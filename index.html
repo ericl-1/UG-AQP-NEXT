@@ -334,7 +334,7 @@ th{position:relative;white-space:normal}
 .btn-glass-dark{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.12);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:rgba(255,255,255,.92);font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .15s;font-family:var(--font)}
 .btn-glass-dark:hover{background:rgba(255,255,255,.22)}
 /* Glass button — for buttons on white/light backgrounds */
-.btn-glass-light{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:10px;border:1px solid rgba(0,0,0,.08);background:rgba(0,0,0,.045);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:var(--c-secondary);font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .15s;font-family:var(--font)}
+.btn-glass-light{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:10px;border:1px solid rgba(0,0,0,.08);background:rgba(0,0,0,.045);color:var(--c-secondary);font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .15s;font-family:var(--font)}
 .btn-glass-light:hover{background:rgba(0,0,0,.075)}
 .btn-dl-secondary{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:10px;border:1px solid var(--c-border-2);background:var(--c-bg);color:var(--c-secondary);font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .15s;font-family:var(--font)}
 .btn-dl-secondary:hover{background:var(--c-surface);border-color:rgba(0,0,0,.3)}
@@ -394,7 +394,7 @@ th{position:relative;white-space:normal}
   .dist-expand-wrap{break-inside:avoid}
   @page{margin:1.5cm;size:A4 landscape}
 }
-#sticky-header{position:sticky;top:0;z-index:100;background:var(--c-bg);padding-bottom:6px;margin-bottom:0}
+#sticky-header{position:sticky;top:0;z-index:100;background:var(--c-bg);padding:16px 16px 6px;margin:0 -16px;isolation:isolate}
 
 /* ── Feedback module ─────────────────────────────────────────────── */
 .setup-tab-bar{display:inline-flex;background:var(--c-surface);border-radius:9px;padding:3px;gap:0;margin-bottom:20px}
@@ -432,6 +432,67 @@ th{position:relative;white-space:normal}
 .btn-fb-disc:hover{background:var(--c-surface)}
 .tab.tab-fb{position:relative}
 
+
+
+/* AQP-Next · Layer 3 · Room structure */
+.room{display:none;padding-top:16px}
+.room.room-active{display:block;padding-top:16px}
+.main-section{padding-top:16px}
+.room-page-hdr{margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--c-border)}
+.page-eyebrow{font-size:10px;font-weight:600;color:var(--c-accent);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
+.page-title{font-size:21px;font-weight:700;color:var(--c-primary);letter-spacing:-.3px;margin-bottom:3px;line-height:1.2}
+.page-sub{font-size:12.5px;color:var(--c-muted);line-height:1.5}
+.room-cards-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:8px}
+.room-card{background:var(--c-bg);border:1.5px solid var(--c-border-2);border-radius:12px;padding:18px;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;gap:8px}
+.room-card:hover{border-color:var(--c-accent);box-shadow:0 4px 12px rgba(0,0,0,.07)}
+.room-card.rc-dest{background:var(--c-accent-tint);border-color:var(--c-accent);grid-column:1/-1}
+.room-card.rc-dest:hover{box-shadow:0 4px 14px rgba(163,21,21,.12)}
+.room-card.rc-hidden{display:none}
+.room-card-hdr{display:flex;align-items:center;gap:10px}
+.room-icon{width:34px;height:34px;border-radius:8px;background:var(--c-accent-tint);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.room-icon svg{color:var(--c-accent)}
+.room-icon.ri-dest{background:white}
+.room-title{font-size:13.5px;font-weight:600;color:var(--c-primary)}
+.room-desc{font-size:12px;color:var(--c-muted);line-height:1.5;flex:1}
+.room-chips{display:flex;gap:5px;flex-wrap:wrap;min-height:18px}
+.lc-chip{font-size:11px;font-weight:500;padding:2px 8px;border-radius:20px}
+.lc-chip-warn{background:var(--s-hard-bg);color:var(--s-hard);border:1px solid rgba(192,57,43,.2)}
+.lc-chip-info{background:var(--s-easy-bg);color:var(--s-easy);border:1px solid rgba(24,95,165,.15)}
+.lc-chip-ok{background:var(--s-ok-bg);color:var(--s-ok);border:1px solid rgba(30,110,48,.2)}
+.lc-chip-muted{background:var(--c-surface);color:var(--c-muted);border:1px solid var(--c-border)}
+.room-cta{font-size:12px;color:var(--c-accent);font-weight:500;display:flex;align-items:center;gap:4px;margin-top:2px}
+
+.topbar-results-nav{display:none;align-items:center;gap:6px;margin-right:4px;padding-right:10px;border-right:1px solid var(--c-border-2)}
+.topbar-nav-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:8px;border:1px solid var(--c-border-2);background:var(--c-bg);color:var(--c-secondary);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .15s;white-space:nowrap}
+.topbar-nav-btn:hover{background:var(--c-surface);color:var(--c-primary)}
+.topbar-nav-btn.btn-reset-top:hover{border-color:var(--c-accent);color:var(--c-accent)}
+
+.room-empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;text-align:center;gap:12px}
+.room-empty-icon{width:52px;height:52px;border-radius:14px;background:var(--c-surface);border:1px solid var(--c-border-2);display:flex;align-items:center;justify-content:center;color:var(--c-muted);margin-bottom:4px}
+.room-empty-title{font-size:15px;font-weight:600;color:var(--c-primary);margin:0}
+.room-empty-sub{font-size:13px;color:var(--c-muted);max-width:380px;line-height:1.6;margin:0}
+
+.nav-badge{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;border-radius:9px;font-size:10px;font-weight:700;padding:0 5px;margin-left:auto;flex-shrink:0;line-height:1}
+.nav-badge-amber{background:#fef3c7;color:#92400e;border:1px solid #fde68a}
+.nav-badge-accent{background:var(--c-accent-tint);color:var(--c-accent);border:1px solid rgba(163,21,21,.2)}
+.nav-badge-dot{width:7px;height:7px;min-width:7px;border-radius:50%;padding:0;margin-left:auto;background:var(--c-accent)}
+
+.landing-summary{margin-bottom:20px}
+.landing-summary-hdr{font-size:13px;font-weight:700;color:var(--c-primary);margin-bottom:3px}
+.landing-summary-sub{font-size:12px;color:var(--c-muted);margin-bottom:10px;font-style:italic}
+.landing-sum-tbl{width:100%;border-collapse:collapse;font-size:12.5px}
+.landing-sum-tbl th{background:var(--c-surface);padding:7px 10px;text-align:left;border-bottom:1.5px solid var(--c-border);font-weight:700;font-size:10.5px;letter-spacing:.5px;text-transform:uppercase;color:var(--c-muted);white-space:nowrap}
+.landing-sum-tbl td{padding:7px 10px;border-bottom:1px solid var(--c-border);vertical-align:middle}
+.landing-sum-tbl tr:last-child td{border-bottom:none}
+.landing-easy-bar{display:flex;align-items:flex-start;gap:12px;padding:10px 0}
+.landing-easy-stripe{width:4px;min-height:24px;background:var(--s-easy);border-radius:2px;flex-shrink:0;margin-top:2px}
+.landing-easy-nums{font-size:13px;color:var(--c-secondary);line-height:1.7}
+/* AQP-Next · Layer 2 · Wizard orientation */
+.wz-guidance{display:flex;gap:10px;padding:10px 14px;background:var(--c-surface);border:1px solid var(--c-border-2);border-radius:8px;font-size:12.5px;color:var(--c-secondary);line-height:1.6;margin-bottom:14px}
+.wz-guidance-icon{font-size:18px;flex-shrink:0;line-height:1;margin-top:1px;color:var(--c-accent);opacity:.7}
+.wz-next-up{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--c-muted);margin-top:10px;padding-top:10px;border-top:1px solid var(--c-border)}
+.wz-next-up svg{flex-shrink:0;opacity:.5}
+
 /* ═══════════════════════════════════════════════════════════════════════════
    AQP-Next · Layer 1 · Shell CSS
    Topbar + Sidebar + Main content layout
@@ -449,7 +510,7 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
 .app-body{flex:1;display:flex;overflow:hidden}
 .sidebar{width:200px;background:var(--c-bg);border-right:1px solid var(--c-border-2);display:flex;flex-direction:column;transition:width .2s ease;flex-shrink:0;overflow:hidden}
 .sidebar.collapsed{width:48px}
-.sidebar-inner{width:200px;display:flex;flex-direction:column;height:100%}
+.sidebar-inner{width:100%;display:flex;flex-direction:column;height:100%}
 .sidebar-top{padding:10px 8px 6px;display:flex;justify-content:flex-end}
 .sidebar.collapsed .sidebar-top{justify-content:center}
 .collapse-btn{width:28px;height:28px;border:1px solid var(--c-border-2);border-radius:8px;background:var(--c-bg);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--c-muted);transition:all .15s;padding:0;font-family:inherit}
@@ -484,8 +545,8 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
 .ios-track.initial{background:var(--c-border-2)}
 .ios-thumb{width:20px;height:20px;background:white;border-radius:50%;position:absolute;top:2px;left:22px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
 .ios-track.initial .ios-thumb{left:2px}
-.content-scroll{flex:1;overflow-y:auto;padding:16px}
-#home-panel,#setup-panel{padding-left:16px;padding-right:16px}
+.content-scroll{flex:1;overflow-y:auto;padding:0 16px 16px}
+#home-panel,#setup-panel{padding-left:0;padding-right:0;padding-top:16px}
 </style>
 </head>
 <body>
@@ -736,9 +797,21 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
   <div class="logo-text">Assessment Quality Platform</div>
   <div id="topbar-exam-sep" class="topbar-div" style="display:none"></div>
   <span id="topbar-exam-name" style="display:none"></span>
+  <div id="topbar-results-nav" class="topbar-results-nav">
+    <button class="topbar-nav-btn" onclick="goToSetup()" title="Return to setup screen">
+      <svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Setup
+    </button>
+    <button class="topbar-nav-btn btn-reset-top" onclick="openResetModal()" title="Clear results and start over">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/></svg>
+      Start Over
+    </button>
+  </div>
   <div class="topbar-actions">
-    <button class="btn-icon" onclick="openSettings()" title="Settings" aria-label="Settings"><i class="ti ti-settings"></i></button>
-    <button class="btn-icon" id="btn-menu-topbar" onclick="toggleHamburger(this)" title="More options" aria-label="More options"><i class="ti ti-dots-vertical"></i></button>
+    <button class="btn-icon" onclick="openSettings()" title="Settings" aria-label="Settings"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+    <button class="btn-icon" id="btn-faq-topbar" onclick="openFAQ()" title="Help &amp; FAQ" aria-label="Help and FAQ"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.5"/><path d="M6.3 6.2C6.3 5.3 7 4.6 8 4.6s1.7.7 1.7 1.6c0 .8-.6 1.3-1.1 1.7C8.2 8.3 8 8.6 8 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="11.2" r=".75" fill="currentColor"/></svg></button>
+    <button class="btn-icon" id="btn-view-results-topbar" onclick="goToResults()" title="Back to results" aria-label="Back to results" style="display:none;gap:5px;width:auto;padding:0 10px;font-size:12px;font-weight:600;color:var(--c-accent);border-color:var(--c-accent)"><svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M9 2l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Results</button>
+    <button class="btn-icon" id="btn-menu-topbar" onclick="toggleHamburger(this)" title="More options" aria-label="More options"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></button>
   </div>
 </div>
 
@@ -748,24 +821,24 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
     <div class="sidebar-inner">
       <div class="sidebar-top">
         <button class="collapse-btn" id="collapseBtn" onclick="toggleSidebar()" title="Collapse sidebar" aria-label="Collapse sidebar">
-          <i class="ti ti-chevron-left" id="collapseIcon"></i>
+          <svg id="collapseIcon" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
       </div>
       <nav class="sidebar-nav">
         <span class="nav-section-label">Overview</span>
-        <button class="nav-item active" id="nav-landing" onclick="sidebarNav('landing',this)"><i class="ti ti-layout-dashboard"></i><span class="nav-item-label">Overview</span></button>
+        <button class="nav-item active" id="nav-landing" onclick="sidebarNav('landing',this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg><span class="nav-item-label">Overview</span></button>
         <div class="nav-div"></div>
         <span class="nav-section-label">Analysis</span>
-        <button class="nav-item" id="nav-mcq" onclick="sidebarNav('mcq',this)"><i class="ti ti-list-check"></i><span class="nav-item-label">MCQ Items</span></button>
-        <div class="nav-sub" id="nav-exceptions" onclick="sidebarNav('exceptions',this)" role="button" tabindex="0"><span>Exceptions</span></div>
-        <button class="nav-item" id="nav-dif" onclick="sidebarNav('dif',this)"><i class="ti ti-scale"></i><span class="nav-item-label">DIF Analysis</span></button>
-        <button class="nav-item" id="nav-feedback" onclick="sidebarNav('feedback',this)"><i class="ti ti-message-dots"></i><span class="nav-item-label">Feedback</span></button>
-        <div class="nav-sub" id="nav-mapping" onclick="sidebarNav('mapping',this)" role="button" tabindex="0"><span>Comment mapping</span></div>
+        <button class="nav-item" id="nav-mcq" onclick="sidebarNav('mcq',this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 5.5l1.5 1.5L8 4"/><path d="M3.5 11.5l1.5 1.5L8 10"/><path d="M3.5 17.5l1.5 1.5L8 16"/><line x1="11" y1="6" x2="20" y2="6"/><line x1="11" y1="12" x2="20" y2="12"/><line x1="11" y1="18" x2="20" y2="18"/></svg><span class="nav-item-label">MCQ Items</span></button>
+        <div class="nav-sub" id="nav-exceptions" onclick="sidebarNav('exceptions',this)" role="button" tabindex="0"><span>Exceptions</span><span class="nav-badge nav-badge-accent" id="badge-exceptions" style="display:none"></span></div>
+        <button class="nav-item" id="nav-dif" onclick="sidebarNav('dif',this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="3" x2="12" y2="21"/><polyline points="8 8 4 12 8 16"/><polyline points="16 8 20 12 16 16"/></svg><span class="nav-item-label">DIF Analysis</span></button>
+        <button class="nav-item" id="nav-feedback" onclick="sidebarNav('feedback',this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><circle cx="9" cy="11" r=".5" fill="currentColor"/><circle cx="12" cy="11" r=".5" fill="currentColor"/><circle cx="15" cy="11" r=".5" fill="currentColor"/></svg><span class="nav-item-label">Feedback</span></button>
+        <div class="nav-sub" id="nav-mapping" onclick="sidebarNav('mapping',this)" role="button" tabindex="0"><span>Comment mapping</span><span class="nav-badge nav-badge-amber" id="badge-mapping" style="display:none"></span></div>
         <div class="nav-div"></div>
-        <button class="nav-item" id="nav-queue" onclick="sidebarNav('queue',this)"><i class="ti ti-checkbox"></i><span class="nav-item-label">Review Queue</span></button>
+        <button class="nav-item" id="nav-queue" onclick="sidebarNav('queue',this)" style="justify-content:space-between"><span style="display:flex;align-items:center;gap:8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span class="nav-item-label">Review Queue</span></span><span class="nav-badge nav-badge-amber" id="badge-queue" style="display:none"></span></button>
         <div class="nav-spacer"></div>
         <div class="nav-div"></div>
-        <button class="nav-item" id="nav-reports" onclick="sidebarNav('reports',this)"><i class="ti ti-file-text"></i><span class="nav-item-label">Reports</span></button>
+        <button class="nav-item" id="nav-reports" onclick="sidebarNav('reports',this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span class="nav-item-label">Reports</span></button>
       </nav>
     </div>
   </div><!-- /sidebar -->
@@ -804,13 +877,13 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
     </svg>
     <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
       <a href="#" onclick="openFAQ();return false;"
-        style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:10px;border:1px solid rgba(0,0,0,.08);background:rgba(0,0,0,.045);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:var(--c-accent);font-size:12px;font-weight:700;text-decoration:none;cursor:pointer;transition:all .15s;font-family:var(--font);white-space:nowrap"
+        style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:10px;border:1px solid rgba(0,0,0,.08);background:rgba(0,0,0,.045);color:var(--c-accent);font-size:12px;font-weight:700;text-decoration:none;cursor:pointer;transition:all .15s;font-family:var(--font);white-space:nowrap"
         onmouseover="this.style.background='rgba(0,0,0,.075)'" onmouseout="this.style.background='rgba(0,0,0,.045)'">
         <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.5"/><rect x="7.2" y="7" width="1.6" height="5" rx=".8" fill="currentColor"/><circle cx="8" cy="5.2" r=".9" fill="currentColor"/></svg>
         Need help?
       </a>
       <button id="btn-menu-home" onclick="toggleHamburger(this)" data-tip="More options."
-        style="display:inline-flex;align-items:center;justify-content:center;padding:7px 9px;border-radius:8px;border:1px solid rgba(0,0,0,.08);background:rgba(0,0,0,.045);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:var(--c-secondary);cursor:pointer;transition:background .15s;flex-shrink:0"
+        style="display:inline-flex;align-items:center;justify-content:center;padding:7px 9px;border-radius:8px;border:1px solid rgba(0,0,0,.08);background:rgba(0,0,0,.045);color:var(--c-secondary);cursor:pointer;transition:background .15s;flex-shrink:0"
         onmouseover="this.style.background='rgba(0,0,0,.075)'" onmouseout="this.style.background='rgba(0,0,0,.045)'">
         <svg width="18" height="16" viewBox="0 0 16 14" fill="none">
           <line x1="1" y1="2"  x2="15" y2="2"  stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
@@ -870,25 +943,25 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
     </svg>
     <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
       <button onclick="goHome()"
-        style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:10px;border:1px solid rgba(0,0,0,.08);background:rgba(0,0,0,.045);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:var(--c-secondary);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;font-family:var(--font);white-space:nowrap"
+        style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:10px;border:1px solid rgba(0,0,0,.08);background:rgba(0,0,0,.045);color:var(--c-secondary);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;font-family:var(--font);white-space:nowrap"
         onmouseover="this.style.background='rgba(0,0,0,.075)'" onmouseout="this.style.background='rgba(0,0,0,.045)'">
         <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         Home
       </button>
       <button onclick="openResetModal()" data-tip="Clear all data and start a new analysis. A confirmation prompt will appear."
-        style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:10px;border:1px solid rgba(0,0,0,.08);background:rgba(0,0,0,.045);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:var(--c-secondary);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;font-family:var(--font);white-space:nowrap"
+        style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:10px;border:1px solid rgba(0,0,0,.08);background:rgba(0,0,0,.045);color:var(--c-secondary);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;font-family:var(--font);white-space:nowrap"
         onmouseover="this.style.background='rgba(0,0,0,.075)'" onmouseout="this.style.background='rgba(0,0,0,.045)'">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/></svg>
         Start Over
       </button>
       <a href="#" onclick="openFAQ();return false;"
-        style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:10px;border:1px solid rgba(0,0,0,.08);background:rgba(0,0,0,.045);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:var(--c-accent);font-size:12px;font-weight:700;text-decoration:none;cursor:pointer;transition:all .15s;font-family:var(--font);white-space:nowrap"
+        style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:10px;border:1px solid rgba(0,0,0,.08);background:rgba(0,0,0,.045);color:var(--c-accent);font-size:12px;font-weight:700;text-decoration:none;cursor:pointer;transition:all .15s;font-family:var(--font);white-space:nowrap"
         onmouseover="this.style.background='rgba(0,0,0,.075)'" onmouseout="this.style.background='rgba(0,0,0,.045)'">
         <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.5"/><rect x="7.2" y="7" width="1.6" height="5" rx=".8" fill="currentColor"/><circle cx="8" cy="5.2" r=".9" fill="currentColor"/></svg>
         Need help?
       </a>
       <button id="btn-menu-setup" onclick="toggleHamburger(this)" data-tip="More options."
-        style="display:inline-flex;align-items:center;justify-content:center;padding:7px 9px;border-radius:8px;border:1px solid rgba(0,0,0,.08);background:rgba(0,0,0,.045);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:var(--c-secondary);cursor:pointer;transition:background .15s;flex-shrink:0"
+        style="display:inline-flex;align-items:center;justify-content:center;padding:7px 9px;border-radius:8px;border:1px solid rgba(0,0,0,.08);background:rgba(0,0,0,.045);color:var(--c-secondary);cursor:pointer;transition:background .15s;flex-shrink:0"
         onmouseover="this.style.background='rgba(0,0,0,.075)'" onmouseout="this.style.background='rgba(0,0,0,.045)'">
         <svg width="18" height="16" viewBox="0 0 16 14" fill="none">
           <line x1="1" y1="2"  x2="15" y2="2"  stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
@@ -978,6 +1051,10 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
           </button>
         </div>
       </div>
+      <div class="wz-next-up">
+        <svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Next up: Choose what type of analysis to run</span>
+      </div>
     </div>
   </div>
 
@@ -995,6 +1072,10 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
         <span style="font-size:12px;color:var(--c-muted)">Choose what you're running today</span>
       </div>
       <div class="section-body">
+        <div class="wz-guidance">
+          <span class="wz-guidance-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
+          <div>Choose what you're analyzing in this session. <strong>MCQ item analysis</strong> is the standard choice for a typical exam. Select <strong>Combined analysis</strong> if you also have student feedback to parse — both outputs are generated in one run and cross-referenced automatically.</div>
+        </div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
           <div id="type-card-mcq" onclick="selectAnalysisType('mcq')"
             style="border:2px solid var(--c-border-2);border-radius:12px;padding:18px;cursor:pointer;transition:all .18s;background:var(--c-bg);position:relative">
@@ -1033,6 +1114,10 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
       <span class="section-hdr-title">Data Source &amp; DIF</span>
     </div>
     <div class="section-body">
+      <div class="wz-guidance">
+        <span class="wz-guidance-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
+        <div><strong>Data source</strong> tells the app which file format to expect — QuestionMark (.xlsx) or Scantron (.txt). <strong>DIF analysis</strong> compares English and French student performance question by question. Turn it on if your exam has both language streams, and enter the codes used in your export file.</div>
+      </div>
       <div class="data-row">
         <span class="row-lbl">Data Source</span>
         <div class="toggle-wrap">
@@ -1081,9 +1166,13 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
 
   <div style="margin-top:22px;display:flex;align-items:center;justify-content:flex-end">
     <button onclick="wizardGoTo(4)" style="display:inline-flex;align-items:center;gap:6px;padding:9px 22px;border-radius:10px;background:var(--c-accent);color:#fff;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .2s">
-      Continue
+      Continue to upload
       <svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
+    <div class="wz-next-up" style="justify-content:flex-end">
+      <svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Next up: Upload your files and run analysis</span>
+    </div>
   </div>
   </div><!-- /wizard-p3 -->
 
@@ -1107,6 +1196,10 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
   </div>
 
   <!-- ── Upload files ── -->
+  <div class="wz-guidance" style="margin-bottom:14px">
+    <span class="wz-guidance-icon"><i class="ti ti-folder-open"></i></span>
+    <div>For <strong>QuestionMark</strong>: upload the raw results export (.xlsx) ensuring you keep only the students who wrote the exam, and the answer key which is an identical document keeping only a single participant row with a perfect score (.xlsx) — these are two separate files. For <strong>Scantron</strong>: upload the single .txt file from the scanning centre — no separate key file is needed, it's embedded in the MASTER row automatically.</div>
+  </div>
   <div id="upload-grid" style="display:grid;grid-template-columns:1fr;gap:14px;margin-bottom:14px">
 
     <!-- Results file -->
@@ -1191,15 +1284,6 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
   <!-- QM validation panel -->
   <div id="qm-preview" style="display:none;margin-top:6px;margin-bottom:10px"></div>
 
-  <!-- Question Exceptions link — inline with MCQ section -->
-  <div id="excl-link-wrap" style="display:none;margin-bottom:8px;text-align:right">
-    <a href="#" id="excl-link" onclick="openExclusionsModal();return false;"
-      style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--c-accent);text-decoration:none;border-bottom:1px solid var(--c-border);padding-bottom:1px">
-      <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.4"/><line x1="8" y1="5" x2="8" y2="11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><line x1="5" y1="8" x2="11" y2="8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-      Question Exceptions
-    </a>
-  </div>
-
   <!-- Pre-flight readiness panel — outside sticky footer so it doesn't overlap content -->
   <div id="preflight-panel" style="display:none;margin-bottom:8px"></div>
   <!-- Active threshold warning — outside sticky footer -->
@@ -1209,7 +1293,7 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
   </div>
 
   <!-- Sticky MCQ Run footer — inside MCQ tab so it hides when FB tab is active -->
-  <div id="setup-run-footer" style="position:sticky;bottom:0;margin:0 -16px;padding:0 16px;background:#fff;border-top:1px solid rgba(0,0,0,.08);box-shadow:0 -4px 16px rgba(0,0,0,.06);z-index:100">
+  <div id="setup-run-footer" style="position:sticky;bottom:0;margin:0 -16px -16px -16px;padding:0 16px 16px 16px;background:#fff;border-top:1px solid rgba(0,0,0,.08);box-shadow:0 -4px 16px rgba(0,0,0,.06);z-index:100">
     <div class="run-bar-inner" style="padding:12px 4px;display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:16px">
       <div id="run-summary" style="display:flex;flex-direction:column;gap:3px;min-width:0">
         <div id="run-summary-mcq" style="font-size:12px;color:var(--c-muted);display:flex;align-items:center;gap:5px">
@@ -1261,6 +1345,11 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
       </div>
     </div>
 
+    <!-- Pre-upload guidance -->
+    <div class="wz-guidance" style="margin-bottom:14px">
+      <span class="wz-guidance-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
+      <div>Upload your QuestionMark feedback export (.xlsx). The app will parse student comments and match them to question numbers automatically. Any comments that couldn't be matched will be shown in the <strong>Comment Mapping</strong> room after analysis for your review.</div>
+    </div>
     <!-- Upload -->
     <div class="section-card" style="margin-bottom:14px">
       <div class="section-hdr">
@@ -1314,10 +1403,14 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
     </div>
 
     <!-- Feedback pre-flight panel -->
+    <div class="wz-guidance" id="fb-attribution-guidance" style="display:none">
+      <span class="wz-guidance-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><circle cx="9" cy="11" r=".5" fill="currentColor"/><circle cx="12" cy="11" r=".5" fill="currentColor"/><circle cx="15" cy="11" r=".5" fill="currentColor"/></svg></span>
+      <div>The app automatically matches comments to question numbers where possible. Any comments that couldn't be matched are shown below for your review — this is normal and expected. Review the attribution, then confirm to proceed.</div>
+    </div>
     <div id="fb-preflight-panel" style="display:none;margin-bottom:4px"></div>
 
     <!-- Sticky feedback run footer -->
-    <div id="setup-fb-footer" style="position:sticky;bottom:0;margin:0 -16px;padding:0 16px;background:#fff;border-top:1px solid rgba(0,0,0,.08);box-shadow:0 -4px 16px rgba(0,0,0,.06);z-index:100">
+    <div id="setup-fb-footer" style="position:sticky;bottom:0;margin:0 -16px -16px -16px;padding:0 16px 16px 16px;background:#fff;border-top:1px solid rgba(0,0,0,.08);box-shadow:0 -4px 16px rgba(0,0,0,.06);z-index:100">
       <div style="padding:14px 4px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
         <span id="fb-run-hint" style="font-size:13px;color:var(--c-muted)">Upload a feedback file to continue</span>
         <button id="btn-fb-run" class="btn-dl-primary" onclick="runFeedbackAnalysis()" disabled>
@@ -1344,6 +1437,10 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
         <span class="section-hdr-title">💬 Student feedback</span>
       </div>
       <div id="combined-fb-body" style="padding:16px 18px 20px">
+        <div class="wz-guidance" id="combined-fb-attribution-guidance" style="display:none">
+          <span class="wz-guidance-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><circle cx="9" cy="11" r=".5" fill="currentColor"/><circle cx="12" cy="11" r=".5" fill="currentColor"/><circle cx="15" cy="11" r=".5" fill="currentColor"/></svg></span>
+          <div>The app automatically matches comments to question numbers where possible. Any comments that couldn’t be matched will be available for review in the <strong>Comment Mapping</strong> room after analysis — this is normal and expected. Click the run button below to proceed.</div>
+        </div>
         <div id="combined-fb-upload-zone" class="upload-row-item"
           onclick="document.getElementById('combined-fb-file-input').click()"
           ondragover="event.preventDefault();this.style.borderColor='var(--c-accent)';this.style.background='var(--c-accent-tint)'"
@@ -1379,7 +1476,7 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
       </div>
     </div>
   </div>
-  <div id="setup-run-footer-p5" style="position:sticky;bottom:0;margin:0 -16px;padding:0 16px;background:#fff;border-top:1px solid rgba(0,0,0,.08);box-shadow:0 -4px 16px rgba(0,0,0,.06);z-index:100">
+  <div id="setup-run-footer-p5" style="position:sticky;bottom:0;margin:0 -16px -16px -16px;padding:0 16px 16px 16px;background:#fff;border-top:1px solid rgba(0,0,0,.08);box-shadow:0 -4px 16px rgba(0,0,0,.06);z-index:100">
     <div style="padding:12px 4px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
       <span id="p5-status-text" style="font-size:13px;color:var(--c-muted)">Upload a feedback file to continue</span>
       <button id="btn-run-p5" class="btn btn-primary" onclick="runAnalysis()" disabled
@@ -1400,7 +1497,7 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
 <div id="results-panel" style="display:none">
   <div id="sticky-header">
   <!-- Single compact nav row -->
-  <div class="no-print" style="display:flex;align-items:center;gap:8px;padding:10px 16px;margin:-16px -16px 12px -16px;background:var(--c-nav-glass);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,0,0,.15)">
+  <div class="no-print" style="display:none;align-items:center;gap:8px;padding:10px 16px;margin:-16px -16px 12px -16px;background:var(--c-nav-glass);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,0,0,.15)">
 
     <!-- Wordmark: small icon + text -->
     <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
@@ -1461,7 +1558,7 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
     </button>
 
   </div>
-  <div class="card" id="banner-card" style="background:rgba(255,255,255,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--c-border);border-radius:10px"></div>
+  <div class="card" id="banner-card" style="background:var(--c-bg);border:1px solid var(--c-border);border-radius:10px"></div>
   <!-- Active threshold warning (results panel) -->
   <div id="thresh-active-results" style="display:none;margin-bottom:8px;padding:8px 14px;background:#fff8e6;border:1px solid rgba(232,168,0,.35);border-radius:8px;font-size:12px;color:#5a3a00;font-weight:500;align-items:center;gap:10px">
     <span style="font-size:14px;flex-shrink:0">⚠</span>
@@ -1471,7 +1568,7 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
   <div id="stale-bar" style="display:none;margin-bottom:10px;padding:9px 14px;background:#fff8e6;border:1px solid rgba(232,168,0,.35);border-radius:8px;font-size:12px;color:#5a3a00;font-weight:500;align-items:center;gap:10px">
     <span style="font-size:15px;flex-shrink:0">⚠</span>
     <span id="stale-bar-msg">These results may be outdated — settings were changed after the last analysis was run.</span>
-    <button onclick="goToSetup()" style="margin-left:auto;padding:4px 12px;border-radius:8px;border:1px solid rgba(184,92,0,.35);background:rgba(184,92,0,.10);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:#b85c00;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .15s">&#8592; Back to Setup</button>
+    <button onclick="goToSetup()" style="margin-left:auto;padding:4px 12px;border-radius:8px;border:1px solid rgba(184,92,0,.35);background:rgba(184,92,0,.10);color:#b85c00;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .15s">&#8592; Back to Setup</button>
   </div>
   <!-- Session Status strip — shows what's loaded and available -->
   <div id="session-status-bar" style="display:none;margin-bottom:8px;padding:7px 14px;background:var(--c-surface);border:1px solid var(--c-border);border-radius:8px;font-size:11px;color:var(--c-muted);display:flex;align-items:center;gap:16px;flex-wrap:wrap"></div>
@@ -1490,7 +1587,7 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
       <button id="whats-next-btn" onclick="" style="display:none;margin-left:auto;flex-shrink:0;font-size:11.5px;font-weight:600;padding:4px 12px;border-radius:6px;border:1.5px solid var(--c-accent);color:var(--c-accent);background:none;cursor:pointer"></button>
     </div>
 
-    <div id="kpi-zone" style="display:none;margin-bottom:8px">
+    <div id="kpi-zone" style="display:none;margin:0 -16px 8px;padding:0 16px">
       <div id="kpi-zone-mcq">
         <div class="card" id="new-summary-card" style="display:none;padding:0;overflow:hidden;border:none;box-shadow:none"></div>
         <div id="summary-separator" style="display:none;border-top:3px solid rgba(0,0,0,.28);margin:8px 0"></div>
@@ -1498,26 +1595,162 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
       <div id="kpi-zone-fb" style="display:none;border:1px solid var(--c-border);border-radius:8px;overflow:hidden;margin-bottom:0"></div>
     </div>
 
-    <div class="tabs no-print" id="main-tab-bar" style="margin-bottom:18px">
+    <div class="tabs no-print" id="main-tab-bar" style="display:none">
       <div class="tab active" id="tab-analysis" role="tab" tabindex="0" aria-selected="true" onclick="switchMainTabByClick('analysis',this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchMainTabByClick('analysis',this)}">📊 Item Analysis</div>
       <div class="tab tab-fb" id="tab-feedback-main" role="tab" tabindex="0" aria-selected="false" onclick="switchMainTabByClick('feedback',this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchMainTabByClick('feedback',this)}" style="display:none">💬 Feedback</div>
       <div class="tab" id="tab-review" role="tab" tabindex="0" aria-selected="false" onclick="switchMainTabByClick('review',this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchMainTabByClick('review',this)}" style="display:none">☑ Review Queue</div>
       <div class="tab" id="tab-reports" role="tab" tabindex="0" aria-selected="false" onclick="switchMainTabByClick('reports',this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchMainTabByClick('reports',this)}">📄 Reports</div>
     </div>
 
+<!-- ══════════════════════════════════════════════════════════════════════
+     Room: Landing (Overview) — AQP-Next Layer 3
+     Status chips populated by updateLandingStatus() after analysis
+     ══════════════════════════════════════════════════════════════════════ -->
+<div id="room-landing" class="room room-active">
+
+  <div class="room-page-hdr">
+    <div class="page-eyebrow">Overview</div>
+    <div class="page-title" id="landing-exam-title">Analysis Results</div>
+    <div class="page-sub">Select a section below to explore your results in detail — or go straight to Reports when you're ready to share.</div>
+  </div>
+
+  <div id="landing-mcq-summary" class="landing-summary" style="display:none"></div>
+
+  <div class="room-cards-grid" id="landing-cards-grid">
+
+    <!-- MCQ Items -->
+    <div class="room-card" id="lc-mcq" onclick="switchRoom('mcq')">
+      <div class="room-card-hdr">
+        <div class="room-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--c-accent)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <span class="room-title">MCQ Items</span>
+      </div>
+      <div class="room-desc">Question difficulty, discrimination, and flag review</div>
+      <div class="room-chips" id="lc-mcq-chips"></div>
+      <div class="room-cta">Explore MCQ Items <svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </div>
+
+    <!-- DIF Analysis -->
+    <div class="room-card rc-hidden" id="lc-dif" onclick="switchRoom('dif')">
+      <div class="room-card-hdr">
+        <div class="room-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--c-accent)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="3" x2="12" y2="21"/><polyline points="8 8 4 12 8 16"/><polyline points="16 8 20 12 16 16"/></svg>
+        </div>
+        <span class="room-title">DIF Analysis</span>
+      </div>
+      <div class="room-desc">English vs French student performance compared question by question</div>
+      <div class="room-chips" id="lc-dif-chips"></div>
+      <div class="room-cta">Explore DIF <svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </div>
+
+    <!-- Feedback -->
+    <div class="room-card rc-hidden" id="lc-feedback" onclick="switchRoom('feedback')">
+      <div class="room-card-hdr">
+        <div class="room-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--c-accent)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <span class="room-title">Feedback</span>
+      </div>
+      <div class="room-desc">Student comments parsed and categorized by question</div>
+      <div class="room-chips" id="lc-fb-chips"></div>
+      <div class="room-cta">Explore Feedback <svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </div>
+
+    <!-- Review Queue -->
+    <div class="room-card" id="lc-queue" onclick="switchRoom('queue')">
+      <div class="room-card-hdr">
+        <div class="room-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--c-accent)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <span class="room-title">Review Queue</span>
+      </div>
+      <div class="room-desc">Track flagged items and sign off on decisions</div>
+      <div class="room-chips" id="lc-queue-chips"></div>
+      <div class="room-cta">Go to Review Queue <svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </div>
+
+    <!-- Reports — destination card, full width -->
+    <div class="room-card rc-dest" onclick="switchRoom('reports')">
+      <div class="room-card-hdr">
+        <div class="room-icon ri-dest">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--c-accent)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <span class="room-title">Reports</span>
+      </div>
+      <div class="room-desc">Generate Word reports and CSV exports ready for committee review. Come here when you've finished reviewing the analysis.</div>
+      <div class="room-cta">Go to Reports <svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </div>
+
+  </div><!-- /landing-cards-grid -->
+</div><!-- /room-landing -->
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     Room: Exceptions — AQP-Next Layer 3
+     Replaces the exceptions modal. Accessible via sidebar sub-item.
+     ══════════════════════════════════════════════════════════════════════ -->
+<div id="room-exceptions" class="room">
+
+  <div class="room-page-hdr">
+    <div class="page-eyebrow">Configuration</div>
+    <div class="page-title">Question Exceptions</div>
+    <div class="page-sub">Set dispositions and alternate keys before re-running analysis. Saving will mark the current results as outdated — a prompt to re-run will appear.</div>
+  </div>
+
+  <!-- Definitions strip -->
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;background:#f7f8f9;border:1px solid var(--c-border);border-radius:10px 10px 0 0;overflow:hidden">
+    <div style="display:flex;align-items:flex-start;gap:8px;padding:14px 18px">
+      <div style="margin-top:4px;width:10px;height:10px;border-radius:2px;background:#2e7d32;flex-shrink:0"></div>
+      <div style="font-size:12.5px;color:var(--c-secondary);line-height:1.6"><strong style="color:var(--c-primary)">Include</strong> — Question is included in analysis as-is. Default for all questions.</div>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:8px;padding:14px 18px;border-left:1px solid var(--c-border);border-right:1px solid var(--c-border)">
+      <div style="margin-top:4px;width:10px;height:10px;border-radius:2px;background:#e8a800;flex-shrink:0"></div>
+      <div style="font-size:12.5px;color:var(--c-secondary);line-height:1.6"><strong style="color:var(--c-primary)">Credit</strong> — Correct answerers keep their point. Denominator reduced by 1 for all students. Stats shown but not flagged or included in DIF.</div>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:8px;padding:14px 18px">
+      <div style="margin-top:4px;width:10px;height:10px;border-radius:2px;background:var(--c-accent);flex-shrink:0"></div>
+      <div style="font-size:12.5px;color:var(--c-secondary);line-height:1.6"><strong style="color:var(--c-primary)">Delete</strong> — Question removed entirely. No points, no stats, not included in exam average, flagging, or DIF.</div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:flex-start;gap:8px;padding:10px 18px;background:#f7f8f9;border:1px solid var(--c-border);border-top:none;border-radius:0 0 10px 10px;margin-bottom:16px">
+    <div style="margin-top:4px;width:10px;height:10px;border-radius:2px;background:var(--c-secondary);flex-shrink:0"></div>
+    <div style="font-size:12.5px;color:var(--c-secondary);line-height:1.6"><strong style="color:var(--c-primary)">Alt. Key</strong> — Accept one or more additional correct answers. Students answering the original key <em>or</em> any alternate receive full credit. Stats recalculate accordingly.</div>
+  </div>
+
+  <!-- Column header -->
+  <div style="display:grid;grid-template-columns:60px 60px 130px 1fr 110px;padding:8px 10px;background:#eeeff1;border:1px solid var(--c-border);border-radius:8px 8px 0 0">
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--c-muted)">Q #</div>
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--c-muted)">Key</div>
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--c-muted)">Disposition</div>
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--c-muted)">Reason <span style="font-weight:400;text-transform:none;letter-spacing:0">(required if Credit or Delete)</span></div>
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--c-muted)">Alt. Key</div>
+  </div>
+  <div id="excl-rows" style="border:1px solid var(--c-border);border-top:none;border-radius:0 0 8px 8px;overflow:hidden;margin-bottom:16px"></div>
+
+  <!-- Footer -->
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0 8px">
+    <div id="excl-summary" style="font-size:12px;color:var(--c-muted)"></div>
+    <div style="display:flex;gap:10px">
+      <button onclick="switchRoom('landing')" class="btn-dl-secondary">Cancel</button>
+      <button onclick="saveExclusions()" class="btn btn-primary" style="padding:9px 20px;font-size:13px">Save Exceptions</button>
+    </div>
+  </div>
+
+</div><!-- /room-exceptions -->
+
     <!-- ── Analysis tab ── -->
-    <div class="main-section active" id="main-section-analysis">
+    <div class="main-section" id="main-section-analysis" style="display:none">
+
+      <div class="room-page-hdr" id="rph-analysis">
+        <div class="page-eyebrow" id="rph-analysis-eyebrow">Analysis</div>
+        <div class="page-title" id="rph-analysis-title">MCQ Items</div>
+        <div class="page-sub" id="rph-analysis-sub">Question difficulty, discrimination, and flag review</div>
+      </div>
 
       <!-- Toolbar row -->
       <div style="display:flex;gap:10px;margin-bottom:8px;flex-wrap:wrap;align-items:center" class="no-print mcq-toolbar">
 
-        <!-- Table toggle — left -->
-        <div class="seg-ctrl" id="analysis-table-toggle">
-          <button class="seg-btn seg-active" id="toggle-btn-mcq" onclick="switchAnalysisTableByClick('mcq')">MCQ Analysis</button>
-          <button class="seg-btn" id="toggle-btn-dif" onclick="switchAnalysisTableByClick('dif')" style="display:none">DIF Analysis</button>
-        </div>
-
-        <!-- Filter bar — only shown for MCQ -->
+        <!-- Filter bar -->
         <div style="display:flex;align-items:center;gap:8px" id="mcq-filter-bar">
           <span style="font-size:11px;font-weight:700;color:var(--c-muted);text-transform:uppercase;letter-spacing:.5px">View:</span>
           <div class="seg-ctrl">
@@ -1543,16 +1776,39 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
       </div>
 
       <!-- MCQ table -->
+      <div class="wz-guidance" id="mcq-guidance-block" style="margin-bottom:12px">
+        <span class="wz-guidance-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
+        <div>Each row is one exam question. <strong>Flagged questions</strong> — marked Needs Review, Difficult, or Low Discrimination — should be examined before reports are finalized. Click any row to expand distractor details and see how students responded to each answer option.</div>
+      </div>
       <div id="mcq-table-wrap">
         <div class="tbl-wrap"><div class="tbl-scroll"><table id="mcq-table" class="mcq-table"></table></div></div>
       </div>
 
       <!-- DIF table -->
       <div id="dif-table-wrap" style="display:none">
-        <div style="background:#eaf0fe;border:1px solid rgba(24,95,165,.15);border-radius:8px;padding:9px 13px;font-size:12.5px;color:#1a3a6e;font-weight:500;margin-bottom:10px">
-          3-block logistic regression DIF. Items with p &lt; 0.01 are flagged as Important.
+        <div class="wz-guidance" style="margin-bottom:12px" id="dif-guidance">
+          <span class="wz-guidance-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
+          <div>DIF analysis compares English and French student performance question by question using 3-block logistic regression. A question is flagged <strong>Important</strong> when the performance gap is statistically significant (p&nbsp;&lt;&nbsp;0.01, Nagelkerke R²&nbsp;&ge;&nbsp;0.07). A flag means the item warrants expert review — it does not automatically indicate bias.</div>
         </div>
+
+        <!-- Not-enabled state -->
+        <div id="dif-not-enabled-msg" style="display:none">
+          <div class="room-empty-state">
+            <div class="room-empty-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="3" x2="12" y2="21"/><polyline points="8 8 4 12 8 16"/><polyline points="16 8 20 12 16 16"/></svg>
+            </div>
+            <p class="room-empty-title">DIF analysis was not enabled for this session</p>
+            <p class="room-empty-sub">To run DIF analysis, return to Setup and turn on DIF in the Configure step — you'll need the English and French stream codes from your export file.</p>
+            <button onclick="goToSetup()" style="margin-top:8px;display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:9px;border:1px solid var(--c-border-2);background:var(--c-bg);color:var(--c-secondary);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .15s" onmouseover="this.style.background='var(--c-surface)'" onmouseout="this.style.background='var(--c-bg)'">
+              <svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Back to Setup
+            </button>
+          </div>
+        </div>
+
+        <div id="dif-table-content">
         <div class="tbl-wrap"><div class="tbl-scroll"><table id="dif-table" class="dif-table"></table></div></div>
+        </div>
       </div>
 
       <!-- Hidden legacy section shells so existing render functions still work -->
@@ -1564,11 +1820,29 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
     <!-- ── Reports tab ── -->
     <!-- Review Queue section -->
     <div class="main-section" id="main-section-review" style="display:none">
+      <div class="room-page-hdr">
+        <div class="page-eyebrow">Review</div>
+        <div class="page-title">Review Queue</div>
+        <div class="page-sub">Track flagged items and sign off on decisions before generating reports</div>
+      </div>
+      <div class="wz-guidance" style="margin-bottom:14px">
+        <span class="wz-guidance-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
+        <div>Flagged questions appear here for coordinator sign-off before reports are generated. Check off each item once you've reviewed it — the progress bar tracks completion. When all items are reviewed, the queue shows a completion indicator and your reports are ready to generate.</div>
+      </div>
       <div id="review-queue-content"></div>
     </div>
 
     <div class="main-section" id="main-section-reports" style="display:none">
+      <div class="room-page-hdr">
+        <div class="page-eyebrow">Reports</div>
+        <div class="page-title">Reports</div>
+        <div class="page-sub">Generate Word reports and CSV exports ready for committee review</div>
+      </div>
 
+      <div class="wz-guidance" style="margin-bottom:16px">
+        <span class="wz-guidance-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
+        <div><strong>Analysis Reports</strong> are formal Word documents for directors and committee members — use Preview to review before downloading. <strong>Session Reports</strong> (CSV and JSON) are structured data exports for record-keeping and integration. Only reports relevant to your current session are shown.</div>
+      </div>
       <!-- ── Report cards ── -->
       <div id="report-cards">
 
@@ -1766,9 +2040,14 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
 
     <!-- ── Feedback tab ── -->
     <div class="main-section" id="main-section-feedback" style="display:none">
+      <div class="room-page-hdr">
+        <div class="page-eyebrow">Analysis</div>
+        <div class="page-title" id="rph-fb-title">Feedback</div>
+        <div class="page-sub" id="rph-fb-sub">Student comments parsed and categorized by question</div>
+      </div>
       <div class="section active" id="section-feedback">
         <div id="fb-toolbar-host"></div>
-        <div id="fb-results-content" style="max-height:calc(100vh - 340px);overflow-y:auto;overflow-x:hidden">
+        <div id="fb-results-content" style="overflow-x:hidden">
           <!-- Rendered by renderFeedbackTab() -->
         </div>
       </div>
@@ -4190,7 +4469,7 @@ function renderQMPreview(el) {
         '<button onclick="updateQMPreview()" style="font-size:12px;font-weight:500;padding:5px 14px;border-radius:6px;border:0.5px solid var(--c-border);background:#fff;color:var(--c-secondary);cursor:pointer">Re-validate</button>' +
         '<button onclick="document.getElementById(&quot;fi-main&quot;).click()" style="font-size:12px;font-weight:500;padding:5px 14px;border-radius:6px;border:0.5px solid var(--c-border);background:#fff;color:var(--c-secondary);cursor:pointer">Re-upload results</button>' +
         '<button onclick="document.getElementById(&quot;fi-key&quot;).click()" style="font-size:12px;font-weight:500;padding:5px 14px;border-radius:6px;border:0.5px solid var(--c-border);background:#fff;color:var(--c-secondary);cursor:pointer">Re-upload key</button>' +
-        '<button onclick="confirmParsePreview(\'qm\')" style="font-size:12px;font-weight:500;padding:5px 14px;border-radius:6px;border:none;background:#2e7d32;color:#fff;cursor:pointer">✓ Looks good</button>' +
+        '<button onclick="confirmParsePreview(\'qm\')" style="font-size:12px;font-weight:500;padding:5px 14px;border-radius:6px;border:none;background:#2e7d32;color:#fff;cursor:pointer">✓ Confirm data</button>' +
       '</div>' +
     '</div>' +
     '</div>';
@@ -4359,9 +4638,9 @@ function exportSessionRecord() {
     var fbGen    = FB.parsed.filter(function(p){return p.status==='general';}).length;
     var fbDisc   = FB.parsed.filter(function(p){return p.status==='discard';}).length;
     var fbQs     = fbAllQs ? fbAllQs().length : '';
-    var fbCont   = FB.parsed.filter(function(p){return p._classif==='Content';}).length;
-    var fbTrans  = FB.parsed.filter(function(p){return p._classif==='Translation';}).length;
-    var fbOth    = FB.parsed.filter(function(p){return p._classif==='Other';}).length;
+    var fbCont   = FB.parsed.filter(function(p){return p._classif==='content';}).length;
+    var fbTrans  = FB.parsed.filter(function(p){return p._classif==='translation';}).length;
+    var fbOth    = FB.parsed.filter(function(p){return p._classif==='other';}).length;
     var fbUncat  = FB.parsed.filter(function(p){return !p._classif&&p.status!=='discard';}).length;
     var s4H = ['Total Comments','Attributed to Questions','General Comments','Discarded','Questions Touched','Content Category','Translation Category','Other Category','Uncategorized'];
     var s4R = [fbTotal,fbAttr,fbGen,fbDisc,fbQs,fbCont,fbTrans,fbOth,fbUncat];
@@ -4584,7 +4863,7 @@ function renderScantronPreview(students, keyLetters, nQ, badRows) {
         '<button onclick="document.getElementById(&quot;fi-main&quot;).click()" ' +
           'style="font-size:12px;font-weight:500;padding:5px 14px;border-radius:6px;border:0.5px solid var(--c-border);background:#fff;color:var(--c-secondary);cursor:pointer">Re-upload</button>' +
         '<button onclick="confirmParsePreview(\'scantron\')" ' +
-          'style="font-size:12px;font-weight:500;padding:5px 14px;border-radius:6px;border:none;background:#2e7d32;color:#fff;cursor:pointer">✓ Looks good</button>' +
+          'style="font-size:12px;font-weight:500;padding:5px 14px;border-radius:6px;border:none;background:#2e7d32;color:#fff;cursor:pointer">✓ Confirm data</button>' +
       '</div>' +
     '</div>' +
     '</div>';
@@ -7928,22 +8207,19 @@ function renderFbPreflightPanel() {
       '</div>';
   }
   panel.style.display = 'block';
+  var _fbGuid = document.getElementById('fb-attribution-guidance');
+  if (_fbGuid) _fbGuid.style.display = 'flex';
+  var _cbGuid = document.getElementById('combined-fb-attribution-guidance');
+  if (_cbGuid) _cbGuid.style.display = 'flex';
 
-  // In combined mode, append a "Validate feedback" button after the preflight summary
-  if (typeof G_ANALYSIS_TYPE !== 'undefined' && G_ANALYSIS_TYPE === 'both' && FB.ready !== true) {
-    var validateBtn = document.createElement('div');
-    validateBtn.style.cssText = 'margin-top:10px;display:flex;justify-content:flex-end';
-    var hasPend = pendCount > 0;
-    var vBtnStyle = hasPend
-      ? 'display:inline-flex;align-items:center;gap:6px;padding:9px 20px;border-radius:10px;background:#e8a000;color:#fff;border:2px solid #b87800;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);box-shadow:0 2px 8px rgba(184,120,0,.25)'
-      : 'display:inline-flex;align-items:center;gap:6px;padding:9px 20px;border-radius:10px;background:var(--c-accent);color:#fff;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font)';
-    validateBtn.innerHTML = '<button onclick="combinedValidateFeedback()" style="' + vBtnStyle + '">' +
-      (hasPend
-        ? '<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><text x="8" y="12" text-anchor="middle" font-size="9" fill="currentColor" font-weight="700">!</text></svg> Review ' + pendCount + ' comment' + (pendCount===1?'':'s') + ' →'
-        : '<svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg> Validate feedback →') +
-      '</button>';
-    panel.appendChild(validateBtn);
+  // Combined mode: note about pending comments going to Comment Mapping room
+  if (typeof G_ANALYSIS_TYPE !== 'undefined' && G_ANALYSIS_TYPE === 'both' && pendCount > 0) {
+    var noteDiv = document.createElement('div');
+    noteDiv.style.cssText = 'margin-top:8px;font-size:11.5px;color:var(--c-muted);padding:6px 10px;background:var(--c-surface);border-radius:6px;border:1px solid var(--c-border)';
+    noteDiv.textContent = pendCount + ' unmatched comment' + (pendCount===1?'':'s') + ' will be available for review in the Comment Mapping room after analysis.';
+    panel.appendChild(noteDiv);
   }
+  checkRunReady(); // update run button state after feedback is parsed
 }
 
 // ── Review Queue ─────────────────────────────────────────────────────────
@@ -7972,6 +8248,7 @@ function updateReviewTabLabel() {
 function renderReviewQueue() {
   var container = document.getElementById('review-queue-content');
   if (!container) return;
+  updateSidebarBadges();
 
   if (!ExamSession.hasMcq || !G.mcq || !G.mcq.length) {
     container.innerHTML = emptyStateHtml('\u2611',
@@ -8318,7 +8595,7 @@ function checkRunReady() {
   var mcqReady = mcqDataPresent && (G_MCQ_CONFIRMED || hasAnalysisRun);
 
   var fbValidated = !isCombined
-    || (FB && FB.parsed && FB.parsed.length > 0 && FB.ready === true);
+    || (FB && FB.parsed && FB.parsed.length > 0); // auto-ready once parsed
   var ready = mcqReady && fbValidated;
 
   var exclWrap = document.getElementById('excl-link-wrap');
@@ -8334,7 +8611,7 @@ function checkRunReady() {
     statusReady = false;
   } else if (isCombined && !fbValidated) {
     var fbParsed = !!(FB && FB.parsed && FB.parsed.length > 0);
-    statusText  = fbParsed ? 'Review unmatched comments' : 'Upload feedback file';
+    statusText  = fbParsed ? 'Review attribution ↓' : 'Upload feedback file';
     statusReady = false;
   } else {
     statusText  = '\u2713 Ready to run';
@@ -8434,7 +8711,7 @@ function checkRunReady() {
       p5Status.style.color = '#1a5c1a';
     } else {
       var fbParsedP5 = !!(FB && FB.parsed && FB.parsed.length > 0);
-      p5Status.textContent = fbParsedP5 ? 'Review unmatched comments ↓' : 'Upload a feedback file to continue';
+      p5Status.textContent = fbParsedP5 ? 'Review attribution ↓' : 'Upload a feedback file to continue';
       p5Status.style.color = 'var(--c-muted)';
     }
   }
@@ -8521,6 +8798,8 @@ function switchAnalysisTable(which) {
   var isMcq = (which === 'mcq');
   if (mcqWrap)   mcqWrap.style.display   = isMcq ? '' : 'none';
   if (difWrap)   difWrap.style.display   = isMcq ? 'none' : '';
+  var mcqGuid = document.getElementById('mcq-guidance-block');
+  if (mcqGuid)   mcqGuid.style.display   = isMcq ? '' : 'none';
   if (mcqFilter) mcqFilter.style.display = isMcq ? '' : 'none';
   if (btnMcqCsv) btnMcqCsv.style.display = isMcq ? '' : 'none';
   if (btnDifCsv) btnDifCsv.style.display = isMcq ? 'none' : '';
@@ -8967,6 +9246,7 @@ function goToSetup() {
   hideSidebar();
   // Show "View Results" button only when a prior analysis exists
   var vrb = document.getElementById('view-results-bar'); if (vrb) vrb.style.display = (G && G._lastN) ? 'block' : 'none';
+  var _vrTop = document.getElementById('btn-view-results-topbar'); if (_vrTop) _vrTop.style.display = (G && G._lastN) ? 'inline-flex' : 'none';
   // Restore step 2 block if an analysis type was previously selected
   // (coming back from results — don't reset state)
   updateSetupContinueBtn();
@@ -9219,8 +9499,9 @@ document.addEventListener('click', function(e) {
   var b1  = document.getElementById('btn-menu');
   var b2  = document.getElementById('btn-menu-setup');
   var b3  = document.getElementById('btn-menu-home');
+  var b4  = document.getElementById('btn-menu-topbar');
   if (!dd || dd.style.display === 'none') return;
-  if ((b1 && b1.contains(e.target)) || (b2 && b2.contains(e.target)) || (b3 && b3.contains(e.target))) return;
+  if ((b1 && b1.contains(e.target)) || (b2 && b2.contains(e.target)) || (b3 && b3.contains(e.target)) || (b4 && b4.contains(e.target))) return;
   if (!dd.contains(e.target)) closeHamburger();
 });
 
@@ -10166,9 +10447,8 @@ function fmt(val, decimals, fallback) {
 // ── Question Exceptions ───────────────────────────────────────────────────
 
 function openExclusionsModal() {
-  var modal = document.getElementById('excl-modal');
   var rows  = document.getElementById('excl-rows');
-  if (!modal || !rows) return;
+  if (!rows) return;
 
   var key = G.key;
   var nQ  = G.nQ;
@@ -10239,8 +10519,6 @@ function openExclusionsModal() {
   }).join('');
 
   updateExclSummary();
-  modal.style.display = 'flex';
-  trapFocus(modal, document.activeElement);
 }
 
 function onExclChange(sel, idx) {
@@ -10369,8 +10647,9 @@ function saveExclusions() {
     }
   });
   if (!valid) return;
-  closeExclusionsModal();
-  // Update link label to show active exclusions
+  switchRoom('landing');
+  markDirty(); // mark results outdated — stale bar appears
+  updateSidebarBadges();
   updateExclLink();
   saveSession(); // C1 — autosave after exception change
 }
@@ -11439,7 +11718,7 @@ function groupComments() {
   FB.general = [];
   FB.parsed.forEach(function(p, idx) {
     if (p.status === 'discard') return;
-    if (p.status === 'general' || (p.status === 'pending' && p.qNums.length === 0)) {
+    if (p.status === 'general') {
       FB.general.push({text: p.text, idx: idx});
     } else {
       var nums = p.status === 'mapped' ? (p.mappedQs || (p.mappedQ != null ? [p.mappedQ] : [])) : p.qNums;
@@ -11623,11 +11902,8 @@ function runFeedbackAnalysis() {
   FB.examTitle = (document.getElementById('exam-title')||{}).value || '';
   FB.examDate  = (document.getElementById('exam-date')||{}).value || '';
   FB.pending   = FB.parsed.reduce(function(acc,p,i){ if(p.status==='pending') acc.push(i); return acc; }, []);
-  if (FB.pending.length > 0) {
-    renderMappingScreen();
-  } else {
-    finaliseFeedback();
-  }
+  // Always finalise — pending items stay as 'pending' for Comment Mapping room
+  finaliseFeedback();
 }
 
 // Combined mode: validate feedback in setup (sets FB.ready) without navigating.
@@ -12126,12 +12402,7 @@ function finaliseFeedback() {
   if (FB.pending && FB.pending.length) {
     FB.pending.forEach(function(idx) {
       if (FB.parsed[idx].status !== 'pending') return;
-      if (fbCommitStaged(idx)) return;
-      // Still pending (nothing valid was entered) — route to general by default
-      FB.parsed[idx].status = 'general';
-      delete FB.parsed[idx]._typed;
-      delete FB.parsed[idx]._staged;
-      delete FB.parsed[idx]._addErr;
+      fbCommitStaged(idx); // commit staged only; leave pending for Comment Mapping
     });
   }
   groupComments();
@@ -12228,11 +12499,12 @@ function finaliseFeedback() {
 
 // ── Mapping screen ────────────────────────────────────────────────────────
 function renderMappingScreen() {
+  // Panel switching handled by switchRoom() in results context
+  // (kept for standalone wizard-context calls)
   var setup   = document.getElementById('setup-panel');
   var results = document.getElementById('results-panel');
-  // Hide setup, show results panel with mapping content
-  if (setup) setup.style.display = 'none';
-  if (results) results.style.display = 'block';
+  if (setup && setup.style.display !== 'none') setup.style.display = 'none';
+  if (results && results.style.display === 'none') { results.style.display = 'block'; showSidebar(); }
   // Render mapping into section-feedback
   var sec = document.getElementById('fb-results-content');
   var tbHost = document.getElementById('fb-toolbar-host');
@@ -12325,7 +12597,7 @@ function renderMappingScreen() {
   if (tabEl) { tabEl.style.display = ''; }
   switchMainTab('feedback', tabEl);
   var _ca=document.getElementById('contentArea');if(_ca)_ca.scrollTop=0;
-  window._refreshMapScreen = function() { sec.innerHTML = buildMapHTML(); };
+  window._refreshMapScreen = function() { sec.innerHTML = buildMapHTML(); updateSidebarBadges(); };
 }
 
 function fbAssignQ(idx) {
@@ -12776,6 +13048,11 @@ function renderFeedbackTab(view) {
     return;
   }
 
+  // Show guidance block (hidden during empty state)
+  var _fbGuid2 = document.getElementById('fb-room-guidance');
+  if (_fbGuid2) _fbGuid2.style.display = 'flex';
+  updateSidebarBadges();
+
   var sortedQs = fbAllQs();
   var freq = sortedQs.map(function(q){ var cc=(FB.grouped[q]||[]).length, bc=FB.bareRefs[q]||0; return {q:q, count:cc+bc, commentCount:cc, bareCount:bc}; })
     .sort(function(a,b){return b.count-a.count;});
@@ -12898,6 +13175,17 @@ function renderFeedbackTab(view) {
   // ── Content HTML (goes into #fb-results-content) ──
   var html = '';
 
+  var _pendBannerCount = FB.pending ? FB.pending.filter(function(i){ return FB.parsed[i] && FB.parsed[i].status === 'pending'; }).length : 0;
+  // Pending attribution banner
+  if (_pendBannerCount > 0) {
+    var _pb = '<div style="display:flex;align-items:center;gap:10px;padding:9px 14px;background:#fff8e6;border:1px solid rgba(232,168,0,.4);border-radius:8px;font-size:12px;color:#5a3a00;margin-bottom:12px">';
+    _pb += '<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 2L1 14h14L8 2z" stroke="#92400e" stroke-width="1.4" stroke-linejoin="round"/></svg>';
+    _pb += '<span style="flex:1"><strong>' + _pendBannerCount + ' comment' + (_pendBannerCount === 1 ? '' : 's') + '</strong> still need attribution review \u2014 not included in the views below.</span>';
+    _pb += '<button onclick="sidebarNav(\'mapping\', document.getElementById(\'nav-mapping\'))" style="font-size:11px;font-weight:700;color:#92400e;background:rgba(146,64,14,.1);border:1px solid rgba(146,64,14,.3);border-radius:6px;padding:3px 12px;cursor:pointer;white-space:nowrap;font-family:var(--font)">Go to Comment Mapping \u2192</button>';
+    _pb += '</div>';
+    html += _pb;
+  }
+
   // Global staged action bar — appears only when at least one row has staged Q#s
   if (totalStaged > 0) {
     html += '<div style="margin-top:6px;padding:7px 12px;background:var(--c-fb-bg);border:1px solid var(--c-fb);border-radius:8px;display:flex;align-items:center;justify-content:space-between;gap:10px">';
@@ -12935,7 +13223,7 @@ function renderFeedbackTab(view) {
       var catCounts = {content:0, translation:0, other:0, uncategorized:0};
       sortedQs.forEach(function(q) {
         (FB.grouped[q]||[]).forEach(function(c) {
-          var cl = c._classif || 'uncategorized';
+          var cl = (FB.parsed[c.idx] && FB.parsed[c.idx]._classif) || 'uncategorized';
           catCounts[cl] = (catCounts[cl]||0) + 1;
         });
       });
@@ -12981,7 +13269,7 @@ function renderFeedbackTab(view) {
       // Category filter — bycat view only
       if (_fbView === 'bycat') {
         comments = comments.filter(function(c) {
-          return _fbCatFilter.indexOf(c._classif || 'uncategorized') !== -1;
+          return _fbCatFilter.indexOf((FB.parsed[c.idx] && FB.parsed[c.idx]._classif) || 'uncategorized') !== -1;
         });
         if (comments.length === 0) return; // skip questions with no matching comments
       }
@@ -13764,6 +14052,282 @@ document.addEventListener('click', function(e) {
 
 checkForDraft(); // C1 — called here so _DRAFT_KEY and all globals are fully initialised
 
+// ── Sidebar badges ────────────────────────────────────────────────────────────
+function updateSidebarBadges() {
+  // Exceptions badge — count of active (non-include) exceptions + alt keys
+  var badgeExcl = document.getElementById('badge-exceptions');
+  if (badgeExcl) {
+    var nExcl = 0;
+    if (typeof G !== 'undefined' && G && G.exclusions) {
+      nExcl = Object.values(G.exclusions).filter(function(e) {
+        return e.disposition !== 'include' || (e.altKeys && e.altKeys.length > 0);
+      }).length;
+    }
+    if (nExcl > 0) {
+      badgeExcl.textContent = nExcl;
+      badgeExcl.style.display = 'inline-flex';
+    } else {
+      badgeExcl.style.display = 'none';
+    }
+  }
+
+  // Review Queue badge — count of flagged questions not yet reviewed
+  var badgeQueue = document.getElementById('badge-queue');
+  if (badgeQueue) {
+    var nQueue = 0;
+    if (typeof G !== 'undefined' && G && G.mcq) {
+      var _all = G.mcq.filter(function(q){ return q.flag; });
+      nQueue = _all.filter(function(q){ return !_reviewState[q.num]; }).length;
+    }
+    if (nQueue > 0) {
+      badgeQueue.textContent = nQueue;
+      badgeQueue.style.display = 'inline-flex';
+    } else {
+      badgeQueue.style.display = 'none';
+    }
+  }
+
+  // Comment mapping badge — count of comments still pending review
+  var badgeMap = document.getElementById('badge-mapping');
+  if (badgeMap) {
+    var nPending = 0;
+    if (typeof FB !== 'undefined' && FB && FB.parsed && FB.pending) {
+      nPending = FB.pending.filter(function(i) {
+        return FB.parsed[i] && FB.parsed[i].status === 'pending';
+      }).length;
+    }
+    if (nPending > 0) {
+      badgeMap.textContent = nPending;
+      badgeMap.style.display = 'inline-flex';
+    } else {
+      badgeMap.style.display = 'none';
+    }
+  }
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════
+// AQP-Next · Layer 3 · Room routing
+// ══════════════════════════════════════════════════════════════════════════
+
+var _currentRoom = 'landing';
+
+function switchRoom(room) {
+  _currentRoom = room;
+
+  // Hide all dedicated room divs (room-landing handled separately below)
+  // Hide KPI zone in all rooms — shown only on landing page (future build)
+  var _kpiZ = document.getElementById('kpi-zone'); if (_kpiZ) _kpiZ.style.display = 'none';
+
+  ['room-exceptions'].forEach(function(id) {
+    var el = document.getElementById(id); if (el) el.style.display = 'none';
+  });
+
+  // Landing room visibility
+  var rl = document.getElementById('room-landing');
+  if (rl) rl.style.display = (room === 'landing') ? 'block' : 'none';
+
+  // Hide/show main-sections via existing switchMainTab for section rooms
+  if (room === 'mcq') {
+    var tabAn = document.getElementById('tab-analysis');
+    switchMainTab('analysis', tabAn);
+    switchAnalysisTable('mcq');
+    var rphT = document.getElementById('rph-analysis-title');
+    var rphS = document.getElementById('rph-analysis-sub');
+    if (rphT) rphT.textContent = 'MCQ Items';
+    if (rphS) rphS.textContent = 'Question difficulty, discrimination, and flag review';
+  } else if (room === 'dif') {
+    var tabAn2 = document.getElementById('tab-analysis');
+    switchMainTab('analysis', tabAn2);
+    switchAnalysisTable('dif');
+    var rphT2 = document.getElementById('rph-analysis-title');
+    var rphS2 = document.getElementById('rph-analysis-sub');
+    if (rphT2) rphT2.textContent = 'DIF Analysis';
+    if (rphS2) rphS2.textContent = 'English vs French student performance compared question by question';
+    // Show either the table or the not-enabled state
+    var difEnabled = (typeof G_DIF_ENABLED !== 'undefined' && G_DIF_ENABLED);
+    var difMsg  = document.getElementById('dif-not-enabled-msg');
+    var difData = document.getElementById('dif-table-content');
+    var difGuid = document.getElementById('dif-guidance');
+    if (difMsg)  difMsg.style.display  = difEnabled ? 'none' : 'block';
+    if (difData) difData.style.display = difEnabled ? '' : 'none';
+    if (difGuid) difGuid.style.display = difEnabled ? 'flex' : 'none';
+  } else if (room === 'exceptions') {
+    // Hide main sections
+    ['analysis','review','reports','feedback'].forEach(function(s){
+      var el=document.getElementById('main-section-'+s); if(el) el.style.display='none';
+    });
+    // Show exceptions room and render rows
+    var roomExcl=document.getElementById('room-exceptions');
+    if(roomExcl) roomExcl.style.display='block';
+    openExclusionsModal(); // renders rows into #excl-rows (no modal shown)
+  } else if (room === 'feedback') {
+    switchMainTab('feedback', document.getElementById('tab-feedback-main'));
+    // Re-render feedback content — clears mapping screen if active
+    renderFeedbackTab(_fbView || 'freq');
+    // Reset page header to feedback defaults
+    var rphFbTitle2 = document.getElementById('rph-fb-title');
+    var rphFbSub2   = document.getElementById('rph-fb-sub');
+    if (rphFbTitle2) rphFbTitle2.textContent = 'Feedback';
+    if (rphFbSub2)   rphFbSub2.textContent   = 'Student comments parsed and categorized by question';
+  } else if (room === 'mapping') {
+    renderMappingScreen();
+    // Update feedback section page header to reflect mapping context
+    var rphFbTitle = document.getElementById('rph-fb-title');
+    var rphFbSub   = document.getElementById('rph-fb-sub');
+    if (rphFbTitle) rphFbTitle.textContent = 'Comment Mapping';
+    if (rphFbSub)   rphFbSub.textContent   = 'Review comments that couldn’t be automatically attributed — assign, mark as general, or discard each one.';
+    var fbGuid = document.getElementById('fb-room-guidance');
+    if (fbGuid) fbGuid.style.display = 'none';
+  } else if (room === 'queue') {
+    switchMainTab('review', document.getElementById('tab-review'));
+    renderReviewQueue();
+  } else if (room === 'reports') {
+    switchMainTab('reports', document.getElementById('tab-reports'));
+    updateReportCards();
+  } else if (room === 'landing') {
+    // Hide all main-sections
+    ['analysis','review','reports','feedback'].forEach(function(s) {
+      var el = document.getElementById('main-section-' + s);
+      if (el) el.style.display = 'none';
+    });
+    // Show kpi-zone on landing if populated
+    var _kz2 = document.getElementById('kpi-zone'); if (_kz2 && _kz2.innerHTML.trim()) _kz2.style.display = '';
+    updateLandingStatus();
+  }
+
+  // Scroll to top
+  var ca = document.getElementById('contentArea');
+  if (ca) ca.scrollTop = 0;
+
+  // Update sidebar active state
+  _updateSidebarActive(room);
+}
+
+function _updateSidebarActive(room) {
+  var map = {
+    landing:'nav-landing', mcq:'nav-mcq', dif:'nav-dif',
+    exceptions:'nav-exceptions', feedback:'nav-feedback',
+    mapping:'nav-mapping', queue:'nav-queue', reports:'nav-reports'
+  };
+  document.querySelectorAll('#main-sidebar .nav-item, #main-sidebar .nav-sub').forEach(function(el){
+    el.classList.remove('active');
+  });
+  var id = map[room];
+  if (id) { var el = document.getElementById(id); if (el) el.classList.add('active'); }
+}
+
+function updateLandingStatus() {
+  // Exam title
+  var lt = document.getElementById('landing-exam-title');
+  if (lt && typeof ExamSession !== 'undefined' && ExamSession.examTitle)
+    lt.textContent = ExamSession.examTitle;
+
+  // MCQ chips
+  var mcqChips = document.getElementById('lc-mcq-chips');
+  if (mcqChips && typeof G !== 'undefined' && G && G._lastN) {
+    var nF = G.mcq ? G.mcq.filter(function(q){return q.flag&&q.flag!=='Too easy';}).length : 0;
+    var nE = G.mcq ? G.mcq.filter(function(q){return q.flag==='Too easy';}).length : 0;
+    var nC = G.mcq ? G.mcq.filter(function(q){return q.disposition==='credit';}).length : 0;
+    var h = '';
+    if (nF > 0) h += '<span class="lc-chip lc-chip-warn">' + nF + ' flagged</span>';
+    if (nE > 0) h += '<span class="lc-chip lc-chip-info">' + nE + ' very easy</span>';
+    if (nC > 0) h += '<span class="lc-chip lc-chip-muted">' + nC + ' credited</span>';
+    if (!h) h = '<span class="lc-chip lc-chip-ok">All clear</span>';
+    mcqChips.innerHTML = h;
+  }
+
+  // DIF card — show only if DIF enabled
+  var difCard = document.getElementById('lc-dif');
+  if (difCard) difCard.classList.toggle('rc-hidden', !(typeof G_DIF_ENABLED !== 'undefined' && G_DIF_ENABLED));
+
+  // DIF chips
+  var difChips = document.getElementById('lc-dif-chips');
+  if (difChips && typeof G !== 'undefined' && G && G.dif) {
+    var nDIF = G.dif.filter(function(d){return d.imp;}).length;
+    difChips.innerHTML = nDIF > 0
+      ? '<span class="lc-chip lc-chip-warn">' + nDIF + ' flagged</span>'
+      : '<span class="lc-chip lc-chip-ok">No flags</span>';
+  }
+
+  // Feedback card — show only if feedback loaded
+  var fbCard = document.getElementById('lc-feedback');
+  if (fbCard) fbCard.classList.toggle('rc-hidden', !(typeof FB !== 'undefined' && FB && FB.ready));
+
+  // Feedback chips
+  var fbChips = document.getElementById('lc-fb-chips');
+  if (fbChips && typeof FB !== 'undefined' && FB && FB.parsed) {
+    var total = FB.parsed.length;
+    fbChips.innerHTML = total > 0
+      ? '<span class="lc-chip lc-chip-muted">' + total + ' attributed</span>'
+      : '';
+  }
+
+
+  // MCQ flagged/easy summary for landing page
+  var _sumDiv = document.getElementById('landing-mcq-summary');
+  if (_sumDiv && typeof G !== 'undefined' && G && G.mcq && G.mcq.length) {
+    var _flagged = G.mcq.filter(function(q){ return q.flag && q.flag !== 'Too easy'; });
+    var _easy    = G.mcq.filter(function(q){ return q.flag === 'Too easy'; });
+    var _html = '';
+
+    if (_flagged.length > 0) {
+      _html += '<div class="landing-summary-hdr">Table 1 — Flagged Questions</div>';
+      _html += '<div class="landing-summary-sub">Questions flagged as possibly problematic, requiring director review.</div>';
+      _html += '<table class="landing-sum-tbl"><thead><tr>';
+      _html += '<th>Q#</th><th>Reason for Flagging</th><th>Comments</th><th>Best Students Chose</th><th>Recommendation</th>';
+      _html += '</tr></thead><tbody>';
+      _flagged.forEach(function(r) {
+        var flagColor = r.flag.indexOf('Poor') >= 0 ? '#c0392b' : r.flag.indexOf('Difficult') >= 0 ? '#6c3483' : '#d68910';
+        var comment = '';
+        if (r.flag.indexOf('Difficult') >= 0) { comment = r.pct + '% answered correctly'; }
+        else if (r.rpbis < 0) { comment = r.pct ? r.pct + '% answered correctly / Negative discrimination' : 'Negative discrimination'; }
+        var bw = (r.topWrong && r.p < 0.5) ? '<strong>' + r.topWrong + '</strong>' : '';
+        _html += '<tr>';
+        _html += '<td style="text-align:center;font-weight:700">' + r.num + '</td>';
+        _html += '<td style="color:' + flagColor + ';font-style:italic">' + (r.flag || '') + '</td>';
+        _html += '<td>' + comment + '</td>';
+        _html += '<td style="text-align:center">' + bw + '</td>';
+        _html += '<td><strong>' + (r.rec || '') + '</strong></td>';
+        _html += '</tr>';
+      });
+      _html += '</tbody></table>';
+    }
+
+    if (_easy.length > 0) {
+      if (_flagged.length > 0) _html += '<div style="margin-top:16px"></div>';
+      _html += '<div class="landing-summary-hdr">Table 2 — Too Easy Questions</div>';
+      _html += '<div class="landing-summary-sub">Questions answered correctly by ' + (typeof getThresh === 'function' ? Math.round(getThresh('easy')*100) : 96) + '% or more of students. Please revise before using again.</div>';
+      _html += '<div class="landing-easy-bar">';
+      _html += '<div style="font-size:10px;font-weight:700;color:var(--c-muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px;width:100%">Question Number</div>';
+      _html += '</div>';
+      _html += '<div class="landing-easy-bar">';
+      _html += '<div class="landing-easy-stripe"></div>';
+      _html += '<div class="landing-easy-nums">' + _easy.map(function(e){ return e.num; }).join(', ') + '</div>';
+      _html += '</div>';
+    }
+
+    if (_html) {
+      _sumDiv.innerHTML = _html;
+      _sumDiv.style.display = 'block';
+    } else {
+      _sumDiv.style.display = 'none';
+    }
+  } else if (_sumDiv) {
+    _sumDiv.style.display = 'none';
+  }
+
+  // Queue chips — count flagged questions
+  var qChips = document.getElementById('lc-queue-chips');
+  if (qChips && typeof G !== 'undefined' && G && G.mcq) {
+    var nRev = G.mcq.filter(function(q){return q.flag;}).length;
+    qChips.innerHTML = nRev > 0
+      ? '<span class="lc-chip lc-chip-muted">' + nRev + ' to review</span>'
+      : '<span class="lc-chip lc-chip-ok">Nothing flagged</span>';
+  }
+}
+
+
 // ══════════════════════════════════════════════════════════════════════════
 // AQP-Next · Layer 1 · Shell JS
 // ══════════════════════════════════════════════════════════════════════════
@@ -13775,12 +14339,20 @@ function toggleSidebar() {
   var sb = document.getElementById('main-sidebar');
   if (sb) sb.classList.toggle('collapsed', _sidebarCollapsed);
   var icon = document.getElementById('collapseIcon');
-  if (icon) icon.className = _sidebarCollapsed ? 'ti ti-chevron-right' : 'ti ti-chevron-left';
+  if (icon) {
+    // Swap chevron direction: right when collapsed (expand), left when expanded (collapse)
+    var path = icon.querySelector('path');
+    if (path) path.setAttribute('d', _sidebarCollapsed ? 'M5 2l5 5-5 5' : 'M9 2L4 7L9 12');
+  }
 }
 
 function showSidebar() {
   var sb = document.getElementById('main-sidebar');
   if (sb) sb.style.display = 'flex';
+  var rn = document.getElementById('topbar-results-nav');
+  if (rn) rn.style.display = 'flex';
+  switchRoom('landing');
+  updateSidebarBadges();
 }
 
 function hideSidebar() {
@@ -13790,15 +14362,14 @@ function hideSidebar() {
   if (sep) sep.style.display = 'none';
   var nm = document.getElementById('topbar-exam-name');
   if (nm) nm.style.display = 'none';
+  var rn = document.getElementById('topbar-results-nav');
+  if (rn) rn.style.display = 'none';
+  var _vrTop2 = document.getElementById('btn-view-results-topbar'); if (_vrTop2) _vrTop2.style.display = 'none';
 }
 
 // Sidebar nav item activation (Layer 3 adds actual room routing)
 function sidebarNav(room, btn) {
-  document.querySelectorAll('#main-sidebar .nav-item, #main-sidebar .nav-sub').forEach(function(el){
-    el.classList.remove('active');
-  });
-  if (btn) btn.classList.add('active');
-  // Layer 3: switchRoom(room);
+  switchRoom(room);
 }
 
 // Update topbar exam label from ExamSession
@@ -14693,13 +15264,6 @@ function updateTopbarExam() {
       Release Notes
     </a>
 
-    <!-- Session History — placeholder -->
-    <span style="display:flex;align-items:center;gap:8px;padding:9px 16px;font-size:12px;font-weight:600;color:#bdc9d4;font-family:var(--font);cursor:default;user-select:none">
-      <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.4"/><polyline points="8,4 8,8 11,10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Session History
-      <span style="margin-left:auto;font-size:10px;font-weight:700;color:#bdc9d4;letter-spacing:.3px">SOON</span>
-    </span>
-
     <div style="height:1px;background:var(--c-border);margin:4px 0"></div>
 
     <!-- About -->
@@ -14790,11 +15354,11 @@ function updateTopbarExam() {
     </div>
 
     <!-- Scrollable rows -->
-    <div id="excl-rows" style="flex:1;overflow-y:auto;padding:0 28px"></div>
+    <div id="excl-rows-modal" style="flex:1;overflow-y:auto;padding:0 28px"></div>
 
     <!-- Footer -->
     <div style="padding:14px 28px;border-top:1px solid var(--c-border);flex-shrink:0;display:flex;align-items:center;justify-content:space-between">
-      <div id="excl-summary" style="font-size:12px;color:var(--c-muted)"></div>
+      <div id="excl-summary-modal" style="font-size:12px;color:var(--c-muted)"></div>
       <div style="display:flex;gap:10px">
         <button onclick="closeExclusionsModal()" class="btn-dl-secondary">Close</button>
         <button onclick="saveExclusions()" class="btn btn-primary" style="padding:9px 20px;font-size:13px">Save Exclusions</button>
