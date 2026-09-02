@@ -2323,11 +2323,11 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
 "use strict";
 
 // ── App version — single source of truth ─────────────────────────────────
-var APP_VERSION     = '0.1';
-var APP_BUILD       = '20260823-01';
-var APP_FAQ_VERSION = '0.1';           // Update when FAQ content changes
-var APP_FAQ_DATE    = 'August 23, 2026'; // Update when FAQ content changes
-var APP_RN_DATE     = 'August 23, 2026'; // Update each version close
+var APP_VERSION     = '0.2';
+var APP_BUILD       = '20260901-01';
+var APP_FAQ_VERSION = '0.2';           // Update when FAQ content changes
+var APP_FAQ_DATE    = 'September 1, 2026'; // Update when FAQ content changes
+var APP_RN_DATE     = 'September 1, 2026'; // Update each version close
 
 // ── Feedback module global ────────────────────────────────────────────────
 var FB = {
@@ -9441,6 +9441,33 @@ document.addEventListener('click', function(e) {
 // ── Release Notes ─────────────────────────────────────────────────────────
 var RELEASE_NOTES = [
   {
+    version: '0.2',
+    builds: [
+      {
+        build: '20260901-01',
+        date:  'September 1, 2026',
+        notes: [
+          'Sidebar restructured into two named sections — Item Analysis (Overview, Item Analysis, Exceptions sub-link, DIF Analysis) and Student Feedback (Feedback Review, Unmapped Comments sub-link) — with separators and section labels. Review Queue and Reports follow below.',
+          'Sub-item indicator: ↳ icon added to Exceptions and Unmapped Comments sidebar links to make parent-child relationships visually explicit.',
+          'Sidebar: default width increased from 200px to 220px. Drag-to-resize via right-edge handle (min 160px, max 400px); handle is disabled when sidebar is collapsed.',
+          'Reports moved up in sidebar — now sits after Review Queue under its own separator; no longer pinned to the bottom of the panel.',
+          'DIF room: slim KPI strip added at top of DIF table showing EN student count, FR student count, questions analyzed, and DIF-flagged count. Strip is hidden when DIF is not enabled.',
+          'KPI zone visibility corrected: MCQ KPIs appear on Overview (landing page) only; Feedback KPIs appear in Feedback Review room only.',
+          'Bug fix — landing page KPI state: MCQ KPIs were displaced by Feedback KPIs when returning from the Feedback Review room. Sub-zone state is now explicitly reset on every landing page entry.',
+          'Overview page: section titles simplified — "Table 1 —", "Table 2 —" numbering removed to avoid confusion with report table numbering, which follows a different sequence.',
+          'Overview page: navigation tiles removed. The sidebar is now the sole navigation surface.',
+          'Overview page: all-clear panel added — a green confirmation banner appears when no questions are flagged, credited, or too easy. Sub-text notes DIF fairness result when DIF was enabled.',
+          'Overview page: DIF-flagged questions table added alongside existing flagged and too-easy question sections. Shows Q#, EN% correct, FR% correct, gap (pp), and direction. Appears only when DIF was enabled and at least one item is flagged.',
+          'Topbar: exam name removed from topbar (exam title remains in the banner card). Standalone settings gear removed — Settings remains accessible via the ellipsis menu.',
+          'Topbar: subtle theme-matched background shading applied (garnet tint in default theme, Elentra purple tint in Elentra theme).',
+          'Topbar buttons: glass styling applied to all topbar buttons — semi-transparent white background with backdrop-filter blur, adapting to the tinted topbar background.',
+          'Topbar: setup/home mode now shows Home and Start Over buttons in the topbar via a new topbar-setup-nav group. These swap out for the Setup and Start Over buttons that appear in results mode. Duplicate button rows removed from home and setup panel headers; AQP logo retained as sole header element in both.',
+          'Bug fix — Feedback KPI student count: the "Students responded" count in the Feedback KPI zone always showed 0 after session restore because FB.raw is intentionally excluded from the session record. Count is now derived from FB.parsed using rawIdx (which survives restore), consistently across all six call sites including the Word export.',
+        ]
+      },
+    ]
+  },
+  {
     version: '3.0',
     builds: [
       {
@@ -14858,6 +14885,18 @@ function updateTopbarExam() {
       <div>
         <div style="font-size:11px;font-weight:700;color:var(--c-accent);text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px;padding-bottom:6px;border-bottom:2px solid var(--c-accent)">Reading the Results</div>
         <div style="display:flex;flex-direction:column;gap:1px">
+
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFAQ(this)">
+              <span>Can I resize or collapse the sidebar?</span>
+              <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-a">
+              Yes — two ways:<br><br>
+              <strong>Collapse/expand:</strong> Click the chevron (‹) at the top of the sidebar to collapse it to an icon-only strip. Click again to expand. Keyboard shortcut: the chevron is keyboard-focusable.<br><br>
+              <strong>Resize:</strong> Hover over the right edge of the sidebar — the cursor changes to a resize arrow. Drag left or right to set any width between 160px and 400px. The change takes effect immediately. Collapsing the sidebar always snaps to the compact icon width regardless of your drag width.
+            </div>
+          </div>
 
           <div class="faq-item">
             <div class="faq-q" onclick="toggleFAQ(this)">
