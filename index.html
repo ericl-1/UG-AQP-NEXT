@@ -195,7 +195,7 @@ input[type=date]:focus::-webkit-datetime-edit,input[type=date]:valid::-webkit-da
   .run-bar-inner { flex-direction: column; align-items: stretch !important; gap: 10px !important; }
   #run-hint { text-align: center; font-size: 12.5px !important; }
   #btn-run { width: 100%; justify-content: center; }
-  #setup-run-footer { margin: 0 -8px; padding: 0 8px; }
+  #setup-run-footer { padding: 0 8px 12px 8px; }
 
   /* Step headers */
   .step-header { flex-wrap: wrap; }
@@ -1134,12 +1134,12 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
     </div>
   </div>
 
-  <div style="margin-top:22px;display:flex;align-items:center;justify-content:flex-end">
+  <div style="margin-top:22px;display:flex;flex-direction:column;align-items:flex-end;gap:0">
     <button onclick="wizardGoTo(4)" style="display:inline-flex;align-items:center;gap:6px;padding:9px 22px;border-radius:10px;background:var(--c-accent);color:#fff;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .2s">
       Continue to upload
       <svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
-    <div class="wz-next-up" style="justify-content:flex-end">
+    <div class="wz-next-up" style="justify-content:flex-end;border-top:none;margin-top:6px;padding-top:0">
       <svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <span>Next up: Upload your files and run analysis</span>
     </div>
@@ -1208,7 +1208,7 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
         </div>
         <div id="dbg-main" class="debug" style="display:none"></div>
         </div><!-- /results-upload-expand -->
-        <div id="scantron-preview" style="display:none;margin-top:10px"></div>
+        <div id="scantron-preview" style="display:none;margin-top:10px;position:relative;z-index:0"></div>
       </div>
     </div>
 
@@ -1252,7 +1252,7 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
   </div><!-- /upload-grid -->
 
   <!-- QM validation panel -->
-  <div id="qm-preview" style="display:none;margin-top:6px;margin-bottom:10px"></div>
+  <div id="qm-preview" style="display:none;margin-top:6px;margin-bottom:10px;position:relative;z-index:0"></div>
 
   <!-- Pre-flight readiness panel — outside sticky footer so it doesn't overlap content -->
   <div id="preflight-panel" style="display:none;margin-bottom:8px"></div>
@@ -1263,7 +1263,7 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
   </div>
 
   <!-- Sticky MCQ Run footer — inside MCQ tab so it hides when FB tab is active -->
-  <div id="setup-run-footer" style="position:sticky;bottom:0;margin:0 -16px -16px -16px;padding:0 16px 16px 16px;background:#fff;border-top:1px solid rgba(0,0,0,.08);box-shadow:0 -4px 16px rgba(0,0,0,.06);z-index:100">
+  <div id="setup-run-footer" style="position:fixed;bottom:0;left:0;right:0;padding:0 16px 16px 16px;background:#fff;border-top:1px solid rgba(0,0,0,.08);box-shadow:0 -4px 16px rgba(0,0,0,.06);z-index:100">
     <div class="run-bar-inner" style="padding:12px 4px;display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:16px">
       <div id="run-summary" style="display:flex;flex-direction:column;gap:3px;min-width:0">
         <div id="run-summary-mcq" style="font-size:12px;color:var(--c-muted);display:flex;align-items:center;gap:5px">
@@ -1446,7 +1446,7 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
       </div>
     </div>
   </div>
-  <div id="setup-run-footer-p5" style="position:sticky;bottom:0;margin:0 -16px -16px -16px;padding:0 16px 16px 16px;background:#fff;border-top:1px solid rgba(0,0,0,.08);box-shadow:0 -4px 16px rgba(0,0,0,.06);z-index:100">
+  <div id="setup-run-footer-p5" style="position:fixed;bottom:0;left:0;right:0;padding:0 16px 16px 16px;background:#fff;border-top:1px solid rgba(0,0,0,.08);box-shadow:0 -4px 16px rgba(0,0,0,.06);z-index:100">
     <div style="padding:12px 4px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
       <span id="p5-status-text" style="font-size:13px;color:var(--c-muted)">Upload a feedback file to continue</span>
       <button id="btn-run-p5" class="btn btn-primary" onclick="runAnalysis()" disabled
@@ -2323,11 +2323,11 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
 "use strict";
 
 // ── App version — single source of truth ─────────────────────────────────
-var APP_VERSION     = '0.2';
-var APP_BUILD       = '20260901-01';
-var APP_FAQ_VERSION = '0.2';           // Update when FAQ content changes
-var APP_FAQ_DATE    = 'September 1, 2026'; // Update when FAQ content changes
-var APP_RN_DATE     = 'September 1, 2026'; // Update each version close
+var APP_VERSION     = '0.4';
+var APP_BUILD       = '20260913-01';
+var APP_FAQ_VERSION = '0.4';           // Update when FAQ content changes
+var APP_FAQ_DATE    = 'September 13, 2026'; // Update when FAQ content changes
+var APP_RN_DATE     = 'September 13, 2026'; // Update each version close
 
 // ── Feedback module global ────────────────────────────────────────────────
 var FB = {
@@ -8797,6 +8797,7 @@ function exportSessionJSON() {
 
   // Summarise questions
   var fbLoaded = !!(FB && FB.ready);
+  try {
   var questions = (G.mcq || []).map(function(r) {
     var dif = (G.dif || []).find(function(d){ return d.num === r.num; }) || null;
     // J4 — answer distribution: uppercase keys + noResponse
@@ -8911,16 +8912,15 @@ function exportSessionJSON() {
     }
   };
 
-  try {
-    var json = JSON.stringify(payload, null, 2);
-    var blob = new Blob([json], { type: 'application/json;charset=utf-8;' });
-    var url  = URL.createObjectURL(blob);
-    var a    = document.createElement('a');
-    a.href = url; a.download = filename; a.style.display = 'none';
-    document.body.appendChild(a); a.click();
-    setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(url); }, 200);
-  } catch(e) {
-    alert('Export failed: ' + e.message);
+  var json = JSON.stringify(payload, null, 2);
+  var blob = new Blob([json], { type: 'application/json;charset=utf-8;' });
+  var url  = URL.createObjectURL(blob);
+  var a    = document.createElement('a');
+  a.href = url; a.download = filename; a.style.display = 'none';
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(url); }, 200);
+} catch(e) {
+  alert('JSON export failed: ' + e.message + '\n\nPlease report this error.');
   }
 }
 
@@ -9440,6 +9440,41 @@ document.addEventListener('click', function(e) {
 
 // ── Release Notes ─────────────────────────────────────────────────────────
 var RELEASE_NOTES = [
+  {
+    version: '0.4',
+    builds: [
+      {
+        build: '20260913-01',
+        date:  'September 13, 2026',
+        notes: [
+          'Wizard run footers (step 4 and step 5): converted from position:sticky to position:fixed;bottom:0;left:0;right:0. Eliminates all bleedthrough — both during panel transitions and within-step content overlap. Spacer divs removed; setup-panel padding-bottom:80px covers all steps. visibility:hidden applied during wizardGoTo() animation window as a safety net.',
+          'Step 3 (Configure) button layout: "Continue to upload" button and "Next up" hint were flex siblings on the same row. Restructured to column stack — button right-aligned, hint below it.',
+          'Feedback KPI zone: two-panel layout. Left panel (55%): compact 2x2 grid — Students Responded (with "with Q# comments" sub-metric), Questions Reached, Total Attributions, Flagged Qs w/ Feedback. Right panel (45%): Top Commented Questions ranked list — up to 8 questions by comment count with proportional mini bars. Bar marker improved from 4px to 8px width with stronger contrast.',
+          'MCQ filter bar multi-select (backlog #6) struck — no concrete workflow need identified. Current single-select filter matches coordinator workflow. Revisit only if user feedback requests it.',
+          'JSON export (exportSessionJSON): try/catch now wraps the full function body including payload construction, not just the download trigger. Previously, any error in the questions map, feedback summary, or payload object would be silently swallowed by the browser onclick handler with no user feedback.',
+          'Backlog item 2 (MCQ guidance block in DIF room) confirmed already closed — ID and hide logic were in place before this session.',
+        ]
+      },
+    ]
+  },
+  {
+    version: '0.3',
+    builds: [
+      {
+        build: '20260910-01',
+        date:  'September 10, 2026',
+        notes: [
+          'Wizard footer bleedthrough — root cause identified: position:sticky with z-index:100 painted over incoming panels during the 180ms slide animation. Both run footers (step 4 and step 5) converted from position:sticky to position:fixed;bottom:0;left:0;right:0. Spacer divs removed; setup-panel padding-bottom:80px covers all steps generically. visibility:hidden applied to both footers at animation start as a safety net for the transition window.',
+          'Step 3 (Configure) button layout fixed — "Continue to upload" button and "Next up" hint were flex siblings on the same row, causing misalignment. Restructured to stacked column: button right-aligned on its own row, hint below it.',
+          'Feedback KPI zone redesigned — two-panel layout replacing the 3x3 grid. Left panel (55%): compact 2x2 grid with Students Responded, Questions Reached, Total Attributions, and Flagged Qs w/ Feedback. Right panel (45%): Top Commented Questions — ranked list of up to 8 questions by comment count, each with proportional mini bar and count. "Most commented" single cell removed (absorbed as the top item in the right panel).',
+          'Feedback KPI bar marker improved — width 4px to 8px, stronger contrast (#111 background, 2.5px white border, heavier shadow).',
+          'Students w/ Q# feedback merged into Students Responded cell as a sub-metric rather than occupying its own cell.',
+          'MCQ filter bar multi-select (backlog item 6) struck — no concrete workflow need identified. Current single-select filter matches coordinator workflow. Revisit only if user feedback requests it.',
+          'Backlog item 2 (MCQ guidance block in DIF room) confirmed already closed — ID and hide logic were in place before this session.',
+        ]
+      },
+    ]
+  },
   {
     version: '0.2',
     builds: [
@@ -11350,6 +11385,11 @@ function wizardGoTo(step) {
   G_WIZARD_STEP = step;
   updateWizardRailClickability(step);
   if (!fromEl || !toEl) return;
+  // Hide sticky footers immediately — prevents z-index:100 bleedthrough during slide animation
+  var _rf  = document.getElementById('setup-run-footer');
+  var _rf5 = document.getElementById('setup-run-footer-p5');
+  if (_rf)  _rf.style.visibility  = 'hidden';
+  if (_rf5) _rf5.style.visibility = 'hidden';
   // Phase 1: animate out current panel
   fromEl.style.animation = isBack ? 'wSlideOutR .18s ease forwards' : 'wSlideOutL .18s ease forwards';
   setTimeout(function() {
@@ -11359,7 +11399,12 @@ function wizardGoTo(step) {
     toEl.style.display = 'block';
     // Phase 3: animate in new panel
     toEl.style.animation = isBack ? 'wSlideInL .2s ease forwards' : 'wSlideInR .2s ease forwards';
-    setTimeout(function() { toEl.style.animation = ''; }, 200);
+    setTimeout(function() {
+      toEl.style.animation = '';
+      // Restore footer visibility now that transition is complete
+      if (_rf)  _rf.style.visibility  = '';
+      if (_rf5) _rf5.style.visibility = '';
+    }, 200);
     // Scroll to top of page so rail is visible
     var _ca=document.getElementById('contentArea');if(_ca){_ca.scrollTo({top:0,behavior:'smooth'});}
   }, 180);
@@ -12656,45 +12701,33 @@ function renderFbKpiZone() {
   var totalAttr = FB.parsed.filter(function(p){return p.status!=='discard' && p.qNums.length > 0;}).length;
   var freq = sortedQs.map(function(q){ var cc=(FB.grouped[q]||[]).length, bc=FB.bareRefs[q]||0; return {q:q,count:cc+bc,commentCount:cc,bareCount:bc}; })
     .sort(function(a,b){return b.count-a.count;});
-  var topQ = freq.length > 0 ? freq[0] : null;
 
-  // Context-aware ceiling for Questions Reached KPI
   var hasMcqData = !!(G._lastN && G.mcq && G.mcq.length);
   var _qCeiling, _qCeilingLabel;
   if (hasMcqData && G.nQ > 0) {
-    _qCeiling = G.nQ;
-    _qCeilingLabel = 'from MCQ analysis';
+    _qCeiling = G.nQ; _qCeilingLabel = 'from MCQ analysis';
   } else if (FB.manualMaxQ && FB.manualMaxQ > 0) {
-    _qCeiling = FB.manualMaxQ;
-    _qCeilingLabel = 'manually set';
+    _qCeiling = FB.manualMaxQ; _qCeilingLabel = 'manually set';
   } else {
-    _qCeiling = sortedQs.length > 0 ? sortedQs[sortedQs.length - 1] : 150;
-    _qCeilingLabel = 'estimated from comments';
+    _qCeiling = sortedQs.length > 0 ? sortedQs[sortedQs.length - 1] : 150; _qCeilingLabel = 'estimated from comments';
   }
   var pctReached = sortedQs.length > 0 ? Math.round(sortedQs.length / _qCeiling * 100) : 0;
 
   var seen = {};
   FB.parsed.forEach(function(p){ if (p.qNums.length > 0 && p.status !== 'discard') seen[p.rawIdx] = true; });
   var studentsWithQFeedback = Object.keys(seen).length;
-  var pctStudentsWithQ = sourceRows > 0 ? Math.round(studentsWithQFeedback / sourceRows * 100) : 0;
   var totalEnrolled = hasMcqData ? G._lastN : 0;
   var concernFlagged = 0, totalConcern = 0, easyFlagged = 0, totalEasy = 0;
   if (hasMcqData) {
     G.mcq.forEach(function(item) {
       if (!item || !item.flag || item.flag === '') return;
-      var qn = item.num; // ← correct property name
+      var qn = item.num;
       var hasComment = !!(FB.grouped[qn] || FB.bareRefs[qn]);
-      if (item.flag === 'Too easy') {
-        totalEasy++;
-        if (hasComment) easyFlagged++;
-      } else {
-        totalConcern++;
-        if (hasComment) concernFlagged++;
-      }
+      if (item.flag === 'Too easy') { totalEasy++; if (hasComment) easyFlagged++; }
+      else { totalConcern++; if (hasComment) concernFlagged++; }
     });
   }
 
-  // ── Pre-compute values for all cells ─────────────────────────────────────
   var reachPct   = pctReached;
   var reachColor = reachPct > 70 ? '#2e7d32' : reachPct >= 41 ? '#0d7a7a' : '#e8a800';
   var reachPos   = Math.max(0, Math.min(100, reachPct));
@@ -12705,65 +12738,64 @@ function renderFbKpiZone() {
   var _nBookmarked   = FB.parsed.filter(function(p){ return p._bookmarked; }).length;
   var _nUncategorized = FB.parsed.filter(function(p){ return p.status !== 'discard' && !p._classif; }).length;
 
-  // ── Shared style tokens (matching Exam Overview / Item Analysis) ──────────
   var FLBL = 'font-size:11px;font-weight:700;color:var(--c-muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px';
-  var FVAL = 'font-size:38px;font-weight:700;color:var(--c-fb);line-height:1;margin-bottom:10px';
-  // Separator borders shared across cells
-  var BR = 'border-right:1px solid rgba(0,0,0,.08);';
+  var FVAL = 'font-size:34px;font-weight:700;color:var(--c-fb);line-height:1;margin-bottom:8px';
+  var BR = 'border-right:1px solid rgba(0,0,0,.1);';
   var BB = 'border-bottom:1px solid rgba(0,0,0,.06);';
+  var MARKER = 'position:absolute;top:-4px;width:8px;height:18px;background:#111;border:2.5px solid #fff;border-radius:2px;box-shadow:0 1px 6px rgba(0,0,0,.65);transform:translateX(-50%)';
 
-  // ── Grid — no gap; cells manage their own padding and separator borders ───
-  var kpiGrid = '<div style="padding:16px 16px 0">' +
-    '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0">';
+  // LEFT PANEL: compact 2x2 KPI grid
+  var left = '<div style="flex:0 0 55%;padding:16px 0 16px 16px;border-right:2px solid rgba(0,0,0,.1)">';
+  left += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0">';
 
-  // ─── ROW 1 ────────────────────────────────────────────────────────────────
-
-  // Cell 1 · Students responded (row 1, col 1)
-  kpiGrid += '<div style="padding:0 20px 20px 0;' + BR + BB + '">';
-  kpiGrid += '<div style="' + FLBL + '">Students responded</div>';
+  // Cell 1: Students responded
+  left += '<div style="padding:0 20px 28px 0;' + BR + BB + '">';
+  left += '<div style="' + FLBL + '">Students responded</div>';
   if (hasMcqData && totalEnrolled > 0) {
     var respPct   = Math.round(sourceRows / totalEnrolled * 100);
     var markerPct = Math.min(100, sourceRows / totalEnrolled * 100);
     var respColor = respPct > 70 ? '#2e7d32' : respPct >= 41 ? '#0d7a7a' : '#e8a800';
-    kpiGrid +=
-      '<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:12px">' +
-        '<span style="font-size:38px;font-weight:700;color:var(--c-fb);line-height:1">' + sourceRows + '</span>' +
-        '<span style="font-size:16px;font-weight:700;color:' + respColor + ';line-height:1">' + respPct + '%</span>' +
+    left +=
+      '<div style="display:flex;align-items:baseline;gap:6px;margin-bottom:10px">' +
+        '<span style="font-size:34px;font-weight:700;color:var(--c-fb);line-height:1">' + sourceRows + '</span>' +
+        '<span style="font-size:14px;font-weight:700;color:' + respColor + ';line-height:1">' + respPct + '%</span>' +
       '</div>' +
-      '<div style="position:relative;height:10px;border-radius:5px;background:linear-gradient(to right,#d64545 0%,#e8a800 50%,#2e7d32 100%);margin-bottom:6px">' +
-        '<div style="position:absolute;top:-3px;left:' + markerPct.toFixed(1) + '%;transform:translateX(-50%);width:4px;height:16px;background:#2c2c2c;border:1.5px solid #fff;border-radius:2px;box-shadow:0 0 2px rgba(0,0,0,.45)"></div>' +
+      '<div style="position:relative;height:10px;border-radius:5px;background:linear-gradient(to right,#d64545 0%,#e8a800 50%,#2e7d32 100%);margin-bottom:5px">' +
+        '<div style="' + MARKER + ';left:' + markerPct.toFixed(1) + '%"></div>' +
       '</div>' +
-      '<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--c-muted);margin-bottom:5px"><span>0%</span><span>100%</span></div>' +
-      '<div style="font-size:11px;color:var(--c-muted)">' + respPct + '% of ' + totalEnrolled + ' enrolled students responded</div>';
+      '<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--c-muted);margin-bottom:4px"><span>0%</span><span>100%</span></div>' +
+      '<div style="font-size:11px;color:var(--c-muted)">' + respPct + '% of ' + totalEnrolled + ' enrolled</div>' +
+      (studentsWithQFeedback > 0 ? '<div style="font-size:10px;color:var(--c-muted);margin-top:2px">' + studentsWithQFeedback + ' with Q# comments</div>' : '');
   } else {
-    kpiGrid += '<div style="' + FVAL + '">' + sourceRows + '</div>';
+    left += '<div style="' + FVAL + '">' + sourceRows + '</div>';
+    if (studentsWithQFeedback > 0) left += '<div style="font-size:11px;color:var(--c-muted)">' + studentsWithQFeedback + ' with Q# comments</div>';
   }
-  kpiGrid += '</div>'; // end cell 1
+  left += '</div>';
 
-  // Cell 2 · Questions reached (row 1, col 2)
-  kpiGrid += '<div style="padding:0 20px 20px;' + BR + BB + '">';
-  kpiGrid += '<div style="' + FLBL + '">Questions reached</div>';
-  kpiGrid +=
-    '<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:12px">' +
-      '<span style="font-size:38px;font-weight:700;color:var(--c-fb);line-height:1">' + sortedQs.length + '</span>' +
-      '<span style="font-size:16px;font-weight:700;color:' + reachColor + ';line-height:1">' + reachPct + '%</span>' +
+  // Cell 2: Questions reached
+  left += '<div style="padding:0 16px 28px 20px;' + BB + '">';
+  left += '<div style="' + FLBL + '">Questions reached</div>';
+  left +=
+    '<div style="display:flex;align-items:baseline;gap:6px;margin-bottom:10px">' +
+      '<span style="font-size:34px;font-weight:700;color:var(--c-fb);line-height:1">' + sortedQs.length + '</span>' +
+      '<span style="font-size:14px;font-weight:700;color:' + reachColor + ';line-height:1">' + reachPct + '%</span>' +
     '</div>' +
-    '<div style="position:relative;height:10px;border-radius:5px;background:linear-gradient(to right,#d64545 0%,#e8a800 50%,#2e7d32 100%);margin-bottom:6px">' +
-      '<div style="position:absolute;top:-3px;left:' + reachPos.toFixed(1) + '%;transform:translateX(-50%);width:4px;height:16px;background:#2c2c2c;border:1.5px solid #fff;border-radius:2px;box-shadow:0 0 2px rgba(0,0,0,.45)"></div>' +
+    '<div style="position:relative;height:10px;border-radius:5px;background:linear-gradient(to right,#d64545 0%,#e8a800 50%,#2e7d32 100%);margin-bottom:5px">' +
+      '<div style="' + MARKER + ';left:' + reachPos.toFixed(1) + '%"></div>' +
     '</div>' +
-    '<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--c-muted);margin-bottom:5px"><span>0%</span><span>100%</span></div>' +
-    '<div style="font-size:11px;color:var(--c-muted)">' + reachPct + '% of Q1–Q' + _qCeiling + '</div>' +
+    '<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--c-muted);margin-bottom:4px"><span>0%</span><span>100%</span></div>' +
+    '<div style="font-size:11px;color:var(--c-muted)">of Q1\u2013Q' + _qCeiling + '</div>' +
     '<div style="font-size:9px;color:var(--c-muted);font-style:italic">' + _qCeilingLabel + '</div>';
-  kpiGrid += '</div>'; // end cell 2
+  left += '</div>';
 
-  // Cell 3 · Total attributions (row 1, col 3)
-  kpiGrid += '<div style="padding:0 0 20px 20px;' + BB + '">';
-  kpiGrid += '<div style="' + FLBL + '">Total attributions</div>';
-  kpiGrid +=
-    '<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px">' +
+  // Cell 3: Total attributions
+  left += '<div style="padding:24px 20px 20px 0;' + BR + '">';
+  left += '<div style="' + FLBL + '">Total attributions</div>';
+  left +=
+    '<div style="display:flex;align-items:baseline;gap:6px;margin-bottom:4px">' +
       '<span style="' + FVAL + 'margin-bottom:0">' + totalAttr + '</span>' +
-      '<span style="font-size:11px;color:var(--c-muted)">Attributed +&nbsp;&nbsp;' + FB.general.length + ' General comments' +
-      (_nBookmarked > 0 ? ' &nbsp;·&nbsp; <span style="color:#e8a800;font-weight:700">★ ' + _nBookmarked + ' bookmarked</span>' : '') +
+      '<span style="font-size:11px;color:var(--c-muted)">+ ' + FB.general.length + ' general' +
+      (_nBookmarked > 0 ? ' &nbsp;\xb7&nbsp; <span style="color:#e8a800;font-weight:700">\u2605 ' + _nBookmarked + '</span>' : '') +
       '</span>' +
     '</div>';
   if ((_nClassified > 0 || _nUncategorized > 0) && fbCategoriesVisible()) {
@@ -12771,60 +12803,68 @@ function renderFbKpiZone() {
     if (_nContent)       _cParts.push('<span style="color:#a0510a;font-weight:600">' + _nContent + ' Content</span>');
     if (_nTranslation)   _cParts.push('<span style="color:#0a5a9c;font-weight:600">' + _nTranslation + ' Translation</span>');
     if (_nOther)         _cParts.push('<span style="color:#4b5563;font-weight:600">' + _nOther + ' Other</span>');
-    if (_nUncategorized) _cParts.push('<span style="color:var(--c-muted)">' + _nUncategorized + ' Uncategorized</span>');
-    kpiGrid +=
-      '<div style="border-top:1px solid rgba(0,0,0,.07);margin-top:8px;padding-top:6px">' +
-        '<div style="font-size:10px;font-weight:700;color:var(--c-muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px">Comment categorization</div>' +
-        '<div style="font-size:11px">' + _cParts.join('<span style="color:var(--c-muted)"> · </span>') + '</div>' +
+    if (_nUncategorized) _cParts.push('<span style="color:var(--c-muted)">' + _nUncategorized + ' Uncat.</span>');
+    left +=
+      '<div style="border-top:1px solid rgba(0,0,0,.07);margin-top:6px;padding-top:5px;font-size:11px">' +
+        _cParts.join('<span style="color:var(--c-muted)"> \xb7 </span>') +
       '</div>';
   }
-  kpiGrid += '</div>'; // end cell 3
+  left += '</div>';
 
-  // ─── ROW 2 ────────────────────────────────────────────────────────────────
-
-  // Cell 4 · Most commented (row 2, col 1)
-  kpiGrid += '<div style="padding:20px 20px 16px 0;' + BR + '">';
-  kpiGrid += '<div style="' + FLBL + '">Most commented</div>';
-  kpiGrid += '<div style="' + FVAL + '">' + (topQ ? 'Q' + topQ.q : '\u2014') + '</div>';
-  if (topQ) kpiGrid += '<div style="font-size:11px;color:var(--c-muted)">' + commentLabel(topQ.commentCount, topQ.bareCount) + '</div>';
-  kpiGrid += '</div>'; // end cell 4
-
-  // Cell 5 · Students w/ Q# feedback (row 2, col 2)
-  kpiGrid += '<div style="padding:20px;' + BR + '">';
-  kpiGrid += '<div style="' + FLBL + '">Students w/ Q# feedback</div>';
-  kpiGrid += '<div style="' + FVAL + '">' + studentsWithQFeedback + '</div>';
-  kpiGrid += '<div style="font-size:11px;color:var(--c-muted)">' + pctStudentsWithQ + '% of respondents</div>';
-  kpiGrid += '</div>'; // end cell 5
-
-  // Cell 6 · Flagged Qs w/ feedback (row 2, col 3)
-  kpiGrid += '<div style="padding:20px 0 16px 20px">';
-  kpiGrid += '<div style="' + FLBL + '">Flagged Qs w/ feedback</div>';
+  // Cell 4: Flagged Qs w/ feedback
+  left += '<div style="padding:24px 16px 20px 20px">';
+  left += '<div style="' + FLBL + '">Flagged Qs w/ feedback</div>';
   if (hasMcqData) {
-    kpiGrid +=
-      '<div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(0,0,0,.06)">' +
-        '<div style="display:flex;align-items:baseline;flex-wrap:wrap;gap:4px">' +
-          '<span style="font-size:24px;font-weight:700;color:var(--c-accent);line-height:1">' + concernFlagged + '</span>' +
-          '<span style="font-size:12px;font-weight:600;color:var(--c-muted)">of ' + totalConcern + '</span>' +
-          '<span style="font-size:11px;color:var(--c-muted);line-height:1.4">questions flagged for concern also received comments</span>' +
+    left +=
+      '<div style="margin-bottom:8px">' +
+        '<div style="display:flex;align-items:baseline;gap:3px">' +
+          '<span style="font-size:22px;font-weight:700;color:var(--c-accent);line-height:1">' + concernFlagged + '</span>' +
+          '<span style="font-size:12px;color:var(--c-muted)"> of ' + totalConcern + ' concern</span>' +
         '</div>' +
       '</div>' +
       '<div>' +
-        '<div style="display:flex;align-items:baseline;flex-wrap:wrap;gap:4px">' +
-          '<span style="font-size:24px;font-weight:700;color:#0a5a9c;line-height:1">' + easyFlagged + '</span>' +
-          '<span style="font-size:12px;font-weight:600;color:var(--c-muted)">of ' + totalEasy + '</span>' +
-          '<span style="font-size:11px;color:var(--c-muted);line-height:1.4">too-easy questions also received comments</span>' +
+        '<div style="display:flex;align-items:baseline;gap:3px">' +
+          '<span style="font-size:22px;font-weight:700;color:#0a5a9c;line-height:1">' + easyFlagged + '</span>' +
+          '<span style="font-size:12px;color:var(--c-muted)"> of ' + totalEasy + ' too easy</span>' +
         '</div>' +
       '</div>';
   } else {
-    kpiGrid +=
-      '<div style="font-size:22px;font-weight:700;color:var(--c-muted);opacity:.35;line-height:1;margin-bottom:6px">&#128274;</div>' +
-      '<div style="font-size:11px;color:var(--c-muted)">Run MCQ analysis in this session to calculate</div>';
+    left +=
+      '<div style="font-size:22px;font-weight:700;color:var(--c-muted);opacity:.35;line-height:1;margin-bottom:4px">\uD83D\uDD12</div>' +
+      '<div style="font-size:11px;color:var(--c-muted)">Run MCQ analysis to calculate</div>';
   }
-  kpiGrid += '</div>'; // end cell 6
+  left += '</div>';
+  left += '</div></div>';
 
-  kpiGrid += '</div></div>'; // close grid + outer padding wrapper
+  // RIGHT PANEL: Top Commented Questions
+  var right = '<div style="flex:1;padding:20px 20px 24px 24px">';
+  right += '<div style="' + FLBL + ';padding-bottom:10px">Top Commented Questions</div>';
+  if (freq.length === 0) {
+    right += '<div style="font-size:12px;color:var(--c-muted);font-style:italic">No attributed comments yet.</div>';
+  } else {
+    var topN = freq.slice(0, 8);
+    var maxCount = topN[0].count || 1;
+    right += '<div style="display:flex;flex-direction:column;gap:9px">';
+    topN.forEach(function(item, idx) {
+      var barW = Math.round(item.count / maxCount * 100);
+      var rankColor = idx === 0 ? 'var(--c-fb)' : 'var(--c-secondary)';
+      right +=
+        '<div style="display:flex;align-items:center;gap:8px">' +
+          '<span style="font-size:12px;font-weight:700;color:' + rankColor + ';width:32px;flex-shrink:0">Q' + item.q + '</span>' +
+          '<div style="flex:1;position:relative;height:10px;background:rgba(0,0,0,.07);border-radius:4px;overflow:hidden">' +
+            '<div style="height:100%;width:' + barW + '%;background:var(--c-fb);border-radius:4px;opacity:' + (idx === 0 ? '1' : '0.55') + '"></div>' +
+          '</div>' +
+          '<span style="font-size:11px;font-weight:600;color:var(--c-secondary);width:22px;text-align:right;flex-shrink:0">' + item.count + '</span>' +
+        '</div>';
+    });
+    right += '</div>';
+    if (freq.length > 8) {
+      right += '<div style="font-size:10px;color:var(--c-muted);margin-top:8px;font-style:italic">+ ' + (freq.length - 8) + ' more questions with comments</div>';
+    }
+  }
+  right += '</div>';
 
-  // Collapsible card — same structure as Exam Overview
+  // Collapsible card wrapper
   var html =
     '<div style="background:#fafafa;padding:10px 16px;border-radius:8px 8px 0 0;border-bottom:1px solid var(--c-border);display:flex;align-items:center;justify-content:space-between">' +
       '<span style="font-size:15px;font-weight:700;color:var(--c-fb);letter-spacing:-.2px">Feedback Overview</span>' +
@@ -12834,24 +12874,22 @@ function renderFbKpiZone() {
       '</button>' +
     '</div>' +
     '<div id="fb-overview-collapsible">' +
-      kpiGrid +
+      '<div style="display:flex;align-items:stretch">' + left + right + '</div>' +
     '</div>';
 
   zone.innerHTML = html;
-  // Always make the zone and fb slot visible — switchMainTab controls
-  // which slot (mcq vs fb) is shown based on the active tab.
   var kpiZone = document.getElementById('kpi-zone');
   var kpiMcq  = document.getElementById('kpi-zone-mcq');
   var activeTab = (document.querySelector('#main-tab-bar .tab.active') || {}).id || '';
   if (kpiZone) kpiZone.style.display = '';
   zone.style.display = '';
-  // On non-feedback tabs keep the fb slot hidden (mcq slot manages itself)
   if (activeTab !== 'tab-feedback-main') {
     zone.style.display = 'none';
   } else {
     if (kpiMcq) kpiMcq.style.display = 'none';
   }
 }
+
 
 // ── Feedback report preview (Reports tab) ────────────────────────────────
 // Renders a read-only HTML summary of the feedback analysis into the
