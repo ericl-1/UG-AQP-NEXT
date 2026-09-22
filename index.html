@@ -546,8 +546,12 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
 .sidebar.collapsed .nav-section-label,.sidebar.collapsed .nav-item-label,.sidebar.collapsed .nav-sub{display:none}
 .sidebar.collapsed .nav-item{justify-content:center;padding:8px}
 .app-main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.exc-banner{display:none;background:#fffbeb;border-bottom:1px solid #fde68a;padding:8px 16px;align-items:center;gap:10px;flex-shrink:0}
+.exc-banner{display:none;background:#fffbeb;border-bottom:1px solid #fde68a;padding:7px 16px;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0;flex-wrap:wrap}
 .exc-banner.visible{display:flex}
+.excl-view-btn{padding:5px 13px;font-size:12px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--c-secondary);border-right:1px solid rgba(0,0,0,.13);font-family:var(--font);transition:background .12s,color .12s;white-space:nowrap}
+.excl-view-btn:last-child{border-right:none}
+.excl-view-btn.excl-active{background:#fff;color:var(--c-primary);font-weight:700}
+.excl-view-btn:hover:not(.excl-active){background:rgba(0,0,0,.04)}
 .banner-text{font-size:12px;color:#92400e;font-weight:500;flex:1}
 .ios-wrap{display:flex;align-items:center;gap:8px}
 .ios-lbl{font-size:12px;color:#92400e}
@@ -865,11 +869,11 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
 
   <div class="app-main">
     <div id="excBanner" class="exc-banner">
-      <span class="banner-text">Exceptions applied — results reflect current dispositions</span>
-      <div class="ios-wrap">
-        <span class="ios-lbl" id="lbl-initial">Initial</span>
-        <div class="ios-track" id="iosTrack" role="switch" aria-checked="true" tabindex="0"><div class="ios-thumb"></div></div>
-        <span class="ios-lbl active" id="lbl-exc">With exceptions</span>
+      <span id="excBannerText" class="banner-text" style="font-size:12px;font-weight:600;color:var(--s-warn-text)"></span>
+      <div role="group" aria-label="Analysis view" style="display:flex;border:1px solid rgba(0,0,0,.15);border-radius:8px;overflow:hidden;flex-shrink:0">
+        <button class="excl-view-btn excl-active" id="excl-btn-clean"  onclick="setExclView('clean')" >Clean</button>
+        <button class="excl-view-btn"             id="excl-btn-init"   onclick="setExclView('init')"  >Initial</button>
+        <button class="excl-view-btn"             id="excl-btn-impact" onclick="setExclView('impact')">&Delta; Impact</button>
       </div>
     </div>
     <div class="content-scroll" id="contentArea">
@@ -2329,11 +2333,11 @@ body{padding:0!important;height:100vh;display:flex;flex-direction:column;overflo
 "use strict";
 
 // ── App version — single source of truth ─────────────────────────────────
-var APP_VERSION     = '0.5';
-var APP_BUILD       = '20260913-02';
-var APP_FAQ_VERSION = '0.5';           // Update when FAQ content changes
-var APP_FAQ_DATE    = 'September 13, 2026'; // Update when FAQ content changes
-var APP_RN_DATE     = 'September 13, 2026'; // Update each version close
+var APP_VERSION     = '0.6';
+var APP_BUILD       = '20260913-03';
+var APP_FAQ_VERSION = '0.6';           // Update when FAQ content changes
+var APP_FAQ_DATE    = 'September 22, 2026'; // Update when FAQ content changes
+var APP_RN_DATE     = 'September 22, 2026'; // Update each version close
 
 // ── Feedback module global ────────────────────────────────────────────────
 var FB = {
@@ -3083,6 +3087,7 @@ var G_SOURCE = 'qm';
 var G_DIF_ENABLED = true;
 var G_DIRTY = false; // true when settings changed since last analysis
 var G_MCQ_CONFIRMED = false; // true once user clicks Looks good on parse preview
+var G_EXCL_VIEW     = 'clean'; // Exception view: 'clean' | 'init' | 'impact'
 
 function markDirty() {
   if (!G._lastN) return; // no analysis run yet
@@ -3240,7 +3245,9 @@ function captureNewChartHiRes() {
   return off.toDataURL('image/png', 1.0);
 }
 // ── State ─────────────────────────────────────────────────────────────────
-var G = { students:[], key:[], nQ:0, qLabels:[], qStatus:[], mcq:[], dif:[], exclusions:{} };
+var G = { students:[], key:[], nQ:0, qLabels:[], qStatus:[], mcq:[], dif:[], exclusions:{}, _initial:null };
+// Also reset exception view on every G reset
+G_EXCL_VIEW = 'clean';
 
 // ── ExamSession ───────────────────────────────────────────────────────────
 // Single authoritative record for the current session.
@@ -4874,6 +4881,81 @@ function handleDrop(event, inputId, parseFn) {
 
 
 // ── Analysis ──────────────────────────────────────────────────────────────
+// ── Pre-exception stats — second pass with no exclusions or alt keys ──────────
+// Called once at end of every analysis run. Stores G._initial for the
+// Initial and Δ Impact views in the exception toggle.
+function computeInitialStats() {
+  if (!G.students || !G.students.length || !G.key || !G.key.length || !G.nQ) return;
+  var students = G.students, key = G.key, nQ = G.nQ, n = students.length;
+  var isScantron = G_SOURCE === 'scantron';
+
+  // Score every student against original key only — no alt keys, no deletions
+  var mat = [], tots0 = [], meanT0 = 0;
+  for (var j = 0; j < n; j++) {
+    var row = [], kt0 = 0;
+    for (var i = 0; i < nQ; i++) {
+      var v;
+      if (isScantron) {
+        v = (students[j].scores && students[j].scores[i] !== undefined) ? students[j].scores[i] : 0;
+      } else if (students[j].qmScores && students[j].qmScores.length > i) {
+        v = students[j].qmScores[i] ? 1 : 0;
+      } else {
+        v = (key[i] && students[j].outcomes && students[j].outcomes[i] === key[i]) ? 1 : 0;
+      }
+      row.push(v); kt0 += v;
+    }
+    mat.push(row); tots0.push(kt0); meanT0 += kt0;
+  }
+  meanT0 /= n;
+  var sdT0 = 0;
+  for (var j = 0; j < n; j++) sdT0 += (tots0[j] - meanT0) * (tots0[j] - meanT0);
+  sdT0 = Math.sqrt(sdT0 / n);
+
+  var avg0    = Math.round(meanT0 / nQ * 100);
+  var alpha0  = Math.max(0, Math.min(1, cronbach(mat)));
+
+  // Per-question initial stats
+  var initMcq = [];
+  var nFl0 = 0, nEz0 = 0;
+  for (var i = 0; i < nQ; i++) {
+    var nR = 0;
+    for (var j = 0; j < n; j++) nR += mat[j][i];
+    var p = nR / n;
+    var rpbis = 0;
+    if (nR > 0 && nR < n && sdT0 > 0) {
+      var mi = p, si = Math.sqrt(p * (1 - p));
+      if (si > 0) {
+        var cov = 0;
+        for (var j = 0; j < n; j++) cov += (mat[j][i] - mi) * (tots0[j] - meanT0);
+        rpbis = (cov / n) / (si * sdT0);
+      }
+    }
+    var flag0 = '';
+    if (p >= getThresh('easy'))                                           flag0 = 'Too easy';
+    else if (p <= getThresh('difficult'))                                  flag0 = 'Difficult';
+    else if (rpbis < getThresh('poordisc'))                               flag0 = rpbis < 0.15 ? 'Poor discrimination' : 'Low discrimination';
+    if (flag0 && flag0 !== 'Too easy') nFl0++;
+    else if (flag0 === 'Too easy') nEz0++;
+    initMcq.push({ p: p, pct: Math.round(p * 100), rpbis: rpbis, flag: flag0 });
+  }
+
+  // Build initial score distributions by stream (mirrors G._distE / G._distF)
+  var engEl = G_SOURCE === 'scantron' ? document.getElementById('scantron-en-code') : document.getElementById('eng-code');
+  var freEl = G_SOURCE === 'scantron' ? document.getElementById('scantron-fr-code') : document.getElementById('fre-code');
+  var engUp = (engEl ? engEl.value.trim() : '').toUpperCase();
+  var freUp = (freEl ? freEl.value.trim() : '').toUpperCase();
+  var distE0 = [], distF0 = [];
+  for (var j = 0; j < n; j++) {
+    var pct0 = Math.round(tots0[j] / nQ * 100);
+    var sv = (students[j].stream || '').toUpperCase();
+    if (engUp && sv === engUp) distE0.push(pct0);
+    else if (freUp && sv === freUp) distF0.push(pct0);
+    else if (!G._hasStream) distE0.push(pct0);
+  }
+
+  G._initial = { alpha: alpha0, avg: avg0, nQ: nQ, nFlagged: nFl0, nEasy: nEz0, mcq: initMcq, distE: distE0, distF: distF0 };
+}
+
 function runAnalysis() {
   try { _runAnalysis(); } catch(e) { console.error(e); alert('Analysis error: ' + e.message + '\n\n' + e.stack); }
 }
@@ -5176,6 +5258,9 @@ function _runAnalysis() {
   fbRefreshQCountField();
   // Update report cards visibility
   updateReportCards();
+  computeInitialStats();  // cache pre-exception stats for the view toggle
+  G_EXCL_VIEW = 'clean';  // always start on clean view after a fresh analysis
+  updateExclBanner();
   saveSession(); // C1 — autosave after MCQ analysis
   // Combined mode: auto-run feedback analysis after MCQ completes
   if (typeof G_ANALYSIS_TYPE !== 'undefined' && G_ANALYSIS_TYPE === 'both' && FB.parsed && FB.parsed.length > 0) {
@@ -5315,28 +5400,59 @@ function renderNewSummary(n, avg, alpha, nE, nF) {
   var avgN = parseFloat(avg);
   var alphaN = parseFloat(alpha);
 
-  // Per-stream averages from score arrays
-  var eScores = G._distE || [], fScores = G._distF || [];
+  // Per-stream averages — use initial distributions in init view
+  var _initMode = G_EXCL_VIEW === 'init' && G._initial;
+  var eScores = _initMode ? (G._initial.distE || []) : (G._distE || []);
+  var fScores = _initMode ? (G._initial.distF || []) : (G._distF || []);
   var eAvg = eScores.length ? (eScores.reduce(function(a,b){return a+b;},0)/eScores.length) : 0;
   var fAvg = fScores.length ? (fScores.reduce(function(a,b){return a+b;},0)/fScores.length) : 0;
 
-  // Question health counts
+  // Question health counts — use initial stats when in 'init' view
   var nQ = G.nQ || 0;
-  var nFlagged=0, nEasy=0, nDiff=0, nPoor=0, nDIF=0, nOk=0, nCredited=0, nDeleted=0;
-  for (var i=0; i<G.mcq.length; i++) {
-    var r = G.mcq[i];
-    if (r.excluded === 'delete') { nDeleted++; continue; }
-    if (r.excluded === 'credit') { nCredited++; continue; }
-    var fl = r.flag;
-    if (!fl) { nOk++; continue; }
-    if (fl === 'Too easy') { nEasy++; continue; }
-    nFlagged++;
-    if (fl.indexOf('Difficult') >= 0) nDiff++;
-    else if (fl.indexOf('Poor') >= 0 || fl.indexOf('Low') >= 0) nPoor++;
+  var nFlagged=0, nEasy=0, nDiff=0, nPoor=0, nDIF=0, nOk=0, nCredited=0, nDeleted=0, nAnalysed=0;
+  if (G_EXCL_VIEW === 'init' && G._initial) {
+    G._initial.mcq.forEach(function(q) {
+      if (!q.flag)                            { nOk++; }
+      else if (q.flag === 'Too easy')         { nEasy++; }
+      else {
+        nFlagged++;
+        if (q.flag.indexOf('Difficult') >= 0) nDiff++;
+        else                                  nPoor++;
+      }
+    });
+    nAnalysed = nQ;
+  } else {
+    for (var i=0; i<G.mcq.length; i++) {
+      var r = G.mcq[i];
+      if (r.excluded === 'delete') { nDeleted++; continue; }
+      if (r.excluded === 'credit') { nCredited++; continue; }
+      var fl = r.flag;
+      if (!fl) { nOk++; continue; }
+      if (fl === 'Too easy') { nEasy++; continue; }
+      nFlagged++;
+      if (fl.indexOf('Difficult') >= 0) nDiff++;
+      else if (fl.indexOf('Poor') >= 0 || fl.indexOf('Low') >= 0) nPoor++;
+    }
+    if (G.dif) { for (var i=0; i<G.dif.length; i++) { if (G.dif[i].imp) nDIF++; } }
+    nAnalysed = nQ - nDeleted - nCredited;
   }
-  if (G.dif) { for (var i=0; i<G.dif.length; i++) { if (G.dif[i].imp) nDIF++; } }
-  var nAnalysed = nQ - nDeleted - nCredited;
   nOk = nAnalysed - nFlagged - nEasy;
+
+  // Delta values for impact view
+  var _showDelta = G_EXCL_VIEW === 'impact' && G._initial;
+  function _delta(cur, ini, higher, unit) {
+    if (!_showDelta || ini === undefined) return '';
+    var diff = parseFloat(cur) - parseFloat(ini), abs = Math.abs(diff);
+    if (abs < 0.005) return '';
+    var better = higher ? diff > 0 : diff < 0;
+    var col = better ? '#166534' : '#92400e';
+    var sign = diff > 0 ? '\u25b2' : '\u25bc';
+    var valStr = unit === '%' ? abs.toFixed(1) + '%'
+               : unit === 'n' ? String(Math.round(abs))
+               : abs.toFixed(2);
+    return '<span style="font-size:11px;font-weight:700;color:' + col + '">' + sign + '\u202f' + valStr + '</span>'
+         + '<span style="font-size:10.5px;color:var(--c-muted)"> from initial</span>';
+  }
 
   // Exam avg badge
   var avgBadge, avgBadgeColor, avgBadgeBg;
@@ -5402,7 +5518,8 @@ function renderNewSummary(n, avg, alpha, nE, nF) {
           +'<span style="font-size:38px;font-weight:700;line-height:1;color:'+(avgN>=75?'var(--s-ok)':avgN>=60?'var(--s-warn-text)':avgN>=50?'#b52020':'var(--c-accent-dark)')+'">'+avgN.toFixed(1)+'%</span>'
           +'<span style="display:inline-block;padding:2px 9px;border-radius:4px;font-size:11px;font-weight:700;background:'+avgBadgeBg+';color:'+avgBadgeColor+'">'+avgBadge+'</span>'
         +'</div>'
-        +(eScores.length&&fScores.length?'<div style="font-size:11.5px;color:var(--c-muted)">EN '+eAvg.toFixed(0)+'% · FR '+fAvg.toFixed(0)+'%</div>':'')
+        +(_showDelta?'<div style="margin-top:3px">'+_delta(avgN, G._initial.avg, true, '%')+'</div>':'')
+        +(eScores.length&&fScores.length?'<div style="font-size:11.5px;color:var(--c-muted);margin-top:2px">EN '+eAvg.toFixed(0)+'% · FR '+fAvg.toFixed(0)+'%</div>':'')
       +'</div>'
 
       // 3 — Reliability: badge inline with value
@@ -5413,6 +5530,7 @@ function renderNewSummary(n, avg, alpha, nE, nF) {
           +'<span style="font-size:38px;font-weight:700;color:#6a3fa0;line-height:1">'+alphaN.toFixed(2)+'</span>'
           +'<span style="display:inline-block;padding:2px 9px;border-radius:4px;font-size:11px;font-weight:700;background:'+alphaBadgeBg+';color:'+alphaBadgeColor+'">'+alphaBadge+'</span>'
         +'</div>'
+        +(_showDelta?'<div style="margin-bottom:6px">'+_delta(alphaN, G._initial ? G._initial.alpha : null, true, 'dec')+'</div>':'')
         +'<div style="position:relative;height:6px;background:var(--c-border);border-radius:3px;margin-bottom:4px">'
           +'<div style="position:absolute;left:0;top:0;height:6px;width:100%;border-radius:3px;background:linear-gradient(to right,#e24b4a 0%,var(--s-warn) 65%,#639922 100%)"></div>'
           +'<div style="position:absolute;top:-5px;left:calc('+alphaBarPct+'% - 4px);width:8px;height:16px;background:#fff;border:2px solid var(--c-primary);border-radius:2px"></div>'
@@ -5422,10 +5540,13 @@ function renderNewSummary(n, avg, alpha, nE, nF) {
 
       // 4 — Question Health (flagged count as headline)
       +'<div style="padding:8px 0 8px 20px" data-tip="Breakdown of all scoreable questions by analysis outcome. Flagged = Difficult, Poor discrimination or Check-key. Too easy = p≥96%. DIF = significant EN/FR gap (p&lt;0.01).">'
-        +'<div style="font-size:11px;font-weight:700;color:var(--c-muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">Question Health</div>'
+        +'<div style="font-size:11px;font-weight:700;color:var(--c-muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">Question Health'
+          +(G_EXCL_VIEW==='init'?'&nbsp;<span style="font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;background:#f1f5f9;color:var(--c-secondary);vertical-align:middle">Initial</span>':'')
+        +'</div>'
         +(nFlagged>0
           ? '<div style="font-size:38px;font-weight:700;color:var(--s-hard);line-height:1;margin-bottom:4px">'+nFlagged+'<span style="font-size:13px;font-weight:400;color:var(--s-hard);margin-left:4px">flagged</span></div>'
-            +'<div style="font-size:11.5px;color:var(--c-muted);margin-bottom:8px">of '+nQ+' questions</div>'
+            +'<div style="font-size:11.5px;color:var(--c-muted);margin-bottom:3px">of '+nQ+' questions</div>'
+            +(_showDelta?'<div style="margin-bottom:6px">'+_delta(nFlagged, G._initial.nFlagged, false, 'n')+'</div>':'<div style="margin-bottom:6px"></div>')
           : '<div style="font-size:38px;font-weight:700;color:var(--s-ok);line-height:1;margin-bottom:4px">0<span style="font-size:13px;font-weight:400;color:var(--s-ok);margin-left:4px">flagged</span></div>'
             +'<div style="font-size:11.5px;color:var(--c-muted);margin-bottom:8px">of '+nQ+' questions — all clear</div>'
         )
@@ -5645,7 +5766,9 @@ function drawNewDistChart(view) {
   ctx.scale(dpr, dpr);
   ctx.clearRect(0, 0, W, H);
 
-  var eScores = G._distE||[], fScores = G._distF||[];
+  var _useInit = G_EXCL_VIEW === 'init' && G._initial && G._initial.distE;
+  var eScores = _useInit ? (G._initial.distE || []) : (G._distE || []);
+  var fScores = _useInit ? (G._initial.distF || []) : (G._distF || []);
   if (!eScores.length && !fScores.length) return;
 
   var bins = 10, binW_pct = 10;
@@ -5868,34 +5991,69 @@ function renderMCQTable(filter) {
     '<th style="min-width:90px" class="col-rec" data-tip="Suggested action for this question based on its statistical profile.">Recommendation</th>'+
     '<th style="min-width:110px" class="col-comment" data-tip="Comments for this question — shows reason for Credit or Delete, and any alternate key notes.">Comments</th>'+
     '</tr></thead><tbody>';
+  var _isInit   = G_EXCL_VIEW === 'init'   && G._initial;
+  var _isImpact = G_EXCL_VIEW === 'impact' && G._initial;
+
+  // Helper: inline delta badge for impact view
+  function _tdDelta(cur, initVal, higher) {
+    if (!_isImpact || initVal === undefined || initVal === null) return '';
+    var diff = parseFloat(cur) - parseFloat(initVal);
+    if (Math.abs(diff) < 0.005) return '';
+    var better = higher ? diff > 0 : diff < 0;
+    var col = better ? '#166534' : '#92400e';
+    return '<span style="font-size:10px;font-weight:700;color:'+col+';margin-left:4px">'+(diff>0?'\u25b2':'\u25bc')+Math.abs(diff).toFixed(2)+'</span>';
+  }
+
   for(i=0;i<filtered.length;i++){
     var r=filtered[i], rc='', rowId='dist-row-'+r.num;
+    var initQ = G._initial ? G._initial.mcq[r.num - 1] : null;
 
-    // Deleted question — greyed placeholder row
+    // Deleted question
     if (r.excluded === 'delete') {
-      html+='<tr style="background:#fafafa;cursor:default">'+
-        '<td></td>'+
-        '<td style="font-size:13px;font-weight:700;color:var(--c-accent-dark);text-align:left;white-space:nowrap">'+r.num+'&nbsp;&nbsp;<span style="background:var(--s-hard);color:#fff;font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;vertical-align:middle">Deleted</span></td>'+
-        eidCell(r)+
-        '<td><b>'+fmtKey(r.key,r.altKeys)+'</b></td>'+
-        '<td colspan="5" style="font-size:12px;color:var(--c-muted);font-style:italic">Excluded from analysis</td>'+
-        '<td style="font-size:11px;color:var(--c-muted);font-style:italic">'+(r.reason?'Reason: '+r.reason:'')+'</td>'+
-      '</tr>';
+      if (_isInit) {
+        // Show with original stats
+        var iq = initQ || {};
+        html+='<tr style="cursor:default">'+
+          '<td></td>'+
+          '<td style="font-size:13px;font-weight:700;color:var(--c-accent-dark);text-align:left;white-space:nowrap">'+r.num+'&nbsp;&nbsp;<span style="background:#fef3c7;color:#854f0b;font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;vertical-align:middle">Would: Delete</span></td>'+
+          eidCell(r)+
+          '<td><b>'+fmtKey(r.key,[])+'</b></td>'+
+          '<td>'+fmt(iq.p,2)+' <span style="color:#777;font-size:10px">('+iq.pct+'%)</span></td>'+
+          '<td>'+fmt(iq.rpbis,2)+'</td>'+
+          '<td>'+(iq.flag?'<span class="badge '+(iq.flag==='Too easy'?'b-easy':iq.flag.indexOf('Difficult')>=0?'b-hard':'b-low-disc')+'">'+iq.flag+'</span>':'—')+'</td>'+
+          '<td></td><td></td>'+
+          '<td style="font-size:11px;color:var(--c-muted);font-style:italic">'+(r.reason?'Reason: '+r.reason:'')+'</td>'+
+        '</tr>';
+      } else {
+        html+='<tr style="background:#fafafa;cursor:default">'+
+          '<td></td>'+
+          '<td style="font-size:13px;font-weight:700;color:var(--c-accent-dark);text-align:left;white-space:nowrap">'+r.num+'&nbsp;&nbsp;<span style="background:var(--s-hard);color:#fff;font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;vertical-align:middle">Deleted</span></td>'+
+          eidCell(r)+
+          '<td><b>'+fmtKey(r.key,r.altKeys)+'</b></td>'+
+          '<td colspan="5" style="font-size:12px;color:var(--c-muted);font-style:italic">Excluded from analysis</td>'+
+          '<td style="font-size:11px;color:var(--c-muted);font-style:italic">'+(r.reason?'Reason: '+r.reason:'')+'</td>'+
+        '</tr>';
+      }
       continue;
     }
 
     // Credited question — expand arrow retained, badge in Q# column
     if (r.excluded === 'credit') {
-      html+='<tr style="background:#fffbea;cursor:default">'+
+      var showP   = _isInit && initQ ? initQ.p    : r.p;
+      var showPct = _isInit && initQ ? initQ.pct  : r.pct;
+      var showRpb = _isInit && initQ ? initQ.rpbis: r.rpbis;
+      var credBg  = _isInit ? '' : 'background:#fffbea;';
+      var credBadge = _isInit
+        ? '<span style="background:#fef3c7;color:#854f0b;font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;vertical-align:middle">Would: Credit</span>'
+        : '<span style="background:#fff8dc;color:#7a5500;font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;vertical-align:middle">Credited</span>';
+      html+='<tr style="'+credBg+'cursor:default">'+
         '<td><span class="expand-btn" onclick="toggleDist('+r.num+')" id="expand-btn-'+r.num+'" data-tip="Click to show distractor analysis for this question.">&#9654;</span></td>'+
-        '<td style="font-size:13px;font-weight:700;color:var(--c-accent-dark);text-align:left;white-space:nowrap">'+r.num+'&nbsp;&nbsp;<span style="background:#fff8dc;color:#7a5500;font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;vertical-align:middle">Credited</span></td>'+
+        '<td style="font-size:13px;font-weight:700;color:var(--c-accent-dark);text-align:left;white-space:nowrap">'+r.num+'&nbsp;&nbsp;'+credBadge+'</td>'+
         eidCell(r)+
-        '<td><b>'+fmtKey(r.key,r.altKeys)+'</b></td>'+
-        '<td>'+fmt(r.p,2)+' <span style="color:#777;font-size:10px">('+r.pct+'%)</span></td>'+
-        '<td>'+fmt(r.rpbis,2)+'</td>'+
-        '<td></td>'+
-        '<td></td>'+
-        '<td></td>'+
+        '<td><b>'+fmtKey(r.key, _isInit?[]:r.altKeys)+'</b></td>'+
+        '<td>'+fmt(showP,2)+' <span style="color:#777;font-size:10px">('+showPct+'%)</span>'+(_isImpact&&initQ?_tdDelta(r.p,initQ.p,true):'')+'</td>'+
+        '<td>'+fmt(showRpb,2)+(_isImpact&&initQ?_tdDelta(r.rpbis,initQ.rpbis,true):'')+'</td>'+
+        '<td></td><td></td><td></td>'+
         '<td style="font-size:11px;color:var(--c-muted);font-style:italic">'+(r.reason?'Reason: '+r.reason:'')+'</td>'+
       '</tr>'+
       '<tr class="row-expand" id="'+rowId+'" style="display:none">'+
@@ -5916,13 +6074,15 @@ function renderMCQTable(filter) {
     var reasonHtml = flagBadge(r.flag) + (isDIF ? (r.flag ? ' ' : '') + '<span class="badge b-dif badge-ctx" data-ctx="dif" onclick="showCtxPanel(\'dif\',this)" tabindex="0" role="button" aria-label="DIF — click for details">DIF</span>' : '');
     var difRec = 'Review for EN/FR performance gap';
     var recText = isDIF ? (r.rec ? r.rec + '; ' + difRec : difRec) : r.rec;
+    // Alt-key delta: show in impact mode when this question has alt keys
+    var hasAlt = r.altKeys && r.altKeys.length > 0;
     html+='<tr'+rc+' style="cursor:default">'+
       '<td><span class="expand-btn" onclick="toggleDist('+r.num+')" id="expand-btn-'+r.num+'" data-tip="Click to show distractor analysis for this question.">&#9654;</span></td>'+
       '<td style="font-size:13px;font-weight:700;color:var(--c-accent-dark);text-align:left">'+r.num+'</td>'+
       eidCell(r)+
       '<td><b>'+fmtKey(r.key,r.altKeys)+'</b></td>'+
-      '<td>'+fmt(r.p,2)+' <span style="color:#777;font-size:10px">('+r.pct+'%)</span></td>'+
-      '<td>'+fmt(r.rpbis,2)+'</td>'+
+      '<td>'+fmt(r.p,2)+' <span style="color:#777;font-size:10px">('+r.pct+'%)</span>'+(_isImpact&&hasAlt&&initQ?_tdDelta(r.p,initQ.p,true):'')+'</td>'+
+      '<td>'+fmt(r.rpbis,2)+(_isImpact&&hasAlt&&initQ?_tdDelta(r.rpbis,initQ.rpbis,true):'')+'</td>'+
       '<td>'+reasonHtml+'</td>'+
       '<td style="font-weight:700;color:#900">'+r.topWrong+'</td>'+
       '<td style="font-size:11px">'+recText+'</td>'+
@@ -6058,6 +6218,28 @@ function _bw(v,n){return n?Math.max(3,Math.round(v/n*100)):0;}
 function kpiAccent(col,w){return '<div style="height:3px;background:'+col+';border-radius:2px;width:'+w+'px;margin-bottom:8px"></div>';}
 function badge(text,bg,col){return '<span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;background:'+bg+';color:'+col+'">'+text+'</span>';}
 function miniBar(pct,col){return '<div style="flex:1;height:5px;background:var(--c-border);border-radius:3px"><div style="height:5px;border-radius:3px;background:'+col+';width:'+pct+'%"></div></div>';}
+
+// ── Report preview disclaimer — shown when exceptions are active ──────────────
+// Reminds the coordinator that reports always reflect the post-exception,
+// authoritative state regardless of the exception view toggle.
+function reportExclDisclaimer() {
+  var hasExcl = G.exclusions && Object.values(G.exclusions).some(function(e){
+    return e && e.disposition && e.disposition !== 'include';
+  });
+  if (!hasExcl) return '';
+  var nExcl = Object.values(G.exclusions).filter(function(e){
+    return e && e.disposition && e.disposition !== 'include';
+  }).length;
+  return '<div style="display:flex;align-items:flex-start;gap:9px;padding:9px 13px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:7px;margin-bottom:16px;font-size:11.5px;color:#166534;line-height:1.5">'
+    + '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;margin-top:1px">'
+      + '<circle cx="8" cy="8" r="6.5" stroke="#2e7d32" stroke-width="1.4"/>'
+      + '<path d="M5 8l2 2 4-4" stroke="#2e7d32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>'
+    + '</svg>'
+    + '<span><strong>' + nExcl + ' exception' + (nExcl !== 1 ? 's' : '') + ' applied.</strong>'
+    + ' This report reflects your final dispositions and is the authoritative record for this exam.'
+    + ' The exception view toggle on the analysis screen does not affect report content.</span>'
+  + '</div>';
+}
 
 // ── Shared report overview card (MCQ, Full/Combined) ──────────────────────────
 // Single source of truth — called by renderMCQReport and renderFullReport.
@@ -6408,6 +6590,7 @@ function renderMCQReport(avg, alpha) {
   });
 
   document.getElementById('mcq-report').innerHTML =
+    reportExclDisclaimer()+
     '<p style="font-size:10px;color:#555;font-style:italic;margin-bottom:14px;text-align:left">Report generated: '+genTs+getCoordinatorByline()+'</p>'+
     '<p style="font-size:16px;font-weight:700;text-align:center;margin:0;line-height:1.3">FACULTY OF MEDICINE - UNDERGRADUATE MEDICAL EDUCATION</p>'+
     '<p style="font-size:14px;font-weight:700;text-align:center;margin:0;line-height:1.3">Multiple-choice Questions Analysis</p>'+
@@ -6782,6 +6965,7 @@ function renderFullReport(avg, alpha) {
   var sep = '<hr style="border:none;border-top:2px solid var(--c-accent);margin:28px 0 20px">';
 
   document.getElementById('full-report').innerHTML =
+    reportExclDisclaimer()+
     // Header — matches Word export design
         '<p style="font-size:16px;font-weight:700;text-align:center;margin:0;line-height:1.3">FACULTY OF MEDICINE - UNDERGRADUATE MEDICAL EDUCATION</p>'+
     '<p style="font-size:14px;font-weight:700;text-align:center;margin:0;line-height:1.3">Full Exam Analysis Report <span style="font-weight:400">(MCQ &amp; DIF)</span></p>'+
@@ -7965,10 +8149,49 @@ function _doExportReportBuild(type, title, safe, dateStr, a2, avg, dateSuffix, f
 
 // ── Banner inline edit ────────────────────────────────────────────────────
 // ── Banner (exam title / date / edit) ────────────────────────────────────
+// ── Exception view toggle ─────────────────────────────────────────────────────
+function updateExclBanner() {
+  var banner = document.getElementById('excBanner');
+  if (!banner) return;
+  // Check G.exclusions (always current) rather than G.mcq.excluded (only updated after re-run)
+  var hasExcl = G.exclusions && Object.values(G.exclusions).some(function(e){ return e && e.disposition && e.disposition !== 'include'; });
+  if (!hasExcl) { banner.classList.remove('visible'); return; }
+  banner.classList.add('visible');
+  var nExcl = G.mcq.filter(function(q){ return q.excluded && q.excluded !== 'include'; }).length;
+  var msgEl = document.getElementById('excBannerText');
+  if (msgEl) {
+    var msgs = { clean:'clean', init:'showing initial — no exceptions applied', impact:'showing \u0394 impact of exceptions' };
+    var prefix = nExcl + ' exception' + (nExcl !== 1 ? 's' : '') + ' applied';
+    msgEl.textContent = G_EXCL_VIEW === 'clean' ? prefix : prefix + ' \u00b7 ' + msgs[G_EXCL_VIEW];
+  }
+  ['clean','init','impact'].forEach(function(v){
+    var btn = document.getElementById('excl-btn-' + v);
+    if (btn) btn.className = 'excl-view-btn' + (G_EXCL_VIEW === v ? ' excl-active' : '');
+  });
+}
+
+function setExclView(v) {
+  G_EXCL_VIEW = v;
+  updateExclBanner();
+  refreshExclView();
+}
+
+function refreshExclView() {
+  if (!G._lastN || !G.mcq || !G.mcq.length) return;
+  var avg   = G_EXCL_VIEW === 'init' && G._initial ? G._initial.avg   : G._lastAvg;
+  var alpha = G_EXCL_VIEW === 'init' && G._initial ? G._initial.alpha : G._lastAlpha;
+  var nE    = G_EXCL_VIEW === 'init' && G._initial ? (G._initial.distE ? G._initial.distE.length : G._lastNE) : G._lastNE;
+  var nF    = G_EXCL_VIEW === 'init' && G._initial ? (G._initial.distF ? G._initial.distF.length : G._lastNF) : G._lastNF;
+  renderNewSummary(G._lastN, avg, alpha, nE, nF);
+  setTimeout(function(){ drawNewDistChart(G._newDistView || 'B'); }, 60);
+  renderMCQTable(G._mcqFilter || 'all');
+}
+
 function renderBanner() {
   renderSessionStatus();
   updateResultsTitle();
   updateThresholdIndicators();
+  updateExclBanner();
   var bc = document.getElementById('banner-card');
   if (!bc) return;
 
@@ -9616,6 +9839,25 @@ document.addEventListener('click', function(e) {
 // ── Release Notes ─────────────────────────────────────────────────────────
 var RELEASE_NOTES = [
   {
+    version: '0.6',
+    builds: [
+      {
+        build: '20260913-03',
+        date:  'September 22, 2026',
+        notes: [
+          'Exception view toggle — Clean / Initial / Δ Impact. A segmented 3-button control appears in the exception banner whenever exceptions are active. Clean (default): current analysis with exceptions applied — the authoritative view. Initial: pre-exception analysis recomputed from raw scores with no deletions, creditings, or alternate keys; all KPIs (average, alpha, flagged count, difficulty distribution, score distribution chart) update to reflect the unmodified exam. Δ Impact: post-exception view with delta indicators on each KPI tile and on affected table rows, showing exactly how much each exception changed the numbers. The toggle does not affect report output — all exports always use the authoritative post-exception state.',
+          'computeInitialStats() — called at the end of every analysis run and cached in G._initial. Performs a full second-pass scoring: all students re-scored against the original key only (no alt keys, no deletions), per-question p-values and rpbis recomputed, alpha and exam average derived. Stream score distributions (distE / distF) are also stored so the score distribution chart updates on toggle.',
+          'Score distribution chart updates on toggle — drawNewDistChart reads from G._initial.distE / distF in Initial view. Stream averages in the Exam Avg tile EN · FR sub-line also update. refreshExclView() redraws the chart on every view change.',
+          'Difficulty distribution strip updates on toggle — all four buckets (acceptable, easy, poor disc., difficult) now derived from G._initial.mcq in Initial view. Previously only nFlagged and nEasy were set from initial data, leaving the bar incorrect.',
+          'Delta indicators redesigned — removed colored pill/badge backgrounds that competed visually with the category badges (Credited, Deleted, Easy etc.). Deltas are now clean colored text: arrow + value in semantic color, "from initial" label in muted gray. Integer counts show without decimal places (▲ 3, not ▲3.00). All three KPI tiles use a consistent dedicated sub-line position for their delta.',
+          'Exception banner wiring fixes — updateExclBanner() now checks G.exclusions (always current) instead of G.mcq[i].excluded (only updated after re-run), so the toggle strip appears immediately when exceptions are applied even before re-running analysis. saveExclusions() now calls updateExclBanner() so the banner appears as soon as exceptions are saved.',
+          'Report preview disclaimer — when exceptions are active, a green info strip appears at the top of all three report previews (MCQ, Full/Combined, Feedback) stating the number of exceptions applied and clarifying that the exception view toggle does not affect report content.',
+          'FAQ — added entry: "Does the exception view toggle (Clean / Initial / Δ Impact) affect my reports?" Clarifies that all report outputs always use the post-exception authoritative state regardless of which view is active. FAQ version bumped to 0.6.',
+        ]
+      }
+    ]
+  },
+  {
     version: '0.5',
     builds: [
       {
@@ -10832,6 +11074,7 @@ function saveExclusions() {
   markDirty(); // mark results outdated — stale bar appears
   updateSidebarBadges();
   updateExclLink();
+  updateExclBanner(); // show / update the exception view toggle strip
   saveSession(); // C1 — autosave after exception change
 }
 
@@ -13181,6 +13424,7 @@ function renderFeedbackReportPreview(container) {
   var HIGH_THRESH = 8, MED_THRESH = 4;
 
   var html = '<div class="report-preview" style="font-family:\'Segoe UI\',system-ui,sans-serif;padding:28px;max-width:820px;margin:0 auto">';
+  html += reportExclDisclaimer();
 
   // Header
   var title = document.getElementById('exam-title').value.trim() || FB.examTitle || '';
@@ -15444,6 +15688,17 @@ function updateTopbarExam() {
               <strong>Session Reports</strong> — structured data exports for record-keeping and integration.<br><br>
               &bull; <strong>Session record (CSV)</strong> — exam summary, per-question statistics, analysis thresholds, and (when feedback is loaded) a comment count per question and a feedback summary section. For Excel review and local archiving.<br>
               &bull; <strong>Session data export (JSON)</strong> — complete structured session record including all question statistics, DIF sub-objects, feedback summary, threshold configuration, and timestamps. Designed for longitudinal item tracking across exam cycles and future backend integration.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFAQ(this)">
+              <span>Does the exception view toggle (Clean / Initial / Δ Impact) affect my reports?</span>
+              <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-a">
+              No. The exception view toggle on the analysis screen is a coordinator audit tool — it lets you compare the analysis before and after your exceptions were applied. It has no effect on any report output.<br><br>
+              All Analysis Reports (MCQ, DIF, MCQ+DIF, Feedback) and Session Reports (CSV, JSON) always reflect the <strong>authoritative final state</strong>: exceptions applied, documented, and justified. Generating a report while in Initial or Δ Impact view produces exactly the same document as generating it in Clean view.
             </div>
           </div>
 
