@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document records recommended future work for the Assessment Quality Platform after the QA and remediation completed for version 0.8, build `20260927-01`.
+This document records recommended future work for the Assessment Quality Platform after the QA and remediation completed for version 0.8, build `20260927-02`.
 
 These are forward-looking improvements rather than defects remaining from the two QA passes. Completed corrections are documented separately in `AQP_CHANGE_SUMMARY_2026-09-23.md`.
 
@@ -119,7 +119,7 @@ Before analysis, detect and explain:
 
 Errors should distinguish between conditions that block analysis and warnings that require coordinator review.
 
-#### 7. Add an analysis validation screen
+#### 7. Add an analysis validation screen (completed in build `20260927-02`)
 
 Before presenting final results, show a concise reconciliation summary containing:
 
@@ -134,7 +134,7 @@ Before presenting final results, show a concise reconciliation summary containin
 - Stream corrections
 - Warnings and unresolved conditions
 
-The coordinator should be able to return to the upload step or explicitly confirm the reconciled structure.
+The coordinator can return to the upload controls or explicitly confirm the reconciled structure. The implementation enhances the existing upload preview rather than creating a duplicate room: it displays the detected and retained question counts, Disclosure/Unscored exclusions, key match, effective denominator, missing responses, score-column comparison, stream matching, blockers, and warnings. Confirmation records a timestamped snapshot in session state.
 
 #### 8. Explain DIF suppression precisely
 

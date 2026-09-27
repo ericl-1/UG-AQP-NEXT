@@ -92,7 +92,7 @@ try {
       latestReleaseDate: RELEASE_NOTES[0].builds[0].date,
       faqText: document.getElementById("faq-overlay").innerText,
     }));
-    assert.equal(buildMetadata.build, "20260927-01");
+    assert.equal(buildMetadata.build, "20260927-02");
     assert.equal(buildMetadata.faqVersion, "0.8");
     assert.equal(buildMetadata.faqDate, "September 27, 2026");
     assert.equal(buildMetadata.releaseDate, "September 27, 2026");
@@ -105,10 +105,45 @@ try {
     assert.deepEqual(actual.blockers, []);
     assert.deepEqual(actual.warnings, []);
     assert.equal(actual.confirmDisabled, false);
+    const reconciliation = await page.evaluate(() => ({
+      snapshot: analysisReconciliationSnapshot("qm"),
+      heading: document.getElementById("analysis-reconciliation-title")?.textContent,
+      button: document.getElementById("qm-confirm-data")?.textContent.trim(),
+      regionVisible: !!document.getElementById("analysis-reconciliation"),
+    }));
+    assert.equal(reconciliation.regionVisible, true);
+    assert.equal(reconciliation.heading, "Analysis reconciliation");
+    assert.match(reconciliation.button, /Confirm and continue/i);
+    assert.deepEqual(reconciliation.snapshot, {
+      source: "qm",
+      students: 40,
+      questionsDetected: 14,
+      scoredQuestions: 12,
+      disclosureExcluded: 1,
+      unscoredExcluded: 1,
+      keyEntries: 12,
+      keyMatched: true,
+      effectiveDenominator: 12,
+      activeExceptions: 0,
+      missingResponses: 0,
+      scoreCompared: 480,
+      scoreMismatches: 0,
+      nEN: 20,
+      nFR: 20,
+      unmatchedStreams: 0,
+      blockers: [],
+      warnings: [],
+      reviewSignals: 0,
+    });
     await page.evaluate(() => confirmParsePreview("qm"));
     actual = await state(page);
     assert.equal(actual.confirmed, true);
     assert.equal(actual.runDisabled, false);
+    const confirmation = await page.evaluate(() => G._reconciliationConfirmation);
+    assert.equal(confirmation.source, "qm");
+    assert.equal(confirmation.snapshot.questionsDetected, 14);
+    assert.equal(confirmation.snapshot.scoredQuestions, 12);
+    assert.match(confirmation.confirmedAt, /^\d{4}-\d{2}-\d{2}T/);
     await page.close();
   }
 
@@ -154,6 +189,9 @@ try {
     assert.deepEqual(actual.blockers, []);
     assert.ok(actual.warnings.some(message => /language-stream code/i.test(message)));
     assert.equal(actual.confirmDisabled, false);
+    const reconciliation = await page.evaluate(() => analysisReconciliationSnapshot("qm"));
+    assert.ok(reconciliation.unmatchedStreams > 0);
+    assert.ok(reconciliation.reviewSignals > 0);
     await page.evaluate(() => confirmParsePreview("qm"));
     actual = await state(page);
     assert.equal(actual.confirmed, true);
@@ -190,6 +228,23 @@ try {
     assert.equal(actual.students, 0);
     assert.equal(actual.confirmed, false);
     assert.equal(actual.runDisabled, true);
+    await page.close();
+  }
+
+  // Replacing a valid results file while retaining the loaded key must rerun
+  // cross-file reconciliation and require a fresh confirmation.
+  {
+    const page = await loadPair(baseResults, baseKey);
+    await page.evaluate(() => confirmParsePreview("qm"));
+    await page.evaluate(() => returnToUploadFiles("qm"));
+    await upload(page, "#fi-main", baseResults);
+    const actual = await state(page);
+    const reconciliation = await page.evaluate(() => analysisReconciliationSnapshot("qm"));
+    assert.equal(actual.confirmed, false);
+    assert.equal(actual.confirmDisabled, false);
+    assert.equal(actual.runDisabled, true);
+    assert.equal(reconciliation.keyMatched, true);
+    assert.equal(reconciliation.questionsDetected, 14);
     await page.close();
   }
 
