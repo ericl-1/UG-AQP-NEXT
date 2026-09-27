@@ -591,19 +591,19 @@
           <div>Choose what you're analyzing in this session. <strong>MCQ item analysis</strong> is the standard choice for a typical exam. Select <strong>Combined analysis</strong> if you also have student feedback to parse — both outputs are generated in one run and cross-referenced automatically.</div>
         </div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
-          <div id="type-card-mcq" onclick="selectAnalysisType('mcq')"
+          <div id="type-card-mcq" role="button" tabindex="0" aria-label="MCQ item analysis" onclick="selectAnalysisType('mcq')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectAnalysisType('mcq')}"
             style="border:2px solid var(--c-border-2);border-radius:12px;padding:18px;cursor:pointer;transition:all .18s;background:var(--c-bg);position:relative">
             <div style="font-size:24px;margin-bottom:8px">📊</div>
             <div style="font-size:13.5px;font-weight:700;color:var(--c-primary);margin-bottom:4px">MCQ item analysis</div>
             <div style="font-size:12px;color:var(--c-secondary);line-height:1.55">Analyze question difficulty, discrimination, and DIF. Includes distractor analysis and flag review.</div>
           </div>
-          <div id="type-card-fb" onclick="selectAnalysisType('fb')"
+          <div id="type-card-fb" role="button" tabindex="0" aria-label="Student feedback analysis" onclick="selectAnalysisType('fb')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectAnalysisType('fb')}"
             style="border:2px solid var(--c-border-2);border-radius:12px;padding:18px;cursor:pointer;transition:all .18s;background:var(--c-bg);position:relative">
             <div style="font-size:24px;margin-bottom:8px">💬</div>
             <div style="font-size:13.5px;font-weight:700;color:var(--c-primary);margin-bottom:4px">Student feedback</div>
             <div style="font-size:12px;color:var(--c-secondary);line-height:1.55">Parse and categorize student comments by question. Identify translation issues and content concerns.</div>
           </div>
-          <div id="type-card-both" onclick="selectAnalysisType('both')"
+          <div id="type-card-both" role="button" tabindex="0" aria-label="Combined MCQ and feedback analysis" onclick="selectAnalysisType('both')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectAnalysisType('both')}"
             style="border:2px solid var(--c-border-2);border-radius:12px;padding:18px;cursor:pointer;transition:all .18s;background:var(--c-bg);position:relative">
             <div style="font-size:24px;margin-bottom:8px">📊💬</div>
             <div style="font-size:13.5px;font-weight:700;color:var(--c-primary);margin-bottom:4px">Combined analysis</div>
@@ -957,8 +957,9 @@
           <span class="wz-guidance-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><circle cx="9" cy="11" r=".5" fill="currentColor"/><circle cx="12" cy="11" r=".5" fill="currentColor"/><circle cx="15" cy="11" r=".5" fill="currentColor"/></svg></span>
           <div>The app automatically matches comments to question numbers where possible. Any comments that couldn’t be matched will be available for review in the <strong>Comment Mapping</strong> room after analysis — this is normal and expected. Click the run button below to proceed.</div>
         </div>
-        <div id="combined-fb-upload-zone" class="upload-row-item"
+        <div id="combined-fb-upload-zone" class="upload-row-item" role="button" tabindex="0" aria-label="Upload student feedback file"
           onclick="document.getElementById('combined-fb-file-input').click()"
+          onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('combined-fb-file-input').click()}"
           ondragover="event.preventDefault();this.style.borderColor='var(--c-accent)';this.style.background='var(--c-accent-tint)'"
           ondragleave="this.style.borderColor='';this.style.background=''"
           ondrop="this.style.borderColor='';this.style.background='';handleFeedbackDrop(event)">
@@ -1690,21 +1691,21 @@
           </div>
         </div>
 
-        <!-- Poor Discrimination -->
+        <!-- Low Discrimination -->
         <div id="thresh-disc" class="thresh-row" style="padding:12px 16px;border-bottom:1px solid var(--c-border);background:#fff">
           <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px">
             <div>
-              <div style="font-size:12px;font-weight:600;color:var(--c-primary)">Poor discrimination — rpbis threshold</div>
-              <div style="font-size:11px;color:var(--c-muted);margin-top:1px">Flag questions with discrimination <em>below</em> this value (negative = red flag)</div>
+              <div style="font-size:12px;font-weight:600;color:var(--c-primary)">Low discrimination — rpbis threshold</div>
+              <div style="font-size:11px;color:var(--c-muted);margin-top:1px">Flag questions below this value as low discrimination; negative values are poor discrimination</div>
             </div>
             <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;margin-left:16px">
-              <input type="number" id="thr-disc" aria-label="Poor discrimination rpbis threshold" value="0.00" step="0.01" min="-0.50" max="0.50"
+              <input type="number" id="thr-disc" aria-label="Low discrimination rpbis threshold" value="0.10" step="0.01" min="-0.50" max="0.50"
                 style="width:60px;padding:4px 6px;border-radius:8px;border:1px solid var(--c-border);font-size:12px;color:var(--c-primary);background:#fff;text-align:center;font-family:var(--font)"
                 oninput="syncSlider('disc',this.value)">
-              <span style="font-size:11px;color:var(--c-muted);width:28px;text-align:right" id="thr-disc-pct">0.00</span>
+              <span style="font-size:11px;color:var(--c-muted);width:28px;text-align:right" id="thr-disc-pct">0.10</span>
             </div>
           </div>
-          <input type="range" id="thr-disc-slider" aria-label="Poor discrimination rpbis threshold slider" min="-50" max="50" value="0" step="1"
+          <input type="range" id="thr-disc-slider" aria-label="Low discrimination rpbis threshold slider" min="-50" max="50" value="10" step="1"
             style="width:100%;accent-color:var(--c-accent);cursor:pointer"
             oninput="syncInput('disc',this.value)">
           <div style="display:flex;justify-content:space-between;margin-top:2px">
@@ -1888,10 +1889,10 @@
 
 // ── App version — single source of truth ─────────────────────────────────
 var APP_VERSION     = '0.8';
-var APP_BUILD       = '20260923-01';
-var APP_FAQ_VERSION = '0.8';           // Update when FAQ content changes
-var APP_FAQ_DATE    = 'September 23, 2026'; // Update when FAQ content changes
-var APP_RN_DATE     = 'September 23, 2026'; // Update each version close
+var APP_BUILD       = '20260927-01';
+var APP_FAQ_VERSION = '0.8';           // Keep aligned with the app version; date records FAQ revisions
+var APP_FAQ_DATE    = 'September 27, 2026'; // Update when FAQ content changes
+var APP_RN_DATE     = 'September 27, 2026'; // Update each version close
 
 // ── Feedback module global ────────────────────────────────────────────────
 var FB = {
@@ -2131,9 +2132,11 @@ function applyTheme(theme) {
 // On page load, checkForDraft() shows a resume banner if a draft is found.
 
 var _DRAFT_KEY = 'aqp-draft';
+var _DRAFT_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;
 
 function saveSession() {
-  if (!G._lastN) return; // nothing analysed yet — nothing worth saving
+  // MCQ and feedback-only sessions are both valuable drafts.
+  if (!G._lastN && !(FB && FB.ready)) return;
   try {
     var thresholds = {};
     ['difficult','easy','disc','checkp','checkr','dif','gapamber','gapred'].forEach(function(id) {
@@ -2157,13 +2160,22 @@ function saveSession() {
         // raw[] intentionally excluded — not needed after parse
       };
     }
+    // Names and institutional student identifiers are not required to resume an
+    // analysis, so do not persist them in browser storage.
+    var gToSave = Object.assign({}, G, {
+      students: (G.students || []).map(function(s) {
+        var copy = Object.assign({}, s);
+        delete copy.first; delete copy.last; delete copy.id;
+        return copy;
+      })
+    });
     var payload = JSON.stringify({
       savedAt:     new Date().toISOString(),
       build:       APP_BUILD,
       fields: {
         examTitle:   (document.getElementById('exam-title')  || {}).value || '',
         examDate:    (document.getElementById('exam-date')   || {}).value || '',
-        coordinator: (document.getElementById('coordinator') || {}).value || '',
+        coordinator: (document.getElementById('coordinator-name') || {}).value || '',
         engCode:     (document.getElementById('eng-code')    || {}).value || '',
         freCode:     (document.getElementById('fre-code')    || {}).value || '',
         thresholds:  thresholds
@@ -2173,9 +2185,11 @@ function saveSession() {
         G_DIF_ENABLED:   G_DIF_ENABLED,
         G_ANALYSIS_TYPE: (typeof G_ANALYSIS_TYPE !== 'undefined') ? G_ANALYSIS_TYPE : 'mcq'
       },
-      G:           G,
+      G:           gToSave,
       FB:          fbToSave,
-      ExamSession: ExamSession
+      ExamSession: ExamSession,
+      ntIncluded:  _ntIncluded,
+      reviewState: _reviewState
     });
     localStorage.setItem(_DRAFT_KEY, payload);
   } catch(e) {
@@ -2198,7 +2212,12 @@ function checkForDraft() {
     var raw = localStorage.getItem(_DRAFT_KEY);
     if (!raw) return;
     var d = JSON.parse(raw);
-    if (!d || !d.G || !d.G._lastN) return; // no real analysis data
+    if (d && d.savedAt && Date.now() - new Date(d.savedAt).getTime() > _DRAFT_MAX_AGE_MS) {
+      localStorage.removeItem(_DRAFT_KEY);
+      renderSessionHistory(null);
+      return;
+    }
+    if (!d || !d.G || (!d.G._lastN && !(d.FB && d.FB.ready))) return;
 
     var banner  = document.getElementById('draft-resume-banner');
     var elTitle = document.getElementById('draft-banner-title');
@@ -2206,8 +2225,8 @@ function checkForDraft() {
     if (!banner) return;
 
     var title   = (d.fields && d.fields.examTitle) ? d.fields.examTitle : 'Untitled exam';
-    var nQ      = d.G.nQ || 0;
-    var nStu    = d.G._lastN || 0;
+    var nQ      = d.G.nQ || (d.FB && d.FB.maxQUsed) || 0;
+    var nStu    = d.G._lastN || (d.FB && d.FB.parsed ? Object.keys(d.FB.parsed.reduce(function(a,p){a[p.rawIdx]=1;return a;},{})).length : 0);
     var hasFb   = !!(d.FB && d.FB.ready);
 
     // Format time-ago
@@ -2237,14 +2256,19 @@ function resumeSession() {
     var raw = localStorage.getItem(_DRAFT_KEY);
     if (!raw) return;
     var d = JSON.parse(raw);
-    if (!d || !d.G || !d.G._lastN) return;
+    if (d && d.savedAt && Date.now() - new Date(d.savedAt).getTime() > _DRAFT_MAX_AGE_MS) {
+      discardDraft();
+      alert('This saved draft expired after 30 days and was removed. Please upload the source files again.');
+      return;
+    }
+    if (!d || !d.G || (!d.G._lastN && !(d.FB && d.FB.ready))) return;
 
     // 1. Restore DOM fields
     var f = d.fields || {};
     var setVal = function(id, val) { var el = document.getElementById(id); if (el && val != null) el.value = val; };
     setVal('exam-title',  f.examTitle);
     setVal('exam-date',   f.examDate);
-    setVal('coordinator', f.coordinator);
+    setVal('coordinator-name', f.coordinator);
     setVal('eng-code',    f.engCode);
     setVal('fre-code',    f.freCode);
 
@@ -2272,6 +2296,7 @@ function resumeSession() {
     G.qLabels    = savedG.qLabels    || [];
     G.qStatus    = savedG.qStatus    || [];
     G.exclusions = savedG.exclusions || {};
+    G.elentraIds = savedG.elentraIds || [];
     // _lastN, _lastAlpha, _hasStream etc. restored for guard checks,
     // then overwritten by runAnalysis()
     G._lastN     = savedG._lastN;
@@ -2299,12 +2324,25 @@ function resumeSession() {
       FB.ready      = true;
     }
 
-    // 6. Hide banner, re-run analysis (recomputes + re-renders)
-    discardDraft();  // clears storage so a crash during render doesn't loop
+    // Restore coordinator decisions that live outside G/FB.
+    _ntIncluded = d.ntIncluded || savedG._ntIncluded || {};
+    var savedReviewState = d.reviewState || {};
+    _reviewState = savedReviewState;
+
+    // 6. Hide banner, re-run analysis (recomputes + re-renders). Keep the saved
+    // draft until the successful run replaces it, so a render failure is recoverable.
     var banner = document.getElementById('draft-resume-banner');
     if (banner) banner.style.display = 'none';
 
-    runAnalysis();
+    if (G._lastN) {
+      runAnalysis();
+      _reviewState = savedReviewState;
+      updateReviewTabLabel();
+      updateSidebarBadges();
+      saveSession();
+    } else {
+      finaliseFeedback();
+    }
 
   } catch(e) {
     alert('Could not restore session: ' + e.message + '. Starting fresh.');
@@ -2323,7 +2361,7 @@ function renderSessionHistory(d) {
   var el = document.getElementById('session-history-content');
   if (!el) return;
 
-  if (!d || !d.G || !d.G._lastN) {
+  if (!d || !d.G || (!d.G._lastN && !(d.FB && d.FB.ready))) {
     // Empty state
     el.style.cssText = 'border:1px dashed var(--c-border);border-radius:10px;padding:32px 20px;text-align:center;background:var(--c-surface)';
     el.innerHTML = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--c-muted)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 12px;display:block;opacity:.6"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>' +
@@ -2462,7 +2500,7 @@ function toggleDiagnostics() {
 var THRESH_DEFAULTS = {
   difficult: 0.35,
   easy:      0.96,
-  disc:      0.00,
+  disc:      0.10,
   checkp:    0.25,
   checkr:    0.15,
   dif:       0.010,
@@ -2475,6 +2513,10 @@ function getThresh(id) {
   var el = document.getElementById('thr-'+id);
   if (el) { var v = parseFloat(el.value); if (!isNaN(v)) return v; }
   return THRESH_DEFAULTS[id];
+}
+
+function formatDifThreshold() {
+  return getThresh('dif').toFixed(3).replace(/0+$/, '').replace(/\.$/, '');
 }
 
 function syncSlider(id, val) {
@@ -2639,7 +2681,7 @@ var TT = {
 var G_SOURCE = 'qm';
 var G_DIF_ENABLED = true;
 var G_DIRTY = false; // true when settings changed since last analysis
-var G_MCQ_CONFIRMED = false; // true once user clicks Looks good on parse preview
+var G_MCQ_CONFIRMED = false; // true once user clicks Confirm data on parse preview
 var G_EXCL_VIEW     = 'clean'; // Exception view: 'clean' | 'init' | 'impact'
 
 function markDirty() {
@@ -2798,7 +2840,8 @@ function captureNewChartHiRes() {
   return off.toDataURL('image/png', 1.0);
 }
 // ── State ─────────────────────────────────────────────────────────────────
-var G = { students:[], key:[], nQ:0, qLabels:[], qStatus:[], mcq:[], dif:[], exclusions:{}, _initial:null };
+var G = { students:[], key:[], nQ:0, qLabels:[], qStatus:[], mcq:[], dif:[], exclusions:{}, _initial:null,
+  _uploadValidation:{resultsBlockers:[],resultsWarnings:[],keyBlockers:[],keyWarnings:[]} };
 // Also reset exception view on every G reset
 G_EXCL_VIEW = 'clean';
 
@@ -2919,13 +2962,23 @@ function esRecordFeedback() {
 
 // ── File I/O ──────────────────────────────────────────────────────────────
 document.getElementById('fi-main').addEventListener('change', function(e) {
-  if (e.target.files[0]) { readFile(e.target.files[0], function(err, rows, text, isCsv) {
+  if (e.target.files[0]) {
+    G_MCQ_CONFIRMED = false;
+    G.students=[]; G.nQ=0; G.qLabels=[]; G.qStatus=[]; G.elentraIds=[]; G._qmResultsMeta=null;
+    qmResetUploadValidation('results');
+    checkRunReady();
+    readFile(e.target.files[0], function(err, rows, text, isCsv) {
     if (err) { showFeedback('feedback-main','err',[err]); return; }
     parseResults(text, rows, isCsv);
   }, false); }
 });
 document.getElementById('fi-key').addEventListener('change', function(e) {
-  if (e.target.files[0]) { readFile(e.target.files[0], function(err, rows, text, isCsv) {
+  if (e.target.files[0]) {
+    G_MCQ_CONFIRMED = false;
+    G.key=[]; G._qmKeyMeta=null;
+    qmResetUploadValidation('key');
+    checkRunReady();
+    readFile(e.target.files[0], function(err, rows, text, isCsv) {
     if (err) { showFeedback('feedback-key','err',[err]); return; }
     parseKey(text, rows, isCsv);
   }, true); }
@@ -3033,11 +3086,50 @@ function parseOutcome(v) {
   return '';
 }
 
+function qmEnsureUploadValidation() {
+  if (!G._uploadValidation) G._uploadValidation={resultsBlockers:[],resultsWarnings:[],keyBlockers:[],keyWarnings:[]};
+  return G._uploadValidation;
+}
+function qmResetUploadValidation(part) {
+  var v=qmEnsureUploadValidation();
+  if (part==='results') { v.resultsBlockers=[]; v.resultsWarnings=[]; }
+  if (part==='key') { v.keyBlockers=[]; v.keyWarnings=[]; }
+}
+function qmAddUploadIssue(part, severity, message) {
+  var v=qmEnsureUploadValidation();
+  var key=part+(severity==='blocker'?'Blockers':'Warnings');
+  if (v[key].indexOf(message)<0) v[key].push(message);
+}
+function qmUploadBlockers() {
+  var v=qmEnsureUploadValidation();
+  return v.resultsBlockers.concat(v.keyBlockers);
+}
+function qmUploadWarnings() {
+  var v=qmEnsureUploadValidation();
+  return v.resultsWarnings.concat(v.keyWarnings);
+}
+function qmCleanItemWording(value) {
+  return String(value||'')
+    .replace(/<[^>]*>/g,' ')
+    .replace(/(?:Question\s+)?ID:\s*\d+(?:\/\d+)?/ig,' ')
+    .replace(/&nbsp;/ig,' ')
+    .replace(/\s+/g,' ')
+    .trim()
+    .toLowerCase();
+}
+function qmItemReference(value, qNum) {
+  var raw=String(value||'');
+  var hasLabel=/(?:Question\s+)?ID\s*:/i.test(raw);
+  var valid=raw.match(/(?:Question\s+)?ID:\s*(\d+)\/([1-9]\d*)/i);
+  return {qNum:qNum,id:valid?(valid[1]+'/'+valid[2]):'',hasIdLabel:hasLabel,validId:!!valid,wording:qmCleanItemWording(raw)};
+}
+
 
 // ── Main results parser ───────────────────────────────────────────────────
 function parseResults(text, xlsxRows, isCsv) {
   // Route to separate Scantron parser — completely independent code path
   if (G_SOURCE === 'scantron') { parseScantronResults(text); return; }
+  qmResetUploadValidation('results');
 
   var rows = [];
   if (xlsxRows) {
@@ -3188,13 +3280,14 @@ function parseResults(text, xlsxRows, isCsv) {
   for (var qi2 = 0; qi2 < questions.length; qi2++) {
     var oc2 = questions[qi2].outcomeCol;
     var allUnscored = true;
-    var checked = 0;
-    for (var ri2 = 3; ri2 < rows.length && checked < 5; ri2++) {
+    var sawOutcome = false;
+    for (var ri2 = 3; ri2 < rows.length; ri2++) {
       var outVal = String(rows[ri2][oc2]||'').trim().toLowerCase();
+      if (!outVal) continue;
+      sawOutcome = true;
       if (outVal && outVal.indexOf('unscored') === -1) { allUnscored = false; break; }
-      checked++;
     }
-    if (allUnscored && checked > 0) {
+    if (allUnscored && sawOutcome) {
       unscoredQNums.push(questions[qi2].qNum);
     } else {
       validQuestions.push(questions[qi2]);
@@ -3202,6 +3295,20 @@ function parseResults(text, xlsxRows, isCsv) {
   }
   var skippedUnscoredResults = unscoredQNums.length;
   questions = validQuestions;
+
+  // A mixture of scored answers and literal "Unscored" values for one item is
+  // structurally ambiguous and must not silently become wrong responses.
+  for (var mq=0; mq<questions.length; mq++) {
+    var mixedUnscored=0, mixedScored=0;
+    for (var mr=0; mr<dataRows.length; mr++) {
+      var mixedRaw=String(dataRows[mr][questions[mq].outcomeCol]||'').trim();
+      if (!mixedRaw) continue;
+      if (/unscored/i.test(mixedRaw)) mixedUnscored++; else mixedScored++;
+    }
+    if (mixedUnscored>0 && mixedScored>0) {
+      qmAddUploadIssue('results','blocker','Question '+questions[mq].qNum+' mixes scored and Unscored outcomes across students.');
+    }
+  }
 
   if (questions.length === 0) {
     showFeedback('feedback-main','err',[
@@ -3226,6 +3333,24 @@ function parseResults(text, xlsxRows, isCsv) {
     // Try scoreCol directly, then adjacent cols (merged cell offset)
     return elentraIdByCol[q.scoreCol] || elentraIdByCol[q.scoreCol - 1] || elentraIdByCol[q.scoreCol + 1] || '';
   });
+  var resultRefs=questions.map(function(q){
+    var cell=wordingRow[q.scoreCol] || wordingRow[q.scoreCol-1] || wordingRow[q.scoreCol+1] || '';
+    return qmItemReference(cell,q.qNum);
+  });
+  G._qmResultsMeta={questionNumbers:questions.map(function(q){return q.qNum;}),items:resultRefs};
+
+  var qNumSeen={};
+  questions.forEach(function(q){ qNumSeen[q.qNum]=(qNumSeen[q.qNum]||0)+1; });
+  var duplicateQNums=Object.keys(qNumSeen).filter(function(q){return qNumSeen[q]>1;});
+  if (duplicateQNums.length) qmAddUploadIssue('results','blocker','Duplicate question number'+(duplicateQNums.length!==1?'s':'')+' found: '+duplicateQNums.join(', ')+'.');
+  var malformedRefs=resultRefs.filter(function(ref){return ref.hasIdLabel&&!ref.validId;});
+  if (malformedRefs.length) qmAddUploadIssue('results','blocker','Question ID version must be a positive number for question'+(malformedRefs.length!==1?'s ':' ')+malformedRefs.map(function(r){return r.qNum;}).join(', ')+'.');
+  var missingRefs=resultRefs.filter(function(ref){return !ref.hasIdLabel;});
+  if (missingRefs.length) qmAddUploadIssue('results','warning',missingRefs.length+' question'+(missingRefs.length!==1?'s are':' is')+' missing a Question ID/version.');
+  var resultIdCounts={};
+  resultRefs.forEach(function(ref){if(ref.id)resultIdCounts[ref.id]=(resultIdCounts[ref.id]||0)+1;});
+  var duplicateIds=Object.keys(resultIdCounts).filter(function(id){return resultIdCounts[id]>1;});
+  if (duplicateIds.length) qmAddUploadIssue('results','blocker','Duplicate Question ID/version found: '+duplicateIds.join(', ')+'.');
 
   // Parse students
   G.students = [];
@@ -3252,6 +3377,13 @@ function parseResults(text, xlsxRows, isCsv) {
     for (var qi = 0; qi < questions.length; qi++) {
       var raw = String(r[questions[qi].outcomeCol] || '').trim();
       var letter = parseOutcome(raw);
+      if (raw && !letter && !/unscored/i.test(raw)) {
+        qmAddUploadIssue('results','blocker','Unrecognised response value for student row '+(ri+1)+', question '+questions[qi].qNum+': "'+raw.slice(0,40)+'".');
+      }
+      var rawScore=String(r[questions[qi].scoreCol]||'').trim();
+      if (rawScore && rawScore!=='0' && rawScore!=='1') {
+        qmAddUploadIssue('results','blocker','Unexpected score value for student row '+(ri+1)+', question '+questions[qi].qNum+': "'+rawScore.slice(0,40)+'".');
+      }
       s.outcomes.push(letter);
       s.qmScores.push(parseInt(r[questions[qi].scoreCol]) || 0);
     }
@@ -3259,12 +3391,27 @@ function parseResults(text, xlsxRows, isCsv) {
     G.students.push(s);
   }
 
+  if (idCol===-1) {
+    qmAddUploadIssue('results','blocker','Student ID column (Special 5) is missing.');
+  } else {
+    var blankIdRows=[], idCounts={};
+    G.students.forEach(function(s,idx){
+      if (!s.id) blankIdRows.push(idx+1);
+      else idCounts[s.id]=(idCounts[s.id]||0)+1;
+    });
+    var duplicateStudentIds=Object.keys(idCounts).filter(function(id){return idCounts[id]>1;});
+    if (blankIdRows.length) qmAddUploadIssue('results','blocker',blankIdRows.length+' student row'+(blankIdRows.length!==1?'s have':' has')+' a blank student ID.');
+    if (duplicateStudentIds.length) qmAddUploadIssue('results','blocker','Duplicate student ID'+(duplicateStudentIds.length!==1?'s':'')+' found: '+duplicateStudentIds.slice(0,10).join(', ')+(duplicateStudentIds.length>10?'…':'')+'.');
+  }
+
   if (G.students.length === 0) {
+    G.nQ=0; G.qLabels=[]; G.qStatus=[]; G.elentraIds=[]; G._qmResultsMeta=null;
+    qmAddUploadIssue('results','blocker','No student data rows were found.');
     showFeedback('feedback-main','err',[
       'No student data rows found.',
       'The file was parsed but contained no valid student rows.',
       'Check that the file has not been filtered or truncated.'
-    ], ''); return;
+    ], ''); checkRunReady(); return;
   }
 
   // Build feedback
@@ -3315,6 +3462,11 @@ function parseResults(text, xlsxRows, isCsv) {
     return 'Q'+(i+1)+'='+(s0.qmScores&&s0.qmScores[i]!==undefined?s0.qmScores[i]:'?');
   }).join(' | ') : 'n/a';
   var unmatchedCount = G.students.filter(function(s){ return s.stream !== engCode && s.stream !== freCode; }).length;
+  if (G_DIF_ENABLED && unmatchedCount>0) qmAddUploadIssue('results','warning',unmatchedCount+' student row'+(unmatchedCount!==1?'s use':' uses')+' an unrecognised or blank language-stream code.');
+  var resultBlockers=qmEnsureUploadValidation().resultsBlockers;
+  var resultWarnings=qmEnsureUploadValidation().resultsWarnings;
+  if (resultBlockers.length) visibleLines.push('Cannot confirm: '+resultBlockers.join(' '));
+  else if (resultWarnings.length) visibleLines.push('Review warning: '+resultWarnings.join(' '));
   var dbg =
     'FILE FORMAT\n' +
     'Detected as: QuestionMark raw export (Excel/CSV).\n' +
@@ -3338,7 +3490,7 @@ function parseResults(text, xlsxRows, isCsv) {
     'ANSWER PREVIEW (first student, Q1–Q10)\n' +
     q10preview;
 
-  showFeedback('feedback-main', (G_DIF_ENABLED && !hasStream) ? 'warn' : 'ok', visibleLines, dbg);
+  showFeedback('feedback-main', resultBlockers.length ? 'err' : ((resultWarnings.length || (G_DIF_ENABLED && !hasStream)) ? 'warn' : 'ok'), visibleLines, dbg);
   document.getElementById('key-card').style.display = 'block';
   checkRunReady();
   if (G_SOURCE !== 'scantron') updateQMPreview();
@@ -3349,6 +3501,7 @@ function parseResults(text, xlsxRows, isCsv) {
 
 // ── Key parser ────────────────────────────────────────────────────────────
 function parseKey(text, xlsxRows, isCsv) {
+  qmResetUploadValidation('key');
   if (!G.nQ) {
     showFeedback('feedback-key','err',[
       'Please upload the results file first.',
@@ -3413,6 +3566,7 @@ function parseKey(text, xlsxRows, isCsv) {
 
   // Build key array — skip Q1 (Disclosure) and Unscored questions
   var keys = [];
+  var keyRefs = [];
   var validQNums = []; // original question numbers for valid (non-unscored) questions
   var validQIndices = []; // indices into G.students[].outcomes that are valid (not unscored)
   var skippedUnscored = 0;
@@ -3434,7 +3588,11 @@ function parseKey(text, xlsxRows, isCsv) {
       matchIdx = keys.length; // current position
       break;
     }
-    keys.push(parseOutcome(raw));
+    var parsedKey=parseOutcome(raw);
+    keys.push(parsedKey);
+    var keyWordingRow=rows[1]||[];
+    var keyWording=keyWordingRow[sc] || keyWordingRow[sc-1] || keyWordingRow[sc+1] || '';
+    keyRefs.push(qmItemReference(keyWording,qNum));
     validQNums.push(qNum);
     validQIndices.push(keys.length - 1);
   }
@@ -3457,26 +3615,59 @@ function parseKey(text, xlsxRows, isCsv) {
       if (/unscored/i.test(raw2)) { dropPositions.push(resultsIdx); }
       resultsIdx++;
     }
-    // Drop those positions from every student's outcomes
-    for (var si = 0; si < G.students.length; si++) {
-      G.students[si].outcomes = G.students[si].outcomes.filter(function(_,idx){
-        return dropPositions.indexOf(idx) === -1;
-      });
-      G.students[si].qmScores = G.students[si].qmScores.filter(function(_,idx){
-        return dropPositions.indexOf(idx) === -1;
-      });
+    // Only drop positions that actually exist in the results data. The results
+    // file remains authoritative for question count; an extra key column must
+    // produce a mismatch, never expand G.nQ.
+    var resultQuestionCount=G.nQ;
+    var actualDropPositions=dropPositions.filter(function(idx){return idx<resultQuestionCount;});
+    if (actualDropPositions.length) {
+      for (var si = 0; si < G.students.length; si++) {
+        G.students[si].outcomes = G.students[si].outcomes.filter(function(_,idx){
+          return actualDropPositions.indexOf(idx) === -1;
+        });
+        G.students[si].qmScores = G.students[si].qmScores.filter(function(_,idx){
+          return actualDropPositions.indexOf(idx) === -1;
+        });
+      }
+      G.qLabels = G.qLabels.filter(function(_,idx){return actualDropPositions.indexOf(idx)===-1;});
+      G.qStatus = G.qLabels.map(function(){ return ''; });
+      G.nQ = G.qLabels.length;
     }
-    // Update nQ and labels
-    G.nQ = keys.length;
-    G.qLabels = validQNums.map(function(qn){ return 'Question '+qn; });
-    G.qStatus = keys.map(function(){ return ''; });
   }
 
   G.key = keys;
+  G._qmKeyMeta={questionNumbers:validQNums.slice(),items:keyRefs};
 
   // Validate count matches
   var mismatch = keys.length !== G.nQ;
   var missing  = keys.filter(function(k){ return !k; }).length;
+  var invalidKeys=keys.map(function(k,i){return (!k||!/^[a-e]$/.test(k))?validQNums[i]:null;}).filter(function(v){return v!==null;});
+  if (mismatch) qmAddUploadIssue('key','blocker','Question count mismatch: results contain '+G.nQ+' questions and the key contains '+keys.length+'.');
+  if (invalidKeys.length) qmAddUploadIssue('key','blocker','Missing or unsupported answer key value for question'+(invalidKeys.length!==1?'s ':' ')+invalidKeys.join(', ')+'. Only A–E (or 1–5) are supported.');
+
+  var keyQSeen={}; validQNums.forEach(function(q){keyQSeen[q]=(keyQSeen[q]||0)+1;});
+  var duplicateKeyQ=Object.keys(keyQSeen).filter(function(q){return keyQSeen[q]>1;});
+  if (duplicateKeyQ.length) qmAddUploadIssue('key','blocker','Duplicate question number'+(duplicateKeyQ.length!==1?'s':'')+' in answer key: '+duplicateKeyQ.join(', ')+'.');
+  var malformedKeyRefs=keyRefs.filter(function(ref){return ref.hasIdLabel&&!ref.validId;});
+  if (malformedKeyRefs.length) qmAddUploadIssue('key','blocker','Answer-key Question ID version must be a positive number for question'+(malformedKeyRefs.length!==1?'s ':' ')+malformedKeyRefs.map(function(r){return r.qNum;}).join(', ')+'.');
+  var missingKeyRefs=keyRefs.filter(function(ref){return !ref.hasIdLabel;});
+  if (missingKeyRefs.length) qmAddUploadIssue('key','warning',missingKeyRefs.length+' answer-key question'+(missingKeyRefs.length!==1?'s are':' is')+' missing a Question ID/version.');
+
+  if (G._qmResultsMeta && G._qmResultsMeta.items) {
+    var resultMeta=G._qmResultsMeta;
+    if (JSON.stringify(resultMeta.questionNumbers)!==JSON.stringify(validQNums)) {
+      qmAddUploadIssue('key','blocker','Question numbers/order do not match between the results file and answer key.');
+    }
+    var crossN=Math.min(resultMeta.items.length,keyRefs.length);
+    var idMismatch=[], wordingMismatch=[];
+    for (var cm=0;cm<crossN;cm++) {
+      var rr=resultMeta.items[cm], kr=keyRefs[cm];
+      if (rr.id && kr.id && rr.id!==kr.id) idMismatch.push(rr.qNum);
+      if (rr.wording && kr.wording && rr.wording!==kr.wording) wordingMismatch.push(rr.qNum);
+    }
+    if (idMismatch.length) qmAddUploadIssue('key','blocker','Question ID/version differs between results and key for question'+(idMismatch.length!==1?'s ':' ')+idMismatch.join(', ')+'.');
+    if (wordingMismatch.length) qmAddUploadIssue('key','blocker','Question wording differs between results and key for question'+(wordingMismatch.length!==1?'s ':' ')+wordingMismatch.join(', ')+'.');
+  }
   var preview  = keys.slice(0,5).map(function(k,i){ return 'Q'+(i+1)+'='+(k||'?').toUpperCase(); });
 
   var keyNotes = [];
@@ -3485,7 +3676,9 @@ function parseKey(text, xlsxRows, isCsv) {
   if (mismatch) keyNotes.push('⚠ Key has '+keys.length+' answers but results file has '+G.nQ+' questions — check that both files are from the same exam.');
   if (missing > 0) keyNotes.push('⚠ '+missing+' question'+(missing!==1?'s':'')+' could not be read from the key file.');
 
-  var type = (mismatch || missing > 0) ? 'warn' : 'ok';
+  var keyBlockers=qmEnsureUploadValidation().keyBlockers;
+  var keyWarnings=qmEnsureUploadValidation().keyWarnings;
+  var type = keyBlockers.length ? 'err' : (keyWarnings.length ? 'warn' : 'ok');
   var lines = [
     'Answer key ready.',
     keys.length + ' questions • first 5 answers: ' + preview.join(', ') + (keys.length > 5 ? '...' : '') + '.'
@@ -3503,6 +3696,8 @@ function parseKey(text, xlsxRows, isCsv) {
     'Correct answers — Q1-Q10:',
     keyPreview10
   ];
+  if (keyBlockers.length) keyVisibleLines.push('Cannot confirm: '+keyBlockers.join(' '));
+  else if (keyWarnings.length) keyVisibleLines.push('Review warning: '+keyWarnings.join(' '));
 
   var allKeyLines = keys.map(function(k,i){return 'Q'+(i+1)+': '+(k?k.toUpperCase():'— (missing)');});
   var keyDbg =
@@ -3880,6 +4075,15 @@ function renderQMPreview(el) {
         '⚠ Question count mismatch: the results file has <strong>'+qCount+' questions</strong> but the answer key has <strong>'+keyCount+' answers</strong>. Verify that both files were exported from the same exam session.' +
       '</div>'
     : '';
+  var uploadBlockers=qmUploadBlockers();
+  var uploadWarnings=qmUploadWarnings();
+  var uploadValidationHtml='';
+  if (uploadBlockers.length) {
+    uploadValidationHtml='<div id="qm-validation-blockers" style="padding:10px 14px;background:#fff0f0;border-top:0.5px solid #f0c0c0;color:#7a1010;font-size:11px"><strong>Analysis blocked until corrected:</strong><ul style="margin:5px 0 0 18px;padding:0">'+uploadBlockers.map(function(m){return '<li>'+escHtml(m)+'</li>';}).join('')+'</ul></div>';
+  }
+  if (uploadWarnings.length) {
+    uploadValidationHtml+='<div id="qm-validation-warnings" style="padding:10px 14px;background:#fffbf0;border-top:0.5px solid #f0e0a0;color:#856404;font-size:11px"><strong>Review before confirming:</strong><ul style="margin:5px 0 0 18px;padding:0">'+uploadWarnings.map(function(m){return '<li>'+escHtml(m)+'</li>';}).join('')+'</ul></div>';
+  }
 
   el.innerHTML =
     '<div style="border:0.5px solid var(--c-border);border-radius:10px;overflow:hidden;font-family:var(--font)">' +
@@ -3896,6 +4100,7 @@ function renderQMPreview(el) {
     '<div style="padding:7px 16px;background:#f0f4ff;border-bottom:0.5px solid var(--c-border);font-size:11px;color:var(--c-secondary)">ℹ This preview reflects the raw files only — Question Exceptions and alternate keys have not been applied yet.</div>' +
     // Mismatch warning (if any)
     mismatchWarning +
+    uploadValidationHtml +
     // KPI row
     '<div style="display:grid;grid-template-columns:repeat('+(G_DIF_ENABLED?'4':'2')+',1fr);gap:0;border-bottom:0.5px solid var(--c-border)">' +
       _previewKPI('Students', G.students.length, 'rows detected') +
@@ -3934,7 +4139,7 @@ function renderQMPreview(el) {
         '<button onclick="updateQMPreview()" style="font-size:12px;font-weight:500;padding:5px 14px;border-radius:6px;border:0.5px solid var(--c-border);background:#fff;color:var(--c-secondary);cursor:pointer">Re-validate</button>' +
         '<button onclick="document.getElementById(&quot;fi-main&quot;).click()" style="font-size:12px;font-weight:500;padding:5px 14px;border-radius:6px;border:0.5px solid var(--c-border);background:#fff;color:var(--c-secondary);cursor:pointer">Re-upload results</button>' +
         '<button onclick="document.getElementById(&quot;fi-key&quot;).click()" style="font-size:12px;font-weight:500;padding:5px 14px;border-radius:6px;border:0.5px solid var(--c-border);background:#fff;color:var(--c-secondary);cursor:pointer">Re-upload key</button>' +
-        '<button onclick="confirmParsePreview(\'qm\')" style="font-size:12px;font-weight:500;padding:5px 14px;border-radius:6px;border:none;background:var(--s-ok);color:#fff;cursor:pointer">✓ Confirm data</button>' +
+        '<button id="qm-confirm-data" onclick="confirmParsePreview(\'qm\')" '+(uploadBlockers.length?'disabled aria-disabled="true"':'')+' style="font-size:12px;font-weight:500;padding:5px 14px;border-radius:6px;border:none;background:var(--s-ok);color:#fff;cursor:'+(uploadBlockers.length?'not-allowed':'pointer')+';opacity:'+(uploadBlockers.length?'.4':'1')+'">✓ Confirm data</button>' +
       '</div>' +
     '</div>' +
     '</div>';
@@ -4032,6 +4237,14 @@ function exportReportPDF(type) {
   }, 700);
 }
 
+// Prevent spreadsheet formula execution when user-controlled text is opened in
+// Excel, while preserving legitimate negative numeric values.
+function csvSafeValue(value) {
+  var s = String(value === null || value === undefined ? '' : value);
+  if (/^[\t\r ]*[=+@]/.test(s) || /^[\t\r ]*-(?!\d+(?:\.\d+)?(?:$|\s))/.test(s)) s = "'" + s;
+  return s;
+}
+
 function exportSessionRecord() {
   closeHamburger();
   if (!G._lastN) { alert('Nothing to export yet.\n\nWhat happened: No analysis has been run in this session.\nWhat to do: Upload your files and run the analysis, then export.'); return; }
@@ -4045,7 +4258,7 @@ function exportSessionRecord() {
   var flaggedCount    = G.mcq ? G.mcq.filter(function(r){return r.flag&&!r.excluded;}).length : 0;
   var difFlaggedCount = G.dif ? G.dif.filter(function(d){return d.imp;}).length : 0;
   var s1H = ['Export Version','Tool Version','Exported At','Source','Exam Title','Exam Date','Total Students','EN Students','FR Students','Total Questions','Effective Questions','Exam Avg %','EN Avg %','FR Avg %','Cronbach Alpha','Flagged Count','DIF Flagged Count','Credited Count','Deleted Count'];
-  var s1R = ['1.0',APP_VERSION,ts,source,examTitle,examDate,G._lastN,G._lastNE||'',G._lastNF||'',G.nQ,G.nQ-deletedCount,G._lastAvg,G._lastEAvg||'',G._lastFAvg||'',G._lastAlpha?(Math.round(G._lastAlpha*100)/100).toFixed(2):'',flaggedCount,difFlaggedCount,creditedCount,deletedCount];
+  var s1R = ['1.0',APP_VERSION,ts,source,examTitle,examDate,G._lastN,G._lastNE||'',G._lastNF||'',G.nQ,G.nQ-deletedCount-creditedCount,G._lastAvg,G._lastEAvg||'',G._lastFAvg||'',G._lastAlpha?(Math.round(G._lastAlpha*100)/100).toFixed(2):'',flaggedCount,difFlaggedCount,creditedCount,deletedCount];
   // Build feedback comment count map
   var fbCommentMap = {};
   if (FB && FB.parsed && FB.parsed.length > 0) {
@@ -4080,7 +4293,7 @@ function exportSessionRecord() {
   });
   var s3H = ['Difficult p','Easy p','Disc rpbis','Check Key p','Check Key rpbis','DIF p-value','Gap Amber %','Gap Red %'];
   var s3R = [getThresh('difficult'),getThresh('easy'),getThresh('disc'),getThresh('checkp'),getThresh('checkr'),getThresh('dif'),getThresh('gapamber'),getThresh('gapred')];
-  function cr(arr){return arr.map(function(v){var s=String(v===null||v===undefined?'':v);if(s.indexOf(',')>=0||s.indexOf('"')>=0||s.indexOf('\n')>=0)s='"'+s.replace(/"/g,'""')+'"';return s;}).join(',');}
+  function cr(arr){return arr.map(function(v){var s=csvSafeValue(v);if(s.indexOf(',')>=0||s.indexOf('"')>=0||s.indexOf('\n')>=0)s='"'+s.replace(/"/g,'""')+'"';return s;}).join(',');}
   var lines=[
     'AQP — Assessment Quality Platform',
     'Undergraduate Medical Education',
@@ -4316,6 +4529,13 @@ function renderScantronPreview(students, keyLetters, nQ, badRows) {
 
 // ── Parse preview confirmation helpers ───────────────────────────────────────
 function confirmParsePreview(source) {
+  if (source==='qm' && qmUploadBlockers().length) {
+    G_MCQ_CONFIRMED=false;
+    updateQMPreview();
+    checkRunReady();
+    srAnnounce('Data cannot be confirmed until the upload errors are corrected.');
+    return false;
+  }
   G_MCQ_CONFIRMED = true;
   var containerId = source === 'scantron' ? 'scantron-preview' : 'qm-preview';
   var el = document.getElementById(containerId);
@@ -4450,8 +4670,6 @@ function computeInitialStats() {
       var v;
       if (isScantron) {
         v = (students[j].scores && students[j].scores[i] !== undefined) ? students[j].scores[i] : 0;
-      } else if (students[j].qmScores && students[j].qmScores.length > i) {
-        v = students[j].qmScores[i] ? 1 : 0;
       } else {
         v = (key[i] && students[j].outcomes && students[j].outcomes[i] === key[i]) ? 1 : 0;
       }
@@ -4486,7 +4704,8 @@ function computeInitialStats() {
     var flag0 = '';
     if (p >= getThresh('easy'))                                           flag0 = 'Too easy';
     else if (p <= getThresh('difficult'))                                  flag0 = 'Difficult';
-    else if (rpbis < getThresh('poordisc'))                               flag0 = rpbis < 0.15 ? 'Poor discrimination' : 'Low discrimination';
+    else if (p < 0.8 && rpbis < 0)                                        flag0 = 'Poor discrimination';
+    else if (p < 0.8 && rpbis < getThresh('disc'))                        flag0 = 'Low discrimination';
     if (flag0 && flag0 !== 'Too easy') nFl0++;
     else if (flag0 === 'Too easy') nEz0++;
     initMcq.push({ p: p, pct: Math.round(p * 100), rpbis: rpbis, flag: flag0 });
@@ -4515,6 +4734,14 @@ function runAnalysis() {
 function _runAnalysis() {
   var students=G.students, key=G.key, nQ=G.nQ, i, j;
   if (!students||!students.length||!key.length) { alert('Analysis cannot run yet.\n\nWhat happened: One or more required files are not loaded.\nWhat to do: Upload both the results file and the answer key, then try again.'); return; }
+  if (G_SOURCE==='qm' && qmUploadBlockers().length) {
+    alert('Analysis cannot run because the uploaded files failed validation.\n\nCorrect the issues shown in the Parse Preview, re-upload the affected file, and confirm the data again.');
+    return;
+  }
+  if (G_SOURCE==='qm' && key.length!==nQ) {
+    alert('Analysis cannot run because the results and answer key contain different numbers of questions.');
+    return;
+  }
   var n=students.length;
   var excl = G.exclusions || {};
 
@@ -4524,6 +4751,7 @@ function _runAnalysis() {
 
   // Score students against key, applying exclusions
   var isScantron = G_SOURCE === 'scantron';
+  var qmScoreCompared = 0, qmScoreMismatches = 0;
   for (i=0; i<n; i++) {
     var s=students[i]; s.ks=[];
     for (j=0; j<nQ; j++) {
@@ -4535,10 +4763,12 @@ function _runAnalysis() {
         var scored;
         if (isScantron) {
           scored = s.scores[j] !== undefined ? s.scores[j] : 0;
-        } else if (s.qmScores && s.qmScores.length > j) {
-          scored = s.qmScores[j] ? 1 : 0;
         } else {
           scored = (key[j]&&s.outcomes[j]===key[j])?1:0;
+          if (s.qmScores && s.qmScores.length > j) {
+            qmScoreCompared++;
+            if ((s.qmScores[j] ? 1 : 0) !== scored) qmScoreMismatches++;
+          }
         }
         // Alt key: if student got it wrong but chose an alternate accepted answer, award credit
         if (!scored && excl[j] && excl[j].altKeys && excl[j].altKeys.length) {
@@ -4554,6 +4784,10 @@ function _runAnalysis() {
       var qd = excl[j] ? excl[j].disposition : 'include';
       if (qd !== 'delete') s.kt += s.ks[j];
     }
+  }
+  G._scoreValidation = { compared:qmScoreCompared, mismatches:qmScoreMismatches };
+  if (!isScantron && qmScoreMismatches > 0) {
+    alert('Score validation warning:\n\nAQP rebuilt item scores from the uploaded answer key and found ' + qmScoreMismatches + ' response-level difference' + (qmScoreMismatches===1?'':'s') + ' from the QuestionMark score columns. The analysis uses the uploaded answer key. Please verify that the correct key file was selected.');
   }
 
   var tots=[], meanT=0, sdT=0;
@@ -4607,13 +4841,13 @@ function _runAnalysis() {
 
     // Flag cascade — from MCQ manual, first match wins
     var flag='', rec='';
-    if (p>=getThresh('easy') || (p>=0.8&&rpbis<0)) {
+    if (p>=getThresh('easy')) {
       flag='Too easy'; rec='Report (Too Easy)';
     } else if (p<getThresh('difficult')&&rpbis>0) {
       flag='Difficult item'; rec='Review wording & distractors';
     } else if (p<0.8&&rpbis<0) {
       flag='Poor discrimination'; rec='Review wording & key';
-    } else if (p<0.8&&rpbis<0.1) {
+    } else if (p<0.8&&rpbis<getThresh('disc')) {
       flag='Low discrimination'; rec='Review distractors';
     }
     // Check Key — not a separate flag category. Per MCQ manual: "if the mean is below 0.25
@@ -4755,16 +4989,16 @@ function _runAnalysis() {
 
   renderNewSummary(n, examAvg, alpha, eS.length, fS.length);
   setFilter('all');
-  G._lastAvg=Math.round(examAvg); G._lastAlpha=alpha; G._lastN=n; G._lastNE=eS.length; G._lastNF=fS.length;
+  G._lastAvg=examAvg; G._lastAlpha=alpha; G._lastN=n; G._lastNE=eS.length; G._lastNF=fS.length;
   G._lastEAvg = eS.length ? Math.round(eS.reduce(function(a,s){return a+s.kt;},0)/eS.length/nQEffective*100) : 0;
   G._lastFAvg = fS.length ? Math.round(fS.reduce(function(a,s){return a+s.kt;},0)/fS.length/nQEffective*100) : 0;
   renderBanner();
-  renderMCQReport(Math.round(examAvg), alpha);
+  renderMCQReport(examAvg, alpha);
   if (G_DIF_ENABLED && G._hasStream) {
     renderDIFTable();
     renderDIFKpiStrip();
     renderDIFReport();
-    renderFullReport(Math.round(examAvg), alpha);
+    renderFullReport(examAvg, alpha);
   }
   applyDIFVisibility();
   setTimeout(updateScrollIndicators, 200);
@@ -4789,11 +5023,11 @@ function _runAnalysis() {
   if (tabReview) tabReview.style.display = '';
   // Screen reader announcement
   var _srMsg = 'Analysis complete. ' + n + ' students, ' + nQEffective + ' questions analyzed.';
-  if (_nFlagged2 === 0 && eS.length === 0) {
+  if (_nFlagged2 === 0 && _nEasy2 === 0) {
     _srMsg += ' No flagged items — this exam performed well overall.';
   } else {
-    if (_nFlagged2) _srMsg += ' ' + _nFlagged2 + ' question' + (_nFlagged2===1?' requires':' require') + ' review.';
-    if (eS.length) _srMsg += ' ' + eS.length + ' too easy.';
+    if (_nFlagged2) _srMsg += ' ' + _nFlagged2 + (_nFlagged2===1?' question requires':' questions require') + ' review.';
+    if (_nEasy2) _srMsg += ' ' + _nEasy2 + ' too easy.';
   }
   _srMsg += ' Reports are ready.';
   srAnnounce(_srMsg);
@@ -4871,7 +5105,8 @@ function doDIF(eS,fS) {
       chi1:b1.chi2.toFixed(3), r1:b1.nk.toFixed(3),
       chi3:b3.chi2.toFixed(3), r3:b3.nk.toFixed(3),
       cd:cd.toFixed(3), rd:(b3.nk-b1.nk).toFixed(3),
-      sig:sig.toFixed(4), imp:sig<0.01 && !lowN, lowN:lowN,
+      sig:sig.toFixed(4), imp:sig<getThresh('dif') && !lowN && b1.converged && b3.converged,
+      lowN:lowN, modelFailed:!(b1.converged && b3.converged),
       ePct:eS.length?Math.round(eC/eS.length*100):0,
       fPct:fS.length?Math.round(fC/fS.length*100):0,
       nE:eS.length, nF:fS.length, disc:fmt(G.mcq[qi].rpbis,2)});
@@ -4883,6 +5118,7 @@ function logReg(y,Xs) {
   var n=y.length, k=Xs.length, i, j, a, bb, b=[];
   for (a=0; a<=k; a++) { b.push(0); }
   function sg(z){if(z>500){return 1;}if(z<-500){return 0;}return 1/(1+Math.exp(-z));}
+  var converged = false;
   for (var it=0; it<200; it++) {
     var mu=[];
     for (i=0; i<n; i++) { var v=b[0]; for (j=0;j<k;j++){v+=Xs[j][i]*b[j+1];} mu.push(sg(v)); }
@@ -4894,7 +5130,7 @@ function logReg(y,Xs) {
       for(a=0;a<=k;a++){g[a]+=rv*xi[a];for(bb=0;bb<=k;bb++){H[a][bb]-=w*xi[a]*xi[bb];}}
     }
     var d=luSolve(H,g); if(!d){break;}
-    var mx=0; for(a=0;a<=k;a++){b[a]-=d[a];if(Math.abs(d[a])>mx){mx=Math.abs(d[a]);}} if(mx<1e-7){break;}
+    var mx=0; for(a=0;a<=k;a++){b[a]-=d[a];if(Math.abs(d[a])>mx){mx=Math.abs(d[a]);}} if(mx<1e-7){converged=true;break;}
   }
   var ySum=0; for(i=0;i<n;i++){ySum+=y[i];}
   var mu0=Math.max(0.001,Math.min(0.999,ySum/n));
@@ -4904,7 +5140,7 @@ function logReg(y,Xs) {
   var chi2=Math.max(0,-2*(ll0-llF));
   var den=1-Math.exp(2*ll0/n);
   var nk=den>0?Math.max(0,Math.min(1,(1-Math.exp((2/n)*(ll0-llF)))/den)):0;
-  return {chi2:chi2,nk:nk};
+  return {chi2:chi2,nk:nk,converged:converged};
 }
 
 function luSolve(A,b) {
@@ -5537,10 +5773,15 @@ function setFilterByClick(f) {
 function renderMCQTable(filter) {
   var rows=G.mcq, filtered=[], i;
   for(i=0;i<rows.length;i++){
-    if(filter==='flagged'){if(rows[i].flag&&rows[i].flag!=='Too easy'){filtered.push(rows[i]);}}
-    else if(filter==='easy'){if(rows[i].flag==='Too easy'){filtered.push(rows[i]);}}
-    else if(filter==='poordisc'){var fl2=rows[i].flag||''; if(fl2.indexOf('Poor')>=0||fl2.indexOf('Low')>=0||fl2.indexOf('Check')>=0){filtered.push(rows[i]);}}
-    else if(filter==='dif'){if(G.dif){var drow=G.dif.filter(function(d){return d.num===rows[i].num;}); if(drow.length&&drow[0].imp){filtered.push(rows[i]);}}}
+    var ntInfo = _ntIncluded[rows[i].num] ? _ntItemToFlag(_ntIncluded[rows[i].num]) : null;
+    if(filter==='flagged'){if((rows[i].flag&&rows[i].flag!=='Too easy') || (ntInfo&&!ntInfo.isEasy)){filtered.push(rows[i]);}}
+    else if(filter==='easy'){if(rows[i].flag==='Too easy' || (ntInfo&&ntInfo.isEasy)){filtered.push(rows[i]);}}
+    else if(filter==='poordisc'){var fl2=rows[i].flag||(ntInfo?ntInfo.flag:''); if(fl2.indexOf('Poor')>=0||fl2.indexOf('Low')>=0||fl2.indexOf('Check')>=0){filtered.push(rows[i]);}}
+    else if(filter==='dif'){
+      var hardDif=false;
+      if(G.dif){var drow=G.dif.filter(function(d){return d.num===rows[i].num;}); hardDif=!!(drow.length&&drow[0].imp);}
+      if(hardDif || (ntInfo&&ntInfo.isDif)){filtered.push(rows[i]);}
+    }
     else{filtered.push(rows[i]);}
   }
   var hasElentraIds = G.mcq.some(function(r){ return r.elentraId; });
@@ -6096,7 +6337,7 @@ function renderMCQReport(avg, alpha) {
   var t2='';
   if(easy.length){
     var nums=[]; for(i=0;i<easy.length;i++) nums.push(easy[i].num);
-    t2='<p style="margin-bottom:4px"><b>Table 2 - Too Easy Questions</b><br><i>Questions answered correctly by 96% or more of students. Please revise before using again.</i></p>'+
+    t2='<p style="margin-bottom:4px"><b>Table 2 - Too Easy Questions</b><br><i>Questions answered correctly by '+Math.round(getThresh('easy')*100)+'% or more of students. Please revise before using again.</i></p>'+
        '<table style="width:95%;margin:0 auto 14px;border-collapse:collapse"><thead><tr><th>Question number</th></tr></thead><tbody><tr><td style="text-align:center;box-shadow:inset 8px 0 0 var(--s-easy)">'+nums.join(', ')+'</td></tr></tbody></table>';
   }
 
@@ -6148,6 +6389,13 @@ function renderMCQReport(avg, alpha) {
     else if(fl.indexOf('Poor')>=0) nPoor++;
   }
   var nAnalysed2 = nQ - nCredited - nDeleted;
+  // The report tables already include coordinator-selected near-threshold items;
+  // keep the overview totals consistent with those tables.
+  nFlagged = flagged.length;
+  nEasy = easy.length;
+  nDiff = flagged.filter(function(q){ return (q.flag||'').indexOf('Difficult') >= 0; }).length;
+  nPoor = flagged.filter(function(q){ return (q.flag||'').indexOf('Poor') >= 0 || (q.flag||'').indexOf('Low') >= 0; }).length;
+  nOk = Math.max(0, nAnalysed2 - nFlagged - nEasy);
 
   var overviewHtml = buildReportOverviewHtml({
     id:'mcq-report-overview', n:n, nE:nE, nF:nF,
@@ -6447,7 +6695,7 @@ function renderFullReport(avg, alpha) {
   var t2='';
   if(easy.length){
     var nums=[]; for(i=0;i<easy.length;i++) nums.push(easy[i].num);
-    t2='<p style="margin-bottom:4px"><b>Table 2 - Too Easy Questions</b><br><i>Questions answered correctly by 96% or more of students. Please revise before using again.</i></p>'+
+    t2='<p style="margin-bottom:4px"><b>Table 2 - Too Easy Questions</b><br><i>Questions answered correctly by '+Math.round(getThresh('easy')*100)+'% or more of students. Please revise before using again.</i></p>'+
        '<table style="width:95%;margin:0 auto 14px;border-collapse:collapse"><thead><tr><th>Question number</th></tr></thead><tbody><tr><td style="text-align:center;box-shadow:inset 8px 0 0 var(--s-easy)">'+nums.join(', ')+'</td></tr></tbody></table>';
   }
 
@@ -6579,9 +6827,9 @@ function renderFullReport(avg, alpha) {
     '</ul>'+
     '<p style="margin-bottom:16px">If no explanation is found, the item should remain on the exam. If an explanation is identified, the item may need to be credited or revised before reuse.</p>'+
     (difFlagged.length
-      ? '<p style="margin-bottom:8px"><b>DIF Results</b><br><i>The following question'+(difFlagged.length!==1?'s':'')+' showed statistically significant DIF (p &lt; 0.01):</i></p>'+
+      ? '<p style="margin-bottom:8px"><b>DIF Results</b><br><i>The following question'+(difFlagged.length!==1?'s':'')+' showed statistically significant DIF (p &lt; '+formatDifThreshold()+'):</i></p>'+
         '<table style="width:100%;margin:0 0 12px;border-collapse:collapse"><thead><tr style="text-align:center"><th>Question</th><th>Elentra ID</th><th>EN % Correct</th><th>FR % Correct</th><th>Interpretation</th><th>Discrimination</th></tr></thead><tbody>'+difTableRows+'</tbody></table>'
-      : '<p><i>No items with statistically significant DIF were detected (p &lt; 0.01).</i></p>')+
+      : '<p><i>No items with statistically significant DIF were detected (p &lt; '+formatDifThreshold()+').</i></p>')+
     uiReportFooterHtml();
 
   // Capture chart AFTER innerHTML is in the DOM, then build KPI overview via Canvas API
@@ -6688,14 +6936,14 @@ function renderDIFTable() {
       difEidCell(mcqR)+
       '<td>'+r.chi1+'</td><td>'+r.r1+'</td><td>'+r.chi3+'</td><td>'+r.r3+'</td>'+
       '<td>'+r.cd+'</td><td>'+r.rd+'</td><td>'+r.sig+'</td>'+
-      '<td>'+(r.imp?'<span class="badge b-dif">Yes &mdash; DIF</span>':'<span class="badge b-ok">No</span>')+'</td>'+
+      '<td>'+(r.modelFailed?'<span class="badge b-low-disc" data-tip="The logistic model did not converge; DIF flagging was suppressed for this item.">Not estimated</span>':r.imp?'<span class="badge b-dif">Yes &mdash; DIF</span>':'<span class="badge b-ok">No</span>')+'</td>'+
       (function(){
       var diff=r.ePct-r.fPct;
       var absDiff=Math.abs(diff);
       var higher=diff>0?'EN':diff<0?'FR':'';
       var gapCol=absDiff>=getThresh('gapred')?'var(--c-accent)':absDiff>=getThresh('gapamber')?'#8b5a00':'var(--c-muted)';
       var gapBg=absDiff>=getThresh('gapred')?'#fde8e8':absDiff>=getThresh('gapamber')?'#fff8e0':'transparent';
-      var gapBorder=absDiff>=8?'0.5px solid '+(absDiff>=15?'rgba(163,21,21,.2)':'rgba(139,90,0,.2)'):'none';
+      var gapBorder=absDiff>=getThresh('gapamber')?'0.5px solid '+(absDiff>=getThresh('gapred')?'rgba(163,21,21,.2)':'rgba(139,90,0,.2)'):'none';
       var arrow=higher==='EN'?'↑ EN':higher==='FR'?'↑ FR':'—';
       var gapCell=absDiff>0
         ? '<span style="font-size:9.5px;padding:2px 6px;border-radius:4px;background:'+gapBg+';color:'+gapCol+';border:'+gapBorder+';white-space:nowrap">'+arrow+' '+absDiff+'%</span>'
@@ -6783,9 +7031,9 @@ function renderDIFReport() {
     '</ul>'+
     '<p style="margin-bottom:16px">If no explanation is found, the item should remain on the exam. If an explanation is identified, the item may need to be credited or revised before reuse.</p>'+
     (flagged.length
-      ? '<p style="margin-bottom:8px"><b>DIF Results</b><br><i>The following question'+(flagged.length!==1?'s':'')+' showed statistically significant DIF (p &lt; 0.01):</i></p>'+
+      ? '<p style="margin-bottom:8px"><b>DIF Results</b><br><i>The following question'+(flagged.length!==1?'s':'')+' showed statistically significant DIF (p &lt; '+formatDifThreshold()+'):</i></p>'+
         '<table style="width:100%;margin:0 0 12px;border-collapse:collapse"><thead><tr style="text-align:center"><th>Question</th><th>Elentra ID</th><th>EN % Correct</th><th>FR % Correct</th><th>Interpretation</th><th>Discrimination</th></tr></thead><tbody>'+difTableRows+'</tbody></table>'
-      : '<p><i>No items with statistically significant DIF were detected (p &lt; 0.01).</i></p>')+
+      : '<p><i>No items with statistically significant DIF were detected (p &lt; '+formatDifThreshold()+').</i></p>')+
     uiReportFooterHtml();
 }
 
@@ -6806,7 +7054,7 @@ function doExport(type) {
   var csv='\uFEFF';
   for(i=0;i<rows.length;i++){
     var cells=[];
-    for(var j=0;j<rows[i].length;j++){cells.push('"'+String(rows[i][j]==null?'':rows[i][j]).replace(/"/g,'""')+'"');}
+    for(var j=0;j<rows[i].length;j++){cells.push('"'+csvSafeValue(rows[i][j]).replace(/"/g,'""')+'"');}
     csv+=cells.join(',')+'\r\n';
   }
   var blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
@@ -6841,9 +7089,12 @@ function docxReportByline(dateStr) {
     return el ? el.value.trim() : '';
   })();
   // Centred paragraph styles
-  var ns0 = '<w:pPr><w:pStyle w:val="NoSpacing"/><w:jc w:val="center"/><w:spacing w:before="480" w:after="80" w:line="240" w:lineRule="auto"/></w:pPr>';
-  var nsImg = '<w:pPr><w:pStyle w:val="NoSpacing"/><w:jc w:val="center"/><w:spacing w:before="80" w:after="80" w:line="240" w:lineRule="auto"/></w:pPr>';
-  var ns1 = '<w:pPr><w:pStyle w:val="NoSpacing"/><w:jc w:val="center"/><w:spacing w:before="0" w:after="200" w:line="240" w:lineRule="auto"/></w:pPr>';
+  // Keep the compact four-line block together. Generous paragraph spacing here
+  // previously orphaned the date/profile onto an otherwise blank final page.
+  var ns0 = '<w:pPr><w:pStyle w:val="NoSpacing"/><w:keepNext/><w:keepLines/><w:jc w:val="center"/><w:spacing w:before="160" w:after="20" w:line="220" w:lineRule="auto"/></w:pPr>';
+  var nsImg = '<w:pPr><w:pStyle w:val="NoSpacing"/><w:keepNext/><w:keepLines/><w:jc w:val="center"/><w:spacing w:before="0" w:after="20" w:line="220" w:lineRule="auto"/></w:pPr>';
+  var ns1 = '<w:pPr><w:pStyle w:val="NoSpacing"/><w:keepNext/><w:keepLines/><w:jc w:val="center"/><w:spacing w:before="0" w:after="20" w:line="220" w:lineRule="auto"/></w:pPr>';
+  var nsLast = '<w:pPr><w:pStyle w:val="NoSpacing"/><w:keepLines/><w:jc w:val="center"/><w:spacing w:before="0" w:after="0" w:line="220" w:lineRule="auto"/></w:pPr>';
   var rPr = '<w:rPr><w:i/><w:color w:val="888888"/><w:sz w:val="18"/><w:szCs w:val="18"/></w:rPr>';
 
   // Line 1 — label
@@ -6878,7 +7129,7 @@ function docxReportByline(dateStr) {
     return Math.abs(getThresh(k) - THRESH_DEFAULTS[k]) < 0.0001;
   });
   var profileLineW = 'Analysis profile: ' + (allDefaultW ? 'UGME Exam Standard' : 'Custom thresholds');
-  xml += '<w:p>' + ns1 + '<w:r>' + rPr + '<w:t xml:space="preserve">' + profileLineW + '</w:t></w:r></w:p>';
+  xml += '<w:p>' + nsLast + '<w:r>' + rPr + '<w:t xml:space="preserve">' + profileLineW + '</w:t></w:r></w:p>';
 
   return xml;
 }
@@ -7432,7 +7683,7 @@ function _doExportReportBuild(type, title, safe, dateStr, a2, avg, dateSuffix, f
     // Table 2 — Too Easy Questions
     if(easy2.length){
       body+=docxPara('Table 2 - Too Easy Questions',{bold:true,sz:24,spAfter:60});
-      body+=docxPara('Questions answered correctly by 96% or more of students. Please revise before using again.',{italic:true,sz:22,spAfter:100});
+      body+=docxPara('Questions answered correctly by '+Math.round(getThresh('easy')*100)+'% or more of students. Please revise before using again.',{italic:true,sz:22,spAfter:100});
       body+=docxTable(['Question number'],[easy2.map(function(e){return e.num;}).join(', ')].map(function(v){return [v];}),[9713],{centre:true,cellMar:58,vAlignBottom:true});
       body+=docxPara('',{spAfter:80});
     }
@@ -7492,7 +7743,7 @@ function _doExportReportBuild(type, title, safe, dateStr, a2, avg, dateSuffix, f
     if(difFlagged2.length){
       body+='<w:p><w:pPr><w:pStyle w:val="NoSpacing"/><w:spacing w:before="0" w:after="80" w:line="240" w:lineRule="auto"/></w:pPr>'+
         '<w:r><w:rPr><w:b/><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr><w:t>DIF Results</w:t></w:r></w:p>';
-      body+=docxPara('The following question'+(difFlagged2.length!==1?'s':'')+' showed statistically significant DIF (p < 0.01):',{sz:24,spAfter:120});
+      body+=docxPara('The following question'+(difFlagged2.length!==1?'s':'')+' showed statistically significant DIF (p < '+formatDifThreshold()+'):',{sz:24,spAfter:120});
       var difRows3=difFlagged2.map(function(r3){
         var mcqMatch=G.mcq.find(function(m){return m.num===r3.num;});
         return [r3.num, mcqMatch?mcqMatch.elentraId||'':'', r3.ePct+'%', r3.fPct+'%', r3.fPct>r3.ePct?'FR students performed better':'EN students performed better', r3.disc];
@@ -7500,7 +7751,7 @@ function _doExportReportBuild(type, title, safe, dateStr, a2, avg, dateSuffix, f
       body+=docxTable(['Question','Elentra ID','EN % Correct','FR % Correct','Interpretation','Discrimination'],difRows3,[900,1000,1200,1200,3413,900],{centreCols:[0,1,2,3,5],centre:true,cellMar:43,vAlignBottom:true});
       body+=docxPara('',{spAfter:120});
     } else {
-      body+=docxPara('No items with statistically significant DIF were detected (p < 0.01).',{italic:true,sz:24,spAfter:160});
+      body+=docxPara('No items with statistically significant DIF were detected (p < '+formatDifThreshold()+').',{italic:true,sz:24,spAfter:160});
     }
     body += docxReportByline(esc(genTs3));
         buildDocx(body, null, title, kpiB64F ? [{id:'rImgKpi1', filename:'kpi.png', b64:kpiB64F}] : null).then(function(blob){
@@ -7610,7 +7861,7 @@ function _doExportReportBuild(type, title, safe, dateStr, a2, avg, dateSuffix, f
     // Table 2 — Too Easy Questions
     if(easy.length){
       body += docxPara('Table 2 - Too Easy Questions',{bold:true,sz:24,spAfter:60});
-      body += docxPara('Questions answered correctly by 96% or more of students. Please revise before using again.',{italic:true,sz:22,spAfter:100});
+      body += docxPara('Questions answered correctly by '+Math.round(getThresh('easy')*100)+'% or more of students. Please revise before using again.',{italic:true,sz:22,spAfter:100});
       body += docxTable(['Question number'],[easy.map(function(e){return e.num;}).join(', ')].map(function(v){return [v];}),[9713],{centre:true,cellMar:58,vAlignBottom:true});
       body += docxPara('',{spAfter:80});
     }
@@ -7656,6 +7907,11 @@ function _doExportReportBuild(type, title, safe, dateStr, a2, avg, dateSuffix, f
     // DIF-only Word export — aligned with Full Combined Report DIF section
     var flaggedDIF=[], i;
     for(i=0;i<G.dif.length;i++){if(G.dif[i].imp){flaggedDIF.push(G.dif[i]);}}
+    var _ntDifStandalone = _ntGetDifItems();
+    if (_ntDifStandalone.length) {
+      flaggedDIF = flaggedDIF.concat(_ntDifStandalone);
+      flaggedDIF.sort(function(a,b){ return (a.num||0) - (b.num||0); });
+    }
 
     var body = '';
     var genTsD = new Date().toLocaleString('en-CA',{year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'});
@@ -7698,7 +7954,7 @@ function _doExportReportBuild(type, title, safe, dateStr, a2, avg, dateSuffix, f
     if(flaggedDIF.length){
       body += '<w:p><w:pPr><w:pStyle w:val="NoSpacing"/><w:spacing w:before="0" w:after="80" w:line="240" w:lineRule="auto"/></w:pPr>'+
         '<w:r><w:rPr><w:b/><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr><w:t>DIF Results</w:t></w:r></w:p>';
-      body += docxPara('The following question'+(flaggedDIF.length!==1?'s':'')+' showed statistically significant DIF (p < 0.01):',{sz:24,spAfter:120});
+      body += docxPara('The following question'+(flaggedDIF.length!==1?'s':'')+' showed statistically significant DIF (p < '+formatDifThreshold()+'):',{sz:24,spAfter:120});
       var difRowsD=flaggedDIF.map(function(r){
         var mcqMatch=G.mcq&&G.mcq.find(function(m){return m.num===r.num;});
         return [r.num, mcqMatch?mcqMatch.elentraId||'':'', r.ePct+'%', r.fPct+'%', r.fPct>r.ePct?'FR students performed better':'EN students performed better', r.disc];
@@ -7706,7 +7962,7 @@ function _doExportReportBuild(type, title, safe, dateStr, a2, avg, dateSuffix, f
       body += docxTable(['Question','Elentra ID','EN % Correct','FR % Correct','Interpretation','Discrimination'],difRowsD,[900,1000,1200,1200,3413,900],{centreCols:[0,1,2,3,5],centre:true,cellMar:43,vAlignBottom:true});
       body += docxPara('',{spAfter:120});
     } else {
-      body += docxPara('No items with statistically significant DIF were detected (p < 0.01).',{italic:true,sz:24,spAfter:160});
+      body += docxPara('No items with statistically significant DIF were detected (p < '+formatDifThreshold()+').',{italic:true,sz:24,spAfter:160});
     }
 
     body += docxReportByline(genTsD);
@@ -8047,7 +8303,7 @@ function renderFbPreflightPanel() {
   var flags = [];
 
   // Question ceiling
-  var hasMcqCeil = !!(typeof G !== 'undefined' && G && G._lastN && G.nQ && G.nQ > 0);
+  var hasMcqCeil = !!(typeof G !== 'undefined' && G && G.nQ && G.nQ > 0);
   var hasManualCeil = !!(FB.manualMaxQ && FB.manualMaxQ > 0);
   var ceilOk = hasMcqCeil || hasManualCeil;
   var ceilLabel, ceilValue;
@@ -8067,7 +8323,7 @@ function renderFbPreflightPanel() {
   var hasFlags = flags.length > 0;
 
   // MCQ cross-reference
-  var hasMcq = !!(typeof G !== 'undefined' && G && G._lastN && G.mcq && G.mcq.length);
+  var hasMcq = !!(typeof G !== 'undefined' && G && G.nQ && G.nQ > 0);
 
   function fbRow(label, value, ok, neutral) {
     var icon = neutral
@@ -8153,6 +8409,10 @@ function updateReviewTabLabel() {
   var tabReview = document.getElementById('tab-review');
   if (!tabReview || !ExamSession.hasMcq) return;
   var flagged = G.mcq.filter(function(q){ return q.flag; });
+  Object.keys(_ntIncluded).forEach(function(k) {
+    var ni = _ntIncluded[k];
+    if (ni && ni.r && !flagged.some(function(q){ return q.num === ni.r.num; })) flagged.push(ni.r);
+  });
   var reviewed = flagged.filter(function(q){ return _reviewState[q.num]; }).length;
   tabReview.innerHTML = reviewed === flagged.length && flagged.length > 0
     ? '☑ Review Queue ✔'
@@ -8521,7 +8781,8 @@ function checkRunReady() {
   var isCombined = (typeof G_ANALYSIS_TYPE !== 'undefined' && G_ANALYSIS_TYPE === 'both');
   var hasAnalysisRun = !!(G.mcq && G.mcq.length > 0);
 
-  var mcqDataPresent = isScantron ? (G.nQ > 0) : (G.nQ > 0 && G.key.length > 0);
+  var uploadValid = isScantron || qmUploadBlockers().length===0;
+  var mcqDataPresent = isScantron ? (G.nQ > 0 && G.students && G.students.length > 0) : (G.nQ > 0 && G.students && G.students.length > 0 && G.key.length > 0 && uploadValid);
   var mcqReady = mcqDataPresent && (G_MCQ_CONFIRMED || hasAnalysisRun);
 
   var fbValidated = !isCombined
@@ -8870,7 +9131,7 @@ function exportSessionJSON() {
       enStudents:         G._lastNE || null,
       frStudents:         G._lastNF || null,
       totalQuestions:     G.nQ,
-      effectiveQuestions: G.nQ - (G.mcq || []).filter(function(r){return r.excluded==='delete';}).length,
+      effectiveQuestions: G.nQ - (G.mcq || []).filter(function(r){return r.excluded==='delete'||r.excluded==='credit';}).length,
       examAvgPct:         G._lastAvg  != null ? parseFloat(G._lastAvg.toFixed(2))  : null,
       enAvgPct:           G._lastEAvg != null ? parseFloat(G._lastEAvg.toFixed(2)) : null,
       frAvgPct:           G._lastFAvg != null ? parseFloat(G._lastFAvg.toFixed(2)) : null,
@@ -9437,6 +9698,36 @@ document.addEventListener('click', function(e) {
 
 // ── Release Notes ─────────────────────────────────────────────────────────
 var RELEASE_NOTES = [
+
+  {
+    version: '0.8',
+    builds: [
+      {
+        build: '20260927-01',
+        date:  'September 27, 2026',
+        notes: [
+          'Validation package: added deterministic synthetic browser suites for baseline MCQ/DIF/feedback calculations, exceptions, Near Threshold persistence, HTML/CSV/JSON/Word reports, and 15 malformed-upload scenarios. Independent reference implementations reproduced all 112 synthetic and 1,138 supplied-exam statistical checks.',
+          'Upload safety: analysis is blocked for duplicate or blank student IDs, duplicate question numbers, mixed scored/Unscored outcomes, invalid responses or scores, invalid Question ID versions, missing or unsupported key answers, and results/key count, order, ID/version, or wording mismatches. Unknown stream codes remain correctable warnings.',
+          'State safety: replacing a results or key file clears its prior confirmed data immediately. A failed re-upload cannot leave stale valid data available, and the analysis engine independently refuses files with unresolved blockers.',
+          'Question-count authority: the results file remains authoritative. Key-marked Unscored positions can remove only questions present in the results; extra key questions can no longer expand the exam or conceal a mismatch.',
+          'Report corrections: effective-question JSON totals now exclude credited items, standalone DIF Word reports include coordinator-selected suggestive-DIF items, and report attribution blocks no longer spill onto otherwise empty pages.',
+          'Documentation: FAQ upload validation, stream handling, session persistence, exclusions, Review Queue persistence, and supported upload formats were aligned with current behaviour.'
+        ]
+      },
+      {
+        build: '20260923-02',
+        date:  'September 23, 2026',
+        notes: [
+          'Correctness: QuestionMark item scores are now rebuilt from the uploaded answer key, with a visible warning if they differ from QuestionMark score columns. Configured discrimination and DIF thresholds now drive flagging; the established p < 0.80 discrimination eligibility rule is preserved.',
+          'Combined feedback: the uploaded MCQ question count is now used immediately as the feedback parser ceiling and MCQ cross-reference, before the MCQ analysis runs.',
+          'Persistence: Near Threshold inclusions, Review Queue decisions, feedback-only sessions, feedback edits, and Elentra IDs now survive session restore. Draft recovery no longer deletes the saved copy before a successful rerun.',
+          'Reports and navigation: Near Threshold changes refresh all affected reports and badges; report summary totals and exam average now match their tables and the dashboard; included items appear in Item Analysis review and DIF filters.',
+          'Robustness and privacy: unscored-item detection checks the full dataset, non-convergent DIF models are suppressed and identified, CSV formula injection is neutralized, effective-question exports exclude credited items, saved drafts omit student names/IDs and expire after 30 days.',
+          'Accessibility: analysis cards, completed wizard steps, combined feedback upload, and comment bookmark controls now expose keyboard and screen-reader semantics; the completion announcement reports the correct too-easy count and grammar.'
+        ]
+      }
+    ]
+  },
 
   {
     version: '0.7',
@@ -11124,7 +11415,7 @@ function isBareRef(text, qNum) {
 // snapshot it once via fbMaxQSnapshot(), not re-call this after the fact.
 function effectiveMaxQ() {
   try {
-    if (typeof G !== 'undefined' && G && G._lastN && G.nQ && G.nQ > 0) return G.nQ;
+    if (typeof G !== 'undefined' && G && G.nQ && G.nQ > 0) return G.nQ;
   } catch (e) {}
   if (FB && FB.manualMaxQ && FB.manualMaxQ > 0) return FB.manualMaxQ;
   return 150;
@@ -11134,7 +11425,7 @@ function effectiveMaxQ() {
 // so later edits to the manual field (or loading MCQ afterward) don't retroactively
 // relabel a parse that already happened under a different ceiling.
 function fbMaxQSnapshot() {
-  var hasMcq = (typeof G !== 'undefined' && G && G._lastN && G.nQ && G.nQ > 0);
+  var hasMcq = (typeof G !== 'undefined' && G && G.nQ && G.nQ > 0);
   if (hasMcq) {
     FB.maxQUsed = G.nQ;
     FB.maxQSource = 'mcq';
@@ -11389,7 +11680,7 @@ function fbCheckQCountStale() {
   var warn = document.getElementById('fb-qcount-stale-warning');
   var warnText = document.getElementById('fb-qcount-stale-text');
   if (!warn) return;
-  var hasMcq = !!(typeof G !== 'undefined' && G && G._lastN && G.nQ && G.nQ > 0);
+  var hasMcq = !!(typeof G !== 'undefined' && G && G.nQ && G.nQ > 0);
   var fileParsed = FB.ready === true; // Only warn if parse has actually completed
   var currentTarget = FB.manualMaxQ || 150;
   var stale = !hasMcq && fileParsed && FB.maxQUsed !== currentTarget;
@@ -11516,10 +11807,20 @@ function updateWizardRailClickability(currentStep) {
     if (stepNum < currentStep) {
       // Completed — show checkmark and pointer cursor
       wrapEl.style.cursor = 'pointer';
+      wrapEl.setAttribute('role', 'button');
+      wrapEl.setAttribute('tabindex', '0');
+      wrapEl.setAttribute('aria-label', 'Return to step ' + stepNum);
+      wrapEl.onkeydown = function(event) {
+        if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); wizardBackTo(stepNum); }
+      };
       if (dotEl) dotEl.innerHTML = checkSvg;
     } else {
       // Active or future — no pointer
       wrapEl.style.cursor = 'default';
+      wrapEl.removeAttribute('role');
+      wrapEl.removeAttribute('tabindex');
+      wrapEl.removeAttribute('aria-label');
+      wrapEl.onkeydown = null;
       if (dotEl && dotEl.innerHTML.indexOf('<svg') >= 0) dotEl.innerHTML = s.num;
     }
   });
@@ -11629,7 +11930,7 @@ function activateCombinedFeedbackZone() {
   if (fbLock) fbLock.style.display = 'none';
   if (fbCard) fbCard.querySelector('.section-hdr-title').style.color = '';
   // Refresh question count field in combined zone
-  var hasMcq = !!(typeof G !== 'undefined' && G && G._lastN && G.nQ && G.nQ > 0);
+  var hasMcq = !!(typeof G !== 'undefined' && G && G.nQ && G.nQ > 0);
   var czEd = document.getElementById('combined-fb-qcount-editable');
   var czLk = document.getElementById('combined-fb-qcount-locked');
   var czLkTxt = document.getElementById('combined-fb-qcount-locked-text');
@@ -11645,7 +11946,7 @@ function activateCombinedFeedbackZone() {
 
 
 function fbRefreshQCountField() {
-  var hasMcq = !!(typeof G !== 'undefined' && G && G._lastN && G.nQ && G.nQ > 0);
+  var hasMcq = !!(typeof G !== 'undefined' && G && G.nQ && G.nQ > 0);
   var ed = document.getElementById('fb-qcount-editable');
   var lk = document.getElementById('fb-qcount-locked');
   var lkText = document.getElementById('fb-qcount-locked-text');
@@ -11876,6 +12177,7 @@ function fbCommitStaged(idx) {
   delete FB.parsed[idx]._typed;
   delete FB.parsed[idx]._staged;
   delete FB.parsed[idx]._addErr;
+  saveSession();
   return true;
 }
 
@@ -12101,6 +12403,7 @@ function fbInlineResetToPending(idx) {
   delete FB.parsed[idx]._typed;
   delete FB.parsed[idx]._staged;
   delete FB.parsed[idx]._addErr;
+  saveSession();
   renderInlineResolver();
 }
 function fbInlineApplyAllStaged() {
@@ -12659,6 +12962,7 @@ function fbSetGeneral(idx) {
   delete FB.parsed[idx]._typed;
   delete FB.parsed[idx]._staged;
   delete FB.parsed[idx]._addErr;
+  saveSession();
   if (window._refreshMapScreen) window._refreshMapScreen();
 }
 
@@ -12671,6 +12975,7 @@ function fbDiscard(idx) {
   delete FB.parsed[idx]._typed;
   delete FB.parsed[idx]._staged;
   delete FB.parsed[idx]._addErr;
+  saveSession();
   if (window._refreshMapScreen) window._refreshMapScreen();
 }
 
@@ -12683,6 +12988,7 @@ function fbRouteAllGeneral() {
     delete FB.parsed[idx]._staged;
     delete FB.parsed[idx]._addErr;
   });
+  saveSession();
   if (window._refreshMapScreen) window._refreshMapScreen();
 }
 
@@ -12699,6 +13005,7 @@ function fbDiscardAll() {
     delete FB.parsed[idx]._staged;
     delete FB.parsed[idx]._addErr;
   });
+  saveSession();
   if (window._refreshMapScreen) window._refreshMapScreen();
 }
 
@@ -13147,6 +13454,7 @@ function fbToggleCatFilter(key) {
 function fbToggleBookmark(idx) {
   if (!FB.parsed[idx]) return;
   FB.parsed[idx]._bookmarked = !FB.parsed[idx]._bookmarked;
+  saveSession();
   renderFbKpiZone();
   renderBanner();
   renderFeedbackTabKeep(_fbView);
@@ -13156,7 +13464,7 @@ function fbToggleBookmark(idx) {
 
 function fbBookmarkStarHtml(idx) {
   var bm = FB.parsed[idx] && FB.parsed[idx]._bookmarked;
-  return '<button onclick="fbToggleBookmark(' + idx + ')" title="' + (bm ? 'Remove bookmark' : 'Bookmark this comment') + '" ' +
+  return '<button onclick="fbToggleBookmark(' + idx + ')" aria-label="' + (bm ? 'Remove bookmark from this comment' : 'Bookmark this comment') + '" title="' + (bm ? 'Remove bookmark' : 'Bookmark this comment') + '" ' +
     'style="font-size:14px;background:none;border:none;cursor:pointer;padding:0 2px;line-height:1;color:' +
     (bm ? '#e8a800' : 'var(--c-muted)') + '" ' +
     'onmouseover="this.style.color=&apos;' + (bm ? '#c07800' : '#e8a800') + '&apos;" ' +
@@ -13684,6 +13992,7 @@ function fbReassign(idx) {
   renderFbKpiZone();
   renderBanner();
   renderFeedbackTabKeep(_fbView);
+  saveSession();
 }
 
 function fbMoveToGeneral(idx) {
@@ -13695,6 +14004,7 @@ function fbMoveToGeneral(idx) {
   renderFbKpiZone();
   renderBanner();
   renderFeedbackTabKeep(_fbView);
+  saveSession();
 }
 
 function fbDiscardFromView(idx) {
@@ -13710,6 +14020,7 @@ function fbDiscardFromView(idx) {
   renderFbKpiZone();
   renderBanner();
   renderFeedbackTabKeep(_fbView);
+  saveSession();
 }
 
 // Recovery from Discarded tab — restore to previous state or send to General/Q#
@@ -13743,6 +14054,7 @@ function fbUndiscard(idx) {
   groupComments();
   renderBanner();
   renderFeedbackTabKeep(_fbView);
+  saveSession();
 }
 
 function fbUndiscardToGeneral(idx) {
@@ -13752,6 +14064,7 @@ function fbUndiscardToGeneral(idx) {
   groupComments();
   renderBanner();
   renderFeedbackTabKeep(_fbView);
+  saveSession();
 }
 
 function fbUndiscardToQ(idx) {
@@ -13763,6 +14076,7 @@ function fbUndiscardToQ(idx) {
     renderBanner();
   }
   renderFeedbackTabKeep(_fbView);
+  saveSession();
 }
 
 // ── Feedback KPI overview canvas builder ──────────────────────────────────────
@@ -14129,6 +14443,7 @@ function onFbShowCategoriesChange() {
 function fbClassifyComment(idx, val) {
   if (!FB.parsed[idx]) return;
   FB.parsed[idx]._classif = (FB.parsed[idx]._classif === val) ? null : val;
+  saveSession();
   renderFbKpiZone();
   renderBanner();
   renderFeedbackTabKeep(_fbView);
@@ -14292,6 +14607,10 @@ function updateSidebarBadges() {
     var nQueue = 0;
     if (typeof G !== 'undefined' && G && G.mcq) {
       var _all = G.mcq.filter(function(q){ return q.flag; });
+      Object.keys(_ntIncluded).forEach(function(k) {
+        var ni = _ntIncluded[k];
+        if (ni && ni.r && !_all.some(function(q){ return q.num === ni.r.num; })) _all.push(ni.r);
+      });
       nQueue = _all.filter(function(q){ return !_reviewState[q.num]; }).length;
     }
     if (nQueue > 0) {
@@ -14970,6 +15289,7 @@ function computeNearThreshold() {
   var easyT  = getThresh('easy');
   var diffT  = getThresh('difficult');
   var discT  = getThresh('disc');
+  var difT   = getThresh('dif');
   var difByNum = {};
   if (G_DIF_ENABLED && G.dif && G.dif.length) {
     G.dif.forEach(function(d) { difByNum[d.num] = d; });
@@ -15006,9 +15326,9 @@ function computeNearThreshold() {
     // Suggestive DIF: p between 0.01-0.10 (didn't reach formal p<0.01 threshold but warrants review)
     if (dif && !dif.imp && !dif.lowN) {
       var _difSig = parseFloat(dif.sig);
-      if (!isNaN(_difSig) && _difSig >= 0.01 && _difSig < 0.10) {
+      if (!isNaN(_difSig) && _difSig >= difT && _difSig < 0.10) {
         signals.push({ id:'dif_b', label:'Suggestive DIF',
-          review:'Item language and cultural assumptions across EN/FR groups — p-value is below 0.10 but did not reach the flagging threshold (p < 0.01)' });
+          review:'Item language and cultural assumptions across EN/FR groups — p-value is below 0.10 but did not reach the flagging threshold (p < ' + formatDifThreshold() + ')' });
       }
     }
     // S6: Replace non-DIF signals with post-exception when exception is active
@@ -15080,7 +15400,7 @@ function renderNearThresholdRoom() {
       near_diff:  'The p-value is close to the Difficult threshold. Many students answered incorrectly — this could reflect a genuinely hard item or unclear wording. Review the stem and answer key.',
       near_disc:  'The rpBis (point-biserial) is close to the poor discrimination threshold. The item barely distinguishes stronger from weaker students — check whether the distractors are attracting the right mix of responders.',
       mismatch:   'Difficulty and discrimination give conflicting signals. One looks acceptable; the other is borderline. For example, if discrimination is low despite a normal p-value, high and low performers may be choosing the same option. Use Distractor Analysis to see the quartile breakdown.',
-      dif_b:      'The chi-square significance is below 0.10 but above 0.01. It did not reach the formal DIF flagging threshold (p < 0.01) but shows a suggestive trend. Worth reviewing for language or cultural assumptions across EN and FR groups.',
+      dif_b:      'The chi-square significance is below 0.10 but above the configured threshold. It did not reach the formal DIF flagging threshold (p < ' + formatDifThreshold() + ') but shows a suggestive trend. Worth reviewing for language or cultural assumptions across EN and FR groups.',
       post_exc:   'An exception (credit or alternate key) was applied, and the resulting statistics now sit near a threshold. Check whether the exception achieved its intended effect.'
     };
     var sigHtml = '<div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:1px">';
@@ -15135,11 +15455,18 @@ function toggleNtItem(num) {
     renderNewSummary(G._lastN, G._lastAvg, G._lastAlpha, G._lastNE, G._lastNF);
     renderMCQTable(G._mcqFilter || 'all');
     renderMCQReport(G._lastAvg, G._lastAlpha);
-    if (G_DIF_ENABLED && G._hasStream) renderFullReport(G._lastAvg, G._lastAlpha);
+    if (G_DIF_ENABLED && G._hasStream) {
+      renderDIFTable();
+      renderDIFReport();
+      renderFullReport(G._lastAvg, G._lastAlpha);
+    }
     if (typeof _currentRoom !== 'undefined' && _currentRoom === 'queue') renderReviewQueue();
   }
+  updateReviewTabLabel();
+  updateSidebarBadges();
   updateLandingStatus();
   renderNearThresholdRoom();
+  saveSession();
 }
 
 function getNtIncludedItems() {
@@ -15162,14 +15489,14 @@ function _getNtFlaggedRows() {
   var rows = '';
   for (var k = 0; k < ntItems.length; k++) {
     var ntR = ntItems[k].r;
-    var sigLabels = ntItems[k].signals.map(function(s){ return s.label; }).join('; ');
+    var ntFlag = _ntItemToFlag(ntItems[k]);
     var ntComment = ntItems[k].signals[0] ? ntItems[k].signals[0].review : '';
     var ntBw = (ntR.topWrong && ntR.p < getThresh('checkp')) ? '<b>' + ntR.topWrong + '</b>' : '';
     rows += '<tr><td style="text-align:center"><b>' + ntR.num + '</b></td>' +
-      '<td style="color:#b07000;font-style:italic">Near threshold — ' + sigLabels + '</td>' +
+      '<td style="color:#b07000;font-style:italic">' + ntFlag.flag + '</td>' +
       '<td>' + ntComment + '</td>' +
       '<td style="text-align:center">' + ntBw + '</td>' +
-      '<td><b>RETAIN</b></td></tr>';
+      '<td><b>' + ntFlag.rec + '</b></td></tr>';
   }
   return rows;
 }
@@ -15180,10 +15507,10 @@ function _getNtFlaggedDocxRows() {
   var rows = [];
   for (var k = 0; k < ntItems.length; k++) {
     var ntR = ntItems[k].r;
-    var sigLabels = ntItems[k].signals.map(function(s){ return s.label; }).join('; ');
+    var ntFlag = _ntItemToFlag(ntItems[k]);
     var ntComment = ntItems[k].signals[0] ? ntItems[k].signals[0].review : '';
     var ntBw = (ntR.topWrong && ntR.p < getThresh('checkp')) ? ntR.topWrong : '';
-    rows.push([ntR.num, 'Near threshold — ' + sigLabels, ntComment, ntBw, 'RETAIN']);
+    rows.push([ntR.num, ntFlag.flag, ntComment, ntBw, ntFlag.rec]);
   }
   return rows;
 }
@@ -15536,7 +15863,7 @@ function updateTopbarExam() {
               <span class="faq-icon">+</span>
             </div>
             <div class="faq-a">
-              Yes — exclusions are saved in memory for the duration of your session. If you click <strong>Update Analysis</strong> after changing a setting, your saved exclusions will be applied again automatically. If you click <strong>Start Over</strong> or close the browser tab, exclusions are cleared along with everything else. They do not persist between sessions.
+              Yes. Exclusions and their written reasons are saved with the browser draft and restored when you resume the session. They are also reapplied if you click <strong>Update Analysis</strong> after changing a setting. Clicking <strong>Start Over</strong> or discarding the saved draft clears them.
             </div>
           </div>
 
@@ -15565,9 +15892,10 @@ function updateTopbarExam() {
             </div>
             <div class="faq-a">
               After a successful upload, a parse preview panel appears below the upload fields. It confirms what the tool detected in your files before you run the analysis.<br><br>
-              <strong>QuestionMark:</strong> The panel appears once <em>both</em> the results file and the answer key are uploaded successfully. It shows both filenames, student and question counts, EN/FR stream breakdown, the answer key for the first 10 questions, and a sample of the first 5 student rows. If the question count in the results file doesn't match the key, a mismatch warning appears. If any stream codes are unrecognised, the panel lists each distinct code and how many students used it.<br><br>
+              <strong>QuestionMark:</strong> The panel appears once <em>both</em> the results file and answer key are loaded. It shows both filenames, student and question counts, EN/FR stream breakdown, the first 10 key answers, and a sample of five student rows. It also compares question count, order, Question ID/version, and wording between the two files.<br><br>
+              <strong>Blocking errors</strong> include duplicate or blank student IDs, duplicate question numbers, mixed scored/Unscored outcomes, invalid response or score values, missing or unsupported key answers, invalid Question ID versions, and results/key mismatches. You cannot confirm or analyse the files until these are corrected. Unrecognised language-stream codes are shown as warnings because they can be corrected with the stream-assignment workflow.<br><br>
               <strong>Scantron:</strong> The panel appears after the single Scantron file is uploaded. It shows the same information — filename, counts, key preview, and student sample — with unmatched course codes highlighted if any are found.<br><br>
-              In both cases this is a preview only — all students and questions are fully loaded regardless. You can fix the codes in the Data Source &amp; DIF section and click <strong>Re-validate</strong> to refresh the stream counts without re-uploading, or click <strong>Re-upload</strong> if the file itself needs replacing. Click <strong>Looks good</strong> to dismiss the panel and proceed.
+              You can fix language codes in the Data Source &amp; DIF section and click <strong>Re-validate</strong>, or click <strong>Re-upload</strong> when the source file needs correction. Click <strong>Confirm data</strong> to proceed once no blocking errors remain.
             </div>
           </div>
 
@@ -15610,7 +15938,7 @@ function updateTopbarExam() {
             </div>
             <div class="faq-a">
               The steps depend on your data source:<br><br>
-              <strong>QuestionMark:</strong> Check that the file is saved as <strong>.xlsx</strong> (not .xls or .csv). The most common issues are a renamed sheet, a modified header row, or a file re-saved in a different format. Re-export directly from QuestionMark without modifying the file first.<br><br>
+              <strong>QuestionMark:</strong> AQP accepts Excel (.xlsx or .xls) and CSV exports, although the original .xlsx export is preferred because it preserves the complete QuestionMark structure. Common problems include modified header rows, missing Score/Outcome column pairs, duplicate identifiers, invalid key values, or results and key files from different exam versions. Re-export directly from QuestionMark without modifying the files first.<br><br>
               <strong>Scantron:</strong> Check that the file is a <strong>.txt</strong> tab-delimited export and that it contains a MASTER row — this is where the tool reads the answer key from. If the MASTER row is missing or the file was exported in the wrong format, re-export from Scantron.<br><br>
               In both cases, click <strong>See details</strong> on the upload status indicator for a full diagnostic breakdown of what the tool found and what it expected.
             </div>
@@ -15622,7 +15950,7 @@ function updateTopbarExam() {
               <span class="faq-icon">+</span>
             </div>
             <div class="faq-a">
-              The tool automatically excludes rows that are not scoreable student responses — this includes header rows, timestamp rows, summary rows, and any students whose stream code doesn't match the EN or FR codes set in the Data Source &amp; DIF section. If the count is unexpectedly low, check that your stream codes there match exactly what's in the file (case-sensitive). Click <em>details</em> after uploading for a full row-by-row breakdown.
+              The tool excludes structural rows such as headers, timestamps, filters, and summaries. Students with blank or unrecognised stream codes remain included in the overall MCQ statistics, but they are not assigned to EN or FR for DIF until you correct their stream. Blank or duplicate student IDs block confirmation because they can distort counts or create duplicate records. Review the Parse Preview and its details before confirming.
             </div>
           </div>
 
@@ -15642,7 +15970,7 @@ function updateTopbarExam() {
               <span class="faq-icon">+</span>
             </div>
             <div class="faq-a">
-              Yes. Simply click the upload area again and select the correct file — it will replace the previous one. If an analysis has already been run, the tool will flag your results as potentially outdated and the <strong>Analyze Exam</strong> button will change to <strong>Update Analysis</strong>. Re-running the analysis will use the new file.
+              Yes. Click the upload area again and select the replacement file. AQP immediately clears the prior confirmation and the data being replaced, then validates the new file. If the replacement fails validation, analysis remains blocked rather than falling back to the old file. After a successful replacement, confirm the data and click <strong>Update Analysis</strong>.
             </div>
           </div>
 
@@ -15673,7 +16001,7 @@ function updateTopbarExam() {
             </div>
             <div class="faq-a">
               Combined analysis follows a staged setup to make sure both files are validated before running:<br><br>
-              <strong>Step 1 — MCQ files.</strong> Upload your QM results file and answer key. The parse preview will show a readiness summary. When everything looks correct, click <strong>Looks good</strong> to confirm. The panel collapses to a compact green row showing question count, student count, DIF status, and threshold setting. The feedback upload zone below unlocks automatically.<br><br>
+              <strong>Step 1 — MCQ files.</strong> Upload your QM results file and answer key. The Parse Preview will show a readiness summary and any blocking errors or correctable warnings. When everything is valid, click <strong>Confirm data</strong>. The panel collapses to a compact confirmed row showing question count, student count, DIF status, and threshold setting. The feedback upload zone below then unlocks.<br><br>
               <strong>Step 2 — Feedback file.</strong> Upload your QM feedback export (.xlsx) in the feedback zone that has unlocked. The footer status pill will update to reflect what is still needed.<br><br>
               <strong>Step 3 — Review comments.</strong> After the file loads, a pre-flight panel appears. If there are comments that could not be auto-mapped to a question, an amber <strong>Review N comments →</strong> button appears. Clicking it expands an inline resolver directly on the setup screen — no navigation away. For each comment, enter a question number, click <strong>General</strong> if it is not about a specific question, or <strong>Discard</strong> if it is not useful. Resolved comments show a status badge; click <strong>Change</strong> next to any badge to re-route it. If all comments were auto-mapped, the resolver shows a confirmation message immediately.<br><br>
               <strong>Step 4 — Apply &amp; Confirm.</strong> Once all comments are resolved, the <strong>Apply &amp; Confirm</strong> button activates. Click it to lock in the feedback. A green validated banner appears with a <strong>Re-open ↓</strong> button in case you need to revisit your routing decisions.<br><br>
@@ -15786,7 +16114,7 @@ function updateTopbarExam() {
               <span class="faq-icon">+</span>
             </div>
             <div class="faq-a">
-              The tool only counts students whose stream code matches the EN or FR codes set in the Data Source &amp; DIF section. Students with a different, blank, or unrecognised stream code are excluded. Check your language codes there, and click <em>details</em> under the upload confirmation for a diagnostic breakdown showing exactly which rows were included and which were excluded and why.
+              All valid student rows are included in the overall MCQ count and statistics. Students with a different, blank, or unrecognised stream code are not assigned to EN or FR for DIF until the code is corrected or assigned. Check the language codes and the Parse Preview breakdown. Blank or duplicate student IDs are treated separately as blocking data-integrity errors.
             </div>
           </div>
 
@@ -15850,7 +16178,7 @@ function updateTopbarExam() {
             <div class="faq-a">
               The <strong>Review Queue</strong> tab appears after an MCQ analysis is run and shows all flagged and too-easy questions as a checklist. It gives you a focused workspace for working through each item one at a time — you can check off questions as you review them, with the tab label tracking your progress live (e.g. "☑ Review Queue (3/7)").<br><br>
               Each item in the queue shows the question number, flag reason badge, difficulty and discrimination values, and the recommendation. If Elentra IDs are present, the ID is shown below the question number to make it easy to locate the question directly in Elentra.<br><br>
-              The checklist resets with each new analysis or when you click Start Over. It is not saved between sessions.
+              Review Queue decisions are saved with the browser draft and restored when you resume the session. They remain in place when you update the analysis, but are cleared when you click Start Over or discard the draft.
             </div>
           </div>
 
@@ -15951,7 +16279,7 @@ function updateTopbarExam() {
               <span class="faq-icon">+</span>
             </div>
             <div class="faq-a">
-              Yes — as of build 20260820-02 the tool auto-saves your session to browser local storage after every analysis run, feedback finalisation, and exception change. If you close the tab or browser, re-opening the tool will show a <strong>Draft found</strong> banner and a session card on the home screen. Click <strong>Resume session</strong> to restore your work and re-run the analysis automatically.<br><br>The draft is stored in this browser only and does not survive clearing browser data. Exporting your Word reports and CSV at the end of each session is still recommended as a permanent record. See also Q49 and Q50.
+              AQP auto-saves the active session to browser local storage after analysis runs and relevant review changes. This includes exceptions, Near Threshold inclusions, Review Queue decisions, and feedback edits. Re-opening the tool shows a <strong>Draft found</strong> banner; click <strong>Resume session</strong> to restore and rerun the analysis.<br><br>The draft stays in this browser only, expires after 30 days, and does not survive clearing browser data. Student names and institutional IDs are omitted from the saved draft. Export Word, CSV, and JSON files for the permanent record.
             </div>
           </div>
 
@@ -16077,8 +16405,8 @@ function updateTopbarExam() {
               <span class="faq-icon">+</span>
             </div>
             <div class="faq-a">
-              Yes — as of build 20260820-02, the tool automatically saves your session to your browser's local storage after every analysis run, feedback finalisation, and exception change. If you close the tab, refresh, or the browser crashes, a <strong>Draft found</strong> banner will appear the next time you open the tool, showing your exam name and question and student counts. Click <strong>Resume session</strong> to restore everything and re-run the analysis automatically.<br><br>
-              <strong>Note:</strong> The draft is stored in this browser only — it will not carry over to a different browser or a different device. It also does not survive clearing your browser data. Exporting your Word reports, CSV, and JSON at the end of a session is still recommended for your permanent record.
+              Yes. AQP saves one active draft in browser local storage after analysis runs and relevant review changes. If the tab closes, the browser refreshes, or the browser crashes, a <strong>Draft found</strong> banner appears the next time you open the tool. Click <strong>Resume session</strong> to restore and rerun the analysis.<br><br>
+              <strong>Note:</strong> The draft is browser- and device-specific, expires after 30 days, and is removed if browser data is cleared. Student names and institutional IDs are not stored in the draft. Export Word, CSV, and JSON files for the permanent record.
             </div>
           </div>
 
