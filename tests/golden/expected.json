@@ -1,0 +1,65 @@
+{
+  "parser": {
+    "students": 40,
+    "scoredQuestions": 12,
+    "disclosureDetected": true,
+    "questionLabels": ["Question 2", "Question 3", "Question 4", "Question 5", "Question 6", "Question 7", "Question 8", "Question 9", "Question 10", "Question 11", "Question 12", "Question 13"],
+    "key": ["a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a"],
+    "elentraIds": ["900002/1", "900003/2", "900004/3", "900005/4", "900006/5", "900007/6", "900008/7", "900009/8", "900010/9", "900011/10", "900012/11", "900013/12"]
+  },
+  "exam": {
+    "averagePct": 61.25,
+    "cronbachAlpha": -0.510638298,
+    "englishStudents": 20,
+    "frenchStudents": 20,
+    "englishAveragePct": 63,
+    "frenchAveragePct": 59
+  },
+  "items": [
+    {"number":1,"label":"Question 2","key":"A","difficulty":1,"discrimination":0,"flag":"Too easy","recommendation":"Report (Too Easy)","topWrong":"","responses":40},
+    {"number":2,"label":"Question 3","key":"A","difficulty":0.3,"discrimination":0.653283166,"flag":"Difficult item","recommendation":"Review wording & distractors","topWrong":"","responses":40},
+    {"number":3,"label":"Question 4","key":"A","difficulty":0.5,"discrimination":-0.647290715,"flag":"Poor discrimination","recommendation":"Review wording & key","topWrong":"","responses":40},
+    {"number":4,"label":"Question 5","key":"A","difficulty":0.5,"discrimination":0.323645358,"flag":"","recommendation":"","topWrong":"","responses":40},
+    {"number":5,"label":"Question 6","key":"A","difficulty":0.75,"discrimination":0.630641478,"flag":"","recommendation":"","topWrong":"","responses":40},
+    {"number":6,"label":"Question 7","key":"A","difficulty":0.65,"discrimination":0.63189507,"flag":"","recommendation":"","topWrong":"","responses":40},
+    {"number":7,"label":"Question 8","key":"A","difficulty":0.5,"discrimination":0.647290715,"flag":"","recommendation":"","topWrong":"","responses":40},
+    {"number":8,"label":"Question 9","key":"A","difficulty":0.4,"discrimination":0.718444173,"flag":"","recommendation":"","topWrong":"","responses":40},
+    {"number":9,"label":"Question 10","key":"A","difficulty":0.9,"discrimination":0.633805492,"flag":"","recommendation":"","topWrong":"","responses":40},
+    {"number":10,"label":"Question 11","key":"A","difficulty":0.4,"discrimination":-0.602832467,"flag":"Poor discrimination","recommendation":"Review wording & key","topWrong":"","responses":40},
+    {"number":11,"label":"Question 12","key":"A","difficulty":0.5,"discrimination":-0.283189688,"flag":"Poor discrimination","recommendation":"Review wording & key","topWrong":"","responses":40},
+    {"number":12,"label":"Question 13","key":"A","difficulty":0.95,"discrimination":0.436214856,"flag":"","recommendation":"","topWrong":"","responses":40}
+  ],
+  "dif": [
+    {"number":1,"pValue":1,"deltaR2":0,"englishPct":100,"frenchPct":100,"flagged":false,"sparse":true,"modelFailed":true},
+    {"number":2,"pValue":0.1326,"deltaR2":0.073,"englishPct":30,"frenchPct":30,"flagged":false,"sparse":false,"modelFailed":true},
+    {"number":3,"pValue":0.3549,"deltaR2":0.039,"englishPct":50,"frenchPct":50,"flagged":false,"sparse":false,"modelFailed":false},
+    {"number":4,"pValue":0.8959,"deltaR2":0.007,"englishPct":50,"frenchPct":50,"flagged":false,"sparse":false,"modelFailed":false},
+    {"number":5,"pValue":0.176,"deltaR2":0.076,"englishPct":75,"frenchPct":75,"flagged":false,"sparse":false,"modelFailed":true},
+    {"number":6,"pValue":0.3489,"deltaR2":0.043,"englishPct":65,"frenchPct":65,"flagged":false,"sparse":false,"modelFailed":false},
+    {"number":7,"pValue":0.3549,"deltaR2":0.039,"englishPct":50,"frenchPct":50,"flagged":false,"sparse":false,"modelFailed":false},
+    {"number":8,"pValue":0.061,"deltaR2":0.08,"englishPct":40,"frenchPct":40,"flagged":false,"sparse":false,"modelFailed":true},
+    {"number":9,"pValue":1,"deltaR2":0,"englishPct":90,"frenchPct":90,"flagged":false,"sparse":true,"modelFailed":true},
+    {"number":10,"pValue":0.4672,"deltaR2":0.033,"englishPct":40,"frenchPct":40,"flagged":false,"sparse":false,"modelFailed":false},
+    {"number":11,"pValue":0.0002,"deltaR2":0.431,"englishPct":75,"frenchPct":25,"flagged":true,"sparse":false,"modelFailed":false},
+    {"number":12,"pValue":1,"deltaR2":0,"englishPct":95,"frenchPct":95,"flagged":false,"sparse":true,"modelFailed":true}
+  ],
+  "feedback": {
+    "ceiling": 12,
+    "ceilingSource": "mcq",
+    "parsedCount": 9,
+    "statusCounts": {"auto":6,"pending":2,"general":1},
+    "questionsWithComments": [2,3,4,5,6,12],
+    "groupedCounts": {"2":1,"3":1,"4":1,"5":1,"6":1},
+    "bareReferenceCounts": {"12":1},
+    "generalCount": 1,
+    "categories": ["content","content","translation","content","content","uncategorized","content","uncategorized","content"]
+  },
+  "scoreValidation": {"compared":480,"mismatches":0},
+  "alerts": [],
+  "fixtureConsistency": {
+    "scoredItemsWithVersionedIds": 12,
+    "allIdsIncludePositiveVersion": true,
+    "wordingRowsMatch": true,
+    "scoredWordingMatches": true
+  }
+}

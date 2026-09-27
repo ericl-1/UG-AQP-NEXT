@@ -1,0 +1,8 @@
+.DS_Store
+node_modules/
+.validation-venv/
+validation/private/
+__pycache__/
+*.pyc
+*.preview.png
+*.inspect.ndjson

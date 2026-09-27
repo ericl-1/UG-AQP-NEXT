@@ -1,0 +1,1329 @@
+{
+  "reference": {
+    "software": {
+      "python": "3.12.14",
+      "numpy": "2.5.3",
+      "scipy": "1.16.2",
+      "statsmodels": "0.14.5",
+      "openpyxl": "3.1.5"
+    },
+    "fixture_integrity": {
+      "results_key_wording_match": true,
+      "all_scored_ids_versioned": true,
+      "scored_ids": [
+        "900002/1",
+        "900003/2",
+        "900004/3",
+        "900005/4",
+        "900006/5",
+        "900007/6",
+        "900008/7",
+        "900009/8",
+        "900010/9",
+        "900011/10",
+        "900012/11",
+        "900013/12"
+      ],
+      "disclosure_detected": true,
+      "qm_score_mismatches": 0
+    },
+    "exam": {
+      "students": 40,
+      "scored_questions": 12,
+      "average_pct": 61.24999999999999,
+      "cronbach_alpha": -0.5106382978723402,
+      "english_students": 20,
+      "french_students": 20,
+      "english_average_pct": 63.33333333333333,
+      "french_average_pct": 59.166666666666664
+    },
+    "items": [
+      {
+        "number": 1,
+        "label": "Question 2",
+        "item_id": "900002/1",
+        "difficulty": 1.0,
+        "discrimination": 0.0,
+        "flag": "Too easy",
+        "recommendation": "Report (Too Easy)",
+        "correct_count": 40
+      },
+      {
+        "number": 2,
+        "label": "Question 3",
+        "item_id": "900003/2",
+        "difficulty": 0.3,
+        "discrimination": 0.6532831659119968,
+        "flag": "Difficult item",
+        "recommendation": "Review wording & distractors",
+        "correct_count": 12
+      },
+      {
+        "number": 3,
+        "label": "Question 4",
+        "item_id": "900004/3",
+        "difficulty": 0.5,
+        "discrimination": -0.647290715250188,
+        "flag": "Poor discrimination",
+        "recommendation": "Review wording & key",
+        "correct_count": 20
+      },
+      {
+        "number": 4,
+        "label": "Question 5",
+        "item_id": "900005/4",
+        "difficulty": 0.5,
+        "discrimination": 0.323645357625094,
+        "flag": "",
+        "recommendation": "",
+        "correct_count": 20
+      },
+      {
+        "number": 5,
+        "label": "Question 6",
+        "item_id": "900006/5",
+        "difficulty": 0.75,
+        "discrimination": 0.6306414784205195,
+        "flag": "",
+        "recommendation": "",
+        "correct_count": 30
+      },
+      {
+        "number": 6,
+        "label": "Question 7",
+        "item_id": "900007/6",
+        "difficulty": 0.65,
+        "discrimination": 0.6318950701275057,
+        "flag": "",
+        "recommendation": "",
+        "correct_count": 26
+      },
+      {
+        "number": 7,
+        "label": "Question 8",
+        "item_id": "900008/7",
+        "difficulty": 0.5,
+        "discrimination": 0.647290715250188,
+        "flag": "",
+        "recommendation": "",
+        "correct_count": 20
+      },
+      {
+        "number": 8,
+        "label": "Question 9",
+        "item_id": "900009/8",
+        "difficulty": 0.4,
+        "discrimination": 0.7184441728206179,
+        "flag": "",
+        "recommendation": "",
+        "correct_count": 16
+      },
+      {
+        "number": 9,
+        "label": "Question 10",
+        "item_id": "900010/9",
+        "difficulty": 0.9,
+        "discrimination": 0.6338054920158088,
+        "flag": "",
+        "recommendation": "",
+        "correct_count": 36
+      },
+      {
+        "number": 10,
+        "label": "Question 11",
+        "item_id": "900011/10",
+        "difficulty": 0.4,
+        "discrimination": -0.6028324668494841,
+        "flag": "Poor discrimination",
+        "recommendation": "Review wording & key",
+        "correct_count": 16
+      },
+      {
+        "number": 11,
+        "label": "Question 12",
+        "item_id": "900012/11",
+        "difficulty": 0.5,
+        "discrimination": -0.28318968792195726,
+        "flag": "Poor discrimination",
+        "recommendation": "Review wording & key",
+        "correct_count": 20
+      },
+      {
+        "number": 12,
+        "label": "Question 13",
+        "item_id": "900013/12",
+        "difficulty": 0.95,
+        "discrimination": 0.436214856245998,
+        "flag": "",
+        "recommendation": "",
+        "correct_count": 38
+      }
+    ],
+    "dif": [
+      {
+        "number": 1,
+        "label": "Question 2",
+        "english_correct": 20,
+        "english_incorrect": 0,
+        "french_correct": 20,
+        "french_incorrect": 0,
+        "english_pct": 100,
+        "french_pct": 100,
+        "sparse": true,
+        "estimable": false,
+        "chi_square_difference": null,
+        "p_value": null,
+        "delta_r2": null,
+        "block1_chi_square": 0.08004002665513466,
+        "block1_nagelkerke_r2": 0.9999999996062291,
+        "block3_chi_square": 0.08004002665513466,
+        "block3_nagelkerke_r2": 0.9999999996062291,
+        "flagged": false,
+        "warnings": [
+          "Perfect separation or prediction detected, parameter may not be identified"
+        ]
+      },
+      {
+        "number": 2,
+        "label": "Question 3",
+        "english_correct": 6,
+        "english_incorrect": 14,
+        "french_correct": 6,
+        "french_incorrect": 14,
+        "english_pct": 30,
+        "french_pct": 30,
+        "sparse": false,
+        "estimable": false,
+        "chi_square_difference": null,
+        "p_value": null,
+        "delta_r2": null,
+        "block1_chi_square": 24.930053280685982,
+        "block1_nagelkerke_r2": 0.6576139076203116,
+        "block3_chi_square": 28.971034314435247,
+        "block3_nagelkerke_r2": 0.7306669446216342,
+        "flagged": false,
+        "warnings": []
+      },
+      {
+        "number": 3,
+        "label": "Question 4",
+        "english_correct": 10,
+        "english_incorrect": 10,
+        "french_correct": 10,
+        "french_incorrect": 10,
+        "english_pct": 50,
+        "french_pct": 50,
+        "sparse": false,
+        "estimable": true,
+        "chi_square_difference": 2.0715594138852538,
+        "p_value": 0.3549495164001627,
+        "delta_r2": 0.03928055208493264,
+        "block1_chi_square": 21.53389125885041,
+        "block1_nagelkerke_r2": 0.5550504432945496,
+        "block3_chi_square": 23.605450672735664,
+        "block3_nagelkerke_r2": 0.5943309953794822,
+        "flagged": false,
+        "warnings": []
+      },
+      {
+        "number": 4,
+        "label": "Question 5",
+        "english_correct": 10,
+        "english_incorrect": 10,
+        "french_correct": 10,
+        "french_incorrect": 10,
+        "english_pct": 50,
+        "french_pct": 50,
+        "sparse": false,
+        "estimable": true,
+        "chi_square_difference": 0.2198977978175023,
+        "p_value": 0.8958799145680953,
+        "delta_r2": 0.006549786961613624,
+        "block1_chi_square": 4.3914205590022775,
+        "block1_nagelkerke_r2": 0.13863160025762586,
+        "block3_chi_square": 4.61131835681978,
+        "block3_nagelkerke_r2": 0.14518138721923948,
+        "flagged": false,
+        "warnings": []
+      },
+      {
+        "number": 5,
+        "label": "Question 6",
+        "english_correct": 15,
+        "english_incorrect": 5,
+        "french_correct": 15,
+        "french_incorrect": 5,
+        "english_pct": 75,
+        "french_pct": 75,
+        "sparse": false,
+        "estimable": false,
+        "chi_square_difference": null,
+        "p_value": null,
+        "delta_r2": null,
+        "block1_chi_square": 19.16520278098407,
+        "block1_nagelkerke_r2": 0.56376667327988,
+        "block3_chi_square": 22.640150241787588,
+        "block3_nagelkerke_r2": 0.6400831686824118,
+        "flagged": false,
+        "warnings": []
+      },
+      {
+        "number": 6,
+        "label": "Question 7",
+        "english_correct": 13,
+        "english_incorrect": 7,
+        "french_correct": 13,
+        "french_incorrect": 7,
+        "english_pct": 65,
+        "french_pct": 65,
+        "sparse": false,
+        "estimable": true,
+        "chi_square_difference": 2.1057745811461643,
+        "p_value": 0.348928834362899,
+        "delta_r2": 0.04344460700821795,
+        "block1_chi_square": 19.438824587575553,
+        "block1_nagelkerke_r2": 0.530112219247811,
+        "block3_chi_square": 21.544599168721717,
+        "block3_nagelkerke_r2": 0.573556826256029,
+        "flagged": false,
+        "warnings": []
+      },
+      {
+        "number": 7,
+        "label": "Question 8",
+        "english_correct": 10,
+        "english_incorrect": 10,
+        "french_correct": 10,
+        "french_incorrect": 10,
+        "english_pct": 50,
+        "french_pct": 50,
+        "sparse": false,
+        "estimable": true,
+        "chi_square_difference": 2.0715594138852467,
+        "p_value": 0.3549495164001641,
+        "delta_r2": 0.03928055208493253,
+        "block1_chi_square": 21.53389125885041,
+        "block1_nagelkerke_r2": 0.5550504432945496,
+        "block3_chi_square": 23.605450672735657,
+        "block3_nagelkerke_r2": 0.5943309953794821,
+        "flagged": false,
+        "warnings": []
+      },
+      {
+        "number": 8,
+        "label": "Question 9",
+        "english_correct": 8,
+        "english_incorrect": 12,
+        "french_correct": 8,
+        "french_incorrect": 12,
+        "english_pct": 40,
+        "french_pct": 40,
+        "sparse": false,
+        "estimable": false,
+        "chi_square_difference": null,
+        "p_value": null,
+        "delta_r2": null,
+        "block1_chi_square": 31.415213469980497,
+        "block1_nagelkerke_r2": 0.7354793185326959,
+        "block3_chi_square": 37.008950015697266,
+        "block3_nagelkerke_r2": 0.8159192225152392,
+        "flagged": false,
+        "warnings": []
+      },
+      {
+        "number": 9,
+        "label": "Question 10",
+        "english_correct": 18,
+        "english_incorrect": 2,
+        "french_correct": 18,
+        "french_incorrect": 2,
+        "english_pct": 90,
+        "french_pct": 90,
+        "sparse": true,
+        "estimable": false,
+        "chi_square_difference": null,
+        "p_value": null,
+        "delta_r2": null,
+        "block1_chi_square": 26.00663787127573,
+        "block1_nagelkerke_r2": 0.9999999999989045,
+        "block3_chi_square": 26.00663787127546,
+        "block3_nagelkerke_r2": 0.9999999999988973,
+        "flagged": false,
+        "warnings": [
+          "Perfect separation or prediction detected, parameter may not be identified"
+        ]
+      },
+      {
+        "number": 10,
+        "label": "Question 11",
+        "english_correct": 8,
+        "english_incorrect": 12,
+        "french_correct": 8,
+        "french_incorrect": 12,
+        "english_pct": 40,
+        "french_pct": 40,
+        "sparse": false,
+        "estimable": true,
+        "chi_square_difference": 1.5219968736305844,
+        "p_value": 0.46719972465708226,
+        "delta_r2": 0.03267820369888802,
+        "block1_chi_square": 17.388019013697743,
+        "block1_nagelkerke_r2": 0.4765833063137482,
+        "block3_chi_square": 18.910015887328328,
+        "block3_nagelkerke_r2": 0.5092615100126362,
+        "flagged": false,
+        "warnings": []
+      },
+      {
+        "number": 11,
+        "label": "Question 12",
+        "english_correct": 15,
+        "english_incorrect": 5,
+        "french_correct": 5,
+        "french_incorrect": 15,
+        "english_pct": 75,
+        "french_pct": 25,
+        "sparse": false,
+        "estimable": true,
+        "chi_square_difference": 17.285868711246323,
+        "p_value": 0.00017636861395926777,
+        "delta_r2": 0.43054798487065027,
+        "block1_chi_square": 3.323371868211133,
+        "block1_nagelkerke_r2": 0.10630190943919926,
+        "block3_chi_square": 20.609240579457456,
+        "block3_nagelkerke_r2": 0.5368498943098495,
+        "flagged": true,
+        "warnings": []
+      },
+      {
+        "number": 12,
+        "label": "Question 13",
+        "english_correct": 19,
+        "english_incorrect": 1,
+        "french_correct": 19,
+        "french_incorrect": 1,
+        "english_pct": 95,
+        "french_pct": 95,
+        "sparse": true,
+        "estimable": false,
+        "chi_square_difference": null,
+        "p_value": null,
+        "delta_r2": null,
+        "block1_chi_square": 10.336042023137804,
+        "block1_nagelkerke_r2": 0.6949159500953037,
+        "block3_chi_square": 10.33604202313838,
+        "block3_nagelkerke_r2": 0.6949159500953376,
+        "flagged": false,
+        "warnings": []
+      }
+    ]
+  },
+  "comparison": {
+    "summary": {
+      "checks": 112,
+      "passed": 112,
+      "failed": 0,
+      "advisories": 0,
+      "dif_models_numerically_compared": 6
+    },
+    "checks": [
+      {
+        "name": "Student count",
+        "reference": 40,
+        "aqp": 40,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Scored-question count",
+        "reference": 12,
+        "aqp": 12,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Disclosure detected",
+        "reference": true,
+        "aqp": true,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Results/key wording agreement",
+        "reference": true,
+        "aqp": true,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "All item IDs include a positive version",
+        "reference": true,
+        "aqp": true,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "QM score mismatches",
+        "reference": 0,
+        "aqp": 0,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Exam average (%)",
+        "reference": 61.24999999999999,
+        "aqp": 61.25,
+        "tolerance": 1e-09,
+        "difference": 7.105427357601002e-15,
+        "passed": true
+      },
+      {
+        "name": "Cronbach alpha",
+        "reference": -0.5106382978723402,
+        "aqp": -0.510638298,
+        "tolerance": 5e-09,
+        "difference": 1.2765988266494332e-10,
+        "passed": true
+      },
+      {
+        "name": "English student count",
+        "reference": 20,
+        "aqp": 20,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "French student count",
+        "reference": 20,
+        "aqp": 20,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q1 difficulty",
+        "reference": 1.0,
+        "aqp": 1,
+        "tolerance": 5e-07,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q1 discrimination",
+        "reference": 0.0,
+        "aqp": 0,
+        "tolerance": 5e-09,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q1 flag",
+        "reference": "Too easy",
+        "aqp": "Too easy",
+        "tolerance": 0.0,
+        "difference": null,
+        "passed": true
+      },
+      {
+        "name": "Q1 recommendation",
+        "reference": "Report (Too Easy)",
+        "aqp": "Report (Too Easy)",
+        "tolerance": 0.0,
+        "difference": null,
+        "passed": true
+      },
+      {
+        "name": "Q2 difficulty",
+        "reference": 0.3,
+        "aqp": 0.3,
+        "tolerance": 5e-07,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q2 discrimination",
+        "reference": 0.6532831659119968,
+        "aqp": 0.653283166,
+        "tolerance": 5e-09,
+        "difference": 8.800327133684505e-11,
+        "passed": true
+      },
+      {
+        "name": "Q2 flag",
+        "reference": "Difficult item",
+        "aqp": "Difficult item",
+        "tolerance": 0.0,
+        "difference": null,
+        "passed": true
+      },
+      {
+        "name": "Q2 recommendation",
+        "reference": "Review wording & distractors",
+        "aqp": "Review wording & distractors",
+        "tolerance": 0.0,
+        "difference": null,
+        "passed": true
+      },
+      {
+        "name": "Q3 difficulty",
+        "reference": 0.5,
+        "aqp": 0.5,
+        "tolerance": 5e-07,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q3 discrimination",
+        "reference": -0.647290715250188,
+        "aqp": -0.647290715,
+        "tolerance": 5e-09,
+        "difference": 2.501879814431618e-10,
+        "passed": true
+      },
+      {
+        "name": "Q3 flag",
+        "reference": "Poor discrimination",
+        "aqp": "Poor discrimination",
+        "tolerance": 0.0,
+        "difference": null,
+        "passed": true
+      },
+      {
+        "name": "Q3 recommendation",
+        "reference": "Review wording & key",
+        "aqp": "Review wording & key",
+        "tolerance": 0.0,
+        "difference": null,
+        "passed": true
+      },
+      {
+        "name": "Q4 difficulty",
+        "reference": 0.5,
+        "aqp": 0.5,
+        "tolerance": 5e-07,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q4 discrimination",
+        "reference": 0.323645357625094,
+        "aqp": 0.323645358,
+        "tolerance": 5e-09,
+        "difference": 3.7490599513745337e-10,
+        "passed": true
+      },
+      {
+        "name": "Q4 flag",
+        "reference": "",
+        "aqp": "",
+        "tolerance": 0.0,
+        "difference": null,
+        "passed": true
+      },
+      {
+        "name": "Q4 recommendation",
+        "reference": "",
+        "aqp": "",
+        "tolerance": 0.0,
+        "difference": null,
+        "passed": true
+      },
+      {
+        "name": "Q5 difficulty",
+        "reference": 0.75,
+        "aqp": 0.75,
+        "tolerance": 5e-07,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q5 discrimination",
+        "reference": 0.6306414784205195,
+        "aqp": 0.630641478,
+        "tolerance": 5e-09,
+        "difference": 4.2051950810417793e-10,
+        "passed": true
+      },
+      {
+        "name": "Q5 flag",
+        "reference": "",
+        "aqp": "",
+        "tolerance": 0.0,
+        "difference": null,
+        "passed": true
+      },
+      {
+        "name": "Q5 recommendation",
+        "reference": "",
+        "aqp": "",
+        "tolerance": 0.0,
+        "difference": null,
+        "passed": true
+      },
+      {
+        "name": "Q6 difficulty",
+        "reference": 0.65,
+        "aqp": 0.65,
+        "tolerance": 5e-07,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q6 discrimination",
+        "reference": 0.6318950701275057,
+        "aqp": 0.63189507,
+        "tolerance": 5e-09,
+        "difference": 1.275056726868229e-10,
+        "passed": true
+      },
+      {
+        "name": "Q6 flag",
+        "reference": "",
+        "aqp": "",
+        "tolerance": 0.0,
+        "difference": null,
+        "passed": true
+      },
+      {
+        "name": "Q6 recommendation",
+        "reference": "",
+        "aqp": "",
+        "tolerance": 0.0,
+        "difference": null,
+        "passed": true
+      },
+      {
+        "name": "Q7 difficulty",
+        "reference": 0.5,
+        "aqp": 0.5,
+        "tolerance": 5e-07,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q7 discrimination",
+        "reference": 0.647290715250188,
+        "aqp": 0.647290715,
+        "tolerance": 5e-09,
+        "difference": 2.501879814431618e-10,
+        "passed": true
+      },
+      {
+        "name": "Q7 flag",
+        "reference": "",
+        "aqp": "",
+        "tolerance": 0.0,
+        "difference": null,
+        "passed": true
+      },
+      {
+        "name": "Q7 recommendation",
+        "reference": "",
+        "aqp": "",
+        "tolerance": 0.0,
+        "difference": null,
+        "passed": true
+      },
+      {
+        "name": "Q8 difficulty",
+        "reference": 0.4,
+        "aqp": 0.4,
+        "tolerance": 5e-07,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q8 discrimination",
+        "reference": 0.7184441728206179,
+        "aqp": 0.718444173,
+        "tolerance": 5e-09,
+        "difference": 1.7938206475776042e-10,
+        "passed": true
+      },
+      {
+        "name": "Q8 flag",
+        "reference": "",
+        "aqp": "",
+        "tolerance": 0.0,
+        "difference": null,
+        "passed": true
+      },
+      {
+        "name": "Q8 recommendation",
+        "reference": "",
+        "aqp": "",
+        "tolerance": 0.0,
+        "difference": null,
+        "passed": true
+      },
+      {
+        "name": "Q9 difficulty",
+        "reference": 0.9,
+        "aqp": 0.9,
+        "tolerance": 5e-07,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q9 discrimination",
+        "reference": 0.6338054920158088,
+        "aqp": 0.633805492,
+        "tolerance": 5e-09,
+        "difference": 1.580879871454499e-11,
+        "passed": true
+      },
+      {
+        "name": "Q9 flag",
+        "reference": "",
+        "aqp": "",
+        "tolerance": 0.0,
+        "difference": null,
+        "passed": true
+      },
+      {
+        "name": "Q9 recommendation",
+        "reference": "",
+        "aqp": "",
+        "tolerance": 0.0,
+        "difference": null,
+        "passed": true
+      },
+      {
+        "name": "Q10 difficulty",
+        "reference": 0.4,
+        "aqp": 0.4,
+        "tolerance": 5e-07,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q10 discrimination",
+        "reference": -0.6028324668494841,
+        "aqp": -0.602832467,
+        "tolerance": 5e-09,
+        "difference": 1.5051593305059896e-10,
+        "passed": true
+      },
+      {
+        "name": "Q10 flag",
+        "reference": "Poor discrimination",
+        "aqp": "Poor discrimination",
+        "tolerance": 0.0,
+        "difference": null,
+        "passed": true
+      },
+      {
+        "name": "Q10 recommendation",
+        "reference": "Review wording & key",
+        "aqp": "Review wording & key",
+        "tolerance": 0.0,
+        "difference": null,
+        "passed": true
+      },
+      {
+        "name": "Q11 difficulty",
+        "reference": 0.5,
+        "aqp": 0.5,
+        "tolerance": 5e-07,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q11 discrimination",
+        "reference": -0.28318968792195726,
+        "aqp": -0.283189688,
+        "tolerance": 5e-09,
+        "difference": 7.804273893796676e-11,
+        "passed": true
+      },
+      {
+        "name": "Q11 flag",
+        "reference": "Poor discrimination",
+        "aqp": "Poor discrimination",
+        "tolerance": 0.0,
+        "difference": null,
+        "passed": true
+      },
+      {
+        "name": "Q11 recommendation",
+        "reference": "Review wording & key",
+        "aqp": "Review wording & key",
+        "tolerance": 0.0,
+        "difference": null,
+        "passed": true
+      },
+      {
+        "name": "Q12 difficulty",
+        "reference": 0.95,
+        "aqp": 0.95,
+        "tolerance": 5e-07,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q12 discrimination",
+        "reference": 0.436214856245998,
+        "aqp": 0.436214856,
+        "tolerance": 5e-09,
+        "difference": 2.4599799974822645e-10,
+        "passed": true
+      },
+      {
+        "name": "Q12 flag",
+        "reference": "",
+        "aqp": "",
+        "tolerance": 0.0,
+        "difference": null,
+        "passed": true
+      },
+      {
+        "name": "Q12 recommendation",
+        "reference": "",
+        "aqp": "",
+        "tolerance": 0.0,
+        "difference": null,
+        "passed": true
+      },
+      {
+        "name": "Q1 EN percent correct",
+        "reference": 100,
+        "aqp": 100,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q1 FR percent correct",
+        "reference": 100,
+        "aqp": 100,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q1 sparse-cell status",
+        "reference": true,
+        "aqp": true,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q2 EN percent correct",
+        "reference": 30,
+        "aqp": 30,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q2 FR percent correct",
+        "reference": 30,
+        "aqp": 30,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q2 sparse-cell status",
+        "reference": false,
+        "aqp": false,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q3 EN percent correct",
+        "reference": 50,
+        "aqp": 50,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q3 FR percent correct",
+        "reference": 50,
+        "aqp": 50,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q3 sparse-cell status",
+        "reference": false,
+        "aqp": false,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q3 DIF p-value",
+        "reference": 0.3549495164001627,
+        "aqp": 0.3549,
+        "tolerance": 5e-05,
+        "difference": 4.9516400162707974e-05,
+        "passed": true
+      },
+      {
+        "name": "Q3 DIF delta R-squared",
+        "reference": 0.03928055208493264,
+        "aqp": 0.039,
+        "tolerance": 0.0005,
+        "difference": 0.00028055208493264067,
+        "passed": true
+      },
+      {
+        "name": "Q3 DIF flag",
+        "reference": false,
+        "aqp": false,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q4 EN percent correct",
+        "reference": 50,
+        "aqp": 50,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q4 FR percent correct",
+        "reference": 50,
+        "aqp": 50,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q4 sparse-cell status",
+        "reference": false,
+        "aqp": false,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q4 DIF p-value",
+        "reference": 0.8958799145680953,
+        "aqp": 0.8959,
+        "tolerance": 5e-05,
+        "difference": 2.0085431904681705e-05,
+        "passed": true
+      },
+      {
+        "name": "Q4 DIF delta R-squared",
+        "reference": 0.006549786961613624,
+        "aqp": 0.007,
+        "tolerance": 0.0005,
+        "difference": 0.0004502130383863762,
+        "passed": true
+      },
+      {
+        "name": "Q4 DIF flag",
+        "reference": false,
+        "aqp": false,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q5 EN percent correct",
+        "reference": 75,
+        "aqp": 75,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q5 FR percent correct",
+        "reference": 75,
+        "aqp": 75,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q5 sparse-cell status",
+        "reference": false,
+        "aqp": false,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q6 EN percent correct",
+        "reference": 65,
+        "aqp": 65,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q6 FR percent correct",
+        "reference": 65,
+        "aqp": 65,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q6 sparse-cell status",
+        "reference": false,
+        "aqp": false,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q6 DIF p-value",
+        "reference": 0.348928834362899,
+        "aqp": 0.3489,
+        "tolerance": 5e-05,
+        "difference": 2.8834362899021748e-05,
+        "passed": true
+      },
+      {
+        "name": "Q6 DIF delta R-squared",
+        "reference": 0.04344460700821795,
+        "aqp": 0.043,
+        "tolerance": 0.0005,
+        "difference": 0.00044460700821795374,
+        "passed": true
+      },
+      {
+        "name": "Q6 DIF flag",
+        "reference": false,
+        "aqp": false,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q7 EN percent correct",
+        "reference": 50,
+        "aqp": 50,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q7 FR percent correct",
+        "reference": 50,
+        "aqp": 50,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q7 sparse-cell status",
+        "reference": false,
+        "aqp": false,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q7 DIF p-value",
+        "reference": 0.3549495164001641,
+        "aqp": 0.3549,
+        "tolerance": 5e-05,
+        "difference": 4.951640016409575e-05,
+        "passed": true
+      },
+      {
+        "name": "Q7 DIF delta R-squared",
+        "reference": 0.03928055208493253,
+        "aqp": 0.039,
+        "tolerance": 0.0005,
+        "difference": 0.00028055208493252964,
+        "passed": true
+      },
+      {
+        "name": "Q7 DIF flag",
+        "reference": false,
+        "aqp": false,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q8 EN percent correct",
+        "reference": 40,
+        "aqp": 40,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q8 FR percent correct",
+        "reference": 40,
+        "aqp": 40,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q8 sparse-cell status",
+        "reference": false,
+        "aqp": false,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q9 EN percent correct",
+        "reference": 90,
+        "aqp": 90,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q9 FR percent correct",
+        "reference": 90,
+        "aqp": 90,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q9 sparse-cell status",
+        "reference": true,
+        "aqp": true,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q10 EN percent correct",
+        "reference": 40,
+        "aqp": 40,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q10 FR percent correct",
+        "reference": 40,
+        "aqp": 40,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q10 sparse-cell status",
+        "reference": false,
+        "aqp": false,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q10 DIF p-value",
+        "reference": 0.46719972465708226,
+        "aqp": 0.4672,
+        "tolerance": 5e-05,
+        "difference": 2.753429177437816e-07,
+        "passed": true
+      },
+      {
+        "name": "Q10 DIF delta R-squared",
+        "reference": 0.03267820369888802,
+        "aqp": 0.033,
+        "tolerance": 0.0005,
+        "difference": 0.00032179630111198176,
+        "passed": true
+      },
+      {
+        "name": "Q10 DIF flag",
+        "reference": false,
+        "aqp": false,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q11 EN percent correct",
+        "reference": 75,
+        "aqp": 75,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q11 FR percent correct",
+        "reference": 25,
+        "aqp": 25,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q11 sparse-cell status",
+        "reference": false,
+        "aqp": false,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q11 DIF p-value",
+        "reference": 0.00017636861395926777,
+        "aqp": 0.0002,
+        "tolerance": 5e-05,
+        "difference": 2.3631386040732236e-05,
+        "passed": true
+      },
+      {
+        "name": "Q11 DIF delta R-squared",
+        "reference": 0.43054798487065027,
+        "aqp": 0.431,
+        "tolerance": 0.0005,
+        "difference": 0.00045201512934972543,
+        "passed": true
+      },
+      {
+        "name": "Q11 DIF flag",
+        "reference": true,
+        "aqp": true,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q12 EN percent correct",
+        "reference": 95,
+        "aqp": 95,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q12 FR percent correct",
+        "reference": 95,
+        "aqp": 95,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      },
+      {
+        "name": "Q12 sparse-cell status",
+        "reference": true,
+        "aqp": true,
+        "tolerance": 0.0,
+        "difference": 0.0,
+        "passed": true
+      }
+    ],
+    "advisories": []
+  }
+}

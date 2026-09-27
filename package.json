@@ -1,0 +1,14 @@
+{
+  "name": "aqp-next",
+  "private": true,
+  "scripts": {
+    "test": "node tests/golden/run-golden-tests.mjs && node tests/golden/run-exceptions-report-tests.mjs && node tests/golden/run-malformed-upload-tests.mjs",
+    "test:golden": "node tests/golden/run-golden-tests.mjs",
+    "test:exceptions-reports": "node tests/golden/run-exceptions-report-tests.mjs",
+    "test:malformed-uploads": "node tests/golden/run-malformed-upload-tests.mjs",
+    "build:malformed-fixtures": "node tests/golden/build-malformed-fixtures.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1"
+  }
+}
