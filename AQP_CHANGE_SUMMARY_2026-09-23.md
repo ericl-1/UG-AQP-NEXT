@@ -3,10 +3,21 @@
 ## Build identity
 
 - Starting point: AQP 0.8, build `20260923-01` (`Downloads/index.html`)
-- Current development build: AQP 0.8, build `20260927-02`
+- Current development build: AQP 0.8, build `20260927-03`
 - Working file: `index.html` in the local `AQP (HTML)` project folder
 - The Downloads baseline was not modified.
-- Build `20260927-01` was merged into GitHub `main` and deployed through GitHub Pages on September 27, 2026. Build `20260927-02` is being developed on an isolated feature branch and is not live until its pull request is approved and merged.
+- Builds `20260927-01` and `20260927-02` were merged into GitHub `main` and deployed through GitHub Pages on September 27, 2026. Build `20260927-03` is being developed on the isolated `feature/session-import` branch and is not live until its pull request is approved and merged.
+
+## Build 20260927-03 — portable session recovery
+
+- Added a separate **Portable session backup** in Reports. It preserves the response-level state needed to reopen an analysis: de-identified responses, answer key, configuration, exceptions and reasons, Near Threshold inclusions, Review Queue decisions, feedback work, and session metadata.
+- Added **Import saved session** to the home screen. Import validates the file type and schema, rejects report-only JSON, malformed/truncated content, files over 25 MB, and unsupported newer schemas, then recalculates the analysis from the saved responses.
+- Kept the existing **Session data export** unchanged as a privacy-minimized, report-only integration record. It deliberately remains non-importable and contains no student outcomes.
+- Introduced portable-session schema version `1`, independent of application version/build, with explicit privacy metadata.
+- Portable backups and browser drafts omit student names and institutional identifiers. The persistence sanitizer now uses a strict whitelist, also closing a gap where Scantron `name` could previously have entered browser storage.
+- Restored session dates are converted back to real Date objects, preventing failures in later structured exports.
+- Expanded the browser regression suite with export/import round-trip coverage and invalid-file checks. It verifies restored calculations, exceptions, Near Threshold choices, Review Queue state, feedback, metadata, report availability, and identifier omission.
+- Updated the in-app FAQ and Release Notes to explain the distinction between report-only Session data JSON and importable portable backups, including the need to handle de-identified responses and feedback text securely.
 
 ## Build 20260927-02 — analysis reconciliation
 
@@ -218,6 +229,6 @@ The existing upload preview was enhanced into a formal pre-analysis checkpoint r
 ## Remaining architectural limitations
 
 - The application still loads XLSX, JSZip, FileSaver, and icon assets from public CDNs. It therefore is not fully offline/self-contained despite being a single HTML artifact. Bundling these libraries would substantially increase the file and should be handled as a deliberate deployment decision.
-- Browser localStorage remains browser/profile-specific and is not suitable for coordinator-to-coordinator handoff or longitudinal institutional storage.
+- Browser localStorage remains browser/profile-specific. Portable backups now support manual coordinator/device handoff, but are not a substitute for managed institutional storage, permissions, retention, or shared history.
 - Multi-user workflow, shared history, permissions, retention policy, and centralized audit records still require the planned SharePoint/SPFx or other managed persistence layer.
-- The local project folder is not currently a Git checkout. The revised file is ready to be copied into or committed from the actual GitHub repository once that repository is connected.
+- GitHub remains the release source of truth. Development changes are prepared on isolated branches and become live only after their pull requests are merged into `main` and GitHub Pages deploys them.
