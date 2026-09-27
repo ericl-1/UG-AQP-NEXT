@@ -3,10 +3,22 @@
 ## Build identity
 
 - Starting point: AQP 0.8, build `20260923-01` (`Downloads/index.html`)
-- Revised local build: AQP 0.8, build `20260927-01`
+- Current development build: AQP 0.8, build `20260927-02`
 - Working file: `index.html` in the local `AQP (HTML)` project folder
 - The Downloads baseline was not modified.
-- No GitHub remote was connected and nothing was pushed or deployed.
+- Build `20260927-01` was merged into GitHub `main` and deployed through GitHub Pages on September 27, 2026. Build `20260927-02` is being developed on an isolated feature branch and is not live until its pull request is approved and merged.
+
+## Build 20260927-02 — analysis reconciliation
+
+The existing upload preview was enhanced into a formal pre-analysis checkpoint rather than adding a separate validation room.
+
+- The coordinator now sees students included, total question columns detected, Disclosure exclusions, Unscored exclusions, scored questions retained, answer-key matching, effective scoring denominator, missing responses, EN/FR matching, and unresolved findings in one summary.
+- The response-level score-comparison KPI was removed because a large “0 of N values differ” total was technically accurate but not useful to coordinators. Score reconstruction remains active internally; an amber, actionable warning appears only if a discrepancy is actually found.
+- The distinction between uploaded structure and analyzed structure is explicit. The golden dataset demonstrates this as 14 detected questions → 1 Disclosure excluded → 1 Unscored excluded → 12 scored questions.
+- The confirmation action is now **Confirm and continue**. It records a timestamped reconciliation snapshot in session state.
+- **Return to uploads** reopens the source-file controls without discarding the rest of setup.
+- Blocking upload defects still prevent confirmation. Correctable warnings remain visible and require an explicit coordinator decision to continue.
+- Automated coverage now freezes the reconciliation values, warning state, confirmation timestamp, and continuation gate.
 
 ## Correctness changes
 

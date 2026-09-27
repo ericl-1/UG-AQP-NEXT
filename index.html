@@ -1889,7 +1889,7 @@
 
 // ── App version — single source of truth ─────────────────────────────────
 var APP_VERSION     = '0.8';
-var APP_BUILD       = '20260927-01';
+var APP_BUILD       = '20260927-02';
 var APP_FAQ_VERSION = '0.8';           // Keep aligned with the app version; date records FAQ revisions
 var APP_FAQ_DATE    = 'September 27, 2026'; // Update when FAQ content changes
 var APP_RN_DATE     = 'September 27, 2026'; // Update each version close
@@ -2681,7 +2681,7 @@ var TT = {
 var G_SOURCE = 'qm';
 var G_DIF_ENABLED = true;
 var G_DIRTY = false; // true when settings changed since last analysis
-var G_MCQ_CONFIRMED = false; // true once user clicks Confirm data on parse preview
+var G_MCQ_CONFIRMED = false; // true once user confirms the analysis reconciliation
 var G_EXCL_VIEW     = 'clean'; // Exception view: 'clean' | 'init' | 'impact'
 
 function markDirty() {
@@ -2737,6 +2737,8 @@ function clearDirty() {
 }
 function setSource(src) {
   G_SOURCE = src;
+  G_MCQ_CONFIRMED = false;
+  G._reconciliationConfirmation=null;
   // Clear both previews whenever source changes
   var sp = document.getElementById('scantron-preview');
   if (sp) { sp.style.display = 'none'; sp.innerHTML = ''; }
@@ -2841,7 +2843,8 @@ function captureNewChartHiRes() {
 }
 // ── State ─────────────────────────────────────────────────────────────────
 var G = { students:[], key:[], nQ:0, qLabels:[], qStatus:[], mcq:[], dif:[], exclusions:{}, _initial:null,
-  _uploadValidation:{resultsBlockers:[],resultsWarnings:[],keyBlockers:[],keyWarnings:[]} };
+  _uploadValidation:{resultsBlockers:[],resultsWarnings:[],keyBlockers:[],keyWarnings:[]},
+  _reconciliation:{resultsDetected:0,disclosureExcluded:0,resultsUnscored:[],keyDetected:0,keyUnscored:0} };
 // Also reset exception view on every G reset
 G_EXCL_VIEW = 'clean';
 
@@ -2964,6 +2967,7 @@ function esRecordFeedback() {
 document.getElementById('fi-main').addEventListener('change', function(e) {
   if (e.target.files[0]) {
     G_MCQ_CONFIRMED = false;
+    G._reconciliationConfirmation=null;
     G.students=[]; G.nQ=0; G.qLabels=[]; G.qStatus=[]; G.elentraIds=[]; G._qmResultsMeta=null;
     qmResetUploadValidation('results');
     checkRunReady();
@@ -2975,6 +2979,7 @@ document.getElementById('fi-main').addEventListener('change', function(e) {
 document.getElementById('fi-key').addEventListener('change', function(e) {
   if (e.target.files[0]) {
     G_MCQ_CONFIRMED = false;
+    G._reconciliationConfirmation=null;
     G.key=[]; G._qmKeyMeta=null;
     qmResetUploadValidation('key');
     checkRunReady();
@@ -3130,6 +3135,7 @@ function parseResults(text, xlsxRows, isCsv) {
   // Route to separate Scantron parser — completely independent code path
   if (G_SOURCE === 'scantron') { parseScantronResults(text); return; }
   qmResetUploadValidation('results');
+  G._reconciliation={resultsDetected:0,disclosureExcluded:0,resultsUnscored:[],keyDetected:0,keyUnscored:0};
 
   var rows = [];
   if (xlsxRows) {
@@ -3215,6 +3221,7 @@ function parseResults(text, xlsxRows, isCsv) {
       'Check that this is the raw QM export and has not been modified.'
     ], 'Headers found: ' + h.slice(0,10).join(', ')); return;
   }
+  G._reconciliation.resultsDetected=qPairs.length;
 
   // Get question labels from rows[0] (SheetJS puts merged Q labels here)
   // Map: scoreCol → question number
@@ -3295,6 +3302,8 @@ function parseResults(text, xlsxRows, isCsv) {
   }
   var skippedUnscoredResults = unscoredQNums.length;
   questions = validQuestions;
+  G._reconciliation.disclosureExcluded=disclosureDetected?1:0;
+  G._reconciliation.resultsUnscored=unscoredQNums.slice();
 
   // A mixture of scored answers and literal "Unscored" values for one item is
   // structurally ambiguous and must not silently become wrong responses.
@@ -3338,6 +3347,24 @@ function parseResults(text, xlsxRows, isCsv) {
     return qmItemReference(cell,q.qNum);
   });
   G._qmResultsMeta={questionNumbers:questions.map(function(q){return q.qNum;}),items:resultRefs};
+  // If a key was already loaded and the results file is being replaced, rerun
+  // the cross-file identity checks instead of trusting the earlier confirmation.
+  if (G.key&&G.key.length&&G._qmKeyMeta&&G._qmKeyMeta.items) {
+    var loadedKeyMeta=G._qmKeyMeta;
+    G._reconciliation.keyDetected=G.key.length;
+    if (JSON.stringify(loadedKeyMeta.questionNumbers)!==JSON.stringify(G._qmResultsMeta.questionNumbers)) {
+      qmAddUploadIssue('results','blocker','Question numbers/order do not match between the results file and answer key.');
+    }
+    var replacementN=Math.min(resultRefs.length,loadedKeyMeta.items.length);
+    var replacementIdMismatch=[],replacementWordingMismatch=[];
+    for(var replacementIdx=0;replacementIdx<replacementN;replacementIdx++) {
+      var replacementResult=resultRefs[replacementIdx],replacementKey=loadedKeyMeta.items[replacementIdx];
+      if(replacementResult.id&&replacementKey.id&&replacementResult.id!==replacementKey.id)replacementIdMismatch.push(replacementResult.qNum);
+      if(replacementResult.wording&&replacementKey.wording&&replacementResult.wording!==replacementKey.wording)replacementWordingMismatch.push(replacementResult.qNum);
+    }
+    if(replacementIdMismatch.length)qmAddUploadIssue('results','blocker','Question ID/version differs between results and key for question'+(replacementIdMismatch.length!==1?'s ':' ')+replacementIdMismatch.join(', ')+'.');
+    if(replacementWordingMismatch.length)qmAddUploadIssue('results','blocker','Question wording differs between results and key for question'+(replacementWordingMismatch.length!==1?'s ':' ')+replacementWordingMismatch.join(', ')+'.');
+  }
 
   var qNumSeen={};
   questions.forEach(function(q){ qNumSeen[q.qNum]=(qNumSeen[q.qNum]||0)+1; });
@@ -3548,6 +3575,8 @@ function parseKey(text, xlsxRows, isCsv) {
       'Check that this is the raw QM answer key export.'
     ], 'Key headers: '+h.slice(0,10).join(', ')); return;
   }
+  if (!G._reconciliation) G._reconciliation={resultsDetected:G.nQ,disclosureExcluded:G._hasDisclosure?1:0,resultsUnscored:[],keyDetected:0,keyUnscored:0};
+  G._reconciliation.keyDetected=qPairs.length;
 
   // Get question labels from rows[0]
   var qNumMap = {};
@@ -3636,6 +3665,7 @@ function parseKey(text, xlsxRows, isCsv) {
   }
 
   G.key = keys;
+  G._reconciliation.keyUnscored=skippedUnscored;
   G._qmKeyMeta={questionNumbers:validQNums.slice(),items:keyRefs};
 
   // Validate count matches
@@ -3818,6 +3848,7 @@ function parseScantronResults(text) {
   G.rows     = students.map(function(s){ return s.scores; });
   G.totals   = students.map(function(s){ return s.total; });
   G._hasStream = false; // will be set properly in runAnalysis
+  G._reconciliation={resultsDetected:nQ,disclosureExcluded:0,resultsUnscored:[],keyDetected:nQ,keyUnscored:0};
 
   // Quick scan for unrecognised course codes to flag in upload feedback
   var enCodeNow = ((document.getElementById('scantron-en-code')||{value:''}).value||'').trim().toUpperCase();
@@ -3925,6 +3956,145 @@ function makeTableResizable(tableId) {
   });
 }
 
+
+// ── Analysis reconciliation ───────────────────────────────────────────────
+// Converts the parsed upload state into one coordinator-facing checkpoint.
+// This is deliberately independent of the later item-analysis calculations:
+// it confirms what will enter the analysis before the user proceeds.
+function analysisReconciliationSnapshot(source) {
+  var rec=G._reconciliation||{};
+  var students=G.students||[];
+  var key=G.key||[];
+  var missingResponses=0;
+  students.forEach(function(s){
+    (s.outcomes||[]).forEach(function(answer){if(!answer)missingResponses++;});
+  });
+
+  var activeExceptions=Object.keys(G.exclusions||{}).filter(function(idx){
+    var e=G.exclusions[idx];
+    return e&&(e.disposition==='credit'||e.disposition==='delete');
+  }).length;
+  var effectiveDenominator=Math.max(0,(G.nQ||0)-activeExceptions);
+
+  var scoreCompared=0, scoreMismatches=0;
+  if(source==='qm'&&key.length===(G.nQ||0)) {
+    students.forEach(function(s){
+      for(var i=0;i<G.nQ;i++) {
+        if(!s.qmScores||s.qmScores.length<=i)continue;
+        var rebuilt=(key[i]&&s.outcomes&&s.outcomes[i]===key[i])?1:0;
+        scoreCompared++;
+        if((s.qmScores[i]?1:0)!==rebuilt)scoreMismatches++;
+      }
+    });
+  }
+
+  var enCode,frCode,unmatched=0,nEN=0,nFR=0;
+  if(source==='scantron') {
+    enCode=((document.getElementById('scantron-en-code')||{value:''}).value||'').trim().toUpperCase();
+    frCode=((document.getElementById('scantron-fr-code')||{value:''}).value||'').trim().toUpperCase();
+    students.forEach(function(s){
+      var code=(s.courseCode||'').toUpperCase();
+      if(code===enCode)nEN++;else if(code===frCode)nFR++;else unmatched++;
+    });
+  } else {
+    enCode=((document.getElementById('eng-code')||{value:'E'}).value||'E').trim().toUpperCase();
+    frCode=((document.getElementById('fre-code')||{value:'F'}).value||'F').trim().toUpperCase();
+    students.forEach(function(s){
+      var code=(s.stream||'').toUpperCase();
+      if(code===enCode)nEN++;else if(code===frCode)nFR++;else unmatched++;
+    });
+  }
+
+  var validation=source==='qm'?qmEnsureUploadValidation():null;
+  var blockers=validation?validation.resultsBlockers.concat(validation.keyBlockers):[];
+  var warnings=validation?validation.resultsWarnings.concat(validation.keyWarnings):[];
+  var excludedUnscored=Math.max((rec.resultsUnscored||[]).length,rec.keyUnscored||0);
+  var detected=rec.resultsDetected||((G.nQ||0)+(rec.disclosureExcluded||0)+excludedUnscored);
+  var crossFileBlocked=validation&&(
+    validation.keyBlockers.length>0||
+    validation.resultsBlockers.some(function(message){return /between (?:the )?results(?: file)? and (?:the )?(?:answer )?key|differs between results and key/i.test(message);})
+  );
+  var keyMatched=source==='scantron'
+    ? key.length===(G.nQ||0)
+    : key.length===(G.nQ||0)&&(rec.keyDetected||0)>0&&!crossFileBlocked;
+  var reviewSignals=warnings.length;
+  if(missingResponses>0)reviewSignals++;
+  if(scoreMismatches>0)reviewSignals++;
+  if(G_DIF_ENABLED&&unmatched>0&&!warnings.some(function(w){return /stream|course code/i.test(w);}))reviewSignals++;
+
+  var snapshot={
+    source:source,students:students.length,questionsDetected:detected,
+    scoredQuestions:G.nQ||0,disclosureExcluded:rec.disclosureExcluded||0,
+    unscoredExcluded:excludedUnscored,keyEntries:key.length,keyMatched:keyMatched,
+    effectiveDenominator:effectiveDenominator,activeExceptions:activeExceptions,
+    missingResponses:missingResponses,scoreCompared:scoreCompared,
+    scoreMismatches:scoreMismatches,nEN:nEN,nFR:nFR,unmatchedStreams:unmatched,
+    blockers:blockers.slice(),warnings:warnings.slice(),reviewSignals:reviewSignals
+  };
+  G._reconciliationSnapshot=snapshot;
+  return snapshot;
+}
+
+function reconciliationCell(id,label,value,detail,status) {
+  var colour=status==='bad'?'var(--s-hard)':status==='warn'?'#9a5a00':status==='ok'?'#1a5c1a':'var(--c-primary)';
+  var icon=status==='bad'?'!':status==='warn'?'⚠':status==='ok'?'✓':'·';
+  return '<div id="'+id+'" style="padding:10px 12px;border:1px solid var(--c-border);border-radius:8px;background:#fff;min-height:58px">'+
+    '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.45px;color:var(--c-muted);margin-bottom:4px">'+escHtml(label)+'</div>'+
+    '<div style="display:flex;align-items:flex-start;gap:6px"><span aria-hidden="true" style="color:'+colour+';font-size:12px;font-weight:800;line-height:18px">'+icon+'</span><div>'+
+      '<div style="font-size:13px;font-weight:700;color:'+colour+'">'+escHtml(value)+'</div>'+
+      (detail?'<div style="font-size:10.5px;color:var(--c-muted);margin-top:2px;line-height:1.35">'+escHtml(detail)+'</div>':'')+
+    '</div></div></div>';
+}
+
+function renderAnalysisReconciliation(source) {
+  var s=analysisReconciliationSnapshot(source);
+  var blocked=s.blockers.length>0||!s.keyMatched;
+  var summary=blocked
+    ? s.blockers.length+' blocking issue'+(s.blockers.length===1?'':'s')+' must be corrected'
+    : s.reviewSignals>0
+      ? 'Ready with '+s.reviewSignals+' item'+(s.reviewSignals===1?'':'s')+' to review'
+      : 'All checks reconciled — ready to confirm';
+  var summaryStatus=blocked?'bad':s.reviewSignals>0?'warn':'ok';
+  var keyValue=source==='scantron'
+    ? s.keyEntries+' embedded key entries matched'
+    : s.keyEntries+' of '+s.scoredQuestions+' entries matched';
+  var keyDetail=source==='scantron'?'Read from the MASTER row':'Question number, ID/version and wording checked';
+  var streamValue=!G_DIF_ENABLED?'Not requested':s.nEN+' EN · '+s.nFR+' FR';
+  var streamDetail=!G_DIF_ENABLED?'DIF is turned off':s.unmatchedStreams?(s.unmatchedStreams+' student'+(s.unmatchedStreams===1?'':'s')+' still unmatched'):'All students matched';
+  var unscoredDetail=(s.unscoredExcluded&&G._reconciliation&&G._reconciliation.resultsUnscored&&G._reconciliation.resultsUnscored.length)
+    ? 'Question'+(G._reconciliation.resultsUnscored.length===1?' ':'s ')+G._reconciliation.resultsUnscored.join(', ')
+    : 'None detected';
+
+  return '<section id="analysis-reconciliation" role="region" aria-labelledby="analysis-reconciliation-title" style="padding:14px 16px;border-bottom:1px solid var(--c-border);background:#fbfcfd">'+
+    '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px">'+
+      '<div><div id="analysis-reconciliation-title" style="font-size:14px;font-weight:700;color:var(--c-primary)">Analysis reconciliation</div>'+
+      '<div style="font-size:11px;color:var(--c-muted);margin-top:2px">Confirm how AQP interpreted the uploaded exam before analysis.</div></div>'+
+      '<span id="recon-status" style="font-size:11px;font-weight:700;color:'+(summaryStatus==='bad'?'var(--s-hard)':summaryStatus==='warn'?'#8a5200':'#1a5c1a')+';background:'+(summaryStatus==='bad'?'#fff0f0':summaryStatus==='warn'?'#fff8e6':'#edf8ed')+';border:1px solid '+(summaryStatus==='bad'?'#f0c0c0':summaryStatus==='warn'?'#ead49a':'#b9deb9')+';border-radius:20px;padding:4px 10px;white-space:nowrap">'+escHtml(summary)+'</span>'+
+    '</div>'+
+    '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:7px">'+
+      reconciliationCell('recon-students','Students included',String(s.students),'All parsed student rows','ok')+
+      reconciliationCell('recon-detected','Questions detected',String(s.questionsDetected),s.scoredQuestions+' retained for scoring','ok')+
+      reconciliationCell('recon-disclosure','Disclosure excluded',s.disclosureExcluded?'Yes — '+s.disclosureExcluded:'No','Automatic identification',s.disclosureExcluded?'ok':'neutral')+
+      reconciliationCell('recon-unscored','Unscored excluded',String(s.unscoredExcluded),unscoredDetail,s.unscoredExcluded?'ok':'neutral')+
+      reconciliationCell('recon-key-match','Answer key match',keyValue,keyDetail,s.keyMatched?'ok':'bad')+
+      reconciliationCell('recon-denominator','Effective denominator',String(s.effectiveDenominator),s.activeExceptions?s.activeExceptions+' active exception'+(s.activeExceptions===1?'':'s'):'Before any new exceptions','ok')+
+      reconciliationCell('recon-missing','Missing responses',String(s.missingResponses),'Across all retained student responses',s.missingResponses?'warn':'ok')+
+      reconciliationCell('recon-streams','Language streams',streamValue,streamDetail,(G_DIF_ENABLED&&s.unmatchedStreams)?'warn':'ok')+
+      reconciliationCell('recon-warning-count','Upload findings',s.blockers.length+' blocking · '+s.warnings.length+' warning'+(s.warnings.length===1?'':'s'),'Details appear below',blocked?'bad':s.warnings.length?'warn':'ok')+
+    '</div>'+
+    (s.scoreMismatches>0?'<div id="recon-score-warning" role="alert" style="margin-top:9px;padding:9px 12px;background:#fff8e6;border:1px solid #ead49a;border-radius:7px;font-size:11.5px;color:#7a4700"><strong>Score discrepancy found:</strong> '+s.scoreMismatches+' of '+s.scoreCompared+' QuestionMark score values differ from scores rebuilt using the uploaded answer key. AQP will use the uploaded answer key; verify that the correct key file was selected before continuing.</div>':'')+
+  '</section>';
+}
+
+function returnToUploadFiles(source) {
+  G_MCQ_CONFIRMED=false;
+  G._reconciliationConfirmation=null;
+  expandUploadCard('results');
+  if(source==='qm')expandUploadCard('key');
+  var grid=document.getElementById('upload-grid');
+  if(grid&&grid.scrollIntoView)grid.scrollIntoView({behavior:'smooth',block:'start'});
+  checkRunReady();
+}
 
 // ── QM Upload validation panel ────────────────────────────────────────────
 function updateQMPreview() {
@@ -4077,6 +4247,7 @@ function renderQMPreview(el) {
     : '';
   var uploadBlockers=qmUploadBlockers();
   var uploadWarnings=qmUploadWarnings();
+  var reconciliationBlocked=uploadBlockers.length>0||!analysisReconciliationSnapshot('qm').keyMatched;
   var uploadValidationHtml='';
   if (uploadBlockers.length) {
     uploadValidationHtml='<div id="qm-validation-blockers" style="padding:10px 14px;background:#fff0f0;border-top:0.5px solid #f0c0c0;color:#7a1010;font-size:11px"><strong>Analysis blocked until corrected:</strong><ul style="margin:5px 0 0 18px;padding:0">'+uploadBlockers.map(function(m){return '<li>'+escHtml(m)+'</li>';}).join('')+'</ul></div>';
@@ -4090,7 +4261,7 @@ function renderQMPreview(el) {
     // Header
     '<div style="background:var(--c-surface);padding:10px 16px;display:flex;align-items:flex-start;justify-content:space-between;border-bottom:0.5px solid var(--c-border)">' +
       '<div>' +
-        '<div style="font-size:13px;font-weight:600;color:var(--c-primary)">Parse Preview</div>' +
+        '<div style="font-size:13px;font-weight:600;color:var(--c-primary)">Upload validation</div>' +
         (fnMain ? '<div style="font-size:11px;color:var(--c-muted);margin-top:2px"><span style="font-weight:500">Results file:</span> '+escHtml(fnMain)+'</div>' : '') +
         (fnKey  ? '<div style="font-size:11px;color:var(--c-muted);margin-top:1px"><span style="font-weight:500">Key file:</span> '+escHtml(fnKey)+'</div>' : '') +
       '</div>' +
@@ -4098,6 +4269,7 @@ function renderQMPreview(el) {
     '</div>' +
     // Raw data notice
     '<div style="padding:7px 16px;background:#f0f4ff;border-bottom:0.5px solid var(--c-border);font-size:11px;color:var(--c-secondary)">ℹ This preview reflects the raw files only — Question Exceptions and alternate keys have not been applied yet.</div>' +
+    renderAnalysisReconciliation('qm') +
     // Mismatch warning (if any)
     mismatchWarning +
     uploadValidationHtml +
@@ -4137,9 +4309,8 @@ function renderQMPreview(el) {
       '<span style="font-size:11px;color:var(--c-muted)">Preview only — all '+G.students.length+' students and '+qCount+' questions are loaded.</span>' +
       '<div style="display:flex;gap:8px">' +
         '<button onclick="updateQMPreview()" style="font-size:12px;font-weight:500;padding:5px 14px;border-radius:6px;border:0.5px solid var(--c-border);background:#fff;color:var(--c-secondary);cursor:pointer">Re-validate</button>' +
-        '<button onclick="document.getElementById(&quot;fi-main&quot;).click()" style="font-size:12px;font-weight:500;padding:5px 14px;border-radius:6px;border:0.5px solid var(--c-border);background:#fff;color:var(--c-secondary);cursor:pointer">Re-upload results</button>' +
-        '<button onclick="document.getElementById(&quot;fi-key&quot;).click()" style="font-size:12px;font-weight:500;padding:5px 14px;border-radius:6px;border:0.5px solid var(--c-border);background:#fff;color:var(--c-secondary);cursor:pointer">Re-upload key</button>' +
-        '<button id="qm-confirm-data" onclick="confirmParsePreview(\'qm\')" '+(uploadBlockers.length?'disabled aria-disabled="true"':'')+' style="font-size:12px;font-weight:500;padding:5px 14px;border-radius:6px;border:none;background:var(--s-ok);color:#fff;cursor:'+(uploadBlockers.length?'not-allowed':'pointer')+';opacity:'+(uploadBlockers.length?'.4':'1')+'">✓ Confirm data</button>' +
+        '<button id="qm-return-upload" onclick="returnToUploadFiles(\'qm\')" style="font-size:12px;font-weight:500;padding:5px 14px;border-radius:6px;border:0.5px solid var(--c-border);background:#fff;color:var(--c-secondary);cursor:pointer">Return to uploads</button>' +
+        '<button id="qm-confirm-data" onclick="confirmParsePreview(\'qm\')" '+(reconciliationBlocked?'disabled aria-disabled="true"':'')+' style="font-size:12px;font-weight:700;padding:6px 16px;border-radius:6px;border:none;background:var(--s-ok);color:#fff;cursor:'+(reconciliationBlocked?'not-allowed':'pointer')+';opacity:'+(reconciliationBlocked?'.4':'1')+'">✓ Confirm and continue</button>' +
       '</div>' +
     '</div>' +
     '</div>';
@@ -4467,7 +4638,7 @@ function renderScantronPreview(students, keyLetters, nQ, badRows) {
     // Header
     '<div style="background:var(--c-surface);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:0.5px solid var(--c-border)">' +
       '<div>' +
-        '<div style="font-size:13px;font-weight:600;color:var(--c-primary)">Parse Preview</div>' +
+        '<div style="font-size:13px;font-weight:600;color:var(--c-primary)">Upload validation</div>' +
         (filename ? '<div style="font-size:11px;color:var(--c-muted);margin-top:2px"><span style="font-weight:500">Uploaded file:</span> '+escHtml(filename)+'</div>' : '') +
       '</div>' +
       '' +
@@ -4476,6 +4647,7 @@ function renderScantronPreview(students, keyLetters, nQ, badRows) {
     '<div style="padding:7px 16px;background:#f0f4ff;border-bottom:0.5px solid var(--c-border);font-size:11px;color:var(--c-secondary)">' +
       'ℹ This preview reflects the raw file only — Question Exceptions and alternate keys have not been applied yet.' +
     '</div>' +
+    renderAnalysisReconciliation('scantron') +
     // KPI row
     '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-bottom:0.5px solid var(--c-border)">' +
       _previewKPI('Students', students.length, 'rows detected') +
@@ -4513,10 +4685,9 @@ function renderScantronPreview(students, keyLetters, nQ, badRows) {
       '<div style="display:flex;gap:8px">' +
         '<button onclick="revalidateScantron()" ' +
           'style="font-size:12px;font-weight:500;padding:5px 14px;border-radius:6px;border:0.5px solid var(--c-border);background:#fff;color:var(--c-secondary);cursor:pointer">Re-validate</button>' +
-        '<button onclick="document.getElementById(&quot;fi-main&quot;).click()" ' +
-          'style="font-size:12px;font-weight:500;padding:5px 14px;border-radius:6px;border:0.5px solid var(--c-border);background:#fff;color:var(--c-secondary);cursor:pointer">Re-upload</button>' +
-        '<button onclick="confirmParsePreview(\'scantron\')" ' +
-          'style="font-size:12px;font-weight:500;padding:5px 14px;border-radius:6px;border:none;background:var(--s-ok);color:#fff;cursor:pointer">✓ Confirm data</button>' +
+        '<button id="sc-return-upload" onclick="returnToUploadFiles(\'scantron\')" style="font-size:12px;font-weight:500;padding:5px 14px;border-radius:6px;border:0.5px solid var(--c-border);background:#fff;color:var(--c-secondary);cursor:pointer">Return to upload</button>' +
+        '<button id="sc-confirm-data" onclick="confirmParsePreview(\'scantron\')" ' +
+          'style="font-size:12px;font-weight:700;padding:6px 16px;border-radius:6px;border:none;background:var(--s-ok);color:#fff;cursor:pointer">✓ Confirm and continue</button>' +
       '</div>' +
     '</div>' +
     '</div>';
@@ -4529,7 +4700,7 @@ function renderScantronPreview(students, keyLetters, nQ, badRows) {
 
 // ── Parse preview confirmation helpers ───────────────────────────────────────
 function confirmParsePreview(source) {
-  if (source==='qm' && qmUploadBlockers().length) {
+  if (source==='qm' && (qmUploadBlockers().length||!analysisReconciliationSnapshot('qm').keyMatched)) {
     G_MCQ_CONFIRMED=false;
     updateQMPreview();
     checkRunReady();
@@ -4537,6 +4708,12 @@ function confirmParsePreview(source) {
     return false;
   }
   G_MCQ_CONFIRMED = true;
+  var confirmedSnapshot=analysisReconciliationSnapshot(source);
+  G._reconciliationConfirmation={
+    confirmedAt:new Date().toISOString(),
+    source:source,
+    snapshot:JSON.parse(JSON.stringify(confirmedSnapshot))
+  };
   var containerId = source === 'scantron' ? 'scantron-preview' : 'qm-preview';
   var el = document.getElementById(containerId);
   if (el) {
@@ -4562,7 +4739,7 @@ function confirmParsePreview(source) {
       '<path d="M5 8l2 2 4-4" stroke="var(--s-ok)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>' +
       '</svg>' +
       '<div style="flex:1">' +
-      '<div style="font-size:13px;color:#1a5c1a;font-weight:600">' + summaryText + '</div>' +
+      '<div style="font-size:13px;color:#1a5c1a;font-weight:600">Data interpretation confirmed · ' + summaryText + '</div>' +
       instructionLine +
       '</div>' +
       '<button data-src="' + source + '" onclick="reopenParsePreview(this.getAttribute(\'data-src\'))" ' +
@@ -4573,10 +4750,12 @@ function confirmParsePreview(source) {
   }
   // For combined: enable the Continue to feedback button via checkRunReady
   checkRunReady();
+  srAnnounce('Analysis reconciliation confirmed. Data are ready to continue.');
 }
 
 function reopenParsePreview(source) {
   G_MCQ_CONFIRMED = false;
+  G._reconciliationConfirmation=null;
   if (source === 'scantron') {
     revalidateScantron();
   } else {
@@ -4735,7 +4914,7 @@ function _runAnalysis() {
   var students=G.students, key=G.key, nQ=G.nQ, i, j;
   if (!students||!students.length||!key.length) { alert('Analysis cannot run yet.\n\nWhat happened: One or more required files are not loaded.\nWhat to do: Upload both the results file and the answer key, then try again.'); return; }
   if (G_SOURCE==='qm' && qmUploadBlockers().length) {
-    alert('Analysis cannot run because the uploaded files failed validation.\n\nCorrect the issues shown in the Parse Preview, re-upload the affected file, and confirm the data again.');
+    alert('Analysis cannot run because the uploaded files failed validation.\n\nCorrect the issues shown in Upload validation, re-upload the affected file, and confirm the data again.');
     return;
   }
   if (G_SOURCE==='qm' && key.length!==nQ) {
@@ -9311,7 +9490,9 @@ function doReportDownload() {
 
 function resetAll() {
   discardDraft(); // C1 — clear draft on reset
-  G={students:[],key:[],nQ:0,qLabels:[],qStatus:[],mcq:[],dif:[],exclusions:{}};
+  G={students:[],key:[],nQ:0,qLabels:[],qStatus:[],mcq:[],dif:[],exclusions:{},
+    _uploadValidation:{resultsBlockers:[],resultsWarnings:[],keyBlockers:[],keyWarnings:[]},
+    _reconciliation:{resultsDetected:0,disclosureExcluded:0,resultsUnscored:[],keyDetected:0,keyUnscored:0}};
   ExamSession.reset();
   _reviewState = {}; _reviewSort = 'flag'; _reviewFloatDone = false;
   var tabReview = document.getElementById('tab-review');
@@ -9702,6 +9883,15 @@ var RELEASE_NOTES = [
   {
     version: '0.8',
     builds: [
+      {
+        build: '20260927-02',
+        date:  'September 27, 2026',
+        notes: [
+          'Analysis reconciliation: the existing upload preview now provides a formal pre-analysis checkpoint showing students included, total questions detected, Disclosure and Unscored exclusions, scored questions retained, answer-key matching, effective denominator, missing responses, language-stream matching, and unresolved upload findings. A score-reconstruction warning appears only when a discrepancy is found.',
+          'Coordinator confirmation: the upload decision is now labelled Confirm and continue, records a timestamped reconciliation snapshot in session state, and provides a Return to uploads action without starting the setup over.',
+          'Regression protection: the golden suite now verifies the 14 detected → 1 Disclosure excluded → 1 Unscored excluded → 12 scored-question reconciliation, key matching, denominator, response completeness, score comparison, language streams, and confirmation record.'
+        ]
+      },
       {
         build: '20260927-01',
         date:  'September 27, 2026',
@@ -11921,7 +12111,7 @@ function onContinueToFeedback() {
 }
 
 function activateCombinedFeedbackZone() {
-  // Banner suppressed — instruction is embedded in the confirmed Parse Preview row
+  // Banner suppressed — instruction is embedded in the confirmed reconciliation row
   // Unlock the feedback zone
   var fbBody = document.getElementById('combined-fb-body');
   var fbLock = document.getElementById('combined-fb-lock-label');
@@ -15891,11 +16081,11 @@ function updateTopbarExam() {
               <span class="faq-icon">+</span>
             </div>
             <div class="faq-a">
-              After a successful upload, a parse preview panel appears below the upload fields. It confirms what the tool detected in your files before you run the analysis.<br><br>
-              <strong>QuestionMark:</strong> The panel appears once <em>both</em> the results file and answer key are loaded. It shows both filenames, student and question counts, EN/FR stream breakdown, the first 10 key answers, and a sample of five student rows. It also compares question count, order, Question ID/version, and wording between the two files.<br><br>
+              After a successful upload, the <strong>Upload validation</strong> panel appears below the upload fields. Its Analysis reconciliation section confirms exactly how AQP interpreted the files before you run the analysis: students included, total questions detected, Disclosure and Unscored exclusions, scored questions retained, answer-key matches, effective scoring denominator, missing responses, language-stream matching, and unresolved findings. If reconstructed scores differ from QuestionMark's score columns, a separate warning appears with the number of differences and the action to take.<br><br>
+              <strong>QuestionMark:</strong> The panel appears once <em>both</em> the results file and answer key are loaded. It also shows both filenames, EN/FR stream breakdown, the first 10 key answers, and a sample of five student rows. Question count, order, Question ID/version, and wording are compared between the two files.<br><br>
               <strong>Blocking errors</strong> include duplicate or blank student IDs, duplicate question numbers, mixed scored/Unscored outcomes, invalid response or score values, missing or unsupported key answers, invalid Question ID versions, and results/key mismatches. You cannot confirm or analyse the files until these are corrected. Unrecognised language-stream codes are shown as warnings because they can be corrected with the stream-assignment workflow.<br><br>
               <strong>Scantron:</strong> The panel appears after the single Scantron file is uploaded. It shows the same information — filename, counts, key preview, and student sample — with unmatched course codes highlighted if any are found.<br><br>
-              You can fix language codes in the Data Source &amp; DIF section and click <strong>Re-validate</strong>, or click <strong>Re-upload</strong> when the source file needs correction. Click <strong>Confirm data</strong> to proceed once no blocking errors remain.
+              You can fix language codes in the Data Source &amp; DIF section and click <strong>Re-validate</strong>, or choose <strong>Return to uploads</strong> when a source file needs correction. Click <strong>Confirm and continue</strong> once the reconciled structure is correct and no blocking errors remain.
             </div>
           </div>
 
@@ -15950,7 +16140,7 @@ function updateTopbarExam() {
               <span class="faq-icon">+</span>
             </div>
             <div class="faq-a">
-              The tool excludes structural rows such as headers, timestamps, filters, and summaries. Students with blank or unrecognised stream codes remain included in the overall MCQ statistics, but they are not assigned to EN or FR for DIF until you correct their stream. Blank or duplicate student IDs block confirmation because they can distort counts or create duplicate records. Review the Parse Preview and its details before confirming.
+              The tool excludes structural rows such as headers, timestamps, filters, and summaries. Students with blank or unrecognised stream codes remain included in the overall MCQ statistics, but they are not assigned to EN or FR for DIF until you correct their stream. Blank or duplicate student IDs block confirmation because they can distort counts or create duplicate records. Review Upload validation and the Analysis reconciliation summary before confirming.
             </div>
           </div>
 
@@ -16001,7 +16191,7 @@ function updateTopbarExam() {
             </div>
             <div class="faq-a">
               Combined analysis follows a staged setup to make sure both files are validated before running:<br><br>
-              <strong>Step 1 — MCQ files.</strong> Upload your QM results file and answer key. The Parse Preview will show a readiness summary and any blocking errors or correctable warnings. When everything is valid, click <strong>Confirm data</strong>. The panel collapses to a compact confirmed row showing question count, student count, DIF status, and threshold setting. The feedback upload zone below then unlocks.<br><br>
+              <strong>Step 1 — MCQ files.</strong> Upload your QM results file and answer key. Upload validation will show the Analysis reconciliation summary, any blocking errors, and correctable warnings. Verify the detected questions, exclusions, scoring denominator, key match, response completeness, and streams, then click <strong>Confirm and continue</strong>. If score reconstruction finds a discrepancy, review the separate warning before proceeding. The panel collapses to a compact confirmed row showing question count, student count, DIF status, and threshold setting. The feedback upload zone below then unlocks.<br><br>
               <strong>Step 2 — Feedback file.</strong> Upload your QM feedback export (.xlsx) in the feedback zone that has unlocked. The footer status pill will update to reflect what is still needed.<br><br>
               <strong>Step 3 — Review comments.</strong> After the file loads, a pre-flight panel appears. If there are comments that could not be auto-mapped to a question, an amber <strong>Review N comments →</strong> button appears. Clicking it expands an inline resolver directly on the setup screen — no navigation away. For each comment, enter a question number, click <strong>General</strong> if it is not about a specific question, or <strong>Discard</strong> if it is not useful. Resolved comments show a status badge; click <strong>Change</strong> next to any badge to re-route it. If all comments were auto-mapped, the resolver shows a confirmation message immediately.<br><br>
               <strong>Step 4 — Apply &amp; Confirm.</strong> Once all comments are resolved, the <strong>Apply &amp; Confirm</strong> button activates. Click it to lock in the feedback. A green validated banner appears with a <strong>Re-open ↓</strong> button in case you need to revisit your routing decisions.<br><br>
@@ -16114,7 +16304,7 @@ function updateTopbarExam() {
               <span class="faq-icon">+</span>
             </div>
             <div class="faq-a">
-              All valid student rows are included in the overall MCQ count and statistics. Students with a different, blank, or unrecognised stream code are not assigned to EN or FR for DIF until the code is corrected or assigned. Check the language codes and the Parse Preview breakdown. Blank or duplicate student IDs are treated separately as blocking data-integrity errors.
+              All valid student rows are included in the overall MCQ count and statistics. Students with a different, blank, or unrecognised stream code are not assigned to EN or FR for DIF until the code is corrected or assigned. Check the language codes and the Analysis reconciliation breakdown. Blank or duplicate student IDs are treated separately as blocking data-integrity errors.
             </div>
           </div>
 
