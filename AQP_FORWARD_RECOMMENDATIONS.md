@@ -134,7 +134,7 @@ Before presenting final results, show a concise reconciliation summary containin
 - Stream corrections
 - Warnings and unresolved conditions
 
-The coordinator can return to the upload controls or explicitly confirm the reconciled structure. The implementation enhances the existing upload preview rather than creating a duplicate room: it displays the detected and retained question counts, Disclosure/Unscored exclusions, key match, effective denominator, missing responses, score-column comparison, stream matching, blockers, and warnings. Confirmation records a timestamped snapshot in session state.
+The coordinator can return to the upload controls or explicitly confirm the reconciled structure. The implementation enhances the existing upload preview rather than creating a duplicate room: it displays the detected and retained question counts, Disclosure/Unscored exclusions, key match, effective denominator, missing responses, stream matching, blockers, and warnings. Score-column comparison runs silently unless it finds a discrepancy, in which case an actionable warning appears. Confirmation records a timestamped snapshot in session state.
 
 #### 8. Explain DIF suppression precisely
 

@@ -110,10 +110,14 @@ try {
       heading: document.getElementById("analysis-reconciliation-title")?.textContent,
       button: document.getElementById("qm-confirm-data")?.textContent.trim(),
       regionVisible: !!document.getElementById("analysis-reconciliation"),
+      scoreKpiPresent: !!document.getElementById("recon-score-check"),
+      scoreWarningPresent: !!document.getElementById("recon-score-warning"),
     }));
     assert.equal(reconciliation.regionVisible, true);
     assert.equal(reconciliation.heading, "Analysis reconciliation");
     assert.match(reconciliation.button, /Confirm and continue/i);
+    assert.equal(reconciliation.scoreKpiPresent, false);
+    assert.equal(reconciliation.scoreWarningPresent, false);
     assert.deepEqual(reconciliation.snapshot, {
       source: "qm",
       students: 40,
@@ -135,6 +139,21 @@ try {
       warnings: [],
       reviewSignals: 0,
     });
+    const discrepancyUi = await page.evaluate(() => {
+      const original = G.students[0].qmScores[0];
+      G.students[0].qmScores[0] = original ? 0 : 1;
+      updateQMPreview();
+      const result = {
+        scoreKpiPresent: !!document.getElementById("recon-score-check"),
+        warning: document.getElementById("recon-score-warning")?.innerText || "",
+      };
+      G.students[0].qmScores[0] = original;
+      updateQMPreview();
+      return result;
+    });
+    assert.equal(discrepancyUi.scoreKpiPresent, false);
+    assert.match(discrepancyUi.warning, /Score discrepancy found/i);
+    assert.match(discrepancyUi.warning, /1 of 480/i);
     await page.evaluate(() => confirmParsePreview("qm"));
     actual = await state(page);
     assert.equal(actual.confirmed, true);

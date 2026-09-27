@@ -4061,8 +4061,6 @@ function renderAnalysisReconciliation(source) {
   var keyDetail=source==='scantron'?'Read from the MASTER row':'Question number, ID/version and wording checked';
   var streamValue=!G_DIF_ENABLED?'Not requested':s.nEN+' EN · '+s.nFR+' FR';
   var streamDetail=!G_DIF_ENABLED?'DIF is turned off':s.unmatchedStreams?(s.unmatchedStreams+' student'+(s.unmatchedStreams===1?'':'s')+' still unmatched'):'All students matched';
-  var scoreValue=source==='scantron'?'Derived from answer key':s.scoreMismatches+' of '+s.scoreCompared+' values differ';
-  var scoreDetail=source==='scantron'?'No separate score column to reconcile':'AQP rebuilds scores from the uploaded key';
   var unscoredDetail=(s.unscoredExcluded&&G._reconciliation&&G._reconciliation.resultsUnscored&&G._reconciliation.resultsUnscored.length)
     ? 'Question'+(G._reconciliation.resultsUnscored.length===1?' ':'s ')+G._reconciliation.resultsUnscored.join(', ')
     : 'None detected';
@@ -4081,10 +4079,10 @@ function renderAnalysisReconciliation(source) {
       reconciliationCell('recon-key-match','Answer key match',keyValue,keyDetail,s.keyMatched?'ok':'bad')+
       reconciliationCell('recon-denominator','Effective denominator',String(s.effectiveDenominator),s.activeExceptions?s.activeExceptions+' active exception'+(s.activeExceptions===1?'':'s'):'Before any new exceptions','ok')+
       reconciliationCell('recon-missing','Missing responses',String(s.missingResponses),'Across all retained student responses',s.missingResponses?'warn':'ok')+
-      reconciliationCell('recon-score-check','Score comparison',scoreValue,scoreDetail,s.scoreMismatches?'warn':'ok')+
       reconciliationCell('recon-streams','Language streams',streamValue,streamDetail,(G_DIF_ENABLED&&s.unmatchedStreams)?'warn':'ok')+
       reconciliationCell('recon-warning-count','Upload findings',s.blockers.length+' blocking · '+s.warnings.length+' warning'+(s.warnings.length===1?'':'s'),'Details appear below',blocked?'bad':s.warnings.length?'warn':'ok')+
     '</div>'+
+    (s.scoreMismatches>0?'<div id="recon-score-warning" role="alert" style="margin-top:9px;padding:9px 12px;background:#fff8e6;border:1px solid #ead49a;border-radius:7px;font-size:11.5px;color:#7a4700"><strong>Score discrepancy found:</strong> '+s.scoreMismatches+' of '+s.scoreCompared+' QuestionMark score values differ from scores rebuilt using the uploaded answer key. AQP will use the uploaded answer key; verify that the correct key file was selected before continuing.</div>':'')+
   '</section>';
 }
 
@@ -9889,7 +9887,7 @@ var RELEASE_NOTES = [
         build: '20260927-02',
         date:  'September 27, 2026',
         notes: [
-          'Analysis reconciliation: the existing upload preview now provides a formal pre-analysis checkpoint showing students included, total questions detected, Disclosure and Unscored exclusions, scored questions retained, answer-key matching, effective denominator, missing responses, reconstructed-score differences, language-stream matching, and unresolved upload findings.',
+          'Analysis reconciliation: the existing upload preview now provides a formal pre-analysis checkpoint showing students included, total questions detected, Disclosure and Unscored exclusions, scored questions retained, answer-key matching, effective denominator, missing responses, language-stream matching, and unresolved upload findings. A score-reconstruction warning appears only when a discrepancy is found.',
           'Coordinator confirmation: the upload decision is now labelled Confirm and continue, records a timestamped reconciliation snapshot in session state, and provides a Return to uploads action without starting the setup over.',
           'Regression protection: the golden suite now verifies the 14 detected → 1 Disclosure excluded → 1 Unscored excluded → 12 scored-question reconciliation, key matching, denominator, response completeness, score comparison, language streams, and confirmation record.'
         ]
@@ -16083,7 +16081,7 @@ function updateTopbarExam() {
               <span class="faq-icon">+</span>
             </div>
             <div class="faq-a">
-              After a successful upload, the <strong>Upload validation</strong> panel appears below the upload fields. Its Analysis reconciliation section confirms exactly how AQP interpreted the files before you run the analysis: students included, total questions detected, Disclosure and Unscored exclusions, scored questions retained, answer-key matches, effective scoring denominator, missing responses, reconstructed-score differences, language-stream matching, and unresolved findings.<br><br>
+              After a successful upload, the <strong>Upload validation</strong> panel appears below the upload fields. Its Analysis reconciliation section confirms exactly how AQP interpreted the files before you run the analysis: students included, total questions detected, Disclosure and Unscored exclusions, scored questions retained, answer-key matches, effective scoring denominator, missing responses, language-stream matching, and unresolved findings. If reconstructed scores differ from QuestionMark's score columns, a separate warning appears with the number of differences and the action to take.<br><br>
               <strong>QuestionMark:</strong> The panel appears once <em>both</em> the results file and answer key are loaded. It also shows both filenames, EN/FR stream breakdown, the first 10 key answers, and a sample of five student rows. Question count, order, Question ID/version, and wording are compared between the two files.<br><br>
               <strong>Blocking errors</strong> include duplicate or blank student IDs, duplicate question numbers, mixed scored/Unscored outcomes, invalid response or score values, missing or unsupported key answers, invalid Question ID versions, and results/key mismatches. You cannot confirm or analyse the files until these are corrected. Unrecognised language-stream codes are shown as warnings because they can be corrected with the stream-assignment workflow.<br><br>
               <strong>Scantron:</strong> The panel appears after the single Scantron file is uploaded. It shows the same information — filename, counts, key preview, and student sample — with unmatched course codes highlighted if any are found.<br><br>
@@ -16193,7 +16191,7 @@ function updateTopbarExam() {
             </div>
             <div class="faq-a">
               Combined analysis follows a staged setup to make sure both files are validated before running:<br><br>
-              <strong>Step 1 — MCQ files.</strong> Upload your QM results file and answer key. Upload validation will show the Analysis reconciliation summary, any blocking errors, and correctable warnings. Verify the detected questions, exclusions, scoring denominator, key match, response completeness, score comparison, and streams, then click <strong>Confirm and continue</strong>. The panel collapses to a compact confirmed row showing question count, student count, DIF status, and threshold setting. The feedback upload zone below then unlocks.<br><br>
+              <strong>Step 1 — MCQ files.</strong> Upload your QM results file and answer key. Upload validation will show the Analysis reconciliation summary, any blocking errors, and correctable warnings. Verify the detected questions, exclusions, scoring denominator, key match, response completeness, and streams, then click <strong>Confirm and continue</strong>. If score reconstruction finds a discrepancy, review the separate warning before proceeding. The panel collapses to a compact confirmed row showing question count, student count, DIF status, and threshold setting. The feedback upload zone below then unlocks.<br><br>
               <strong>Step 2 — Feedback file.</strong> Upload your QM feedback export (.xlsx) in the feedback zone that has unlocked. The footer status pill will update to reflect what is still needed.<br><br>
               <strong>Step 3 — Review comments.</strong> After the file loads, a pre-flight panel appears. If there are comments that could not be auto-mapped to a question, an amber <strong>Review N comments →</strong> button appears. Clicking it expands an inline resolver directly on the setup screen — no navigation away. For each comment, enter a question number, click <strong>General</strong> if it is not about a specific question, or <strong>Discard</strong> if it is not useful. Resolved comments show a status badge; click <strong>Change</strong> next to any badge to re-route it. If all comments were auto-mapped, the resolver shows a confirmation message immediately.<br><br>
               <strong>Step 4 — Apply &amp; Confirm.</strong> Once all comments are resolved, the <strong>Apply &amp; Confirm</strong> button activates. Click it to lock in the feedback. A green validated banner appears with a <strong>Re-open ↓</strong> button in case you need to revisit your routing decisions.<br><br>

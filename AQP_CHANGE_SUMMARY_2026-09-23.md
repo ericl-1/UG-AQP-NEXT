@@ -12,7 +12,8 @@
 
 The existing upload preview was enhanced into a formal pre-analysis checkpoint rather than adding a separate validation room.
 
-- The coordinator now sees students included, total question columns detected, Disclosure exclusions, Unscored exclusions, scored questions retained, answer-key matching, effective scoring denominator, missing responses, QuestionMark score-column differences, EN/FR matching, and unresolved findings in one summary.
+- The coordinator now sees students included, total question columns detected, Disclosure exclusions, Unscored exclusions, scored questions retained, answer-key matching, effective scoring denominator, missing responses, EN/FR matching, and unresolved findings in one summary.
+- The response-level score-comparison KPI was removed because a large “0 of N values differ” total was technically accurate but not useful to coordinators. Score reconstruction remains active internally; an amber, actionable warning appears only if a discrepancy is actually found.
 - The distinction between uploaded structure and analyzed structure is explicit. The golden dataset demonstrates this as 14 detected questions → 1 Disclosure excluded → 1 Unscored excluded → 12 scored questions.
 - The confirmation action is now **Confirm and continue**. It records a timestamped reconciliation snapshot in session state.
 - **Return to uploads** reopens the source-file controls without discarding the rest of setup.
