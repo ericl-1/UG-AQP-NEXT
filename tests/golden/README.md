@@ -26,6 +26,10 @@ This suite protects the highest-risk AQP calculations and parsers with fictional
 - MCQ, DIF, combined, and feedback Word reports, including required OOXML parts and table grids
 - Malformed, incomplete, duplicated, inconsistent, and cross-file-mismatched uploads
 - Blocking versus correctable-warning behaviour and stale-data clearing after a failed re-upload
+- Built-in demonstration mode, persistent synthetic-data banner, and privacy-safe fixture identity
+- Advisory report-readiness transitions before and after Review Queue completion
+- Reproducibility/audit metadata in CSV, JSON, and portable-session recovery
+- Precise DIF non-estimation reasons in the interface, structured exports, and Word reports
 
 The synthetic exam intentionally contains healthy items and known edge cases. Its reliability coefficient is therefore not intended to resemble a well-constructed operational exam; the exact value is useful as a regression target.
 
@@ -43,14 +47,15 @@ Then, from the project folder:
 npm test
 ```
 
-A successful run prints three `PASS` lines and exits with status 0. They cover the frozen baseline analysis; exceptions, Near Threshold persistence, previews, and exports; and malformed-upload validation. Any changed result produces a structured assertion diff and exits non-zero.
+A successful run prints four `PASS` lines and exits with status 0. They cover the frozen baseline analysis; exceptions, Near Threshold persistence, previews, and exports; malformed-upload validation; and the demonstration, audit, readiness, and DIF-suppression workflows. Any changed result produces a structured assertion diff and exits non-zero.
 
-The three cases can also be run separately:
+The four cases can also be run separately:
 
 ```bash
 npm run test:golden
 npm run test:exceptions-reports
 npm run test:malformed-uploads
+npm run test:audit-demo-readiness
 ```
 
 The runner uses the installed Google Chrome application, starts a temporary localhost server, and closes both when finished. It does not upload fixture data. `xlsx.full.min.js` is a local copy of SheetJS 0.18.5, matching the version loaded by AQP, so file parsing does not depend on internet access after setup.
@@ -65,6 +70,7 @@ The runner uses the installed Google Chrome application, starts a temporary loca
 - `run-golden-tests.mjs`: end-to-end runner
 - `run-exceptions-report-tests.mjs`: exception, persistence, preview, and export runner
 - `run-malformed-upload-tests.mjs`: fifteen upload-validation and stale-state scenarios
+- `run-audit-demo-readiness-tests.mjs`: demonstration, audit, readiness, DIF suppression, export, and recovery scenarios
 - `build-fixtures.mjs`: deterministic workbook generator
 - `build-malformed-fixtures.mjs`: deterministic malformed-workbook generator
 - `jszip.min.js`: local JSZip copy used to inspect generated Word packages without a network dependency

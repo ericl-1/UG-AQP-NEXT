@@ -242,3 +242,12 @@ The existing upload preview was enhanced into a formal pre-analysis checkpoint r
 - Browser localStorage remains browser/profile-specific. Portable backups now support manual coordinator/device handoff, but are not a substitute for managed institutional storage, permissions, retention, or shared history.
 - Multi-user workflow, shared history, permissions, retention policy, and centralized audit records still require the planned SharePoint/SPFx or other managed persistence layer.
 - GitHub remains the release source of truth. Development changes are prepared on isolated branches and become live only after their pull requests are merged into `main` and GitHub Pages deploys them.
+
+## Enhancement build completed September 28, 2026
+
+- Prepared AQP 0.8 build `20260928-01` with four coordinator-facing enhancements.
+- Added precise DIF non-estimation classifications for sparse cells, singular model matrices, complete and quasi-complete separation, maximum-iteration non-convergence, and invalid statistics. “Not estimated” remains distinct from “No DIF detected” in the interface and is carried into CSV, JSON, HTML, and Word outputs.
+- Added a reproducibility record to structured exports: application and schema versions, source filenames and SHA-256 fingerprints, analysis/reconciliation timestamps, thresholds, stream settings, validation and score-comparison results, exceptions, Near Threshold inclusions, Review Queue sign-offs, DIF suppressions, and an event history.
+- Added a clearly labelled, deterministic demonstration session containing only synthetic bilingual MCQ, DIF, and feedback data. It is available from the home screen and remains visibly marked throughout the session.
+- Added an advisory report-readiness panel covering stale or unreconciled analysis, unfinished Review Queue items, unresolved feedback mapping, score discrepancies, and documented DIF suppressions. It informs but never disables exports.
+- Updated the in-app FAQ and Release Notes and the forward-recommendations document. AI-assisted features were recorded for future governance review only; no AI processing was added.

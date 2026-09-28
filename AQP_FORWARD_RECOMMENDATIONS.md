@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document records recommended future work for the Assessment Quality Platform after the QA and remediation completed for version 0.8, build `20260927-04`.
+This document records recommended future work for the Assessment Quality Platform after the QA and remediation completed for version 0.8, build `20260928-01`.
 
 These are forward-looking improvements rather than defects remaining from the two QA passes. Completed corrections are documented separately in `AQP_CHANGE_SUMMARY_2026-09-23.md`.
 
@@ -66,7 +66,7 @@ Include synthetic or thoroughly anonymized examples for:
 
 Each dataset should have a machine-readable expected-results file.
 
-#### 4. Add a complete analysis audit trail
+#### 4. Add a complete analysis audit trail (completed in build `20260928-01`)
 
 Every session export should record enough information to reproduce and defend the analysis:
 
@@ -134,7 +134,7 @@ Before presenting final results, show a concise reconciliation summary containin
 
 The coordinator can return to the upload controls or explicitly confirm the reconciled structure. The implementation enhances the existing upload preview rather than creating a duplicate room: it displays the detected and retained question counts, Disclosure/Unscored exclusions, key match, effective denominator, missing responses, stream matching, blockers, and warnings. Score-column comparison runs silently unless it finds a discrepancy, in which case an actionable warning appears. Confirmation records a timestamped snapshot in session state.
 
-#### 8. Explain DIF suppression precisely
+#### 8. Explain DIF suppression precisely (completed in build `20260928-01`)
 
 Distinguish among:
 
@@ -264,7 +264,7 @@ Allow coordinators to create a support package containing:
 
 Exclude student names, IDs, raw comments, free-text justifications, and individual responses by default.
 
-#### 17. Add a built-in demonstration mode
+#### 17. Add a built-in demonstration mode (completed in build `20260928-01`)
 
 Provide a synthetic bilingual exam and feedback dataset that can be loaded without accessing real student information.
 
@@ -279,7 +279,27 @@ Uses include:
 
 The interface should clearly label demonstration results so they cannot be mistaken for a real exam.
 
-#### 18. Continue formal accessibility testing
+#### 18. Add an advisory report-readiness check (completed in build `20260928-01`)
+
+The Reports tab now checks whether the current analysis is reconciled and current, Review Queue work is complete, feedback mapping is resolved, score discrepancies have been considered, and DIF suppression reasons are documented. The result is advisory and never prevents an authorized coordinator from exporting.
+
+#### 20. Revisit AI-assisted features later — governance review only
+
+No AI-assisted analysis, classification, recommendation, or report-writing feature is included in the current application. Reconsider this only after the deterministic platform is accepted by institutional IT and the intended use has been approved through privacy, security, academic-governance, and records-management review.
+
+Before any implementation, define:
+
+- Which specific task would benefit and why deterministic rules are insufficient
+- Whether any student data, responses, comments, item content, or coordinator notes may leave the approved environment
+- The approved provider, model, hosting region, retention policy, and contractual safeguards
+- Required human review and a prohibition on autonomous scoring or final academic decisions
+- Clear disclosure when generated text or categorisation is AI-assisted
+- Reproducible prompts, model/version records, confidence limits, and auditability
+- A non-AI fallback and a way to disable the feature institution-wide
+
+Until those conditions are met, keep AQP's calculations, categorisation, and reports deterministic and locally processed.
+
+#### 19. Continue formal accessibility testing
 
 Test each release with:
 
@@ -307,8 +327,8 @@ Add automated accessibility checks where practical, but retain manual screen-rea
 ### Medium term
 
 1. Session schema and JSON import
-2. Expanded audit trail
-3. Detailed DIF suppression reporting
+2. Report approval metadata
+3. Anonymized diagnostics export
 4. Modular development source and build process
 5. Dependency/offline deployment decision
 
@@ -322,4 +342,4 @@ Add automated accessibility checks where practical, but retain manual screen-rea
 
 ## Recommended immediate next task
 
-Implement the automated golden-dataset regression suite first. The current application has been validated against the supplied exam, but a repeatable automated comparison is what will preserve that correctness through future development.
+Complete formal accessibility testing and institutional privacy review next. The statistical, upload, audit, demonstration, and report-readiness foundations are now covered by retained regression tests; the next highest-value evidence is human accessibility testing across the supported university environment.
