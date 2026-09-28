@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document records recommended future work for the Assessment Quality Platform after the QA and remediation completed for version 0.8, build `20260927-03`.
+This document records recommended future work for the Assessment Quality Platform after the QA and remediation completed for version 0.8, build `20260927-04`.
 
 These are forward-looking improvements rather than defects remaining from the two QA passes. Completed corrections are documented separately in `AQP_CHANGE_SUMMARY_2026-09-23.md`.
 
@@ -95,7 +95,8 @@ The importer should:
 
 - Completed: recognized schema version, required structural/type checks, malformed/truncated/incompatible/newer-file rejection, 25 MB size limit, confirmation before replacing a current browser draft, and recalculation from saved responses.
 - Completed: strict student-field whitelist; names and institutional IDs are omitted from browser drafts and portable backups.
-- Still recommended: a richer pre-import preview, source-build warning, and explicit migrations when a future schema version makes migration necessary.
+- Completed in build `20260927-04`: pre-import preview and source-build compatibility warning before replacing a draft.
+- Still recommended: explicit migrations when a future schema version makes migration necessary.
 - Continue to ensure imported text is rendered as text and never evaluated as code or markup.
 
 #### 6. Strengthen upload validation
@@ -220,16 +221,16 @@ Confirm formal requirements for:
 
 Build `20260927-01` no longer places student names or institutional IDs in the saved browser draft, but identifiable source data is still processed in memory during an active session.
 
-#### 14. Add a visible Clear Local Data control
+#### 14. Add a visible Clear Local Data control (completed in build `20260927-04`)
 
-Provide a dedicated control that explains exactly what will be removed:
+The Privacy & local data panel now explains and controls:
 
 - Saved draft session
 - Review decisions
 - Feedback edits
 - Theme or non-sensitive preferences, if selected
 
-The action should require confirmation and should not imply that downloaded reports or source files will be deleted.
+The actions require confirmation, distinguish draft data from optional theme preferences, state that downloaded reports/source files/backups cannot be removed by AQP, and suppress re-autosave for a currently open session whose local copy was deliberately cleared.
 
 #### 15. Move to managed institutional storage when collaboration begins
 

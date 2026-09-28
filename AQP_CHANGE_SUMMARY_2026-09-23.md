@@ -3,10 +3,20 @@
 ## Build identity
 
 - Starting point: AQP 0.8, build `20260923-01` (`Downloads/index.html`)
-- Current development build: AQP 0.8, build `20260927-03`
+- Current development build: AQP 0.8, build `20260927-04`
 - Working file: `index.html` in the local `AQP (HTML)` project folder
 - The Downloads baseline was not modified.
-- Builds `20260927-01` and `20260927-02` were merged into GitHub `main` and deployed through GitHub Pages on September 27, 2026. Build `20260927-03` is being developed on the isolated `feature/session-import` branch and is not live until its pull request is approved and merged.
+- Builds through `20260927-03` were merged into GitHub `main` and deployed through GitHub Pages on September 27, 2026. Build `20260927-04` is being developed on the isolated `feature/coordinator-workflow-ui` branch and is not live until its pull request is approved and merged.
+
+## Build 20260927-04 — coordinator workflow UI
+
+- Rebuilt the home screen around three real entry paths: start a new analysis, resume the single browser draft, or import a portable backup. Replaced the misleading Session History placeholder with Current browser draft.
+- Added a persistent, clickable Upload → Validate → Analyse → Review → Export workflow indicator driven by actual session state.
+- Reorganized Reports into Director reports, Analysis records, and Session recovery. The recovery group has separate privacy treatment because its backup contains response-level data and feedback text.
+- Added a pre-import preview showing exam identity, contents, counts, exceptions, Near Threshold and Review Queue decisions, source build, schema, privacy details, and replacement/build warnings before anything is overwritten.
+- Converted reconciliation guidance into three action-oriented states: Must fix before analysis, Review recommended, and Ready to confirm, each with the relevant next action.
+- Added a Privacy & local data panel showing the stored draft, save/expiry dates, contents, and approximate size. Coordinators can clear the draft or all AQP local data and optionally reset theme preferences; downloaded files are explicitly unaffected.
+- Added browser coverage for the new import preview, workflow state, report grouping, draft home action, privacy details, and validation guidance.
 
 ## Build 20260927-03 — portable session recovery
 

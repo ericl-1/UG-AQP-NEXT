@@ -92,7 +92,7 @@ try {
       latestReleaseDate: RELEASE_NOTES[0].builds[0].date,
       faqText: document.getElementById("faq-overlay").innerText,
     }));
-    assert.equal(buildMetadata.build, "20260927-03");
+    assert.equal(buildMetadata.build, "20260927-04");
     assert.equal(buildMetadata.faqVersion, "0.8");
     assert.equal(buildMetadata.faqDate, "September 27, 2026");
     assert.equal(buildMetadata.releaseDate, "September 27, 2026");
@@ -101,6 +101,8 @@ try {
     assert.match(buildMetadata.faqText, /Blocking errors/i);
     assert.match(buildMetadata.faqText, /expires after 30 days/i);
     assert.match(buildMetadata.faqText, /Review Queue decisions are saved/i);
+    assert.match(buildMetadata.faqText, /Privacy & local data/i);
+    assert.match(buildMetadata.faqText, /preview.*source build/i);
     let actual = await state(page);
     assert.deepEqual(actual.blockers, []);
     assert.deepEqual(actual.warnings, []);
@@ -112,12 +114,14 @@ try {
       regionVisible: !!document.getElementById("analysis-reconciliation"),
       scoreKpiPresent: !!document.getElementById("recon-score-check"),
       scoreWarningPresent: !!document.getElementById("recon-score-warning"),
+      action: document.querySelector("#analysis-reconciliation .recon-action")?.innerText || "",
     }));
     assert.equal(reconciliation.regionVisible, true);
     assert.equal(reconciliation.heading, "Analysis reconciliation");
     assert.match(reconciliation.button, /Confirm and continue/i);
     assert.equal(reconciliation.scoreKpiPresent, false);
     assert.equal(reconciliation.scoreWarningPresent, false);
+    assert.match(reconciliation.action, /Ready to confirm/i);
     assert.deepEqual(reconciliation.snapshot, {
       source: "qm",
       students: 40,
@@ -195,6 +199,7 @@ try {
     assert.ok(actual.blockers.some(message => pattern.test(message)), `${file}: ${actual.blockers.join(" | ")}`);
     assert.equal(actual.confirmDisabled, true, file);
     assert.equal(actual.runDisabled, true, file);
+    assert.match(actual.preview, /Must fix before analysis/i, file);
     await page.evaluate(() => confirmParsePreview("qm"));
     actual = await state(page);
     assert.equal(actual.confirmed, false, file);
@@ -211,6 +216,7 @@ try {
     const reconciliation = await page.evaluate(() => analysisReconciliationSnapshot("qm"));
     assert.ok(reconciliation.unmatchedStreams > 0);
     assert.ok(reconciliation.reviewSignals > 0);
+    assert.match(actual.preview, /Review recommended/i);
     await page.evaluate(() => confirmParsePreview("qm"));
     actual = await state(page);
     assert.equal(actual.confirmed, true);
