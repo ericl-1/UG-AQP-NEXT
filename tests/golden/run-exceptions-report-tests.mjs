@@ -356,6 +356,41 @@ try {
   assert.match(validationErrors.future, /newer AQP format/);
   assert.match(validationErrors.malformed, /answer key does not match/);
 
+  const workflowUi = await page.evaluate(payload => {
+    const older = { ...payload, app: { ...payload.app, build: "20260927-03" } };
+    openSessionImportPreview(older, null);
+    const importText = document.getElementById("session-import-preview").innerText;
+    const importVisible = document.getElementById("session-import-modal").style.display === "flex";
+    cancelSessionImport();
+    openPrivacyPanel();
+    const privacyText = document.getElementById("privacy-draft-details").innerText;
+    closePrivacyPanel();
+    goHome();
+    const resumeEnabled = !document.getElementById("home-resume-action").disabled;
+    const draftHeading = document.getElementById("session-history-content").innerText;
+    goToResults();
+    switchRoom("reports");
+    return {
+      importText, importVisible, privacyText, resumeEnabled, draftHeading,
+      workflowVisible: document.getElementById("workflow-strip").style.display === "flex",
+      exportCurrent: document.querySelector('[data-wf="export"]').classList.contains("wf-current"),
+      analysisGroupVisible: document.getElementById("rp-section-session").style.display === "block",
+      recoveryGroupVisible: document.getElementById("rp-section-recovery").style.display === "block",
+    };
+  }, backup);
+  assert.equal(workflowUi.importVisible, true);
+  assert.match(workflowUi.importText, /Different AQP build/);
+  assert.match(workflowUi.importText, /Synthetic Exception Report Exam/);
+  assert.match(workflowUi.importText, /40/);
+  assert.match(workflowUi.importText, /de-identified responses/);
+  assert.match(workflowUi.privacyText, /Synthetic Exception Report Exam/);
+  assert.equal(workflowUi.resumeEnabled, true);
+  assert.match(workflowUi.draftHeading, /Resume session/);
+  assert.equal(workflowUi.workflowVisible, true);
+  assert.equal(workflowUi.exportCurrent, true);
+  assert.equal(workflowUi.analysisGroupVisible, true);
+  assert.equal(workflowUi.recoveryGroupVisible, true);
+
   const docs = {
     mcq: await inspectDocx(page, mcqDocxPath),
     dif: await inspectDocx(page, difDocxPath),
