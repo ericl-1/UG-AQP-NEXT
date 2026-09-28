@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document records recommended future work for the Assessment Quality Platform after the QA and remediation completed for version 0.8, build `20260927-02`.
+This document records recommended future work for the Assessment Quality Platform after the QA and remediation completed for version 0.8, build `20260927-03`.
 
 These are forward-looking improvements rather than defects remaining from the two QA passes. Completed corrections are documented separately in `AQP_CHANGE_SUMMARY_2026-09-23.md`.
 
@@ -26,7 +26,7 @@ The second case now verifies:
 
 The third suite uses fourteen synthetic workbooks and fifteen scenarios to verify malformed-file rejection, duplicate and missing identifiers, question-number duplication, mixed scored/Unscored outcomes, invalid responses and keys, results/key count and content mismatches, correctable stream warnings, and stale-data clearing after a failed re-upload.
 
-The next additions should concentrate on missing-response and single-language cases, session recovery failures, older session-schema compatibility, and exact report approval/audit metadata. These remain strong protection against statistical or reporting regressions as the application evolves.
+The second suite now also performs a portable-session export/import round trip, verifies restored statistics and coordinator state, checks privacy fields, and rejects report-only, malformed, and future-schema files. The next additions should concentrate on missing-response and single-language cases, older supported session-schema migration, and exact report approval/audit metadata.
 
 #### 2. Expand independent statistical validation (synthetic and first operational validation completed September 25, 2026)
 
@@ -87,19 +87,16 @@ Every session export should record enough information to reproduce and defend th
 
 ### Priority 2 — Improve validation and handoff
 
-#### 5. Add JSON session import
+#### 5. Add JSON session import (core workflow completed in build `20260927-03`)
 
-AQP already exports structured session JSON. Add a strictly validated import workflow so an archived session can be reopened or transferred to another coordinator before a shared backend exists.
+AQP now has a separate, versioned **Portable session backup** and a strictly validated home-screen import workflow. The existing structured Session data JSON remains a report-only integration format and is deliberately not importable.
 
 The importer should:
 
-- Require a recognized schema version
-- Validate every required field and data type
-- Reject malformed, truncated, or incompatible files
-- Display a preview before replacing the current session
-- Warn when the source build differs from the current build
-- Migrate older supported schema versions explicitly
-- Never evaluate imported strings as code or markup
+- Completed: recognized schema version, required structural/type checks, malformed/truncated/incompatible/newer-file rejection, 25 MB size limit, confirmation before replacing a current browser draft, and recalculation from saved responses.
+- Completed: strict student-field whitelist; names and institutional IDs are omitted from browser drafts and portable backups.
+- Still recommended: a richer pre-import preview, source-build warning, and explicit migrations when a future schema version makes migration necessary.
+- Continue to ensure imported text is rendered as text and never evaluated as code or markup.
 
 #### 6. Strengthen upload validation
 
@@ -194,9 +191,9 @@ Evaluate one of these deployment models:
 
 The choice should be made with institutional IT because fully embedding the libraries will substantially increase the HTML file size.
 
-#### 12. Version the session-data schema
+#### 12. Version the session-data schema (completed for portable backups in build `20260927-03`)
 
-Add a dedicated field such as `schemaVersion: 1`, separate from the application version and build.
+Portable backups now use `fileType: "aqp-portable-session"` and `schemaVersion: 1`, separate from the application version and build. Unsupported newer versions are rejected clearly and the golden suite freezes the version and round-trip behaviour.
 
 For every future schema change:
 

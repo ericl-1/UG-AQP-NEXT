@@ -247,6 +247,7 @@ try {
   if (difNear && !chosen.some(item => item.number === difNear.number)) chosen.push(difNear);
   assert.ok(chosen.length > 0);
   for (const item of chosen) await page.evaluate(number => toggleNtItem(number), item.number);
+  await page.evaluate(() => { _reviewState[1] = true; saveSession(); });
 
   const reportState = await page.evaluate(() => {
     const report = id => ({
@@ -283,6 +284,7 @@ try {
   const difCsvPath = await saveDownload(page, () => doExport("dif"), ".csv");
   const sessionCsvPath = await saveDownload(page, () => exportSessionRecord(), ".csv");
   const jsonPath = await saveDownload(page, () => exportSessionJSON(), ".json");
+  const backupPath = await saveDownload(page, () => exportPortableSession(), ".json");
   const mcqDocxPath = await saveDownload(page, () => doExportReport("mcq"), ".docx");
   const difDocxPath = await saveDownload(page, () => doExportReport("dif"), ".docx");
   const fullDocxPath = await saveDownload(page, () => doExportReport("full"), ".docx");
@@ -327,6 +329,33 @@ try {
   assert.ok(!JSON.stringify(json).includes("outcomes"));
   assert.ok(!JSON.stringify(json).includes("studentId"));
 
+  const backup = JSON.parse(await fs.readFile(backupPath, "utf8"));
+  assert.equal(backup.fileType, "aqp-portable-session");
+  assert.equal(backup.schemaVersion, 1);
+  assert.equal(backup.privacy.studentIdentifiersIncluded, false);
+  assert.equal(backup.privacy.studentResponsesIncluded, true);
+  assert.equal(backup.privacy.feedbackTextIncluded, true);
+  assert.equal(backup.session.G.students.length, 40);
+  assert.equal(backup.session.G.students[0].outcomes.length, 12);
+  for (const student of backup.session.G.students) {
+    for (const forbidden of ["id", "name", "first", "last"]) assert.ok(!(forbidden in student));
+  }
+  assert.equal(backup.session.G.exclusions[1].disposition, "credit");
+  assert.equal(backup.session.reviewState[1], true);
+  assert.equal(Object.keys(backup.session.ntIncluded).length, chosen.length);
+
+  const validationErrors = await page.evaluate(payload => {
+    const message = value => { try { validatePortableSession(value); return ""; } catch (error) { return error.message; } };
+    return {
+      aggregate: message({ meta: {}, summary: {} }),
+      future: message({ ...payload, schemaVersion: 999 }),
+      malformed: message({ ...payload, session: { ...payload.session, G: { ...payload.session.G, key: [] } } }),
+    };
+  }, backup);
+  assert.match(validationErrors.aggregate, /report-only Session data export/);
+  assert.match(validationErrors.future, /newer AQP format/);
+  assert.match(validationErrors.malformed, /answer key does not match/);
+
   const docs = {
     mcq: await inspectDocx(page, mcqDocxPath),
     dif: await inspectDocx(page, difDocxPath),
@@ -359,6 +388,35 @@ try {
   }
 
   const expectedIncluded = reportState.included;
+  // Portable backup must restore the same analysis independently of the
+  // browser's autosaved draft.
+  await page.evaluate(payload => {
+    localStorage.clear();
+    importPortableSessionObject(payload);
+  }, backup);
+  await page.waitForFunction(() => G._lastN === 40 && G.mcq?.length === 12 && FB.ready === true);
+  const portableRestored = await page.evaluate(() => ({
+    build: APP_BUILD,
+    title: document.getElementById("exam-title").value,
+    credit: G.mcq[1].excluded,
+    deleted: G.mcq[2].excluded,
+    altKeys: G.mcq[3].altKeys,
+    included: Object.keys(_ntIncluded).map(Number).sort((a, b) => a - b),
+    review: _reviewState[1],
+    feedbackCount: FB.parsed.length,
+    createdAtIsDate: ExamSession.createdAt instanceof Date,
+    backupCardVisible: document.getElementById("rp-card-backup").style.display === "flex",
+  }));
+  assert.equal(portableRestored.title, "Synthetic Exception Report Exam");
+  assert.equal(portableRestored.credit, "credit");
+  assert.equal(portableRestored.deleted, "delete");
+  assert.deepEqual(portableRestored.altKeys, ["B"]);
+  assert.deepEqual(portableRestored.included, expectedIncluded);
+  assert.equal(portableRestored.review, true);
+  assert.ok(portableRestored.feedbackCount > 0);
+  assert.equal(portableRestored.createdAtIsDate, true);
+  assert.equal(portableRestored.backupCardVisible, true);
+
   await page.reload({ waitUntil: "domcontentloaded" });
   if (!(await page.evaluate(() => typeof XLSX !== "undefined"))) await page.addScriptTag({ path: path.join(projectRoot, "tests", "golden", "xlsx.full.min.js") });
   if (!(await page.evaluate(() => typeof JSZip !== "undefined"))) await page.addScriptTag({ path: path.join(projectRoot, "tests", "golden", "jszip.min.js") });
@@ -385,7 +443,7 @@ try {
 
   assert.deepEqual(pageErrors, []);
   assert.deepEqual(alerts, []);
-  console.log(`PASS: exceptions, Near Threshold persistence, HTML previews, CSV, JSON, and 4 Word reports validated.`);
+  console.log(`PASS: exceptions, Near Threshold persistence, portable session round-trip, HTML previews, CSV, JSON, and 4 Word reports validated.`);
   console.log(`Generated report files: ${outputDir}`);
 } finally {
   if (browser) await browser.close();
