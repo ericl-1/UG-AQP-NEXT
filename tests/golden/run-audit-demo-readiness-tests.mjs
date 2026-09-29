@@ -125,7 +125,8 @@ try {
   assert.ok(initial.audit.events.some(event => event.type === "demonstration_loaded"));
   assert.equal(initial.audit.difSuppressions.length, initial.suppressions.length);
   assert.equal(initial.design.bodyFontSize, "14px");
-  assert.equal(initial.design.sidebarBackground, "rgb(32, 40, 45)");
+  assert.equal(initial.design.bodyBackground, "rgb(255, 255, 255)");
+  assert.equal(initial.design.sidebarBackground, "rgb(255, 255, 255)");
   assert.match(initial.design.tableNumerals, /tabular-nums/);
   assert.ok(initial.design.primaryButtonHeight >= 36);
   assert.equal(initial.design.uottawa.radius, "12px");

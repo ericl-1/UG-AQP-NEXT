@@ -11,7 +11,7 @@
 
 ## Build 20260928-02 — design-system consolidation
 
-- Established a centralized **Calm clinical intelligence** design system covering colour, typography, spacing, radii, shadows, surfaces, controls, tables, statuses, focus treatment, and motion.
+- Established a centralized **Calm clinical intelligence** design system covering colour, typography, spacing, radii, shadows, surfaces, controls, tables, statuses, focus treatment, and motion. The main application canvas and navigation remain white; neutral grey is limited to subtle grouping and interaction states.
 - Reserved institutional garnet for identity, active navigation, focus, and principal actions instead of using it as a generic warning colour. Semantic status colours remain stable across themes.
 - Strengthened the interface hierarchy with larger page and section headings, fewer competing bold labels, and clearer supporting-text treatment.
 - Reduced the boxes-inside-boxes effect by using spacing, neutral surfaces, and dividers for internal organization while retaining bordered cards for genuine conceptual units.
