@@ -107,7 +107,7 @@ try {
       };
     })(),
   }));
-  assert.equal(initial.build, "20260928-02");
+  assert.equal(initial.build, "20260928-03");
   assert.equal(initial.title, "AQP Synthetic Demonstration Exam");
   assert.equal(initial.bannerVisible, true);
   assert.equal(initial.isDemo, true);
@@ -119,7 +119,7 @@ try {
   assert.match(initial.difText, /Not estimated|Sparse cells|separation|Singular model|No convergence/i);
   assert.equal(initial.readiness.ready, false, "unreviewed demo flags should produce advisory readiness");
   assert.equal(initial.audit.demonstration, true);
-  assert.equal(initial.audit.application.build, "20260928-02");
+  assert.equal(initial.audit.application.build, "20260928-03");
   assert.equal(initial.audit.sourceFiles.demonstration.name, "Built-in synthetic dataset");
   assert.ok(initial.audit.inputInterpretation.reconciliation);
   assert.ok(initial.audit.events.some(event => event.type === "demonstration_loaded"));
@@ -159,7 +159,7 @@ try {
   assert.match(csv, /sparse_cells|separation|singular_model_matrix|maximum_iterations/);
 
   const json = JSON.parse(await fs.readFile(jsonPath, "utf8"));
-  assert.equal(json.meta.build, "20260928-02");
+  assert.equal(json.meta.build, "20260928-03");
   assert.equal(json.audit.demonstration, true);
   assert.ok(json.audit.difSuppressions.length > 0);
   assert.ok(json.questions.some(q => q.dif?.estimationStatus !== "estimated" && q.dif?.suppressionReason));

@@ -2,11 +2,12 @@
   "name": "aqp-next",
   "private": true,
   "scripts": {
-    "test": "node tests/golden/run-golden-tests.mjs && node tests/golden/run-exceptions-report-tests.mjs && node tests/golden/run-malformed-upload-tests.mjs && node tests/golden/run-audit-demo-readiness-tests.mjs",
+    "test": "node tests/golden/run-golden-tests.mjs && node tests/golden/run-exceptions-report-tests.mjs && node tests/golden/run-malformed-upload-tests.mjs && node tests/golden/run-audit-demo-readiness-tests.mjs && node tests/golden/run-accessibility-tests.mjs",
     "test:golden": "node tests/golden/run-golden-tests.mjs",
     "test:exceptions-reports": "node tests/golden/run-exceptions-report-tests.mjs",
     "test:malformed-uploads": "node tests/golden/run-malformed-upload-tests.mjs",
     "test:audit-demo-readiness": "node tests/golden/run-audit-demo-readiness-tests.mjs",
+    "test:accessibility": "node tests/golden/run-accessibility-tests.mjs",
     "build:malformed-fixtures": "node tests/golden/build-malformed-fixtures.mjs"
   },
   "devDependencies": {

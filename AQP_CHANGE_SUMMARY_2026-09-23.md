@@ -3,11 +3,22 @@
 ## Build identity
 
 - Starting point: AQP 0.8, build `20260923-01` (`Downloads/index.html`)
-- Current development build: AQP 0.8, build `20260928-02`
-- Working branch: `feature/design-system-refresh`
-- Working file: `index.html` in the isolated design-system worktree
+- Current development build: AQP 0.8, build `20260928-03`
+- Working branch: `feature/accessibility-pass`
+- Working file: `index.html` in the isolated accessibility worktree
 - The Downloads baseline was not modified.
-- Builds through `20260928-01` were merged into GitHub `main` and deployed through GitHub Pages. Build `20260928-02` is being developed on the isolated `feature/design-system-refresh` branch and is not live until its pull request is approved and merged.
+- Builds through `20260928-02` were merged into GitHub `main` and deployed through GitHub Pages. Build `20260928-03` is being developed on the isolated `feature/accessibility-pass` branch and is not live until its pull request is approved and merged.
+
+## Build 20260928-03 — accessibility pass
+
+- Converted FAQ questions into keyboard-operable accordions with button semantics, unique question/answer relationships, expanded-state announcements, and labelled answer regions. Search results are now native buttons and the search field has an accessible name.
+- Repaired the shared focus-trap marker used by all dialogs. Escape now reliably closes the active dialog instead of allowing the global fallback to remove its handler first.
+- Added Escape-to-close and focus restoration to report previews and the More Options menu. The menu now announces expanded/collapsed state and exposes menu/menu-item semantics.
+- Added checked-state announcements to the data-source and DIF switches, keyboard activation for Unmapped Comments, current-page state to the sidebar, stable naming for statistical explanation panels, and a name for the Exceptions close control.
+- Increased compact statistical information/expand controls to the WCAG 2.2 minimum 24-by-24-pixel target size.
+- Corrected top-bar overflow at a 320-pixel viewport by hiding duplicated session/navigation metadata only at very narrow widths; core Help and More Options controls remain available.
+- Added a retained browser accessibility suite covering unique IDs, dialog and visible-control naming, keyboard accordion operation, Escape/focus restoration, switch state, text contrast, target size, reduced motion, and 320-pixel reflow.
+- This is an automated and code-level accessibility pass, not a claim of full WCAG conformance. Human VoiceOver testing on macOS and NVDA testing on Windows remain required.
 
 ## Build 20260928-02 — design-system consolidation
 
