@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document records recommended future work for the Assessment Quality Platform after the QA, remediation, and design-system consolidation completed for version 0.8, build `20260928-02`.
+This document records recommended future work for the Assessment Quality Platform after the QA, remediation, design-system consolidation, and automated accessibility pass completed for version 0.8, build `20260928-03`.
 
 These are forward-looking improvements rather than defects remaining from the two QA passes. Completed corrections are documented separately in `AQP_CHANGE_SUMMARY_2026-09-23.md`.
 
@@ -299,20 +299,18 @@ Before any implementation, define:
 
 Until those conditions are met, keep AQP's calculations, categorisation, and reports deterministic and locally processed.
 
-#### 19. Continue formal accessibility testing
+#### 19. Complete human assistive-technology validation
 
-Test each release with:
+Build `20260928-03` added retained automated checks for keyboard operation, focus restoration, dialog/control naming, switch state, contrast-sensitive design tokens, target size, reduced motion, unique IDs, and 320-pixel reflow. It also fixed the concrete issues found by those checks.
+
+Complete the remaining human validation with:
 
 - Keyboard-only navigation
 - VoiceOver on macOS
 - NVDA on Windows
-- Browser zoom at 200% and 400%
-- High-contrast or forced-colour mode
-- Reduced-motion preferences
-- Narrow mobile-sized viewports
 - Long translated labels and content
 
-Add automated accessibility checks where practical, but retain manual screen-reader testing for the complete upload-to-report workflow.
+Retain the automated suite for each release, but use human screen-reader testing for the complete upload-to-report workflow and record the browser, operating system, assistive-technology version, findings, and remediation evidence.
 
 ### Deferred interface-design backlog
 
@@ -362,4 +360,4 @@ The future pass should preserve visible text for important actions, use a consis
 
 ## Recommended immediate next task
 
-Complete formal accessibility testing and institutional privacy review next. The statistical, upload, audit, demonstration, and report-readiness foundations are now covered by retained regression tests; the next highest-value evidence is human accessibility testing across the supported university environment.
+Complete human VoiceOver/NVDA validation and institutional privacy review next. The statistical, upload, audit, demonstration, report-readiness, and automated accessibility foundations are now covered by retained regression tests; the next highest-value evidence requires the supported university hardware, browsers, and assistive technologies.

@@ -99,7 +99,7 @@
 </style>
 <style>
 /* ═══════════════════════════════════════════════════════════════════════════
-   AQP design system · Calm clinical intelligence · build 20260928-02
+   AQP design system · Calm clinical intelligence · build 20260928-03
    Centralized visual rules for colour, type, spacing, surfaces, controls,
    tables, status communication, motion, and theme parity.
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -291,6 +291,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 .workflow-step{padding:4px 9px}
 .workflow-connector{background:var(--c-border-2)}
 #ctx-panel{border-color:var(--c-border);border-radius:var(--radius-md);box-shadow:var(--c-shadow-raised)}
+.expand-btn,.alpha-info-btn{min-width:24px;min-height:24px;display:inline-flex;align-items:center;justify-content:center}
 .faq-item{margin-bottom:var(--space-2);border-radius:var(--radius-sm)}
 .faq-q{padding:13px var(--space-4);border-radius:var(--radius-sm);background:var(--c-surface)}
 .faq-a{padding:13px var(--space-4) var(--space-4);border-color:var(--c-border);background:var(--c-bg)}
@@ -306,6 +307,12 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
   .content-scroll{padding-left:var(--space-4);padding-right:var(--space-4)}
   h1,.page-title{font-size:23px}
   .mcq-table th,.mcq-table td{padding:8px!important;font-size:12px!important}
+}
+@media(max-width:420px){
+  .topbar{padding-left:10px;padding-right:10px;gap:8px}
+  .topbar-session-zone{display:none!important}
+  #topbar-exam-sep,#topbar-exam-name,.topbar-results-nav,.topbar-setup-nav{display:none!important}
+  .topbar-actions{gap:6px}
 }
 </style>
 </head>
@@ -581,7 +588,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
   <div class="topbar-actions">
     <button class="btn-icon" id="btn-faq-topbar" onclick="openFAQ()" title="Help &amp; FAQ" aria-label="Help and FAQ"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.5"/><path d="M6.3 6.2C6.3 5.3 7 4.6 8 4.6s1.7.7 1.7 1.6c0 .8-.6 1.3-1.1 1.7C8.2 8.3 8 8.6 8 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="11.2" r=".75" fill="currentColor"/></svg></button>
     <button class="btn-icon" id="btn-view-results-topbar" onclick="goToResults()" title="Back to results" aria-label="Back to results" style="display:none;gap:5px;width:auto;padding:0 10px;font-size:12px;font-weight:600;color:var(--c-accent);border-color:var(--c-accent)"><svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M9 2l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Results</button>
-    <button class="btn-icon" id="btn-menu-topbar" onclick="toggleHamburger(this)" title="More options" aria-label="More options"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></button>
+    <button class="btn-icon" id="btn-menu-topbar" onclick="toggleHamburger(this)" title="More options" aria-label="More options" aria-haspopup="menu" aria-controls="hamburger-dropdown" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></button>
   </div>
 </div>
 
@@ -603,7 +610,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
         <div class="nav-div"></div>
         <span class="nav-section-label">Student Feedback</span>
         <button class="nav-item" id="nav-feedback" onclick="sidebarNav('feedback',this)" title="Feedback Review"><span id="badge-mapping-mirror" class="nav-badge nav-badge-amber"></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><circle cx="9" cy="11" r=".5" fill="currentColor"/><circle cx="12" cy="11" r=".5" fill="currentColor"/><circle cx="15" cy="11" r=".5" fill="currentColor"/></svg><span class="nav-item-label">Feedback Review</span></button>
-        <div class="nav-sub" id="nav-mapping" onclick="sidebarNav('mapping',this)" role="button" tabindex="0" title="Unmapped Comments"><svg class="nav-sub-icon" width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M3 1v5h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 4l2 2-2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Unmapped Comments</span><span class="nav-badge nav-badge-amber" id="badge-mapping" style="display:none"></span></div>
+        <div class="nav-sub" id="nav-mapping" onclick="sidebarNav('mapping',this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();sidebarNav('mapping',this)}" role="button" tabindex="0" title="Unmapped Comments"><svg class="nav-sub-icon" width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M3 1v5h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 4l2 2-2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Unmapped Comments</span><span class="nav-badge nav-badge-amber" id="badge-mapping" style="display:none"></span></div>
         <div class="nav-div"></div>
         <span class="nav-section-label">Tools</span>
         <button class="nav-item" id="nav-exceptions" onclick="sidebarNav('exceptions',this)" style="justify-content:space-between" title="Exceptions"><span style="display:flex;align-items:center;gap:8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg><span class="nav-item-label">Exceptions</span></span><span class="nav-badge nav-badge-accent" id="badge-exceptions" style="display:none"></span></button>
@@ -875,7 +882,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
         <span class="row-lbl">Data Source</span>
         <div class="toggle-wrap">
           <span id="src-label-qm" style="font-size:14px;font-weight:700;color:var(--c-primary);cursor:pointer;transition:color .2s" onclick="setSource('qm')">QuestionMark</span>
-          <div id="source-toggle-track" role="switch" tabindex="0" aria-label="Data source: toggle between QuestionMark and Scantron" onclick="setSource(G_SOURCE==='qm'?'scantron':'qm')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();setSource(G_SOURCE==='qm'?'scantron':'qm')}" class="toggle-track" style="background:var(--c-accent)">
+          <div id="source-toggle-track" role="switch" tabindex="0" aria-checked="false" aria-label="Data source: QuestionMark off, Scantron on" onclick="setSource(G_SOURCE==='qm'?'scantron':'qm')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();setSource(G_SOURCE==='qm'?'scantron':'qm')}" class="toggle-track" style="background:var(--c-accent)">
             <div id="source-toggle-pill" class="toggle-thumb" style="left:3px"></div>
           </div>
           <span id="src-label-scantron" style="font-size:14px;font-weight:600;color:var(--c-muted);cursor:pointer;transition:color .2s" onclick="setSource('scantron')">Scantron</span>
@@ -886,7 +893,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
         <div class="dif-row" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
           <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
             <span id="dif-label-off" style="font-size:13px;font-weight:600;color:var(--c-muted)">Off</span>
-            <div id="dif-toggle-track" role="switch" tabindex="0" aria-label="DIF Analysis toggle" onclick="toggleDIF()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleDIF()}" class="toggle-track" style="background:var(--c-accent)">
+            <div id="dif-toggle-track" role="switch" tabindex="0" aria-checked="true" aria-label="DIF Analysis" onclick="toggleDIF()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleDIF()}" class="toggle-track" style="background:var(--c-accent)">
               <div id="dif-toggle-pill" class="toggle-thumb" style="left:19px"></div>
             </div>
             <span id="dif-label-on" style="font-size:13px;font-weight:700;color:var(--c-primary)">On</span>
@@ -1309,7 +1316,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
     </button>
 
     <!-- Hamburger menu -->
-    <button id="btn-menu" onclick="toggleHamburger(this)" data-tip="More options."
+    <button id="btn-menu" onclick="toggleHamburger(this)" data-tip="More options." aria-label="More options" aria-haspopup="menu" aria-controls="hamburger-dropdown" aria-expanded="false"
       style="display:inline-flex;align-items:center;justify-content:center;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:rgba(255,255,255,.85);cursor:pointer;white-space:nowrap;transition:color .15s;flex-shrink:0">
       <svg width="16" height="14" viewBox="0 0 16 14" fill="none">
         <line x1="1" y1="2"  x2="15" y2="2"  stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
@@ -2157,7 +2164,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 
 // ── App version — single source of truth ─────────────────────────────────
 var APP_VERSION     = '0.8';
-var APP_BUILD       = '20260928-02';
+var APP_BUILD       = '20260928-03';
 var APP_FAQ_VERSION = '0.8';           // Keep aligned with the app version; date records FAQ revisions
 var APP_FAQ_DATE    = 'September 28, 2026'; // Update when FAQ content changes
 var APP_RN_DATE     = 'September 28, 2026'; // Update each version close
@@ -3127,6 +3134,7 @@ function setSource(src) {
   var keyCard  = document.getElementById('key-card');
   var grid     = document.getElementById('upload-grid');
   var tplMain  = document.getElementById('btn-tpl-main');
+  if (track) track.setAttribute('aria-checked', src === 'scantron' ? 'true' : 'false');
   if (src === 'qm') {
     if(track)   track.style.background = 'var(--c-accent)';
     if(pill)    { pill.style.left = '3px'; pill.style.background = '#fff'; }
@@ -10163,6 +10171,7 @@ function updateReportCards() {
 var _currentModalReport = null;
 
 function openReportPreviewModal(which) {
+  var trigger = document.activeElement;
   _currentModalReport = which;
   var meta = _reportMeta[which] || _reportMeta.mcq;
   var modal = document.getElementById('report-preview-modal');
@@ -10200,7 +10209,7 @@ function openReportPreviewModal(which) {
   }
 
   // Trap focus
-  if (typeof trapFocus === 'function') trapFocus(modal);
+  if (typeof trapFocus === 'function') trapFocus(modal, trigger);
   var closeBtn = modal.querySelector('[aria-label="Close preview"]');
   if (closeBtn) closeBtn.focus();
 }
@@ -10407,6 +10416,7 @@ function toggleDIF() {
   var pill     = document.getElementById('dif-toggle-pill');
   var labelOn  = document.getElementById('dif-label-on');
   var labelOff = document.getElementById('dif-label-off');
+  if (track) track.setAttribute('aria-checked', G_DIF_ENABLED ? 'true' : 'false');
   if (G_DIF_ENABLED) {
     track.style.background = 'var(--c-accent)';
     pill.style.left = '19px';
@@ -10640,7 +10650,7 @@ function faqSearch(query) {
   }
   resultsEl.innerHTML = matches.map(function(m, idx) {
     var hl = m.text.replace(new RegExp('('+query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')', 'gi'), '<strong style="color:var(--c-accent)">$1</strong>');
-    return '<div onclick="faqJumpTo('+idx+')" data-faq-idx="'+idx+'" style="padding:9px 14px;font-size:12.5px;color:var(--c-primary);cursor:pointer;border-bottom:0.5px solid var(--c-border);transition:background .1s" onmouseover="this.style.background=\'#f4f6fb\'" onmouseout="this.style.background=\'\'">'+hl+'</div>';
+    return '<button type="button" onclick="faqJumpTo('+idx+')" data-faq-idx="'+idx+'" style="display:block;width:100%;padding:9px 14px;font-size:12.5px;text-align:left;color:var(--c-primary);background:#fff;border:0;border-bottom:0.5px solid var(--c-border);cursor:pointer;font-family:var(--font);transition:background .1s" onmouseover="this.style.background=\'#f4f6fb\'" onmouseout="this.style.background=\'#fff\'">'+hl+'</button>';
   }).join('');
   // Store match refs for jump
   resultsEl._matches = matches;
@@ -10664,6 +10674,7 @@ function faqJumpTo(idx) {
     answer.style.display = 'block';
     if (icon) icon.textContent = '−';
     qEl.classList.add('open');
+    qEl.setAttribute('aria-expanded', 'true');
   }
   // Scroll to it within the overlay
   setTimeout(function() {
@@ -10690,7 +10701,33 @@ function toggleFAQ(qEl) {
   answer.style.display = isOpen ? 'none' : 'block';
   icon.textContent     = isOpen ? '+' : '−';
   qEl.classList.toggle('open', !isOpen);
+  qEl.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
 }
+
+function initFAQAccessibility() {
+  document.querySelectorAll('#faq-overlay .faq-item').forEach(function(item, idx) {
+    var question = item.querySelector('.faq-q');
+    var answer = item.querySelector('.faq-a');
+    if (!question || !answer) return;
+    var qId = 'faq-question-' + (idx + 1);
+    var aId = 'faq-answer-' + (idx + 1);
+    question.id = qId;
+    answer.id = aId;
+    question.setAttribute('role', 'button');
+    question.setAttribute('tabindex', '0');
+    question.setAttribute('aria-controls', aId);
+    question.setAttribute('aria-expanded', answer.style.display === 'block' ? 'true' : 'false');
+    answer.setAttribute('role', 'region');
+    answer.setAttribute('aria-labelledby', qId);
+    question.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleFAQ(question);
+      }
+    });
+  });
+}
+document.addEventListener('DOMContentLoaded', initFAQAccessibility);
 document.addEventListener('keydown', function(e) {
   // Escape is now handled per-modal by the trapFocus utility.
   // This fallback handles any modal opened without trapFocus (should not occur in normal use).
@@ -10742,16 +10779,29 @@ function toggleHamburger(btn) {
   if (dd.style.display !== 'none' && dd._anchor === btn) {
     closeHamburger(); return;
   }
+  if (dd._anchor && dd._anchor !== btn) dd._anchor.setAttribute('aria-expanded', 'false');
   var r = btn.getBoundingClientRect();
   dd.style.top  = (r.bottom + 6) + 'px';
   dd.style.left = 'auto';
   dd.style.right = (document.documentElement.clientWidth - r.right) + 'px';
   dd.style.display = 'block';
   dd._anchor = btn;
+  btn.setAttribute('aria-expanded', 'true');
+  dd.setAttribute('role', 'menu');
+  dd.setAttribute('aria-label', 'More options');
+  dd.querySelectorAll('a').forEach(function(item){ item.setAttribute('role', 'menuitem'); });
+  var firstItem = dd.querySelector('[role="menuitem"]');
+  if (firstItem) setTimeout(function(){ firstItem.focus(); }, 0);
 }
-function closeHamburger() {
+function closeHamburger(restoreFocus) {
   var dd = document.getElementById('hamburger-dropdown');
-  if (dd) { dd.style.display = 'none'; dd._anchor = null; }
+  if (dd) {
+    var anchor = dd._anchor;
+    if (anchor) anchor.setAttribute('aria-expanded', 'false');
+    dd.style.display = 'none';
+    dd._anchor = null;
+    if (restoreFocus && anchor) anchor.focus();
+  }
 }
 document.addEventListener('click', function(e) {
   var dd  = document.getElementById('hamburger-dropdown');
@@ -10763,6 +10813,25 @@ document.addEventListener('click', function(e) {
   if ((b1 && b1.contains(e.target)) || (b2 && b2.contains(e.target)) || (b3 && b3.contains(e.target)) || (b4 && b4.contains(e.target))) return;
   if (!dd.contains(e.target)) closeHamburger();
 });
+document.addEventListener('keydown', function(e) {
+  var dd = document.getElementById('hamburger-dropdown');
+  if (!dd || dd.style.display === 'none') return;
+  if (e.key === 'Escape') {
+    e.preventDefault();
+    closeHamburger(true);
+    return;
+  }
+  var items = Array.prototype.slice.call(dd.querySelectorAll('[role="menuitem"]'));
+  if (!items.length) return;
+  var current = items.indexOf(document.activeElement);
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Home' || e.key === 'End') {
+    e.preventDefault();
+    var next = e.key === 'Home' ? 0 : e.key === 'End' ? items.length - 1 : e.key === 'ArrowDown' ? (current + 1 + items.length) % items.length : (current - 1 + items.length) % items.length;
+    items[next].focus();
+  } else if (e.key === 'Tab') {
+    closeHamburger(false);
+  }
+});
 
 // ── Release Notes ─────────────────────────────────────────────────────────
 var RELEASE_NOTES = [
@@ -10770,6 +10839,17 @@ var RELEASE_NOTES = [
   {
     version: '0.8',
     builds: [
+      {
+        build: '20260928-03',
+        date:  'September 28, 2026',
+        notes: [
+          'Accessibility pass: FAQ questions now expose correct accordion semantics and support Enter/Space operation; search results are native buttons and the FAQ search field has an accessible name.',
+          'Keyboard and focus reliability: repaired shared dialog focus-trap state, enabled Escape-to-close with focus restoration for report previews, and added keyboard operation for Unmapped Comments.',
+          'State announcements: data-source and DIF switches now publish their checked state, the More Options menu publishes its expanded state and restores focus on Escape, active sidebar rooms publish the current page, and explanation panels have stable accessible names.',
+          'Reflow and target sizing: preserved 24-pixel minimum targets for compact statistical controls and corrected top-bar overflow at a 320-pixel viewport without changing the desktop workflow.',
+          'Regression coverage: added retained browser checks for dialog naming, unique IDs, visible control names, keyboard operation, focus restoration, switch state, text contrast, target size, reduced motion, and narrow-screen reflow. Human VoiceOver and NVDA validation remains required.'
+        ]
+      },
       {
         build: '20260928-02',
         date:  'September 28, 2026',
@@ -12182,6 +12262,7 @@ function applyUnmatchedCorrections() {
 
   window.trapFocus = function(modal, trigger) {
     if (_trap) releaseFocus(); // clean up any existing trap first
+    modal.setAttribute('data-trap-active', 'true');
 
     var nodes = getFocusable(modal);
     if (nodes.length) nodes[0].focus();
@@ -12199,6 +12280,7 @@ function applyUnmatchedCorrections() {
           'faq-overlay':     function(){ closeFAQ(); },
           'rn-overlay':      function(){ closeReleaseNotes(); },
           'excl-modal':      function(){ closeExclusionsModal(); },
+          'report-preview-modal': function(){ closeReportPreviewModal(); },
           'unmatched-modal': function(){ closeUnmatchedModal(); },
           'diag-modal':      function(){ closeDiagnosticsModal(); },
           'session-import-modal': function(){ cancelSessionImport(); },
@@ -12225,6 +12307,7 @@ function applyUnmatchedCorrections() {
   window.releaseFocus = function() {
     if (!_trap) return;
     document.removeEventListener('keydown', _trap.handler);
+    _trap.modal.removeAttribute('data-trap-active');
     if (_trap.trigger && typeof _trap.trigger.focus === 'function') {
       try { _trap.trigger.focus(); } catch(e) {}
     }
@@ -12323,6 +12406,8 @@ function applyUnmatchedCorrections() {
   _panel.id = 'ctx-panel';
   _panel.setAttribute('role', 'dialog');
   _panel.setAttribute('aria-modal', 'false');
+  _panel.setAttribute('aria-label', 'Statistical term explanation');
+  _panel.setAttribute('aria-labelledby', 'ctx-panel-title');
   document.body.appendChild(_panel);
 
   var _anchor = null;
@@ -12332,7 +12417,7 @@ function applyUnmatchedCorrections() {
     if (!c) return;
 
     _panel.innerHTML =
-      '<div class="ctx-term">' + c.term +
+      '<div class="ctx-term"><span id="ctx-panel-title">' + c.term + '</span>' +
         '<button class="ctx-close" onclick="closeCtxPanel()" aria-label="Close">\u00d7</button>' +
       '</div>' +
       '<div class="ctx-lbl">What it means</div>' +
@@ -15905,9 +15990,10 @@ function _updateSidebarActive(room) {
   };
   document.querySelectorAll('#main-sidebar .nav-item, #main-sidebar .nav-sub').forEach(function(el){
     el.classList.remove('active');
+    el.removeAttribute('aria-current');
   });
   var id = map[room];
-  if (id) { var el = document.getElementById(id); if (el) el.classList.add('active'); }
+  if (id) { var el = document.getElementById(id); if (el) { el.classList.add('active'); el.setAttribute('aria-current', 'page'); } }
 }
 
 function updateLandingStatus() {
@@ -16856,7 +16942,7 @@ function updateTopbarExam() {
     <div style="padding:14px 36px;border-bottom:1px solid var(--c-border);background:var(--c-surface)">
       <div style="position:relative">
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--c-muted)"><circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.6"/><line x1="10.5" y1="10.5" x2="14" y2="14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-        <input type="text" id="faq-search-input" placeholder="Search questions…" oninput="faqSearch(this.value)"
+        <input type="text" id="faq-search-input" aria-label="Search frequently asked questions" placeholder="Search questions…" oninput="faqSearch(this.value)"
           style="width:100%;box-sizing:border-box;padding:8px 12px 8px 32px;border:1px solid var(--c-border);border-radius:8px;font-size:13px;font-family:var(--font);color:var(--c-primary);background:#fff;outline:none">
         <div id="faq-search-results" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1px solid var(--c-border);border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.12);z-index:100;max-height:240px;overflow-y:auto"></div>
       </div>
@@ -17807,7 +17893,7 @@ function updateTopbarExam() {
         <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.8);text-transform:uppercase;letter-spacing:.7px;margin-bottom:3px">Pre-Analysis</div>
         <div id="excl-modal-title" style="font-size:20px;font-weight:700;color:#fff;letter-spacing:-.2px">Question Exceptions</div>
       </div>
-      <button onclick="closeExclusionsModal()" style="background:rgba(255,255,255,.12);border:none;border-radius:8px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;flex-shrink:0;transition:background .15s;font-size:20px;line-height:1" onmouseover="this.style.background='rgba(255,255,255,.22)'" onmouseout="this.style.background='rgba(255,255,255,.12)'">&#x2715;</button>
+      <button onclick="closeExclusionsModal()" aria-label="Close question exceptions" title="Close" style="background:rgba(255,255,255,.12);border:none;border-radius:8px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;flex-shrink:0;transition:background .15s;font-size:20px;line-height:1" onmouseover="this.style.background='rgba(255,255,255,.22)'" onmouseout="this.style.background='rgba(255,255,255,.12)'">&#x2715;</button>
     </div>
 
     <!-- Definitions strip — equal thirds -->
