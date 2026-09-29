@@ -77,8 +77,37 @@ try {
     readiness: getReportReadiness(),
     difText: document.getElementById("dif-table").innerText,
     audit: buildAuditSnapshot(),
+    design: (() => {
+      const rootStyle = getComputedStyle(document.documentElement);
+      const bodyStyle = getComputedStyle(document.body);
+      const sidebarStyle = getComputedStyle(document.querySelector(".sidebar"));
+      const tableStyle = getComputedStyle(document.querySelector(".mcq-table"));
+      const primaryButton = document.querySelector(".btn-primary, .btn-dl-primary");
+      const uottawa = {
+        accent: rootStyle.getPropertyValue("--c-accent").trim(),
+        success: rootStyle.getPropertyValue("--s-ok").trim(),
+        radius: rootStyle.getPropertyValue("--radius-md").trim(),
+      };
+      document.documentElement.dataset.theme = "elentra";
+      const elentraStyle = getComputedStyle(document.documentElement);
+      const elentra = {
+        accent: elentraStyle.getPropertyValue("--c-accent").trim(),
+        success: elentraStyle.getPropertyValue("--s-ok").trim(),
+        radius: elentraStyle.getPropertyValue("--radius-md").trim(),
+      };
+      document.documentElement.dataset.theme = "uottawa";
+      return {
+        bodyFontSize: bodyStyle.fontSize,
+        bodyBackground: bodyStyle.backgroundColor,
+        sidebarBackground: sidebarStyle.backgroundColor,
+        tableNumerals: tableStyle.fontVariantNumeric,
+        primaryButtonHeight: primaryButton ? parseFloat(getComputedStyle(primaryButton).minHeight) : 0,
+        uottawa,
+        elentra,
+      };
+    })(),
   }));
-  assert.equal(initial.build, "20260928-01");
+  assert.equal(initial.build, "20260928-02");
   assert.equal(initial.title, "AQP Synthetic Demonstration Exam");
   assert.equal(initial.bannerVisible, true);
   assert.equal(initial.isDemo, true);
@@ -90,11 +119,19 @@ try {
   assert.match(initial.difText, /Not estimated|Sparse cells|separation|Singular model|No convergence/i);
   assert.equal(initial.readiness.ready, false, "unreviewed demo flags should produce advisory readiness");
   assert.equal(initial.audit.demonstration, true);
-  assert.equal(initial.audit.application.build, "20260928-01");
+  assert.equal(initial.audit.application.build, "20260928-02");
   assert.equal(initial.audit.sourceFiles.demonstration.name, "Built-in synthetic dataset");
   assert.ok(initial.audit.inputInterpretation.reconciliation);
   assert.ok(initial.audit.events.some(event => event.type === "demonstration_loaded"));
   assert.equal(initial.audit.difSuppressions.length, initial.suppressions.length);
+  assert.equal(initial.design.bodyFontSize, "14px");
+  assert.equal(initial.design.sidebarBackground, "rgb(32, 40, 45)");
+  assert.match(initial.design.tableNumerals, /tabular-nums/);
+  assert.ok(initial.design.primaryButtonHeight >= 36);
+  assert.equal(initial.design.uottawa.radius, "12px");
+  assert.equal(initial.design.elentra.radius, initial.design.uottawa.radius);
+  assert.notEqual(initial.design.elentra.accent, initial.design.uottawa.accent);
+  assert.equal(initial.design.elentra.success, initial.design.uottawa.success, "semantic status colours must remain stable across themes");
 
   const ready = await page.evaluate(() => {
     const now = new Date().toISOString();
@@ -121,7 +158,7 @@ try {
   assert.match(csv, /sparse_cells|separation|singular_model_matrix|maximum_iterations/);
 
   const json = JSON.parse(await fs.readFile(jsonPath, "utf8"));
-  assert.equal(json.meta.build, "20260928-01");
+  assert.equal(json.meta.build, "20260928-02");
   assert.equal(json.audit.demonstration, true);
   assert.ok(json.audit.difSuppressions.length > 0);
   assert.ok(json.questions.some(q => q.dif?.estimationStatus !== "estimated" && q.dif?.suppressionReason));

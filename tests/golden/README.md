@@ -29,6 +29,7 @@ This suite protects the highest-risk AQP calculations and parsers with fictional
 - Built-in demonstration mode, persistent synthetic-data banner, and privacy-safe fixture identity
 - Advisory report-readiness transitions before and after Review Queue completion
 - Reproducibility/audit metadata in CSV, JSON, and portable-session recovery
+- Design-system invariants: base typography, dark navigation surface, minimum primary-action sizing, tabular table numerals, shared component geometry, and stable semantic colours across uOttawa and Elentra themes
 - Precise DIF non-estimation reasons in the interface, structured exports, and Word reports
 
 The synthetic exam intentionally contains healthy items and known edge cases. Its reliability coefficient is therefore not intended to resemble a well-constructed operational exam; the exact value is useful as a regression target.
