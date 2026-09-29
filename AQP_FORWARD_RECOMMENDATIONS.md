@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document records recommended future work for the Assessment Quality Platform after the QA and remediation completed for version 0.8, build `20260928-01`.
+This document records recommended future work for the Assessment Quality Platform after the QA, remediation, and design-system consolidation completed for version 0.8, build `20260928-02`.
 
 These are forward-looking improvements rather than defects remaining from the two QA passes. Completed corrections are documented separately in `AQP_CHANGE_SUMMARY_2026-09-23.md`.
 
@@ -313,6 +313,26 @@ Test each release with:
 - Long translated labels and content
 
 Add automated accessibility checks where practical, but retain manual screen-reader testing for the complete upload-to-report workflow.
+
+### Deferred interface-design backlog
+
+#### 21. Add narrative analysis summaries
+
+Revisit a concise, deterministic overview statement that answers **what happened**, **what needs action**, and **where supporting evidence is located** before presenting detailed metrics. This was deliberately excluded from the `20260928-02` visual-system build so that wording, statistical interpretation, and institutional approval can be designed and validated separately.
+
+Any future implementation should:
+
+- Derive every statement from already validated AQP results
+- Avoid implying that a statistical signal is an academic decision
+- Remain useful for MCQ-only, DIF, feedback-only, and combined sessions
+- Handle all-clear, partial-analysis, sparse-data, and unresolved-review states
+- Receive content review from assessment-methodology stakeholders
+
+#### 22. Consolidate the icon language
+
+Replace the remaining mixture of Tabler webfont icons, custom SVG marks, emoji, and text symbols with one approved, locally packaged SVG icon system. This was deliberately deferred from build `20260928-02` because it overlaps with the dependency/offline-deployment decision.
+
+The future pass should preserve visible text for important actions, use a consistent stroke weight and size scale, remove emoji from formal workflow surfaces, and verify accessible names for every icon-only control.
 
 ## Suggested delivery sequence
 

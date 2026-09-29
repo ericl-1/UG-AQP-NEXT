@@ -3,10 +3,25 @@
 ## Build identity
 
 - Starting point: AQP 0.8, build `20260923-01` (`Downloads/index.html`)
-- Current development build: AQP 0.8, build `20260927-04`
-- Working file: `index.html` in the local `AQP (HTML)` project folder
+- Current development build: AQP 0.8, build `20260928-02`
+- Working branch: `feature/design-system-refresh`
+- Working file: `index.html` in the isolated design-system worktree
 - The Downloads baseline was not modified.
-- Builds through `20260927-03` were merged into GitHub `main` and deployed through GitHub Pages on September 27, 2026. Build `20260927-04` is being developed on the isolated `feature/coordinator-workflow-ui` branch and is not live until its pull request is approved and merged.
+- Builds through `20260928-01` were merged into GitHub `main` and deployed through GitHub Pages. Build `20260928-02` is being developed on the isolated `feature/design-system-refresh` branch and is not live until its pull request is approved and merged.
+
+## Build 20260928-02 — design-system consolidation
+
+- Established a centralized **Calm clinical intelligence** design system covering colour, typography, spacing, radii, shadows, surfaces, controls, tables, statuses, focus treatment, and motion. The main application canvas and navigation remain white; neutral grey is limited to subtle grouping and interaction states.
+- Reserved institutional garnet for identity, active navigation, focus, and principal actions instead of using it as a generic warning colour. Semantic status colours remain stable across themes.
+- Strengthened the interface hierarchy with larger page and section headings, fewer competing bold labels, and clearer supporting-text treatment.
+- Reduced the boxes-inside-boxes effect by using spacing, neutral surfaces, and dividers for internal organization while retaining bordered cards for genuine conceptual units.
+- Standardized primary, secondary, quiet, compact, icon, segmented, and context-specific controls without changing their existing actions.
+- Refined statistical tables with tabular numerals, calmer row tints, slimmer status rails, clearer hover states, softer separators, and sticky question columns for the primary MCQ and DIF tables.
+- Standardized category badges, status chips, and explanatory alerts as distinct visual roles.
+- Adopted an 8-pixel-based spacing rhythm and consistent transition timing, including reduced-motion support.
+- Kept uOttawa and Elentra layouts/components identical; only brand tokens change, while semantic colours retain the same meaning.
+- Deliberately deferred narrative analysis summaries and icon-family replacement to the documented interface-design backlog.
+- No statistical calculation, upload validation, persistence, or report-content logic was changed.
 
 ## Build 20260927-04 — coordinator workflow UI
 
