@@ -107,7 +107,7 @@ try {
       };
     })(),
   }));
-  assert.equal(initial.build, "20260928-03");
+  assert.equal(initial.build, "20260929-01");
   assert.equal(initial.title, "AQP Synthetic Demonstration Exam");
   assert.equal(initial.bannerVisible, true);
   assert.equal(initial.isDemo, true);
@@ -119,7 +119,7 @@ try {
   assert.match(initial.difText, /Not estimated|Sparse cells|separation|Singular model|No convergence/i);
   assert.equal(initial.readiness.ready, false, "unreviewed demo flags should produce advisory readiness");
   assert.equal(initial.audit.demonstration, true);
-  assert.equal(initial.audit.application.build, "20260928-03");
+  assert.equal(initial.audit.application.build, "20260929-01");
   assert.equal(initial.audit.sourceFiles.demonstration.name, "Built-in synthetic dataset");
   assert.ok(initial.audit.inputInterpretation.reconciliation);
   assert.ok(initial.audit.events.some(event => event.type === "demonstration_loaded"));
@@ -144,6 +144,22 @@ try {
   assert.match(ready.panel, /Ready for director export/);
   assert.equal(ready.audit.decisions.reviewQueue.filter(item => item.reviewed && item.reviewedAt).length, ready.state.reviewTotal);
 
+  const recordUi = await page.evaluate(() => ({
+    cardCount: document.querySelectorAll("#rp-card-record").length,
+    oldCsvCard: !!document.getElementById("rp-card-csv"),
+    oldJsonCard: !!document.getElementById("rp-card-json"),
+    recordText: document.getElementById("rp-card-record")?.innerText || "",
+    backupText: document.getElementById("rp-card-backup")?.innerText || "",
+    canonical: JSON.parse(JSON.stringify(buildAnalysisRecord())),
+  }));
+  assert.equal(recordUi.cardCount, 1);
+  assert.equal(recordUi.oldCsvCard, false);
+  assert.equal(recordUi.oldJsonCard, false);
+  assert.match(recordUi.recordText, /Analysis record/);
+  assert.match(recordUi.recordText, /CSV/);
+  assert.match(recordUi.recordText, /JSON/);
+  assert.match(recordUi.backupText, /Reopenable AQP backup/);
+
   const csvPath = await saveDownload(page, () => exportSessionRecord(), ".csv");
   const jsonPath = await saveDownload(page, () => exportSessionJSON(), ".json");
   const backupPath = await saveDownload(page, () => exportPortableSession(), ".json");
@@ -151,6 +167,7 @@ try {
   const fullDocx = await saveDownload(page, () => doExportReport("full"), ".docx");
 
   const csv = await fs.readFile(csvPath, "utf8");
+  assert.match(path.basename(csvPath), /_analysis-record\.csv$/);
   assert.match(csv, /AUDIT METADATA/);
   assert.match(csv, /SOURCE FILES/);
   assert.match(csv, /COORDINATOR DECISIONS/);
@@ -159,7 +176,15 @@ try {
   assert.match(csv, /sparse_cells|separation|singular_model_matrix|maximum_iterations/);
 
   const json = JSON.parse(await fs.readFile(jsonPath, "utf8"));
-  assert.equal(json.meta.build, "20260928-03");
+  assert.match(path.basename(jsonPath), /_analysis-record\.json$/);
+  assert.equal(json.recordType, "aqp-analysis-record");
+  assert.equal(json.schemaVersion, "1.0");
+  assert.equal(json.meta.build, "20260929-01");
+  assert.deepEqual(json.summary, recordUi.canonical.summary);
+  assert.deepEqual(json.thresholds, recordUi.canonical.thresholds);
+  assert.deepEqual(json.questions, recordUi.canonical.questions);
+  assert.deepEqual(json.feedback, recordUi.canonical.feedback);
+  assert.match(csv, new RegExp(`AQP Synthetic Demonstration Exam,${json.meta.examDate},${json.summary.totalStudents},${json.summary.enStudents},${json.summary.frStudents},${json.summary.totalQuestions},${json.summary.effectiveQuestions}`));
   assert.equal(json.audit.demonstration, true);
   assert.ok(json.audit.difSuppressions.length > 0);
   assert.ok(json.questions.some(q => q.dif?.estimationStatus !== "estimated" && q.dif?.suppressionReason));

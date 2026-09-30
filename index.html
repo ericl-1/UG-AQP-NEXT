@@ -99,7 +99,7 @@
 </style>
 <style>
 /* ═══════════════════════════════════════════════════════════════════════════
-   AQP design system · Calm clinical intelligence · build 20260928-03
+   AQP design system · Calm clinical intelligence · build 20260929-01
    Centralized visual rules for colour, type, spacing, surfaces, controls,
    tables, status communication, motion, and theme parity.
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -684,7 +684,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
     </button>
     <button class="home-action-card" onclick="document.getElementById('session-import-input').click()">
       <span class="home-card-icon"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M8 11V2M4.5 5.5 8 2l3.5 3.5M2 10v3a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-      <span class="home-card-title">Import a portable backup</span>
+      <span class="home-card-title">Import a reopenable backup</span>
       <span class="home-card-desc">Preview and reopen a secure AQP backup created on this or another device.</span>
     </button>
     <button class="home-action-card demo" onclick="loadDemonstrationSession()">
@@ -692,7 +692,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
       <span class="home-card-title">Explore a demonstration</span>
       <span class="home-card-desc">Open a clearly labelled synthetic bilingual exam with MCQ, DIF, feedback, and reports.</span>
     </button>
-    <input id="session-import-input" type="file" aria-label="Import an AQP portable session backup" accept=".json,application/json" onchange="handleSessionImport(this)" style="display:none">
+    <input id="session-import-input" type="file" aria-label="Import a Reopenable AQP backup" accept=".json,application/json" onchange="handleSessionImport(this)" style="display:none">
   </div>
 
   <!-- Current browser draft — populated by renderSessionHistory() -->
@@ -1668,34 +1668,22 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
           <div class="report-group-title">Analysis records</div>
           <div class="report-group-note">Privacy-minimized structured outputs for Excel review, archiving, integration, and longitudinal analysis. These files cannot reopen a working session.</div>
 
-          <div id="rp-card-csv" style="display:none;align-items:center;padding:13px 16px;border:1px solid var(--c-border);border-radius:10px;margin-bottom:8px;gap:14px;background:var(--c-bg)">
+          <div id="rp-card-record" style="display:none;align-items:center;padding:13px 16px;border:1px solid var(--c-border);border-radius:10px;margin-bottom:8px;gap:14px;background:var(--c-bg)">
             <div style="flex-shrink:0;width:28px;display:flex;align-items:center;justify-content:center;color:var(--c-muted)">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
             </div>
             <div style="flex:1;min-width:0">
-              <div style="font-size:13px;font-weight:600;color:var(--c-primary);margin-bottom:2px">Session record <span style="font-size:10px;font-weight:500;color:var(--c-muted);background:var(--c-surface);border:1px solid var(--c-border);border-radius:4px;padding:1px 6px;vertical-align:middle">CSV</span></div>
-              <div style="font-size:11.5px;color:var(--c-muted)">Exam summary, question-level stats, and analysis thresholds — for local record-keeping and Excel review</div>
+              <div style="font-size:13px;font-weight:600;color:var(--c-primary);margin-bottom:2px">Analysis record <span style="font-size:10px;font-weight:500;color:var(--c-muted);background:var(--c-surface);border:1px solid var(--c-border);border-radius:4px;padding:1px 6px;vertical-align:middle">CSV</span> <span style="font-size:10px;font-weight:500;color:#5c4fc7;background:#f0eeff;border:1px solid #c5bef5;border-radius:4px;padding:1px 6px;vertical-align:middle">JSON</span></div>
+              <div style="font-size:11.5px;color:var(--c-muted)">The same privacy-minimized exam results and audit history — CSV for Excel review, or JSON for systems and longitudinal analysis</div>
             </div>
-            <div style="display:flex;align-items:center;gap:14px;flex-shrink:0">
-              <button data-tip="Download the Session Record as a CSV file" onclick="exportSessionRecord()" style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:500;color:var(--c-primary);cursor:pointer;background:var(--c-bg);border:0.5px solid var(--c-border-2);border-radius:8px;padding:6px 13px;font-family:var(--font);transition:all .15s" onmouseover="this.style.background='var(--c-surface)'" onmouseout="this.style.background='var(--c-bg)'">
+            <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end">
+              <button data-tip="Download the Analysis Record as a CSV file for Excel review" onclick="exportSessionRecord()" style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:500;color:var(--c-primary);cursor:pointer;background:var(--c-bg);border:0.5px solid var(--c-border-2);border-radius:8px;padding:6px 13px;font-family:var(--font);transition:all .15s" onmouseover="this.style.background='var(--c-surface)'" onmouseout="this.style.background='var(--c-bg)'">
                 <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M6 1v7M3 6l3 3 3-3M2 10h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                Export
+                CSV
               </button>
-            </div>
-          </div>
-
-          <div id="rp-card-json" style="display:none;align-items:center;padding:13px 16px;border:1px solid var(--c-border);border-radius:10px;margin-bottom:8px;gap:14px;background:var(--c-bg)">
-            <div style="flex-shrink:0;width:28px;display:flex;align-items:center;justify-content:center;color:#5c4fc7">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-            </div>
-            <div style="flex:1;min-width:0">
-              <div style="font-size:13px;font-weight:600;color:var(--c-primary);margin-bottom:2px">Session data export <span style="font-size:10px;font-weight:500;color:#5c4fc7;background:#f0eeff;border:1px solid #c5bef5;border-radius:4px;padding:1px 6px;vertical-align:middle">JSON</span></div>
-              <div style="font-size:11.5px;color:var(--c-muted)">Complete structured session record for integration, backend storage, and longitudinal item tracking across exam cycles</div>
-            </div>
-            <div style="display:flex;align-items:center;gap:14px;flex-shrink:0">
-              <button data-tip="Download the full session as a structured JSON file" onclick="exportSessionJSON()" style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:500;color:var(--c-primary);cursor:pointer;background:var(--c-bg);border:0.5px solid var(--c-border-2);border-radius:8px;padding:6px 13px;font-family:var(--font);transition:all .15s" onmouseover="this.style.background='var(--c-surface)'" onmouseout="this.style.background='var(--c-bg)'">
+              <button data-tip="Download the Analysis Record as structured JSON" onclick="exportSessionJSON()" style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:500;color:var(--c-primary);cursor:pointer;background:var(--c-bg);border:0.5px solid var(--c-border-2);border-radius:8px;padding:6px 13px;font-family:var(--font);transition:all .15s" onmouseover="this.style.background='var(--c-surface)'" onmouseout="this.style.background='var(--c-bg)'">
                 <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M6 1v7M3 6l3 3 3-3M2 10h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                Export
+                JSON
               </button>
             </div>
           </div>
@@ -1710,11 +1698,11 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h11l3 3v15H5z"/><path d="M8 3v6h8V3M8 21v-7h8v7"/></svg>
             </div>
             <div style="flex:1;min-width:0">
-              <div style="font-size:13px;font-weight:600;color:var(--c-primary);margin-bottom:2px">Portable session backup <span style="font-size:10px;font-weight:500;color:#2B7A3E;background:#e8f5eb;border:1px solid rgba(43,122,62,.25);border-radius:4px;padding:1px 6px;vertical-align:middle">JSON</span></div>
+              <div style="font-size:13px;font-weight:600;color:var(--c-primary);margin-bottom:2px">Reopenable AQP backup <span style="font-size:10px;font-weight:500;color:#2B7A3E;background:#e8f5eb;border:1px solid rgba(43,122,62,.25);border-radius:4px;padding:1px 6px;vertical-align:middle">JSON</span></div>
               <div style="font-size:11.5px;color:var(--c-muted)">De-identified responses, decisions, and feedback text for reopening this session on another device. Handle securely.</div>
             </div>
             <div style="display:flex;align-items:center;gap:14px;flex-shrink:0">
-              <button data-tip="Download a portable backup that AQP can reopen" onclick="exportPortableSession()" style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:500;color:var(--c-primary);cursor:pointer;background:var(--c-bg);border:0.5px solid var(--c-border-2);border-radius:8px;padding:6px 13px;font-family:var(--font);transition:all .15s" onmouseover="this.style.background='var(--c-surface)'" onmouseout="this.style.background='var(--c-bg)'">
+              <button data-tip="Download a Reopenable AQP backup" onclick="exportPortableSession()" style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:500;color:var(--c-primary);cursor:pointer;background:var(--c-bg);border:0.5px solid var(--c-border-2);border-radius:8px;padding:6px 13px;font-family:var(--font);transition:all .15s" onmouseover="this.style.background='var(--c-surface)'" onmouseout="this.style.background='var(--c-bg)'">
                 <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M6 1v7M3 6l3 3 3-3M2 10h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 Export backup
               </button>
@@ -2164,10 +2152,10 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 
 // ── App version — single source of truth ─────────────────────────────────
 var APP_VERSION     = '0.8';
-var APP_BUILD       = '20260928-03';
+var APP_BUILD       = '20260929-01';
 var APP_FAQ_VERSION = '0.8';           // Keep aligned with the app version; date records FAQ revisions
-var APP_FAQ_DATE    = 'September 28, 2026'; // Update when FAQ content changes
-var APP_RN_DATE     = 'September 28, 2026'; // Update each version close
+var APP_FAQ_DATE    = 'September 29, 2026'; // Update when FAQ content changes
+var APP_RN_DATE     = 'September 29, 2026'; // Update each version close
 var SESSION_BACKUP_FILE_TYPE = 'aqp-portable-session';
 var SESSION_BACKUP_SCHEMA_VERSION = 1;
 
@@ -4883,57 +4871,149 @@ function buildAuditSnapshot() {
   };
 }
 
+// Canonical privacy-minimized analysis record. CSV and JSON are serializers of
+// this same object; neither contains student-level responses or feedback text.
+function buildAnalysisRecord() {
+  var examTitle = (document.getElementById('exam-title')||{value:''}).value || 'Untitled Exam';
+  var examDate  = (document.getElementById('exam-date')||{value:''}).value || '';
+  var coord     = (document.getElementById('coordinator-name')||{value:''}).value || '';
+  var fbLoaded  = !!(FB && FB.ready);
+  var questions = (G.mcq || []).map(function(r) {
+    var dif = (G.dif || []).find(function(d){ return d.num === r.num; }) || null;
+    var answerDist = {};
+    if (r.distCounts) Object.keys(r.distCounts).forEach(function(k){ answerDist[k.toUpperCase()] = r.distCounts[k]; });
+    answerDist.noResponse = r.noResp || 0;
+    return {
+      number: r.num,
+      elentraId: r.elentraId ? r.elentraId.split('/')[0] : null,
+      elentraVersion: r.elentraId && r.elentraId.indexOf('/') !== -1 ? parseInt(r.elentraId.split('/')[1], 10) : null,
+      key: r.key || null,
+      altKeys: (r.altKeys && r.altKeys.length) ? r.altKeys.slice() : [],
+      difficulty: r.p != null ? parseFloat(r.p.toFixed(4)) : null,
+      discrimination: r.rpbis != null ? parseFloat(r.rpbis.toFixed(4)) : null,
+      flag: r.flag || null,
+      recommendation: r.rec || null,
+      topPerformerChoice: r.topWrong || null,
+      disposition: r.excluded === 'credit' ? 'credit' : r.excluded === 'delete' ? 'delete' : 'include',
+      reason: r.reason || null,
+      altReason: r.altReason || null,
+      feedbackCount: fbLoaded ? ((FB.grouped && FB.grouped[r.num]) ? FB.grouped[r.num].length : 0) : null,
+      mentionsWithoutCommentCount: fbLoaded ? (FB.bareRefs[r.num] || 0) : null,
+      answerDistribution: answerDist,
+      dif: dif ? {
+        enPctCorrect: dif.ePct != null ? dif.ePct : null,
+        frPctCorrect: dif.fPct != null ? dif.fPct : null,
+        gapPct: (dif.ePct != null && dif.fPct != null) ? Math.abs(dif.ePct - dif.fPct) : null,
+        nagelkerkeR2: dif.r3 != null ? parseFloat(parseFloat(dif.r3).toFixed(4)) : null,
+        pValue: dif.sig != null ? parseFloat(parseFloat(dif.sig).toFixed(4)) : null,
+        flagged: !!dif.imp,
+        estimationStatus: dif.suppressionCode || 'estimated',
+        suppressionReason: dif.suppressionReason || null,
+        block1Status: dif.b1Status || null,
+        block3Status: dif.b3Status || null,
+        chi1: dif.chi1 != null ? parseFloat(dif.chi1) : null,
+        r1: dif.r1 != null ? parseFloat(dif.r1) : null,
+        chi3: dif.chi3 != null ? parseFloat(dif.chi3) : null,
+        cd: dif.cd != null ? parseFloat(dif.cd) : null,
+        rd: dif.rd != null ? parseFloat(dif.rd) : null
+      } : null
+    };
+  });
+  var feedback = null;
+  if (FB && FB.ready && FB.parsed && FB.parsed.length > 0) {
+    var counts = computeFbCatCounts();
+    feedback = {
+      totalComments: FB.parsed.length,
+      attributedComments: FB.parsed.filter(function(p){return p.status!=='discard'&&p.status!=='general'&&p.status!=='pending'&&((p.qNums&&p.qNums.length)||(p.mappedQs&&p.mappedQs.length)||p.mappedQ!=null);}).length,
+      generalComments: FB.parsed.filter(function(p){return p.status==='general';}).length,
+      discardedComments: FB.parsed.filter(function(p){return p.status==='discard';}).length,
+      questionsTouched: fbAllQs ? fbAllQs().length : null,
+      categories: {content:counts.content,translation:counts.translation,other:counts.other,uncategorized:counts.uncategorized}
+    };
+  }
+  var credited = questions.filter(function(q){return q.disposition==='credit';}).length;
+  var deleted = questions.filter(function(q){return q.disposition==='delete';}).length;
+  return {
+    recordType: 'aqp-analysis-record',
+    schemaVersion: '1.0',
+    meta: {
+      tool:'AQP \u2014 Assessment Quality Platform', institution:'Undergraduate Medical Education',
+      version:APP_VERSION, build:APP_BUILD, exportedAt:new Date().toISOString(),
+      examTitle:examTitle, examDate:examDate, coordinator:coord,
+      source:G_SOURCE==='scantron'?'Scantron':'QuestionMark'
+    },
+    summary: {
+      totalStudents:G._lastN, enStudents:G._lastNE||null, frStudents:G._lastNF||null,
+      totalQuestions:G.nQ, effectiveQuestions:G.nQ-deleted-credited,
+      examAvgPct:G._lastAvg!=null?parseFloat(G._lastAvg.toFixed(2)):null,
+      enAvgPct:G._lastEAvg!=null?parseFloat(G._lastEAvg.toFixed(2)):null,
+      frAvgPct:G._lastFAvg!=null?parseFloat(G._lastFAvg.toFixed(2)):null,
+      cronbachAlpha:G._lastAlpha!=null?parseFloat(G._lastAlpha.toFixed(4)):null,
+      flaggedCount:questions.filter(function(q){return q.flag&&q.disposition==='include';}).length,
+      easyCount:questions.filter(function(q){return q.flag==='Too easy';}).length,
+      difFlaggedCount:(G.dif||[]).filter(function(d){return d.imp;}).length,
+      creditedCount:credited, deletedCount:deleted
+    },
+    thresholds: {
+      difficult:getThresh('difficult'), easy:getThresh('easy'), disc:getThresh('disc'),
+      checkKeyP:getThresh('checkp'), checkKeyR:getThresh('checkr'), difPValue:getThresh('dif'),
+      gapAmber:getThresh('gapamber'), gapRed:getThresh('gapred')
+    },
+    dif: {
+      enabled:!!(G_DIF_ENABLED&&G._hasStream),
+      enCode:(document.getElementById('eng-code')||{value:''}).value||null,
+      frCode:(document.getElementById('fre-code')||{value:''}).value||null,
+      flaggedCount:(G.dif||[]).filter(function(d){return d.imp;}).length
+    },
+    questions:questions,
+    feedback:feedback,
+    session: {
+      createdAt:ExamSession.createdAt?ExamSession.createdAt.toISOString():null,
+      lastMcqRunAt:ExamSession.lastMcqAt?ExamSession.lastMcqAt.toISOString():null,
+      lastFeedbackAt:ExamSession.lastFeedbackAt?ExamSession.lastFeedbackAt.toISOString():null
+    },
+    audit:buildAuditSnapshot()
+  };
+}
+
 function exportSessionRecord() {
   closeHamburger();
   if (!G._lastN) { alert('Nothing to export yet.\n\nWhat happened: No analysis has been run in this session.\nWhat to do: Upload your files and run the analysis, then export.'); return; }
   recordAuditEvent('analysis_record_generated',{format:'csv'});
-  var now = new Date();
+  var record = buildAnalysisRecord();
+  var now = new Date(record.meta.exportedAt);
   var ts = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0')+' '+String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
-  var examTitle = (document.getElementById('exam-title')||{value:''}).value||'Untitled Exam';
-  var examDate  = (document.getElementById('exam-date')||{value:''}).value||'';
-  var source    = G_SOURCE==='scantron' ? 'Scantron' : 'QuestionMark';
-  var creditedCount   = G.mcq ? G.mcq.filter(function(r){return r.excluded==='credit';}).length : 0;
-  var deletedCount    = G.mcq ? G.mcq.filter(function(r){return r.excluded==='delete';}).length : 0;
-  var flaggedCount    = G.mcq ? G.mcq.filter(function(r){return r.flag&&!r.excluded;}).length : 0;
-  var difFlaggedCount = G.dif ? G.dif.filter(function(d){return d.imp;}).length : 0;
+  var examTitle = record.meta.examTitle;
+  var examDate  = record.meta.examDate;
+  var source    = record.meta.source;
+  var creditedCount   = record.summary.creditedCount;
+  var deletedCount    = record.summary.deletedCount;
+  var flaggedCount    = record.summary.flaggedCount;
+  var difFlaggedCount = record.summary.difFlaggedCount;
   var s1H = ['Export Version','Tool Version','Exported At','Source','Exam Title','Exam Date','Total Students','EN Students','FR Students','Total Questions','Effective Questions','Exam Avg %','EN Avg %','FR Avg %','Cronbach Alpha','Flagged Count','DIF Flagged Count','Credited Count','Deleted Count'];
-  var s1R = ['1.0',APP_VERSION,ts,source,examTitle,examDate,G._lastN,G._lastNE||'',G._lastNF||'',G.nQ,G.nQ-deletedCount-creditedCount,G._lastAvg,G._lastEAvg||'',G._lastFAvg||'',G._lastAlpha?(Math.round(G._lastAlpha*100)/100).toFixed(2):'',flaggedCount,difFlaggedCount,creditedCount,deletedCount];
-  // Build feedback comment count map
-  var fbCommentMap = {};
-  if (FB && FB.parsed && FB.parsed.length > 0) {
-    FB.parsed.forEach(function(p) {
-      if (p.status === 'discard') return;
-      var nums = (p.mappedQs && p.mappedQs.length) ? p.mappedQs
-               : (p.mappedQ != null ? [p.mappedQ] : (p.qNums || []));
-      nums.forEach(function(n){ fbCommentMap[n] = (fbCommentMap[n] || 0) + 1; });
-    });
-  }
-  var hasFbData = Object.keys(fbCommentMap).length > 0;
+  var s1R = [record.schemaVersion,record.meta.version,ts,source,examTitle,examDate,record.summary.totalStudents,record.summary.enStudents||'',record.summary.frStudents||'',record.summary.totalQuestions,record.summary.effectiveQuestions,record.summary.examAvgPct,record.summary.enAvgPct||'',record.summary.frAvgPct||'',record.summary.cronbachAlpha!=null?record.summary.cronbachAlpha.toFixed(2):'',flaggedCount,difFlaggedCount,creditedCount,deletedCount];
+  var hasFbData = record.feedback !== null;
   var s2H = ['Q #','Elentra ID','Elentra Version','Key','Alt Keys','Difficulty (p)','Discrimination (rpbis)','Flag','Disposition','Reason','EN % Correct','FR % Correct','EN-FR Gap %','DIF Flagged','DIF p-value','DIF Status','DIF Suppression Reason','Comments'].concat(hasFbData ? ['Feedback Comments'] : []);
-  var s2R = (G.mcq||[]).map(function(r) {
-    var dif = (G.dif||[]).find(function(d){return d.num===r.num;});
-    var isDel = r.excluded==='delete';
-    var eidRaw = r.elentraId || '';
-    var eidParts = eidRaw.indexOf('/') !== -1 ? eidRaw.split('/') : null;
-    var eidId  = eidParts ? eidParts[0] : eidRaw;
-    var eidVer = eidParts ? parseInt(eidParts[1], 10) : '';
-    return [r.num,eidId,eidVer,r.key||'',(r.altKeys&&r.altKeys.length)?r.altKeys.join('+'):'',
-      isDel?'':(r.p!=null?(Math.round(r.p*100)/100).toFixed(2):''),
-      isDel?'':(r.rpbis!=null?(Math.round(r.rpbis*100)/100).toFixed(2):''),
-      r.flag||'',r.excluded==='credit'?'Credit':isDel?'Delete':'Include',r.reason||'',
-      (isDel||!dif)?'':(dif.ePct!=null?dif.ePct:''),
-      (isDel||!dif)?'':(dif.fPct!=null?dif.fPct:''),
-      (isDel||!dif)?'':Math.abs(dif.ePct - dif.fPct),
-      (isDel||!dif)?'':(dif.imp?'Yes':'No'),
-      (isDel||!dif)?'':(dif.sig!=null?parseFloat(dif.sig).toFixed(3):''),
-      (isDel||!dif)?'':(dif.suppressionCode||'Estimated'),
+  var s2R = record.questions.map(function(q) {
+    var dif = q.dif;
+    var isDel = q.disposition==='delete';
+    return [q.number,q.elentraId||'',q.elentraVersion!=null?q.elentraVersion:'',q.key||'',q.altKeys.length?q.altKeys.join('+'):'',
+      isDel?'':(q.difficulty!=null?q.difficulty.toFixed(2):''),
+      isDel?'':(q.discrimination!=null?q.discrimination.toFixed(2):''),
+      q.flag||'',q.disposition==='credit'?'Credit':isDel?'Delete':'Include',q.reason||'',
+      (isDel||!dif)?'':(dif.enPctCorrect!=null?dif.enPctCorrect:''),
+      (isDel||!dif)?'':(dif.frPctCorrect!=null?dif.frPctCorrect:''),
+      (isDel||!dif)?'':(dif.gapPct!=null?dif.gapPct:''),
+      (isDel||!dif)?'':(dif.flagged?'Yes':'No'),
+      (isDel||!dif)?'':(dif.pValue!=null?dif.pValue.toFixed(3):''),
+      (isDel||!dif)?'':(dif.estimationStatus||'estimated'),
       (isDel||!dif)?'':(dif.suppressionReason||''),
-      r.reason&&r.excluded?'Reason: '+r.reason+(r.altReason?' | '+r.altReason:''):
-        (r.altKeys&&r.altKeys.length?'Alt. answer(s) accepted: '+r.altKeys.join(', ')+(r.altReason?' — '+r.altReason:''):'')
-    ].concat(hasFbData ? [fbCommentMap[r.num] || 0] : []);
+      q.reason&&q.disposition!=='include'?'Reason: '+q.reason+(q.altReason?' | '+q.altReason:''):
+        (q.altKeys.length?'Alt. answer(s) accepted: '+q.altKeys.join(', ')+(q.altReason?' — '+q.altReason:''):'')
+    ].concat(hasFbData ? [q.feedbackCount || 0] : []);
   });
   var s3H = ['Difficult p','Easy p','Disc rpbis','Check Key p','Check Key rpbis','DIF p-value','Gap Amber %','Gap Red %'];
-  var s3R = [getThresh('difficult'),getThresh('easy'),getThresh('disc'),getThresh('checkp'),getThresh('checkr'),getThresh('dif'),getThresh('gapamber'),getThresh('gapred')];
+  var s3R = [record.thresholds.difficult,record.thresholds.easy,record.thresholds.disc,record.thresholds.checkKeyP,record.thresholds.checkKeyR,record.thresholds.difPValue,record.thresholds.gapAmber,record.thresholds.gapRed];
   function cr(arr){return arr.map(function(v){var s=csvSafeValue(v);if(s.indexOf(',')>=0||s.indexOf('"')>=0||s.indexOf('\n')>=0)s='"'+s.replace(/"/g,'""')+'"';return s;}).join(',');}
   var lines=[
     'AQP — Assessment Quality Platform',
@@ -4948,7 +5028,7 @@ function exportSessionRecord() {
     cr(s2H)];
   s2R.forEach(function(r){lines.push(cr(r));});
   lines.push('','ANALYSIS THRESHOLDS',cr(s3H),cr(s3R));
-  var audit=buildAuditSnapshot();
+  var audit=record.audit;
   lines.push('','AUDIT METADATA',cr(['Field','Value']),cr(['Application Build',APP_BUILD]),cr(['Session Schema',SESSION_BACKUP_SCHEMA_VERSION]),cr(['Demonstration Session',audit.demonstration?'Yes':'No']),cr(['Session Created',audit.analysisTimestamps.sessionCreated||'']),cr(['Last MCQ Run',audit.analysisTimestamps.lastMcqRun||'']),cr(['Last Feedback Run',audit.analysisTimestamps.lastFeedbackRun||'']),cr(['Reconciliation Confirmed',audit.analysisTimestamps.reconciliationConfirmed||'']),cr(['Missing Responses',audit.inputInterpretation.missingResponses]),cr(['Score Values Compared',audit.inputInterpretation.scoreValidation?audit.inputInterpretation.scoreValidation.compared:'']),cr(['Score Differences',audit.inputInterpretation.scoreValidation?audit.inputInterpretation.scoreValidation.mismatches:'']));
   var srcKeys=Object.keys(audit.sourceFiles||{});
   if(srcKeys.length){
@@ -4967,27 +5047,19 @@ function exportSessionRecord() {
     lines.push('','EVENT LOG',cr(['Timestamp','Event','Details']));
     audit.events.forEach(function(e){lines.push(cr([e.at,e.type,JSON.stringify(e.details||{})]));});
   }
-  if (FB && FB.ready && FB.parsed && FB.parsed.length > 0) {
-    var fbTotal     = FB.parsed.length;
-    var fbAttr      = FB.parsed.filter(function(p){
-      return p.status!=='discard'&&p.status!=='general'&&p.status!=='pending'&&
-             ((p.qNums&&p.qNums.length)||(p.mappedQs&&p.mappedQs.length)||p.mappedQ!=null);
-    }).length;
-    var fbGen    = FB.parsed.filter(function(p){return p.status==='general';}).length;
-    var fbDisc   = FB.parsed.filter(function(p){return p.status==='discard';}).length;
-    var fbQs     = fbAllQs ? fbAllQs().length : '';
-    var _csvCats = computeFbCatCounts();
-    var fbCont   = _csvCats.content;
-    var fbTrans  = _csvCats.translation;
-    var fbOth    = _csvCats.other;
-    var fbUncat  = _csvCats.uncategorized;
+  if (record.feedback) {
+    var fbTotal = record.feedback.totalComments, fbAttr = record.feedback.attributedComments;
+    var fbGen = record.feedback.generalComments, fbDisc = record.feedback.discardedComments;
+    var fbQs = record.feedback.questionsTouched;
+    var fbCont = record.feedback.categories.content, fbTrans = record.feedback.categories.translation;
+    var fbOth = record.feedback.categories.other, fbUncat = record.feedback.categories.uncategorized;
     var s4H = ['Total Comments','Attributed to Questions','General Comments','Discarded','Questions Touched','Content Category','Translation Category','Other Category','Uncategorized'];
     var s4R = [fbTotal,fbAttr,fbGen,fbDisc,fbQs,fbCont,fbTrans,fbOth,fbUncat];
     lines.push('','FEEDBACK SUMMARY',cr(s4H),cr(s4R));
   }
   var csv  = lines.join('\n');
   var safeTitle = examTitle.replace(/[^a-zA-Z0-9\-_ ]/g,'').replace(/\s+/g,'-').substring(0,40);
-  var filename = safeTitle + (examDate ? '_'+examDate : '') + '_session-record.csv';
+  var filename = safeTitle + (examDate ? '_'+examDate : '') + '_analysis-record.csv';
   try {
     var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     var url  = URL.createObjectURL(blob);
@@ -9780,7 +9852,7 @@ var _reportMeta = {
 
 // ── Report cards visibility ───────────────────────────────────────────────
 
-// ── Session JSON export ───────────────────────────────────────────────────────
+// ── Structured analysis records and reopenable backup exports ────────────────
 function _safeBackupTitle(title) {
   return (title || 'Untitled-Exam').replace(/[^a-zA-Z0-9\-_ ]/g, '').replace(/\s+/g, '-').substring(0, 40) || 'Untitled-Exam';
 }
@@ -9797,7 +9869,7 @@ function _downloadJson(payload, filename) {
 
 function exportPortableSession() {
   if (!G._lastN && !(FB && FB.ready)) {
-    alert('Nothing to back up yet.\n\nRun an analysis first, then export a portable session backup.');
+    alert('Nothing to back up yet.\n\nRun an analysis first, then export a Reopenable AQP backup.');
     return;
   }
   try {
@@ -9819,16 +9891,16 @@ function exportPortableSession() {
     var date = draft.fields.examDate ? '_' + draft.fields.examDate : '';
     _downloadJson(payload, title + date + '_aqp-backup.json');
   } catch(e) {
-    alert('Portable session backup failed: ' + e.message + '\n\nPlease report this error.');
+    alert('Reopenable AQP backup failed: ' + e.message + '\n\nPlease report this error.');
   }
 }
 
 function validatePortableSession(data) {
   if (!data || typeof data !== 'object' || Array.isArray(data)) throw new Error('The selected file is not a valid AQP session backup.');
   if (!data.fileType && data.meta && data.summary) {
-    throw new Error('This is a report-only Session data export. It cannot reopen a session. Select a Portable session backup instead.');
+    throw new Error('This is a report-only Analysis record. It cannot reopen a session. Select a Reopenable AQP backup instead.');
   }
-  if (data.fileType !== SESSION_BACKUP_FILE_TYPE) throw new Error('This JSON file is not an AQP portable session backup.');
+  if (data.fileType !== SESSION_BACKUP_FILE_TYPE) throw new Error('This JSON file is not a Reopenable AQP backup.');
   if (!Number.isInteger(data.schemaVersion)) throw new Error('The backup does not identify its format version.');
   if (data.schemaVersion > SESSION_BACKUP_SCHEMA_VERSION) {
     throw new Error('This backup was created by a newer AQP format. Update AQP before importing it.');
@@ -9901,7 +9973,7 @@ var _pendingSessionImport = null;
 
 function openSessionImportPreview(data, file) {
   var draft=validatePortableSession(data);
-  _pendingSessionImport={data:data,draft:draft,fileName:file?file.name:'Portable backup',fileSize:file?file.size:0};
+  _pendingSessionImport={data:data,draft:draft,fileName:file?file.name:'Reopenable AQP backup',fileSize:file?file.size:0};
   var hasMcq=!!(draft.G&&draft.G._lastN);
   var hasFeedback=!!(draft.FB&&draft.FB.ready);
   var title=(draft.fields&&draft.fields.examTitle)||'Untitled exam';
@@ -9914,7 +9986,7 @@ function openSessionImportPreview(data, file) {
   var preview=document.getElementById('session-import-preview');
   preview.innerHTML=
     (sourceBuild!==APP_BUILD?'<div style="padding:10px 12px;background:#fff8e6;border:1px solid #ead49a;border-radius:8px;color:#7a4700;font-size:12px;margin-bottom:14px"><strong>Different AQP build:</strong> this backup was created by build '+escHtml(sourceBuild)+'. Its schema is compatible and AQP will recalculate it using build '+escHtml(APP_BUILD)+'.</div>':'')+
-    (existing?'<div style="padding:10px 12px;background:#fff0f0;border:1px solid #f0c0c0;border-radius:8px;color:#7a1010;font-size:12px;margin-bottom:14px"><strong>Current draft will be replaced.</strong> Download a portable backup first if you may need the existing draft later.</div>':'')+
+    (existing?'<div style="padding:10px 12px;background:#fff0f0;border:1px solid #f0c0c0;border-radius:8px;color:#7a1010;font-size:12px;margin-bottom:14px"><strong>Current draft will be replaced.</strong> Download a Reopenable AQP backup first if you may need the existing draft later.</div>':'')+
     '<div style="font-size:18px;font-weight:700;color:var(--c-primary);margin-bottom:3px">'+escHtml(title)+'</div><div style="font-size:12px;color:var(--c-muted);margin-bottom:16px">'+escHtml(_pendingSessionImport.fileName)+' · '+(_pendingSessionImport.fileSize?Math.max(1,Math.round(_pendingSessionImport.fileSize/1024))+' KB':'size unavailable')+'</div>'+
     '<dl class="privacy-kv"><dt>Exam date</dt><dd>'+escHtml(date)+'</dd><dt>Contents</dt><dd>'+[hasMcq?'MCQ analysis':null,(draft.flags&&draft.flags.G_DIF_ENABLED)?'DIF':null,hasFeedback?'Feedback':null].filter(Boolean).join(' · ')+'</dd><dt>Students</dt><dd>'+(hasMcq?draft.G._lastN:'Not applicable')+'</dd><dt>Questions</dt><dd>'+(hasMcq?draft.G.nQ:(draft.FB.maxQUsed||'Not recorded'))+'</dd><dt>Coordinator decisions</dt><dd>'+exceptions+' exceptions · '+ntCount+' Near Threshold · '+reviewCount+' reviewed</dd><dt>Source build</dt><dd>'+escHtml(sourceBuild)+'</dd><dt>Backup schema</dt><dd>Version '+data.schemaVersion+'</dd></dl>'+
     '<div style="margin-top:16px;padding:11px 13px;border-radius:8px;background:#f7fbf8;border:1px solid rgba(43,122,62,.25);font-size:11.5px;line-height:1.6;color:var(--c-secondary)"><strong>Privacy:</strong> Student names and institutional IDs are not included. This backup does contain '+(hasMcq?'de-identified responses':'no student responses')+(hasFeedback?' and feedback text':'')+'. Import only files from a trusted source.</div>';
@@ -9969,149 +10041,17 @@ function handleSessionImport(input) {
 
 function exportSessionJSON() {
   if (!G._lastN) {
-    alert('Nothing to export yet.\n\nRun an analysis first, then export the session data.');
+    alert('Nothing to export yet.\n\nRun an analysis first, then export the analysis record.');
     return;
   }
-  recordAuditEvent('analysis_record_generated',{format:'json'});
-  var examTitle = (document.getElementById('exam-title')||{value:''}).value || 'Untitled Exam';
-  var examDate  = (document.getElementById('exam-date')||{value:''}).value || '';
-  var coord     = (document.getElementById('coordinator-name')||{value:''}).value || '';
-  var now       = new Date();
-  var ts        = now.toISOString();
-  var safeTitle = examTitle.replace(/[^a-zA-Z0-9\-_ ]/g,'').replace(/\s+/g,'-').substring(0,40);
-  var filename  = safeTitle + (examDate ? '_'+examDate : '') + '_aqp-session.json';
-
-  // Summarise questions
-  var fbLoaded = !!(FB && FB.ready);
   try {
-  var questions = (G.mcq || []).map(function(r) {
-    var dif = (G.dif || []).find(function(d){ return d.num === r.num; }) || null;
-    // J4 — answer distribution: uppercase keys + noResponse
-    var answerDist = {};
-    if (r.distCounts) {
-      Object.keys(r.distCounts).forEach(function(k) { answerDist[k.toUpperCase()] = r.distCounts[k]; });
-    }
-    answerDist.noResponse = r.noResp || 0;
-    return {
-      number:          r.num,
-      elentraId:       r.elentraId ? r.elentraId.split('/')[0] : null,                    // J5
-      elentraVersion:  r.elentraId && r.elentraId.indexOf('/') !== -1 ? parseInt(r.elentraId.split('/')[1], 10) : null,  // J5
-      key:             r.key || null,
-      altKeys:         (r.altKeys && r.altKeys.length) ? r.altKeys : [],
-      difficulty:      r.p != null ? parseFloat(r.p.toFixed(4)) : null,
-      discrimination:  r.rpbis != null ? parseFloat(r.rpbis.toFixed(4)) : null,
-      flag:            r.flag || null,
-      recommendation:  r.rec  || null,                                                              // J6
-      topPerformerChoice: r.topWrong || null,                                                       // J6
-      disposition:     r.excluded === 'credit' ? 'credit' : r.excluded === 'delete' ? 'delete' : 'include',
-      reason:          r.reason || null,
-      altReason:       r.altReason || null,
-      feedbackCount:   fbLoaded ? ((FB.grouped && FB.grouped[r.num]) ? FB.grouped[r.num].length : 0) : null,  // J1
-      mentionsWithoutCommentCount: fbLoaded ? (FB.bareRefs[r.num] || 0) : null,                    // J2
-      answerDistribution: answerDist,                                                               // J4
-      dif: dif ? {
-        enPctCorrect:  dif.ePct  != null ? dif.ePct  : null,
-        frPctCorrect:  dif.fPct  != null ? dif.fPct  : null,
-        gapPct:        (dif.ePct != null && dif.fPct != null) ? Math.abs(dif.ePct - dif.fPct) : null,  // J3
-        nagelkerkeR2:  dif.r3    != null ? parseFloat(parseFloat(dif.r3).toFixed(4))  : null,           // J3
-        pValue:        dif.sig   != null ? parseFloat(parseFloat(dif.sig).toFixed(4)) : null,           // J3
-        flagged:       !!dif.imp,                                                                        // J3
-        estimationStatus: dif.suppressionCode || 'estimated',
-        suppressionReason: dif.suppressionReason || null,
-        block1Status: dif.b1Status || null,
-        block3Status: dif.b3Status || null,
-        chi1:          dif.chi1  != null ? parseFloat(dif.chi1) : null,
-        r1:            dif.r1    != null ? parseFloat(dif.r1)   : null,
-        chi3:          dif.chi3  != null ? parseFloat(dif.chi3) : null,
-        cd:            dif.cd    != null ? parseFloat(dif.cd)   : null,
-        rd:            dif.rd    != null ? parseFloat(dif.rd)   : null
-      } : null
-    };
-  });
-
-  // Feedback summary
-  var fbSummary = null;
-  if (FB && FB.ready && FB.parsed && FB.parsed.length > 0) {
-    var fbTotal = FB.parsed.length;
-    var fbAttributed = FB.parsed.filter(function(p){
-      return p.status !== 'discard' && p.status !== 'general' && p.status !== 'pending' &&
-             ((p.qNums && p.qNums.length) || (p.mappedQs && p.mappedQs.length) || p.mappedQ != null);
-    }).length;
-    var fbGeneral  = FB.parsed.filter(function(p){ return p.status === 'general'; }).length;
-    var fbDiscard  = FB.parsed.filter(function(p){ return p.status === 'discard'; }).length;
-    var fbQsTouched = fbAllQs ? fbAllQs().length : null;
-    fbSummary = {
-      totalComments:      fbTotal,
-      attributedComments: fbAttributed,
-      generalComments:    fbGeneral,
-      discardedComments:  fbDiscard,
-      questionsTouched:   fbQsTouched
-    };
-  }
-
-  var payload = {
-    meta: {
-      tool:        'AQP \u2014 Assessment Quality Platform',
-      institution: 'Undergraduate Medical Education',
-      version:     APP_VERSION,
-      build:       APP_BUILD,
-      exportedAt:  ts,
-      examTitle:   examTitle,
-      examDate:    examDate,
-      coordinator: coord,
-      source:      G_SOURCE === 'scantron' ? 'Scantron' : 'QuestionMark'
-    },
-    summary: {
-      totalStudents:      G._lastN,
-      enStudents:         G._lastNE || null,
-      frStudents:         G._lastNF || null,
-      totalQuestions:     G.nQ,
-      effectiveQuestions: G.nQ - (G.mcq || []).filter(function(r){return r.excluded==='delete'||r.excluded==='credit';}).length,
-      examAvgPct:         G._lastAvg  != null ? parseFloat(G._lastAvg.toFixed(2))  : null,
-      enAvgPct:           G._lastEAvg != null ? parseFloat(G._lastEAvg.toFixed(2)) : null,
-      frAvgPct:           G._lastFAvg != null ? parseFloat(G._lastFAvg.toFixed(2)) : null,
-      cronbachAlpha:      G._lastAlpha != null ? parseFloat(G._lastAlpha.toFixed(4)) : null,
-      flaggedCount:       (G.mcq||[]).filter(function(r){return r.flag&&!r.excluded;}).length,
-      easyCount:          (G.mcq||[]).filter(function(r){return r.flag==='Too easy';}).length,
-      difFlaggedCount:    (G.dif||[]).filter(function(d){return d.imp;}).length,
-      creditedCount:      (G.mcq||[]).filter(function(r){return r.excluded==='credit';}).length,
-      deletedCount:       (G.mcq||[]).filter(function(r){return r.excluded==='delete';}).length
-    },
-    thresholds: {
-      difficult:  getThresh('difficult'),
-      easy:       getThresh('easy'),
-      disc:       getThresh('disc'),
-      checkKeyP:  getThresh('checkp'),
-      checkKeyR:  getThresh('checkr'),
-      difPValue:  getThresh('dif'),
-      gapAmber:   getThresh('gapamber'),
-      gapRed:     getThresh('gapred')
-    },
-    dif: {
-      enabled:      !!(G_DIF_ENABLED && G._hasStream),
-      enCode:       (document.getElementById('eng-code')||{value:''}).value || null,
-      frCode:       (document.getElementById('fre-code')||{value:''}).value || null,
-      flaggedCount: (G.dif||[]).filter(function(d){return d.imp;}).length
-    },
-    questions: questions,
-    feedback:  fbSummary,
-    session:   {
-      createdAt:       ExamSession.createdAt  ? ExamSession.createdAt.toISOString()  : null,
-      lastMcqRunAt:    ExamSession.lastMcqAt  ? ExamSession.lastMcqAt.toISOString()  : null,
-      lastFeedbackAt:  ExamSession.lastFeedbackAt ? ExamSession.lastFeedbackAt.toISOString() : null
-    },
-    audit: buildAuditSnapshot()
-  };
-
-  var json = JSON.stringify(payload, null, 2);
-  var blob = new Blob([json], { type: 'application/json;charset=utf-8;' });
-  var url  = URL.createObjectURL(blob);
-  var a    = document.createElement('a');
-  a.href = url; a.download = filename; a.style.display = 'none';
-  document.body.appendChild(a); a.click();
-  setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(url); }, 200);
-} catch(e) {
-  alert('JSON export failed: ' + e.message + '\n\nPlease report this error.');
+    recordAuditEvent('analysis_record_generated',{format:'json'});
+    var payload = buildAnalysisRecord();
+    var safeTitle = _safeBackupTitle(payload.meta.examTitle);
+    var date = payload.meta.examDate ? '_' + payload.meta.examDate : '';
+    _downloadJson(payload, safeTitle + date + '_analysis-record.json');
+  } catch(e) {
+    alert('JSON export failed: ' + e.message + '\n\nPlease report this error.');
   }
 }
 
@@ -10156,8 +10096,7 @@ function updateReportCards() {
   showCard('rp-card-combined', hasDif);   // Full report = MCQ + DIF
   showCard('rp-card-feedback', hasFeedback);
   // Session Reports section
-  showCard('rp-card-csv',  hasMcq);
-  showCard('rp-card-json', hasMcq);
+  showCard('rp-card-record', hasMcq);
   showCard('rp-card-backup', hasMcq || hasFeedback);
   var sessionSection = document.getElementById('rp-section-session');
   if (sessionSection) sessionSection.style.display = hasMcq ? 'block' : 'none';
@@ -10278,7 +10217,7 @@ function doReportDownload() {
 function loadDemonstrationSession(skipConfirm) {
   var hasCurrent=!!(G._lastN||(FB&&FB.ready));
   try{hasCurrent=hasCurrent||!!localStorage.getItem(_DRAFT_KEY);}catch(e){}
-  if(hasCurrent&&!skipConfirm&&!confirm('Open the synthetic demonstration?\n\nThis will replace the current working session in AQP. Download a portable backup first if you may need it later.'))return;
+  if(hasCurrent&&!skipConfirm&&!confirm('Open the synthetic demonstration?\n\nThis will replace the current working session in AQP. Download a Reopenable AQP backup first if you may need it later.'))return;
   resetAll();
   G_ANALYSIS_TYPE='both'; G_SOURCE='qm'; G_DIF_ENABLED=true; G_MCQ_CONFIRMED=true;
   var title=document.getElementById('exam-title'), date=document.getElementById('exam-date'), coord=document.getElementById('coordinator-name');
@@ -10839,6 +10778,17 @@ var RELEASE_NOTES = [
   {
     version: '0.8',
     builds: [
+      {
+        build: '20260929-01',
+        date:  'September 29, 2026',
+        notes: [
+          'Simplified structured exports: the former Session record CSV and Session data JSON are now one Analysis record with CSV and JSON download choices.',
+          'Consistency: both Analysis record formats are generated from the same canonical privacy-minimized data model, preventing field and calculation drift between CSV and JSON.',
+          'Clearer recovery language: Portable session backup is now labelled Reopenable AQP backup and remains deliberately separate because it contains de-identified response-level data and any feedback text.',
+          'Stable integration schema: JSON Analysis records now identify themselves with record type aqp-analysis-record and schema version 1.0; both formats use analysis-record filenames.',
+          'Documentation and regression coverage: Reports guidance, FAQ content, validation messages, and automated export equivalence checks were aligned with the consolidated workflow.'
+        ]
+      },
       {
         build: '20260928-03',
         date:  'September 28, 2026',
@@ -17133,10 +17083,9 @@ function updateTopbarExam() {
             </div>
             <div class="faq-a">
               Three options are available in the Reports tab, grouped by purpose.<br><br>
-              <strong>Session record (CSV)</strong> — a structured CSV with an exam summary, per-question statistics (difficulty, discrimination, flag, disposition, EN/FR correct rates, DIF results), and the analysis thresholds used. When feedback is loaded, it also includes a comment count per question and a feedback summary section. Import into Excel or SharePoint for local review and archiving.<br><br>
-              <strong>Session data export (JSON)</strong> — a complete machine-readable record of the session, including all question statistics, DIF detail, feedback summary, threshold configuration, and timestamps. Designed for longitudinal item tracking across exam cycles — each exam's JSON file uses a consistent schema so multiple files can be compared over time. This is also the format a future backend would ingest for session history and historical item analysis.<br><br>
-              <strong>Portable session backup (JSON)</strong> — the file to use when you need to reopen the working session on this or another device. It contains de-identified student responses, coordinator decisions, and any feedback comment text, but no student names or institutional IDs. Because it includes response-level and comment data, store and transfer it according to institutional requirements.<br><br>
-              All files are named automatically using the exam title and date. The report-only Session data export cannot be imported; choose the file ending in <strong>_aqp-backup.json</strong> when reopening a session.
+              <strong>Analysis record (CSV or JSON)</strong> — the same privacy-minimized exam results and audit history in two formats. Choose CSV for Excel or SharePoint review. Choose JSON for systems integration, longitudinal item tracking, or comparison across exam cycles. Both contain the exam summary, per-question statistics, DIF detail, feedback counts, thresholds, timestamps, and reproducibility information; neither contains student-level responses or feedback comment text.<br><br>
+              <strong>Reopenable AQP backup (JSON)</strong> — the file to use when you need to reopen the working session on this or another device. It contains de-identified student responses, coordinator decisions, and any feedback comment text, but no student names or institutional IDs. Because it includes response-level and comment data, store and transfer it according to institutional requirements.<br><br>
+              All files are named automatically using the exam title and date. An Analysis record cannot be imported; choose the file ending in <strong>_aqp-backup.json</strong> when reopening a session.
             </div>
           </div>
 
@@ -17146,7 +17095,7 @@ function updateTopbarExam() {
               <span class="faq-icon">+</span>
             </div>
             <div class="faq-a">
-              The Session record (CSV) and Session data export (JSON) include a reproducibility record: the AQP version and build, source filenames and file fingerprints, analysis and reconciliation times, thresholds and stream codes, validation results, exceptions and reasons, Near Threshold decisions, Review Queue sign-offs, DIF suppression reasons, and report/export events. This helps another reviewer confirm what inputs and decisions produced the result. Student names, institutional IDs, and individual responses are not included in these report-only exports.
+              The Analysis record in both CSV and JSON includes the same reproducibility information: the AQP version and build, source filenames and file fingerprints, analysis and reconciliation times, thresholds and stream codes, validation results, exceptions and reasons, Near Threshold decisions, Review Queue sign-offs, DIF suppression reasons, and report/export events. This helps another reviewer confirm what inputs and decisions produced the result. Student names, institutional IDs, individual responses, and feedback comment text are not included.
             </div>
           </div>
 
@@ -17485,8 +17434,7 @@ function updateTopbarExam() {
               &bull; <strong>MCQ+DIF report</strong> — MCQ analysis and DIF combined in a single document. Only available when DIF is enabled.<br>
               &bull; <strong>Feedback report</strong> — student comments organised by question with summary and categorisation. Only available after a feedback analysis.<br><br>
               <strong>Session Reports</strong> — structured data exports for record-keeping and integration.<br><br>
-              &bull; <strong>Session record (CSV)</strong> — exam summary, per-question statistics, analysis thresholds, and (when feedback is loaded) a comment count per question and a feedback summary section. For Excel review and local archiving.<br>
-              &bull; <strong>Session data export (JSON)</strong> — complete structured session record including all question statistics, DIF sub-objects, feedback summary, threshold configuration, and timestamps. Designed for longitudinal item tracking across exam cycles and future backend integration.
+              &bull; <strong>Analysis record (CSV or JSON)</strong> — the same privacy-minimized exam summary, per-question statistics, DIF detail, feedback counts, thresholds, timestamps, and audit history. Choose CSV for Excel review and archiving, or JSON for longitudinal analysis and future backend integration.
             </div>
           </div>
 
@@ -17537,7 +17485,7 @@ function updateTopbarExam() {
               <span class="faq-icon">+</span>
             </div>
             <div class="faq-a">
-              AQP auto-saves the active session to browser local storage after analysis runs and relevant review changes. This includes exceptions, Near Threshold inclusions, Review Queue decisions, and feedback edits. Re-opening the tool shows a <strong>Draft found</strong> banner; click <strong>Resume session</strong> to restore and rerun the analysis.<br><br>The browser draft expires after 30 days and does not survive clearing browser data. To move or retain the working session, export a <strong>Portable session backup</strong> from Reports and use <strong>Import saved session</strong> on the home screen. Both drafts and backups omit student names and institutional IDs; portable backups still contain de-identified responses and any feedback text and must be handled securely.
+              AQP auto-saves the active session to browser local storage after analysis runs and relevant review changes. This includes exceptions, Near Threshold inclusions, Review Queue decisions, and feedback edits. Re-opening the tool shows a <strong>Draft found</strong> banner; click <strong>Resume session</strong> to restore and rerun the analysis.<br><br>The browser draft expires after 30 days and does not survive clearing browser data. To move or retain the working session, export a <strong>Reopenable AQP backup</strong> from Reports and use <strong>Import saved session</strong> on the home screen. Both drafts and backups omit student names and institutional IDs; reopenable backups still contain de-identified responses and any feedback text and must be handled securely.
             </div>
           </div>
 
@@ -17664,7 +17612,7 @@ function updateTopbarExam() {
             </div>
             <div class="faq-a">
               Yes. AQP saves one active draft in browser local storage after analysis runs and relevant review changes. If the tab closes, the browser refreshes, or the browser crashes, a <strong>Draft found</strong> banner appears the next time you open the tool. Click <strong>Resume session</strong> to restore and rerun the analysis.<br><br>
-              <strong>Note:</strong> The browser draft expires after 30 days and is removed if browser data is cleared. Export a <strong>Portable session backup</strong> to reopen the working session on another device. Student names and institutional IDs are not stored, but the backup contains de-identified responses and any feedback text and must be handled securely.
+              <strong>Note:</strong> The browser draft expires after 30 days and is removed if browser data is cleared. Export a <strong>Reopenable AQP backup</strong> to reopen the working session on another device. Student names and institutional IDs are not stored, but the backup contains de-identified responses and any feedback text and must be handled securely.
             </div>
           </div>
 
@@ -17675,7 +17623,7 @@ function updateTopbarExam() {
             </div>
             <div class="faq-a">
               Yes. The tool saves one draft session at a time in your browser's local storage. If you closed the tab or the browser crashed during your last session, re-opening the tool will show a <strong>Draft found</strong> banner and a session card on the home screen. Click <strong>Resume session</strong> to restore your data.<br><br>
-              For recovery after the draft is overwritten, cleared, expired, or moved to another computer, use a previously exported <strong>Portable session backup</strong> and select <strong>Import a portable backup</strong> on the home screen. AQP first previews the exam, contents, source build, coordinator decisions, and privacy characteristics; nothing is replaced until you confirm. It then recalculates the analysis. Full searchable multi-session history is still planned for the backend-enabled version.
+              For recovery after the draft is overwritten, cleared, expired, or moved to another computer, use a previously exported <strong>Reopenable AQP backup</strong> and select <strong>Import a reopenable backup</strong> on the home screen. AQP first previews the exam, contents, source build, coordinator decisions, and privacy characteristics; nothing is replaced until you confirm. It then recalculates the analysis. Full searchable multi-session history is still planned for the backend-enabled version.
             </div>
           </div>
 
@@ -17686,7 +17634,7 @@ function updateTopbarExam() {
             </div>
             <div class="faq-a">
               Open <strong>Privacy &amp; local data</strong> from the home screen or hamburger menu. The panel identifies the current browser draft, when it was saved, when it expires, what it contains, and its approximate storage size. You can clear only the recovery draft or clear all AQP local data and optionally reset the saved colour theme.<br><br>
-              Clearing local data does not delete source workbooks, reports, or portable backups already downloaded to the computer. If an analysis is currently open, clearing its stored copy turns autosave off for that open session so the draft is not immediately recreated; reload or start a later session to resume normal autosaving.
+              Clearing local data does not delete source workbooks, reports, or Reopenable AQP backups already downloaded to the computer. If an analysis is currently open, clearing its stored copy turns autosave off for that open session so the draft is not immediately recreated; reload or start a later session to resume normal autosaving.
             </div>
           </div>
 
@@ -17765,7 +17713,7 @@ function updateTopbarExam() {
 <div id="session-import-modal" role="dialog" aria-modal="true" aria-labelledby="session-import-title" onclick="if(event.target===this)cancelSessionImport()" style="display:none;position:fixed;inset:0;z-index:2200;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:16px">
   <div style="background:#fff;border-radius:14px;width:min(660px,92vw);max-height:88vh;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.25);display:flex;flex-direction:column">
     <div style="padding:18px 22px;background:var(--c-nav-glass);display:flex;align-items:center;justify-content:space-between">
-      <div><div id="session-import-title" style="font-size:18px;font-weight:700;color:#fff">Review portable backup</div><div style="font-size:11px;color:rgba(255,255,255,.8);margin-top:2px">Nothing will be replaced until you confirm.</div></div>
+      <div><div id="session-import-title" style="font-size:18px;font-weight:700;color:#fff">Review reopenable backup</div><div style="font-size:11px;color:rgba(255,255,255,.8);margin-top:2px">Nothing will be replaced until you confirm.</div></div>
       <button onclick="cancelSessionImport()" aria-label="Close import preview" style="background:rgba(255,255,255,.12);border:0;border-radius:8px;width:34px;height:34px;color:#fff;cursor:pointer">×</button>
     </div>
     <div id="session-import-preview" style="padding:22px;overflow-y:auto"></div>
@@ -17787,7 +17735,7 @@ function updateTopbarExam() {
       <div style="padding:13px 15px;background:#f0f4ff;border:1px solid #cbd8f0;border-radius:9px;font-size:12px;line-height:1.65;color:var(--c-secondary);margin-bottom:16px"><strong>AQP processes uploaded files in your browser.</strong> The application has no AQP server or database. One recovery draft may be stored locally. Student names and institutional IDs are excluded, but de-identified responses and feedback text may be present.</div>
       <div style="font-size:12px;font-weight:700;color:var(--c-primary);margin-bottom:8px">Current browser storage</div>
       <div id="privacy-draft-details" style="border:1px solid var(--c-border);border-radius:9px;padding:13px 15px;margin-bottom:16px"></div>
-      <div style="font-size:11.5px;line-height:1.6;color:var(--c-muted);margin-bottom:16px">Portable backups are downloaded files. Clearing browser data cannot remove files already downloaded to this computer or copied elsewhere.</div>
+      <div style="font-size:11.5px;line-height:1.6;color:var(--c-muted);margin-bottom:16px">Reopenable AQP backups are downloaded files. Clearing browser data cannot remove files already downloaded to this computer or copied elsewhere.</div>
       <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--c-secondary);margin-bottom:14px"><input id="privacy-clear-theme" type="checkbox" style="accent-color:var(--c-accent)"> Also reset the saved colour theme</label>
       <div style="display:flex;gap:8px;flex-wrap:wrap"><button id="privacy-clear-draft" class="btn-dl-secondary" onclick="clearLocalAqpData(false)">Clear saved draft</button><button class="btn-dl-primary" style="background:var(--s-hard)" onclick="clearLocalAqpData(true)">Clear all AQP local data</button></div>
     </div>

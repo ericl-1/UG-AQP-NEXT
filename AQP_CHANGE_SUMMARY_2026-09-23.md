@@ -3,11 +3,20 @@
 ## Build identity
 
 - Starting point: AQP 0.8, build `20260923-01` (`Downloads/index.html`)
-- Current development build: AQP 0.8, build `20260928-03`
-- Working branch: `feature/accessibility-pass`
-- Working file: `index.html` in the isolated accessibility worktree
+- Current development build: AQP 0.8, build `20260929-01`
+- Working branch: `feature/analysis-record-consolidation`
+- Working file: `index.html` in the isolated analysis-record consolidation worktree
 - The Downloads baseline was not modified.
-- Builds through `20260928-02` were merged into GitHub `main` and deployed through GitHub Pages. Build `20260928-03` is being developed on the isolated `feature/accessibility-pass` branch and is not live until its pull request is approved and merged.
+- Builds through `20260928-03` were merged into GitHub `main` and deployed through GitHub Pages. Build `20260929-01` is being developed on the isolated `feature/analysis-record-consolidation` branch and is not live until its pull request is approved and merged.
+
+## Build 20260929-01 — analysis-record consolidation
+
+- Consolidated the former **Session record (CSV)** and **Session data export (JSON)** into one **Analysis record** card with CSV and JSON download choices.
+- Added one canonical privacy-minimized record builder. CSV and JSON are now serializers of the same summary, per-question statistics, DIF detail, feedback counts, thresholds, session metadata, and audit history, reducing the risk of the two formats drifting apart.
+- Added `recordType: "aqp-analysis-record"` and `schemaVersion: "1.0"` to JSON Analysis records and aligned both filenames to `_analysis-record`.
+- Renamed **Portable session backup** to **Reopenable AQP backup** throughout the current interface and FAQ. It remains structurally separate because it contains de-identified response-level data and any feedback comment text and is the only JSON format that AQP can import.
+- Updated the in-app FAQ, Release Notes, validation guidance, retained project documentation, and automated browser coverage for the consolidated workflow.
+- Narrative Overview remains deferred. The approved Fluent interface-icon direction and revised analytical-Q app-mark concept remain separate future design work; neither is included in this build.
 
 ## Build 20260928-03 — accessibility pass
 

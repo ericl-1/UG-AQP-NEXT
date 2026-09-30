@@ -352,7 +352,7 @@ try {
       malformed: message({ ...payload, session: { ...payload.session, G: { ...payload.session.G, key: [] } } }),
     };
   }, backup);
-  assert.match(validationErrors.aggregate, /report-only Session data export/);
+  assert.match(validationErrors.aggregate, /report-only Analysis record/);
   assert.match(validationErrors.future, /newer AQP format/);
   assert.match(validationErrors.malformed, /answer key does not match/);
 
