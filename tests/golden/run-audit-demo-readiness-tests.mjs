@@ -76,6 +76,32 @@ try {
     suppressions: G.dif.filter(d => d.suppressionCode).map(d => ({ number: d.num, code: d.suppressionCode, reason: d.suppressionReason })),
     readiness: getReportReadiness(),
     difText: document.getElementById("dif-table").innerText,
+    distractorQ2: (() => { computeQuartileData(); return buildDistractorDetailHtml(1); })(),
+    distractorQ3: (() => {
+      computeQuartileData();
+      const html = buildDistractorDetailHtml(2);
+      const host = document.createElement("div");
+      host.innerHTML = html;
+      const distributionWidths = Object.fromEntries([...host.querySelectorAll(".dist-bar-wrap")].map(row => [
+        row.querySelector(".dist-opt-label")?.textContent.trim(),
+        row.querySelector(".dist-bar-fill")?.style.width,
+      ]));
+      return {
+        html,
+        qN: [...G._quartileData[2].qN],
+        c: G._quartileData[2].optCounts.map(group => group.c),
+        d: G._quartileData[2].optCounts.map(group => group.d),
+        globalC: G.mcq[2].distCounts.c,
+        globalD: G.mcq[2].distCounts.d,
+        distributionWidths,
+      };
+    })(),
+    betaRooms: [...document.querySelectorAll("#room-distractor .beta-badge, #room-nearthreshold .beta-badge")].map(el => ({
+      text: el.textContent.trim(),
+      display: getComputedStyle(el).display,
+    })),
+    overviewSections: document.querySelectorAll("#landing-mcq-summary .landing-summary-section").length,
+    difKpiInToolbar: document.getElementById("dif-kpi-strip")?.parentElement?.classList.contains("mcq-toolbar"),
     audit: buildAuditSnapshot(),
     design: (() => {
       const rootStyle = getComputedStyle(document.documentElement);
@@ -83,6 +109,8 @@ try {
       const sidebarStyle = getComputedStyle(document.querySelector(".sidebar"));
       const tableStyle = getComputedStyle(document.querySelector(".mcq-table"));
       const primaryButton = document.querySelector(".btn-primary, .btn-dl-primary");
+      const activeIcon = document.querySelector(".nav-item.active .fui-icon");
+      if (activeIcon) activeIcon.style.transition = "none";
       const uottawa = {
         accent: rootStyle.getPropertyValue("--c-accent").trim(),
         success: rootStyle.getPropertyValue("--s-ok").trim(),
@@ -94,20 +122,22 @@ try {
         accent: elentraStyle.getPropertyValue("--c-accent").trim(),
         success: elentraStyle.getPropertyValue("--s-ok").trim(),
         radius: elentraStyle.getPropertyValue("--radius-md").trim(),
+        activeIconColor: activeIcon ? getComputedStyle(activeIcon).color : "",
       };
       document.documentElement.dataset.theme = "uottawa";
+      const uottawaIconColor = activeIcon ? getComputedStyle(activeIcon).color : "";
       return {
         bodyFontSize: bodyStyle.fontSize,
         bodyBackground: bodyStyle.backgroundColor,
         sidebarBackground: sidebarStyle.backgroundColor,
         tableNumerals: tableStyle.fontVariantNumeric,
         primaryButtonHeight: primaryButton ? parseFloat(getComputedStyle(primaryButton).minHeight) : 0,
-        uottawa,
+        uottawa: { ...uottawa, activeIconColor: uottawaIconColor },
         elentra,
       };
     })(),
   }));
-  assert.equal(initial.build, "20260928-03");
+  assert.equal(initial.build, "20261001-01");
   assert.equal(initial.title, "AQP Synthetic Demonstration Exam");
   assert.equal(initial.bannerVisible, true);
   assert.equal(initial.isDemo, true);
@@ -117,9 +147,26 @@ try {
   assert.ok(initial.suppressions.length > 0, `demo must exercise DIF suppression; enabled=${initial.enabled}, hasStream=${initial.hasStream}, difLength=${initial.difLength}, table=${initial.difText}`);
   assert.ok(initial.suppressions.every(s => s.code && s.reason), "every suppression needs a code and explanation");
   assert.match(initial.difText, /Not estimated|Sparse cells|separation|Singular model|No convergence/i);
+  assert.doesNotMatch(initial.distractorQ2, /Option (A|D|E).*possible defensible answer/i, "unselected options must not be labelled key competitors");
+  assert.match(initial.distractorQ2, /Quartile 3: 100% chose option C vs 0% for keyed option B/i, "real key competition must identify both percentages and the keyed option");
+  assert.deepEqual(initial.distractorQ3.qN, [10, 10, 10, 10], "demo Q3 must retain four equal performance groups");
+  assert.deepEqual(initial.distractorQ3.c, [10, 6, 0, 0], "demo Q3 keyed-option counts must run from lowest to highest performance group");
+  assert.deepEqual(initial.distractorQ3.d, [0, 4, 10, 10], "demo Q3 distractor counts must run from lowest to highest performance group");
+  assert.equal(initial.distractorQ3.globalC, 16);
+  assert.equal(initial.distractorQ3.globalD, 24);
+  assert.equal(initial.distractorQ3.distributionWidths.C, "40%", "global answer bars must use the actual percentage");
+  assert.equal(initial.distractorQ3.distributionWidths.D, "60%", "global answer bars must not stretch the most popular option to 100%");
+  assert.match(initial.distractorQ3.html, /Quartile 3: 100% chose option D vs 0% for keyed option C/i);
+  assert.match(initial.distractorQ3.html, /Quartile 4: 100% chose option D vs 0% for keyed option C/i);
+  assert.match(initial.distractorQ3.html, /within-quartile percentages, not the overall answer distribution/i);
+  assert.doesNotMatch(initial.distractorQ3.html, /In Q[1-4],/i, "interpretations must not use ambiguous Q1–Q4 abbreviations");
+  assert.equal(initial.betaRooms.length, 2, "Distractor Analysis and Near Threshold must both carry Beta badges");
+  assert.ok(initial.betaRooms.every(badge => badge.text === "Beta" && ["flex", "inline-flex"].includes(badge.display)));
+  assert.ok(initial.overviewSections >= 2, "overview result groups must be visually separated into sections");
+  assert.equal(initial.difKpiInToolbar, true, "DIF KPI tiles must share the toolbar row with the CSV action");
   assert.equal(initial.readiness.ready, false, "unreviewed demo flags should produce advisory readiness");
   assert.equal(initial.audit.demonstration, true);
-  assert.equal(initial.audit.application.build, "20260928-03");
+  assert.equal(initial.audit.application.build, "20261001-01");
   assert.equal(initial.audit.sourceFiles.demonstration.name, "Built-in synthetic dataset");
   assert.ok(initial.audit.inputInterpretation.reconciliation);
   assert.ok(initial.audit.events.some(event => event.type === "demonstration_loaded"));
@@ -132,6 +179,7 @@ try {
   assert.equal(initial.design.uottawa.radius, "12px");
   assert.equal(initial.design.elentra.radius, initial.design.uottawa.radius);
   assert.notEqual(initial.design.elentra.accent, initial.design.uottawa.accent);
+  assert.notEqual(initial.design.elentra.activeIconColor, initial.design.uottawa.activeIconColor, "Fluent active-state icons must follow the selected theme");
   assert.equal(initial.design.elentra.success, initial.design.uottawa.success, "semantic status colours must remain stable across themes");
 
   const ready = await page.evaluate(() => {
@@ -144,6 +192,22 @@ try {
   assert.match(ready.panel, /Ready for director export/);
   assert.equal(ready.audit.decisions.reviewQueue.filter(item => item.reviewed && item.reviewedAt).length, ready.state.reviewTotal);
 
+  const recordUi = await page.evaluate(() => ({
+    cardCount: document.querySelectorAll("#rp-card-record").length,
+    oldCsvCard: !!document.getElementById("rp-card-csv"),
+    oldJsonCard: !!document.getElementById("rp-card-json"),
+    recordText: document.getElementById("rp-card-record")?.innerText || "",
+    backupText: document.getElementById("rp-card-backup")?.innerText || "",
+    canonical: JSON.parse(JSON.stringify(buildAnalysisRecord())),
+  }));
+  assert.equal(recordUi.cardCount, 1);
+  assert.equal(recordUi.oldCsvCard, false);
+  assert.equal(recordUi.oldJsonCard, false);
+  assert.match(recordUi.recordText, /Analysis record/);
+  assert.match(recordUi.recordText, /CSV/);
+  assert.match(recordUi.recordText, /JSON/);
+  assert.match(recordUi.backupText, /Reopenable AQP backup/);
+
   const csvPath = await saveDownload(page, () => exportSessionRecord(), ".csv");
   const jsonPath = await saveDownload(page, () => exportSessionJSON(), ".json");
   const backupPath = await saveDownload(page, () => exportPortableSession(), ".json");
@@ -151,6 +215,7 @@ try {
   const fullDocx = await saveDownload(page, () => doExportReport("full"), ".docx");
 
   const csv = await fs.readFile(csvPath, "utf8");
+  assert.match(path.basename(csvPath), /_analysis-record\.csv$/);
   assert.match(csv, /AUDIT METADATA/);
   assert.match(csv, /SOURCE FILES/);
   assert.match(csv, /COORDINATOR DECISIONS/);
@@ -159,7 +224,15 @@ try {
   assert.match(csv, /sparse_cells|separation|singular_model_matrix|maximum_iterations/);
 
   const json = JSON.parse(await fs.readFile(jsonPath, "utf8"));
-  assert.equal(json.meta.build, "20260928-03");
+  assert.match(path.basename(jsonPath), /_analysis-record\.json$/);
+  assert.equal(json.recordType, "aqp-analysis-record");
+  assert.equal(json.schemaVersion, "1.0");
+  assert.equal(json.meta.build, "20261001-01");
+  assert.deepEqual(json.summary, recordUi.canonical.summary);
+  assert.deepEqual(json.thresholds, recordUi.canonical.thresholds);
+  assert.deepEqual(json.questions, recordUi.canonical.questions);
+  assert.deepEqual(json.feedback, recordUi.canonical.feedback);
+  assert.match(csv, new RegExp(`AQP Synthetic Demonstration Exam,${json.meta.examDate},${json.summary.totalStudents},${json.summary.enStudents},${json.summary.frStudents},${json.summary.totalQuestions},${json.summary.effectiveQuestions}`));
   assert.equal(json.audit.demonstration, true);
   assert.ok(json.audit.difSuppressions.length > 0);
   assert.ok(json.questions.some(q => q.dif?.estimationStatus !== "estimated" && q.dif?.suppressionReason));
@@ -187,6 +260,53 @@ try {
   assert.ok(restored.auditEvents.length > 0);
   assert.equal(Object.keys(restored.reviewedAt).length, ready.state.reviewTotal);
   assert.equal(restored.banner, true);
+
+  const exceptionRefresh = await page.evaluate(() => {
+    switchRoom("exceptions");
+    const creditSelect = document.querySelector('.excl-row[data-idx="0"] select');
+    creditSelect.value = "credit";
+    onExclChange(creditSelect, 0);
+    document.getElementById("excl-reason-0").value = "Regression test credit";
+
+    const original = String(G.key[1] || "").toUpperCase();
+    const alternate = ["A", "B", "C", "D", "E"].find(letter => letter !== original);
+    const alternateBox = document.querySelector('#altkey-row-1 input[data-altletter="' + alternate + '"]');
+    alternateBox.checked = true;
+    document.getElementById("altkey-reason-1").value = "Regression test alternate";
+    saveAltKey(1);
+    saveExclusions();
+    const roomAfterSave = _currentRoom;
+    const quartileCacheCleared = G._quartileData === null;
+    switchRoom("distractor");
+    const quartileCacheRebuilt = Array.isArray(G._quartileData) && G._quartileData.length === G.nQ;
+    const acceptedOptionWarning = new RegExp("option " + alternate + ".*possible defensible answer", "i").test(buildDistractorDetailHtml(1));
+    const mutedRow = document.querySelector(".nt-table tr.nt-excluded");
+    const rowOpacity = mutedRow ? getComputedStyle(mutedRow.querySelector("td")).opacity : null;
+    const actionOpacity = mutedRow ? getComputedStyle(mutedRow.querySelector("td:last-child")).opacity : null;
+    return {
+      credited: G.mcq[0].excluded,
+      alternate,
+      altKeys: G.mcq[1].altKeys,
+      roomAfterSave,
+      dirty: G_DIRTY,
+      quartileCacheCleared,
+      quartileCacheRebuilt,
+      acceptedOptionWarning,
+      rowOpacity,
+      actionOpacity,
+    };
+  });
+  assert.equal(exceptionRefresh.credited, "credit", "saved credit must immediately appear in Item Analysis data");
+  assert.ok(exceptionRefresh.altKeys.includes(exceptionRefresh.alternate), "saved alternate key must immediately appear in Item Analysis data");
+  assert.equal(exceptionRefresh.roomAfterSave, "mcq", "successful exception save must return to updated Item Analysis");
+  assert.equal(exceptionRefresh.dirty, false, "successful exception save must leave results current");
+  assert.equal(exceptionRefresh.quartileCacheCleared, true, "exception recalculation must invalidate the prior quartile breakdown");
+  assert.equal(exceptionRefresh.quartileCacheRebuilt, true, "opening Distractor Analysis must rebuild quartiles from updated totals");
+  assert.equal(exceptionRefresh.acceptedOptionWarning, false, "an accepted alternate key must not be reported as a distractor problem");
+  if (exceptionRefresh.rowOpacity !== null) {
+    assert.ok(Number(exceptionRefresh.rowOpacity) < 1, "unincluded Near Threshold data remains muted");
+    assert.equal(exceptionRefresh.actionOpacity, "1", "Near Threshold inclusion action remains fully visible");
+  }
 
   assert.deepEqual(pageErrors, []);
   assert.deepEqual(alerts, []);

@@ -22,6 +22,13 @@ const server = http.createServer(async (req, res) => {
 await new Promise(resolve => server.listen(0, "127.0.0.1", resolve));
 const { port } = server.address();
 
+const applicationHtml = await fs.readFile(path.join(projectRoot, "index.html"), "utf8");
+assert.doesNotMatch(applicationHtml, /tabler-icons|class=["'][^"']*\bti\s+ti-/, "the external Tabler icon family must not return");
+assert.match(applicationHtml, /id="fluent-icon-sprite"/, "the local Fluent icon sprite must be present");
+assert.match(applicationHtml, /id="fui-apps"/, "the Fluent navigation family must be embedded");
+assert.match(applicationHtml, /AQP analytical Q icon|Analytical-Q identity/, "the analytical-Q identity must be present");
+assert.match(applicationHtml, /aqp-mark aqp-lockup-mark/, "primary headers must use the analytical-Q lockup");
+
 let browser;
 try {
   browser = await chromium.launch({ headless: true, channel: "chrome" });

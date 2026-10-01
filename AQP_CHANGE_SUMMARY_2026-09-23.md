@@ -3,11 +3,39 @@
 ## Build identity
 
 - Starting point: AQP 0.8, build `20260923-01` (`Downloads/index.html`)
-- Current development build: AQP 0.8, build `20260928-03`
-- Working branch: `feature/accessibility-pass`
-- Working file: `index.html` in the isolated accessibility worktree
+- Current development build: AQP 0.8, build `20261001-01`
+- Working branch: `feature/analysis-record-consolidation`
+- Working file: `index.html` in the isolated analysis-record consolidation worktree
 - The Downloads baseline was not modified.
-- Builds through `20260928-02` were merged into GitHub `main` and deployed through GitHub Pages. Build `20260928-03` is being developed on the isolated `feature/accessibility-pass` branch and is not live until its pull request is approved and merged.
+- Builds through `20260928-03` were merged into GitHub `main` and deployed through GitHub Pages. Builds `20260929-01` and `20261001-01` are being developed on the isolated `feature/analysis-record-consolidation` branch and are not live until its pull request is approved and merged.
+
+## Build 20261001-01 — analytical-Q identity and Fluent icons
+
+- Replaced the legacy magnifying-glass/AQP/checkmark identity with the approved analytical-Q mark: a garnet rounded tile containing a white Q and three analytical bars.
+- Applied the identity consistently to the splash screen, application top bar, home and setup headers, results navigation, footer, About panel, browser favicon, report-preview byline, and Word-report byline.
+- Replaced the principal navigation and workflow icons with locally embedded Microsoft Fluent System Icons Regular 24 px and removed the external Tabler icon-webfont dependency.
+- Retained production SVG source artwork and brand-use guidance under `assets/brand/`, plus a `THIRD_PARTY_NOTICES.md` file containing the Fluent icon attribution and MIT licence.
+- Kept charts, statistical graphics, status indicators, and data visualizations purpose-built rather than forcing them into the interface-icon family.
+- Confirmed that Fluent icons inherit theme colours through `currentColor`; active navigation icons now have regression coverage proving that they follow the uOttawa and Elentra accent tokens.
+- Improved Overview readability with softly separated result groups and category-matched accents: amber for flagged questions, blue for too-easy questions, and indigo for DIF.
+- Moved the compact DIF KPI set into the export toolbar and joined the methodology panel visually to its results table.
+- Corrected Distractor Analysis key-competition detection so empty options cannot be flagged through a `0 ≥ 0` comparison. A competitor must attract at least 10% of Quartile 3 or Quartile 4 and meet or exceed the keyed option. Explanations now spell out every matching quartile, name the key and both within-quartile percentages, and distinguish them from the overall answer distribution.
+- Corrected the Answer Distribution bars to use the displayed global percentage as their width. Previously, bars were scaled relative to the most-selected option, so a 60% answer could incorrectly appear as a full-width 100% bar.
+- Verified the synthetic Question 3 baseline: 40 students; C=16 (40%), D=24 (60%); quartile counts for C=`10,6,0,0` and D=`0,4,10,10`, ordered from Quartile 1 (lowest) through Quartile 4 (highest). The existing ascending-score assignment is correct and was retained.
+- Added prominent **Beta** badges beside the Distractor Analysis and Near Threshold room titles.
+- Invalidated cached performance-quartile data whenever analysis reruns. Credits and alternate keys can change student totals, so reopening Distractor Analysis now rebuilds quartile membership from the updated scores; accepted alternate answers remain excluded from distractor warnings.
+- Refined the Exceptions room with aligned columns, stronger editable-field borders, and a persistent **Save & Update Analysis** bar. Saving now immediately recalculates and returns to Item Analysis, so Credit and Alternate Key changes are visible without a separate setup rerun.
+- Kept Near Threshold candidate rows muted while restoring full emphasis to their actionable inclusion buttons.
+- Core scoring, difficulty, discrimination, reliability, DIF regression, upload validation, persistence, and report-content methods were not changed.
+
+## Build 20260929-01 — analysis-record consolidation
+
+- Consolidated the former **Session record (CSV)** and **Session data export (JSON)** into one **Analysis record** card with CSV and JSON download choices.
+- Added one canonical privacy-minimized record builder. CSV and JSON are now serializers of the same summary, per-question statistics, DIF detail, feedback counts, thresholds, session metadata, and audit history, reducing the risk of the two formats drifting apart.
+- Added `recordType: "aqp-analysis-record"` and `schemaVersion: "1.0"` to JSON Analysis records and aligned both filenames to `_analysis-record`.
+- Renamed **Portable session backup** to **Reopenable AQP backup** throughout the current interface and FAQ. It remains structurally separate because it contains de-identified response-level data and any feedback comment text and is the only JSON format that AQP can import.
+- Updated the in-app FAQ, Release Notes, validation guidance, retained project documentation, and automated browser coverage for the consolidated workflow.
+- Narrative Overview remains deferred. The Fluent interface-icon direction and revised analytical-Q app mark were completed in build `20261001-01`.
 
 ## Build 20260928-03 — accessibility pass
 

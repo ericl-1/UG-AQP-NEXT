@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document records recommended future work for the Assessment Quality Platform after the QA, remediation, design-system consolidation, and automated accessibility pass completed for version 0.8, build `20260928-03`.
+This document records recommended future work for the Assessment Quality Platform after the QA, remediation, design-system consolidation, automated accessibility pass, analysis-record consolidation, and identity/icon refresh completed for version 0.8, build `20261001-01`.
 
 These are forward-looking improvements rather than defects remaining from the two QA passes. Completed corrections are documented separately in `AQP_CHANGE_SUMMARY_2026-09-23.md`.
 
@@ -87,9 +87,9 @@ Every session export should record enough information to reproduce and defend th
 
 ### Priority 2 — Improve validation and handoff
 
-#### 5. Add JSON session import (core workflow completed in build `20260927-03`)
+#### 5. Add JSON session import (core workflow completed in build `20260927-03`; export terminology consolidated in build `20260929-01`)
 
-AQP now has a separate, versioned **Portable session backup** and a strictly validated home-screen import workflow. The existing structured Session data JSON remains a report-only integration format and is deliberately not importable.
+AQP now has a separate, versioned **Reopenable AQP backup** and a strictly validated home-screen import workflow. The privacy-minimized **Analysis record** is offered in CSV and JSON from one canonical model and is deliberately not importable.
 
 The importer should:
 
@@ -192,9 +192,11 @@ Evaluate one of these deployment models:
 
 The choice should be made with institutional IT because fully embedding the libraries will substantially increase the HTML file size.
 
-#### 12. Version the session-data schema (completed for portable backups in build `20260927-03`)
+#### 12. Version the structured export schemas (completed for backups in build `20260927-03` and Analysis records in build `20260929-01`)
 
 Portable backups now use `fileType: "aqp-portable-session"` and `schemaVersion: 1`, separate from the application version and build. Unsupported newer versions are rejected clearly and the golden suite freezes the version and round-trip behaviour.
+
+Privacy-minimized JSON Analysis records use `recordType: "aqp-analysis-record"` and `schemaVersion: "1.0"`. CSV and JSON are generated from the same canonical record so their shared fields remain aligned.
 
 For every future schema change:
 
@@ -326,11 +328,13 @@ Any future implementation should:
 - Handle all-clear, partial-analysis, sparse-data, and unresolved-review states
 - Receive content review from assessment-methodology stakeholders
 
-#### 22. Consolidate the icon language
+#### 22. Consolidate the icon language (completed in build `20261001-01`)
 
-Replace the remaining mixture of Tabler webfont icons, custom SVG marks, emoji, and text symbols with one approved, locally packaged SVG icon system. This was deliberately deferred from build `20260928-02` because it overlaps with the dependency/offline-deployment decision.
+The principal navigation and workflow controls now use the user-approved **Fluent System Icons** direction, with selected paths embedded locally in the single HTML file. The external Tabler webfont dependency was removed. Purpose-built statistical graphics and status/data visualizations remain separate by design.
 
-The future pass should preserve visible text for important actions, use a consistent stroke weight and size scale, remove emoji from formal workflow surfaces, and verify accessible names for every icon-only control.
+Visible text remains on important actions, the icon size scale is centralized, and icon-only controls retain accessible names. Future feature work should extend this same pattern rather than introduce another icon family.
+
+The revised analytical-Q application mark is also complete and appears across the splash screen, top bar, primary headers, footer, About panel, favicon, report previews, and Word-report byline. Production SVG sources and usage guidance are retained under `assets/brand/`.
 
 ## Suggested delivery sequence
 
