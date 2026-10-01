@@ -4,10 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>AQP — Assessment Quality Platform</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkMWQxZCIvPjxkZWZzPjxjbGlwUGF0aCBpZD0iZmMiPjxjaXJjbGUgY3g9IjEzIiBjeT0iMTMiIHI9IjguNSIvPjwvY2xpcFBhdGg+PC9kZWZzPjxsaW5lIHgxPSIyMCIgeTE9IjIwIiB4Mj0iMjciIHkyPSIyNyIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48Y2lyY2xlIGN4PSIxMyIgY3k9IjEzIiByPSI4LjUiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsLjA4KSIvPjxnIGNsaXAtcGF0aD0idXJsKCNmYykiPjxyZWN0IHg9IjciIHk9IjE3IiB3aWR0aD0iMyIgaGVpZ2h0PSI1IiByeD0iMSIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwuMzUpIi8+PHJlY3QgeD0iMTEiIHk9IjE0IiB3aWR0aD0iMyIgaGVpZ2h0PSI4IiByeD0iMSIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwuNjUpIi8+PHJlY3QgeD0iMTUiIHk9IjExIiB3aWR0aD0iMyIgaGVpZ2h0PSIxMSIgcng9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsLjk1KSIvPjwvZz48Y2lyY2xlIGN4PSIxMyIgY3k9IjEzIiByPSI4LjUiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg=="><script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjggMTI4Ij4KICA8dGl0bGU+QXNzZXNzbWVudCBRdWFsaXR5IFBsYXRmb3JtIGFuYWx5dGljYWwgUSBhcHAgaWNvbjwvdGl0bGU+CiAgPHJlY3QgeD0iOCIgeT0iOCIgd2lkdGg9IjExMiIgaGVpZ2h0PSIxMTIiIHJ4PSIyOCIgZmlsbD0iI0EzMTUxNSIvPgogIDxwYXRoIGQ9Ik02MCAyN2EzMyAzMyAwIDEgMCAyMS45IDU3LjdMOTggMTAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iOSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPHBhdGggZD0iTTQwIDcwaDlWNTdoLTl2MTN6bTE1IDBoOVY0NWgtOXYyNXptMTUgMGg5VjM1aC05djM1eiIgZmlsbD0iI0ZGRkZGRiIvPgo8L3N2Zz4K"><script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <style>/* ── Font stack: Aptos Display → Aptos → Calibri → Segoe UI → system ── */@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 :root{
   --font:'Aptos Display','Aptos',Calibri,'Segoe UI','Inter',Arial,sans-serif;
@@ -99,7 +98,7 @@
 </style>
 <style>
 /* ═══════════════════════════════════════════════════════════════════════════
-   AQP design system · Calm clinical intelligence · build 20260929-01
+   AQP design system · Calm clinical intelligence · build 20261001-01
    Centralized visual rules for colour, type, spacing, surfaces, controls,
    tables, status communication, motion, and theme parity.
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -269,6 +268,9 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 .col-resize-handle:hover,.col-resize-handle.resizing{background:var(--c-accent-tint)}
 
 /* Status vocabulary: compact category badges, state chips, explanatory alerts */
+.page-title-row{display:flex;align-items:center;gap:10px;margin-bottom:3px}
+.page-title-row .page-title{margin-bottom:0}
+.beta-badge{display:inline-flex;align-items:center;min-height:24px;padding:3px 9px;border-radius:999px;background:#fff3cd;border:1px solid #e8bd4f;color:#744b00;font-size:11px;font-weight:750;letter-spacing:.04em;text-transform:uppercase;box-shadow:0 1px 3px rgba(116,75,0,.12)}
 .badge,.lc-chip,.nt-sig,.fb-flag-high,.fb-flag-med{
   display:inline-flex;align-items:center;min-height:24px;padding:3px 8px;border-radius:999px;
   font-size:11.5px;line-height:1.2;font-weight:650;letter-spacing:0;border:0
@@ -284,6 +286,38 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 .report-readiness.review{border-color:#e5c985;background:#fffbf2}
 .exc-banner{padding:9px var(--space-6);background:#fffbf1;border-bottom-color:#ead18b}
 .demo-banner{padding:9px var(--space-6);background:var(--c-accent-tint);border-bottom-color:var(--c-border-2);color:var(--c-accent-dark)}
+
+/* Overview result groups: soft surfaces separate related tables without heavy dividers. */
+.landing-summary{display:grid;gap:18px}
+.landing-summary-section{padding:16px 16px 14px;border-radius:12px;background:linear-gradient(180deg,var(--c-bg) 0%,var(--c-surface) 150%);box-shadow:0 5px 18px rgba(24,34,43,.07)}
+.landing-summary-section .landing-summary-hdr{margin-top:0}
+.landing-summary-section .landing-sum-tbl{border-radius:8px;overflow:hidden}
+.landing-summary-flagged .landing-summary-hdr{border-left-color:var(--s-warn)}
+.landing-summary-flagged .landing-sum-tbl tbody td:first-child{box-shadow:inset 4px 0 0 var(--s-warn)}
+.landing-summary-easy .landing-summary-hdr{border-left-color:var(--s-easy)}
+.landing-summary-dif .landing-summary-hdr{border-left-color:var(--s-dif)}
+.landing-summary-dif .landing-sum-tbl tbody td:first-child{box-shadow:inset 4px 0 0 var(--s-dif)}
+
+/* Exceptions editor: shared columns, legible inputs, and a persistent action bar. */
+.excl-grid{display:grid;grid-template-columns:60px 60px 130px minmax(220px,1fr) 110px;padding-left:12px;padding-right:12px;align-items:center}
+.excl-column-header{padding-top:9px;padding-bottom:9px;background:var(--c-surface);border:1px solid var(--c-border);border-radius:8px 8px 0 0}
+.excl-main-row{padding-top:10px;padding-bottom:10px}
+.excl-reason-input:not(:disabled){border-color:var(--c-border-strong)!important;box-shadow:inset 0 0 0 1px rgba(24,34,43,.035)}
+.excl-save-bar{position:sticky;bottom:-16px;z-index:15;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 14px;margin:0 -2px;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-top:1px solid var(--c-border-2);box-shadow:0 -10px 24px rgba(24,34,43,.08)}
+.excl-save-actions{display:flex;gap:10px;flex-shrink:0}
+@media(max-width:760px){.excl-grid{grid-template-columns:48px 48px 112px minmax(180px,1fr) 96px}.excl-save-bar{align-items:flex-start;flex-direction:column}.excl-save-actions{width:100%;justify-content:flex-end}}
+
+/* DIF header arrangement: summary metrics and export action share one compact row. */
+#dif-kpi-strip{flex:1;min-width:0}
+#dif-kpi-strip>div{flex-wrap:wrap}
+.dif-table-stack .wz-guidance{margin-bottom:0!important;border-radius:10px 10px 0 0}
+.dif-table-stack .tbl-wrap{border-top:0;border-radius:0 0 10px 10px}
+
+/* Keep the Near Threshold action available even while the candidate row is muted. */
+.nt-table tr.nt-excluded td{opacity:.42}
+.nt-table tr.nt-excluded td:last-child{opacity:1}
+.nt-table tr.nt-excluded .nt-toggle{color:var(--c-accent);border-color:var(--c-accent);background:var(--c-bg);box-shadow:0 1px 3px rgba(24,34,43,.08)}
+.nt-table tr.nt-excluded .nt-toggle:hover{color:#fff;background:var(--c-accent);border-color:var(--c-accent)}
 
 /* Deliberate spacing and modal treatment */
 .home-action-grid{gap:var(--space-4)}
@@ -303,6 +337,20 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 .dist-bar-fill,.da-qbar-fill{transition:width var(--motion-standard) var(--motion-ease)}
 @media(prefers-reduced-motion:reduce){.room.room-active,.main-section.active{animation:none}}
 
+/* Locally embedded Microsoft Fluent System Icons (Regular, 24 px). */
+.fui-icon{display:inline-block;width:1em;height:1em;fill:currentColor;flex:0 0 auto;vertical-align:-.125em}
+.fui-icon-sm{width:14px;height:14px}.fui-icon-md{width:16px;height:16px}.fui-icon-lg{width:20px;height:20px}
+.nav-item>.fui-icon,.nav-item>span>.fui-icon{width:16px;height:16px;color:var(--c-muted);transition:color var(--motion-fast) var(--motion-ease)}
+.nav-item.active>.fui-icon,.nav-item.active>span>.fui-icon{color:var(--c-accent)}
+
+/* Analytical-Q identity system. The garnet tile remains constant across themes. */
+.aqp-mark{display:block;fill:none;flex:0 0 auto}
+.aqp-mark .aqp-tile{fill:#A31515}.aqp-mark .aqp-q{fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round}.aqp-mark .aqp-bars{fill:#fff}
+.aqp-lockup{display:flex;align-items:center;gap:18px;color:#26313B}
+.aqp-lockup-mark{width:72px;height:72px}.aqp-lockup-name{font-size:28px;font-weight:650;letter-spacing:-.6px;line-height:1.12;color:var(--c-primary)}
+.logo-mark{padding:0;background:transparent!important;overflow:visible}.logo-mark .aqp-mark{width:100%;height:100%}
+@media(max-width:620px){.aqp-lockup{gap:12px}.aqp-lockup-mark{width:58px;height:58px}.aqp-lockup-name{font-size:21px}}
+
 @media(max-width:860px){
   .content-scroll{padding-left:var(--space-4);padding-right:var(--space-4)}
   h1,.page-title{font-size:23px}
@@ -318,66 +366,65 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 </head>
 <body>
 
+<!-- Local SVG symbol library: Microsoft Fluent System Icons, Regular 24 px. -->
+<svg id="fluent-icon-sprite" aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden">
+  <symbol id="fui-apps" viewBox="0 0 24 24"><path d="m18.5 2.33 3.17 3.18c.88.88.88 2.3 0 3.18l-2.58 2.59A2.25 2.25 0 0 1 21 13.5v5.25C21 20 20 21 18.75 21H5.25C4.01 21 3 20 3 18.75V5.25C3 4.01 4 3 5.25 3h5.25c1.13 0 2.06.83 2.23 1.92l2.58-2.59c.88-.88 2.3-.88 3.18 0m-14 16.42c0 .41.34.75.75.75h6v-6.75H4.5zm8.25.75h6c.41 0 .75-.34.75-.75V13.5a.75.75 0 0 0-.75-.75h-6zm-2.25-15H5.25a.75.75 0 0 0-.75.75v6h6.75v-6a.75.75 0 0 0-.75-.75m2.25 4.81v1.94h1.94zm3.62-5.92L13.2 6.57c-.3.3-.3.77 0 1.06l3.18 3.18c.3.3.77.3 1.06 0l3.18-3.18c.3-.3.3-.77 0-1.06l-3.18-3.18a.75.75 0 0 0-1.06 0"/></symbol>
+  <symbol id="fui-task-list" viewBox="0 0 24 24"><path d="M12.5 9.25c0-.41.34-.75.75-.75h3.5a.75.75 0 0 1 0 1.5h-3.5a.75.75 0 0 1-.75-.75m.75 4.75a.75.75 0 1 0 0 1.5h3.5a.75.75 0 1 0 0-1.5zm-2.47-5.22a.75.75 0 1 0-1.06-1.06L8.25 9.19l-.47-.47a.75.75 0 0 0-1.06 1.06l1 1c.3.3.77.3 1.06 0zm0 4.44c.3.3.3.77 0 1.06l-2 2c-.3.3-.77.3-1.06 0l-1-1a.75.75 0 1 1 1.06-1.06l.47.47 1.47-1.47c.3-.3.77-.3 1.06 0M6.25 3A3.25 3.25 0 0 0 3 6.25v11.5C3 19.55 4.46 21 6.25 21h11.5c1.8 0 3.25-1.46 3.25-3.25V6.25C21 4.45 19.54 3 17.75 3zM4.5 6.25c0-.97.78-1.75 1.75-1.75h11.5c.97 0 1.75.78 1.75 1.75v11.5c0 .97-.78 1.75-1.75 1.75H6.25c-.97 0-1.75-.78-1.75-1.75z"/></symbol>
+  <symbol id="fui-chart" viewBox="0 0 24 24"><path d="M5.75 3C6.99 3 8 4 8 5.25v13.5a2.25 2.25 0 1 1-4.5 0V5.25C3.5 4 4.5 3 5.75 3m6.5 4c1.24 0 2.25 1 2.25 2.25v9.5a2.25 2.25 0 1 1-4.5 0v-9.5C10 8 11 7 12.25 7m6.5 4c1.24 0 2.25 1 2.25 2.25v5.5a2.25 2.25 0 1 1-4.5 0v-5.5c0-1.24 1-2.25 2.25-2.25m-13-6.5a.75.75 0 0 0-.75.75v13.5a.75.75 0 0 0 1.5 0V5.25a.75.75 0 0 0-.75-.75m6.5 4a.75.75 0 0 0-.75.75v9.5a.75.75 0 0 0 1.5 0v-9.5a.75.75 0 0 0-.75-.75m6.5 4a.75.75 0 0 0-.75.75v5.5a.75.75 0 0 0 1.5 0v-5.5a.75.75 0 0 0-.75-.75"/></symbol>
+  <symbol id="fui-scales" viewBox="0 0 24 24"><path d="M3 3.75c0-.41.34-.75.75-.75h16.5a.75.75 0 0 1 0 1.5h-1.04l2.73 6.72q.06.13.06.28a3.5 3.5 0 1 1-7 0q0-.15.06-.28l2.73-6.72h-5.04v12h4a2.25 2.25 0 0 1 0 4.5h-9.5a2.25 2.25 0 0 1 0-4.5h4v-12H6.21l2.73 6.72q.06.13.06.28a3.5 3.5 0 1 1-7 0q0-.15.06-.28L4.79 4.5H3.75A.75.75 0 0 1 3 3.75m3.5 15c0 .41.34.75.75.75h9.5a.75.75 0 0 0 0-1.5h-9.5a.75.75 0 0 0-.75.75m.85-6.5h-3.7a2 2 0 0 0 3.7 0m-.22-1.5L5.5 6.74l-1.63 4.01zM18.5 13.5a2 2 0 0 0 1.85-1.25h-3.7a2 2 0 0 0 1.85 1.25m-1.63-2.75h3.26L18.5 6.74z"/></symbol>
+  <symbol id="fui-chat" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 1-4.59 18.89L3.6 21.96a1.25 1.25 0 0 1-1.54-1.54l1.06-3.83A10 10 0 0 1 12 2m0 1.5a8.5 8.5 0 0 0-7.43 12.64l.15.27-1.1 3.98 3.98-1.11.27.15A8.5 8.5 0 1 0 12 3.5M8.75 13h4.5a.75.75 0 0 1 .1 1.5h-4.6a.75.75 0 0 1-.1-1.5zh4.5zm0-3.5h6.5a.75.75 0 0 1 .1 1.5h-6.6a.75.75 0 0 1-.1-1.5zh6.5z"/></symbol>
+  <symbol id="fui-options" viewBox="0 0 24 24"><path d="M8.75 14.5a3.25 3.25 0 0 1 3.16 2.5h9.34a.75.75 0 0 1 .1 1.5h-9.44a3.25 3.25 0 0 1-6.32 0H2.75a.75.75 0 0 1-.1-1.5h2.94a3.25 3.25 0 0 1 3.16-2.5m0 1.5a1.75 1.75 0 1 0 0 3.5 1.75 1.75 0 0 0 0-3.5m6.5-13a3.25 3.25 0 0 1 3.16 2.5h2.84a.75.75 0 0 1 .1 1.5h-2.94a3.25 3.25 0 0 1-6.32 0H2.75a.75.75 0 0 1-.1-1.5h9.44A3.25 3.25 0 0 1 15.25 3m0 1.5a1.75 1.75 0 1 0 0 3.5 1.75 1.75 0 0 0 0-3.5"/></symbol>
+  <symbol id="fui-pulse" viewBox="0 0 24 24"><path d="m8.46 6.8 3.29 13.63c.17.73 1.2.77 1.44.05l3.26-10.12.58 2.1c.1.32.39.54.72.54h3.5a.75.75 0 0 0 0-1.5h-2.93l-1.1-3.95a.75.75 0 0 0-1.44-.03l-3.2 9.96-3.35-13.9c-.19-.76-1.26-.77-1.46-.02l-2.1 7.94H2.75a.75.75 0 0 0 0 1.5h3.5c.34 0 .63-.23.72-.56z"/></symbol>
+  <symbol id="fui-clipboard-task" viewBox="0 0 24 24"><path d="M17.03 11.03a.75.75 0 1 0-1.06-1.06L11 14.94l-1.97-1.97a.75.75 0 0 0-1.06 1.06l2.5 2.5c.3.3.77.3 1.06 0zm-1.04-6.95A2.25 2.25 0 0 0 13.75 2h-3.5c-1.16 0-2.11.87-2.24 2H6.25C5.01 4 4 5 4 6.25v13.5C4 20.99 5 22 6.25 22h11.5c1.24 0 2.25-1 2.25-2.25V6.25C20 5.01 19 4 17.75 4h-1.76zm0 .02.01.15zm-5.74 2.4h3.5c.78 0 1.47-.4 1.87-1h2.13c.41 0 .75.34.75.75v13.5c0 .41-.34.75-.75.75H6.25a.75.75 0 0 1-.75-.75V6.25c0-.41.34-.75.75-.75h2.13c.4.6 1.09 1 1.87 1m0-3h3.5a.75.75 0 0 1 0 1.5h-3.5a.75.75 0 0 1 0-1.5"/></symbol>
+  <symbol id="fui-document" viewBox="0 0 24 24"><path d="M6 2a2 2 0 0 0-2 2v16c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2V9.83a2 2 0 0 0-.59-1.42L13.6 2.6A2 2 0 0 0 12.17 2zm-.5 2c0-.28.22-.5.5-.5h6V8c0 1.1.9 2 2 2h4.5v10a.5.5 0 0 1-.5.5H6a.5.5 0 0 1-.5-.5zm11.88 4.5H14a.5.5 0 0 1-.5-.5V4.62z"/></symbol>
+  <symbol id="fui-document-data" viewBox="0 0 24 24"><path d="M8.75 11c.41 0 .75.34.75.75v6.5a.75.75 0 0 1-1.5 0v-6.5c0-.41.34-.75.75-.75m4 4.75a.75.75 0 0 0-1.5 0v2.5a.75.75 0 0 0 1.5 0zm2.5-2.75c.41 0 .75.34.75.75v4.5a.75.75 0 0 1-1.5 0v-4.5c0-.41.34-.75.75-.75M12.48 2q.51 0 .89.37l2.85 2.85.02.03 3.17 3.16A2 2 0 0 1 20 9.83V20a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.1.9-2 2-2zM6 3.5a.5.5 0 0 0-.5.5v16c0 .27.22.5.5.5h12a.5.5 0 0 0 .5-.5V10H14a2 2 0 0 1-2-2V3.5zm7.5 1.12V8c0 .28.22.5.5.5h3.38z"/></symbol>
+  <symbol id="fui-add" viewBox="0 0 24 24"><path d="M12 3.25c.41 0 .75.34.75.75v7.25H20a.75.75 0 0 1 0 1.5h-7.25V20a.75.75 0 0 1-1.5 0v-7.25H4a.75.75 0 0 1 0-1.5h7.25V4c0-.41.34-.75.75-.75"/></symbol>
+  <symbol id="fui-save" viewBox="0 0 24 24"><path d="M3 5.75A2.75 2.75 0 0 1 5.75 3h9.96c.87 0 1.7.34 2.3.95L20.05 6c.6.6.95 1.43.95 2.3v9.96A2.75 2.75 0 0 1 18.25 21H5.75A2.75 2.75 0 0 1 3 18.25zM5.75 4.5c-.69 0-1.25.56-1.25 1.25v12.5c0 .69.56 1.25 1.25 1.25H6v-5.25C6 13.01 7 12 8.25 12h7.5c1.24 0 2.25 1 2.25 2.25v5.25h.25c.69 0 1.25-.56 1.25-1.25V8.29c0-.47-.18-.91-.51-1.24L16.95 5q-.4-.4-.95-.49v2.73c0 1.24-1 2.25-2.25 2.25h-4.5C8.01 9.5 7 8.5 7 7.25V4.5zm10.75 15v-5.25a.75.75 0 0 0-.75-.75h-7.5a.75.75 0 0 0-.75.75v5.25zm-8-15v2.75c0 .41.34.75.75.75h4.5c.41 0 .75-.34.75-.75V4.5z"/></symbol>
+  <symbol id="fui-upload" viewBox="0 0 24 24"><path d="M18.25 3.51a.75.75 0 1 0 0-1.5h-13a.75.75 0 1 0 0 1.5zM11.65 22h.1c.38 0 .7-.28.74-.64l.01-.1V7.56l3.72 3.72c.27.27.68.29.98.07l.08-.07a.75.75 0 0 0 .07-.98l-.07-.08-5-5a.75.75 0 0 0-.97-.07l-.09.07-5 5a.75.75 0 0 0 .98 1.13l.08-.07L11 7.58v13.67c0 .38.28.7.65.75"/></symbol>
+  <symbol id="fui-download" viewBox="0 0 24 24"><path d="M18.25 20.5a.75.75 0 1 1 0 1.5h-13a.75.75 0 1 1 0-1.5zm-6.6-18.49h.1c.38 0 .7.28.74.64l.01.1v13.7l3.72-3.73a.75.75 0 0 1 .98-.07l.08.07c.27.27.3.68.07.98l-.07.08-5 5a.75.75 0 0 1-.97.07l-.09-.07-5-5a.75.75 0 0 1 .98-1.13l.08.07L11 16.43V2.76c0-.38.28-.7.65-.75h.1z"/></symbol>
+  <symbol id="fui-beaker" viewBox="0 0 24 24"><path d="M8 4.5h1v6.24q0 .57-.27 1.07l-3.59 6.6A1.75 1.75 0 0 0 6.68 21h10.64a1.75 1.75 0 0 0 1.54-2.59l-3.59-6.6q-.27-.5-.27-1.07V4.5h1A.75.75 0 0 0 16 3H8a.75.75 0 0 0 0 1.5m2.5 6.24V4.5h3v6.24q0 .95.45 1.79l.8 1.47h-5.5l.8-1.47q.45-.84.45-1.8M8.43 15.5h7.14l1.97 3.63a.25.25 0 0 1-.22.37H6.68a.25.25 0 0 1-.22-.37z"/></symbol>
+  <symbol id="fui-question" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20m0 1.67a8.34 8.34 0 0 0 0 16.66 8.34 8.34 0 0 0 0-16.66m0 11.83a1 1 0 1 1 0 2 1 1 0 0 1 0-2m0-8.75a2.75 2.75 0 0 1 2.75 2.75c0 1.01-.3 1.57-1.05 2.36l-.17.17c-.62.62-.78.89-.78 1.47a.75.75 0 0 1-1.5 0c0-1.01.3-1.57 1.05-2.36l.17-.17c.62-.62.78-.89.78-1.47a1.25 1.25 0 0 0-2.5-.13v.13a.75.75 0 0 1-1.5 0A2.75 2.75 0 0 1 12 6.75"/></symbol>
+  <symbol id="fui-more" viewBox="0 0 24 24"><path d="M12 7.75a1.75 1.75 0 1 1 0-3.5 1.75 1.75 0 0 1 0 3.5m0 6a1.75 1.75 0 1 1 0-3.5 1.75 1.75 0 0 1 0 3.5M10.25 18a1.75 1.75 0 1 0 3.5 0 1.75 1.75 0 0 0-3.5 0"/></symbol>
+  <symbol id="fui-left" viewBox="0 0 24 24"><path d="M10.73 19.8a.75.75 0 0 0 1.04-1.1l-6.25-5.95h14.73a.75.75 0 0 0 0-1.5H5.52l6.25-5.95a.75.75 0 0 0-1.04-1.1l-7.42 7.08a1 1 0 0 0 0 1.44z"/></symbol>
+  <symbol id="fui-right" viewBox="0 0 24 24"><path d="M13.27 4.2a.75.75 0 0 0-1.04 1.1l6.25 5.95H3.75a.75.75 0 0 0 0 1.5h14.73l-6.25 5.95a.75.75 0 0 0 1.04 1.1l7.42-7.08a1 1 0 0 0 0-1.44z"/></symbol>
+  <symbol id="fui-reset" viewBox="0 0 24 24"><path d="M6.78 2.72c.3.3.3.77 0 1.06L4.56 6h8.69a7.75 7.75 0 1 1-7.75 7.75.75.75 0 0 1 1.5 0 6.25 6.25 0 1 0 6.25-6.25H4.56l2.22 2.22a.75.75 0 1 1-1.06 1.06l-3.5-3.5a.75.75 0 0 1 0-1.06l3.5-3.5c.3-.3.77-.3 1.06 0"/></symbol>
+  <symbol id="fui-play" viewBox="0 0 24 24"><path d="M7.6 4.61a.75.75 0 0 0-1.1.66v13.46c0 .56.6.93 1.1.65l12.37-6.72a.75.75 0 0 0 0-1.32zM5 5.27c0-1.7 1.83-2.79 3.33-1.97l12.36 6.72a2.25 2.25 0 0 1 0 3.96L8.33 20.7A2.25 2.25 0 0 1 5 18.73z"/></symbol>
+  <symbol id="fui-folder-open" viewBox="0 0 24 24"><path d="M3.5 6.25c0-.97.78-1.75 1.75-1.75h2.88q.31 0 .53.22l2.06 2.06q.22.22.53.22h5.5c.97 0 1.75.78 1.75 1.75q0 .13.04.25H8.72c-1.34 0-2.58.71-3.25 1.87L3.5 14.28zM2 17.79A3.25 3.25 0 0 0 5.25 21h11.04c1.33 0 2.57-.72 3.24-1.88l3.03-5.25A3.25 3.25 0 0 0 19.96 9a1 1 0 0 0 .04-.25c0-1.8-1.45-3.25-3.25-3.25h-5.19L9.72 3.66c-.42-.42-1-.66-1.6-.66H5.26A3.25 3.25 0 0 0 2 6.25v11.54m6.72-7.3h11.03a1.75 1.75 0 0 1 1.51 2.63l-3.03 5.25c-.4.7-1.14 1.13-1.95 1.13H5.25a1.75 1.75 0 0 1-1.51-2.63l3.03-5.25c.4-.7 1.14-1.12 1.95-1.12"/></symbol>
+  <symbol id="fui-info" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20m0 1.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17m0 7c.41 0 .75.34.75.75v5a.75.75 0 0 1-1.5 0v-5c0-.41.34-.75.75-.75M12 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/></symbol>
+  <symbol id="fui-eye" viewBox="0 0 24 24"><path d="M12 9a4 4 0 1 1 0 8 4 4 0 0 1 0-8m0 1.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5m0-5a10 10 0 0 1 9.7 7.56.75.75 0 1 1-1.45.37 8.5 8.5 0 0 0-16.5 0 .75.75 0 0 1-1.45-.36A10 10 0 0 1 12 5.5"/></symbol>
+  <symbol id="fui-document-pdf" viewBox="0 0 24 24"><path d="M3.75 15a2.5 2.5 0 0 1 0 5H2.5v1.25a.75.75 0 0 1-1.5 0v-5.5c0-.41.34-.75.75-.75zM2.5 18.5h1.25a1 1 0 1 0 0-2H2.5zM9.25 15A2.75 2.75 0 0 1 12 17.75v1.5A2.75 2.75 0 0 1 9.25 22h-1.5a.75.75 0 0 1-.75-.75v-5.5c0-.41.34-.75.75-.75zm-.75 5.5h.75c.69 0 1.25-.56 1.25-1.25v-1.5c0-.69-.56-1.25-1.25-1.25H8.5zm8.25-5.5a.75.75 0 0 1 0 1.5H14.5V18h1.75a.75.75 0 0 1 0 1.5H14.5v1.75a.75.75 0 0 1-1.5 0v-5.5c0-.41.34-.75.75-.75zM12.13 2c.6 0 1.17.24 1.59.66l5.62 5.62c.42.42.66 1 .66 1.6v9.62a2.5 2.5 0 0 1-2.5 2.5h-2.17q.16-.34.17-.75v-.75h2a1 1 0 0 0 1-1V10H14a2 2 0 0 1-2-2V3.5H6.5a1 1 0 0 0-1 1V14H4V4.5A2.5 2.5 0 0 1 6.5 2zm1.37 6c0 .28.22.5.5.5h3.44L13.5 4.56z"/></symbol>
+  <symbol id="fui-document-table" viewBox="0 0 24 24"><path d="M8.75 11.5h6.5c.97 0 1.75.78 1.75 1.75v4c0 .97-.78 1.75-1.75 1.75h-6.5C7.78 19 7 18.22 7 17.25v-4c0-.97.78-1.75 1.75-1.75m-.25 1.75v1.25H10V13H8.75a.25.25 0 0 0-.25.25m0 2.75v1.25q.02.23.25.25H10V16zm3 0v1.5h3.75q.23-.02.25-.25V16zm4-1.5v-1.25a.25.25 0 0 0-.25-.25H11.5v1.5zM13.59 2.59c-.37-.37-.9-.59-1.42-.59H6a2 2 0 0 0-2 2v16c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2V9.83a2 2 0 0 0-.59-1.42zM18 20.5H6a.5.5 0 0 1-.5-.5V4c0-.27.22-.5.5-.5h6V8c0 1.1.9 2 2 2h4.5v10a.5.5 0 0 1-.5.5m-.62-12H14a.5.5 0 0 1-.5-.5V4.62z"/></symbol>
+  <symbol id="fui-database" viewBox="0 0 24 24"><path d="M4 6c0-.7.32-1.3.77-1.78a6 6 0 0 1 1.8-1.2A14 14 0 0 1 12 2c2.08 0 4 .38 5.43 1.02q1.1.48 1.8 1.2c.45.49.77 1.09.77 1.78v12c0 .7-.32 1.3-.77 1.78q-.7.72-1.8 1.2A14 14 0 0 1 12 22c-2.08 0-4-.38-5.43-1.02a6 6 0 0 1-1.8-1.2A2.6 2.6 0 0 1 4 18zm1.5 0c0 .2.09.46.37.75q.4.46 1.31.86c1.2.54 2.9.89 4.82.89s3.62-.35 4.82-.89q.9-.4 1.31-.86c.28-.3.37-.54.37-.75s-.09-.46-.37-.75q-.4-.46-1.31-.86c-1.2-.54-2.9-.89-4.82-.89s-3.62.35-4.82.89q-.9.4-1.31.86c-.28.3-.37.54-.37.75m13 2.4a7 7 0 0 1-1.07.58A14 14 0 0 1 12 10c-2.08 0-4-.38-5.43-1.02A7 7 0 0 1 5.5 8.4V18c0 .2.09.46.37.75q.4.46 1.31.86c1.2.54 2.9.89 4.82.89s3.62-.35 4.82-.89q.9-.4 1.31-.86c.28-.3.37-.54.37-.75z"/></symbol>
+  <symbol id="fui-shield-lock" viewBox="0 0 24 24"><path d="M3 5.75c0-.41.34-.75.75-.75q3.99 0 7.8-2.85c.27-.2.63-.2.9 0Q16.26 5 20.25 5c.41 0 .75.34.75.75V11l-.01.54a3.5 3.5 0 0 0-1.49-.9V6.48a14.4 14.4 0 0 1-7.5-2.8 14.4 14.4 0 0 1-7.5 2.8V11c0 4.26 2.45 7.38 7.5 9.44l1-.44v1.65l-.73.3a.8.8 0 0 1-.54 0C5.96 19.68 3 16 3 11zM16 15v-1a2.5 2.5 0 0 1 5 0v1h.5c.83 0 1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5v-5c0-.83.67-1.5 1.5-1.5zm1.5-1v1h2v-1a1 1 0 1 0-2 0m2 5a1 1 0 1 0-2 0 1 1 0 0 0 2 0"/></symbol>
+  <symbol id="fui-search" viewBox="0 0 24 24"><path d="M16.1 17.16a8 8 0 1 1 1.06-1.06l4.62 4.62a.75.75 0 1 1-1.06 1.06zM17.5 11a6.5 6.5 0 1 0-13 0 6.5 6.5 0 0 0 13 0"/></symbol>
+  <symbol id="fui-dismiss" viewBox="0 0 24 24"><path d="m4.4 4.55.07-.08a.75.75 0 0 1 .98-.07l.08.07L12 10.94l6.47-6.47a.75.75 0 1 1 1.06 1.06L13.06 12l6.47 6.47c.27.27.3.68.07.98l-.07.08a.75.75 0 0 1-.98.07l-.08-.07L12 13.06l-6.47 6.47a.75.75 0 0 1-1.06-1.06L10.94 12 4.47 5.53a.75.75 0 0 1-.07-.98l.07-.08z"/></symbol>
+  <symbol id="fui-settings" viewBox="0 0 24 24"><path d="M12.01 2.25q1.11.01 2.18.25c.32.07.55.33.59.65l.17 1.53a1.38 1.38 0 0 0 1.92 1.11l1.4-.61c.3-.13.64-.06.85.17a10 10 0 0 1 2.2 3.8c.1.3 0 .63-.26.82l-1.25.92a1.38 1.38 0 0 0 0 2.22l1.25.92c.26.19.36.52.27.82a10 10 0 0 1-2.2 3.8.75.75 0 0 1-.85.17l-1.4-.62a1.38 1.38 0 0 0-1.93 1.12l-.17 1.52a.75.75 0 0 1-.58.65 9.5 9.5 0 0 1-4.4 0 .75.75 0 0 1-.57-.65l-.17-1.52a1.38 1.38 0 0 0-1.93-1.11l-1.4.62a.75.75 0 0 1-.85-.18 10 10 0 0 1-2.2-3.8c-.1-.3 0-.63.26-.82l1.25-.92a1.38 1.38 0 0 0 0-2.22l-1.24-.92a.75.75 0 0 1-.28-.82 10 10 0 0 1 2.2-3.8c.23-.23.57-.3.86-.17l1.4.62c.4.17.86.15 1.25-.08.38-.22.63-.6.68-1.04l.17-1.53a.75.75 0 0 1 .58-.65q1.08-.24 2.2-.25m0 1.5q-.67 0-1.35.12l-.11.97a2.9 2.9 0 0 1-4.03 2.33l-.9-.4A8 8 0 0 0 4.29 9.1l.8.59a2.88 2.88 0 0 1 0 4.64l-.8.59a8 8 0 0 0 1.35 2.32l.9-.4a2.88 2.88 0 0 1 4.02 2.32l.1.99q1.35.22 2.7 0l.1-.99a2.88 2.88 0 0 1 4.02-2.32l.9.4a8 8 0 0 0 1.35-2.32l-.8-.59a2.88 2.88 0 0 1 0-4.64l.8-.59a8 8 0 0 0-1.35-2.32l-.9.4q-.55.24-1.15.24c-1.47 0-2.7-1.1-2.86-2.57l-.11-.97q-.68-.11-1.34-.12M12 8.25a3.75 3.75 0 1 1 0 7.5 3.75 3.75 0 0 1 0-7.5m0 1.5a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5"/></symbol>
+  <symbol id="fui-history" viewBox="0 0 24 24"><path d="M12 4.5a7.5 7.5 0 1 1-7.42 6.4c.07-.46-.26-.9-.72-.9-.37 0-.7.26-.76.62Q3 11.3 3 12a9 9 0 1 0 3-6.7V4.24a.75.75 0 0 0-1.5 0v3c0 .41.34.75.75.75h3a.75.75 0 0 0 0-1.5H6.9a7.5 7.5 0 0 1 5.1-2m.5 3.25a.75.75 0 0 0-1.5 0v4.5c0 .41.34.75.75.75h3a.75.75 0 0 0 0-1.5H12.5z"/></symbol>
+  <symbol id="fui-home" viewBox="0 0 24 24"><path d="M10.55 2.53c.84-.7 2.06-.7 2.9 0l6.75 5.7c.5.42.8 1.05.8 1.71v9.31c0 .97-.78 1.75-1.75 1.75h-3.5c-.97 0-1.75-.78-1.75-1.75v-5a.25.25 0 0 0-.25-.25h-3.5a.25.25 0 0 0-.25.25v5c0 .97-.78 1.75-1.75 1.75h-3.5C3.78 21 3 20.22 3 19.25v-9.3c0-.67.3-1.3.8-1.73zm1.93 1.15a.75.75 0 0 0-.96 0l-6.75 5.7a.8.8 0 0 0-.27.56v9.31c0 .14.11.25.25.25h3.5q.23-.01.25-.25v-5c0-.97.78-1.75 1.75-1.75h3.5c.97 0 1.75.78 1.75 1.75v5q.02.23.25.25h3.5q.23-.01.25-.25v-9.3q0-.36-.27-.58z"/></symbol>
+  <symbol id="fui-check" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20m0 1.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17m-1.25 9.94 4.47-4.47a.75.75 0 0 1 1.13.98l-.07.08-5 5a.75.75 0 0 1-.98.07l-.08-.07-2.5-2.5a.75.75 0 0 1 .98-1.13l.08.07zl4.47-4.47z"/></symbol>
+  <symbol id="fui-warning" viewBox="0 0 24 24"><path d="M9.14 3.7a3.25 3.25 0 0 1 5.72 0l6.74 12.5a3.25 3.25 0 0 1-2.86 4.8H5.25a3.25 3.25 0 0 1-2.86-4.8zm4.4.72a1.75 1.75 0 0 0-3.08 0L3.7 16.92a1.75 1.75 0 0 0 1.54 2.58h13.5a1.75 1.75 0 0 0 1.53-2.58zM12 15a1 1 0 1 1 0 2 1 1 0 0 1 0-2m0-7.5c.41 0 .75.34.75.75v4.5a.75.75 0 0 1-1.5 0v-4.5c0-.41.34-.75.75-.75"/></symbol>
+  <symbol id="fui-chevron-left" viewBox="0 0 24 24"><path d="M15.53 4.22c.3.3.3.77 0 1.06L8.81 12l6.72 6.72a.75.75 0 1 1-1.06 1.06l-7.25-7.25a.75.75 0 0 1 0-1.06l7.25-7.25c.3-.3.77-.3 1.06 0"/></symbol>
+  <symbol id="fui-chevron-right" viewBox="0 0 24 24"><path d="M8.47 4.22c-.3.3-.3.77 0 1.06L15.19 12l-6.72 6.72a.75.75 0 1 0 1.06 1.06l7.25-7.25c.3-.3.3-.77 0-1.06L9.53 4.22a.75.75 0 0 0-1.06 0"/></symbol>
+  <symbol id="fui-chevron-down" viewBox="0 0 24 24"><path d="M4.22 8.47c.3-.3.77-.3 1.06 0L12 15.19l6.72-6.72a.75.75 0 1 1 1.06 1.06l-7.25 7.25c-.3.3-.77.3-1.06 0L4.22 9.53a.75.75 0 0 1 0-1.06"/></symbol>
+  <symbol id="fui-chevron-up" viewBox="0 0 24 24"><path d="M4.22 15.53c.3.3.77.3 1.06 0L12 8.81l6.72 6.72a.75.75 0 1 0 1.06-1.06l-7.25-7.25a.75.75 0 0 0-1.06 0l-7.25 7.25c-.3.3-.3.77 0 1.06"/></symbol>
+  <symbol id="fui-clock" viewBox="0 0 24 24"><path d="M3.5 12a8.5 8.5 0 1 1 17 0 8.5 8.5 0 0 1-17 0M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20m0 4.65a.75.75 0 0 0-1.5.1v6.1c.06.37.37.65.75.65h4.1a.75.75 0 0 0-.1-1.5H12V6.65"/></symbol>
+</svg>
+
 <!-- ── Splash Screen ─────────────────────────────────────────────────────── -->
 <div id="splash-screen" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(155deg,#c41c1c 0%,#7a0a0a 40%,#2a0505 75%,#0e0202 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:all;transition:opacity .4s ease">
 
   <div style="display:flex;flex-direction:column;align-items:center;gap:36px;width:400px">
 
-    <!-- AQP Logo SVG — animated draw sequence -->
-    <svg id="splash-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" style="width:100%;display:block">
-      <defs>
-        <clipPath id="sp-glass-clip">
-          <circle cx="40" cy="40" r="32"/>
-        </clipPath>
-      </defs>
-
-      <!-- Handle -->
-      <line id="sp-handle" x1="63" y1="63" x2="76" y2="77"
-            stroke="rgba(255,255,255,.90)" stroke-width="5" stroke-linecap="round"
-            style="opacity:0"/>
-
-      <!-- Lens background -->
-      <circle cx="40" cy="40" r="32" fill="rgba(255,255,255,.06)"/>
-
-      <!-- 2. Bars — clipped to lens, rise individually -->
-      <g clip-path="url(#sp-glass-clip)">
-        <rect id="sp-bar-1" x="25" y="55" width="8" height="30" rx="2" fill="rgba(255,255,255,.30)"
-              style="transform-origin:29px 85px;transform:scaleY(0)"/>
-        <rect id="sp-bar-2" x="36" y="44" width="8" height="41" rx="2" fill="rgba(255,255,255,.60)"
-              style="transform-origin:40px 85px;transform:scaleY(0)"/>
-        <rect id="sp-bar-3" x="47" y="33" width="8" height="52" rx="2" fill="rgba(255,255,255,.95)"
-              style="transform-origin:51px 85px;transform:scaleY(0)"/>
+    <!-- Analytical-Q identity — animated draw sequence -->
+    <svg id="splash-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 128" style="width:100%;display:block" role="img" aria-label="Assessment Quality Platform">
+      <rect id="sp-tile" x="8" y="8" width="112" height="112" rx="28" fill="#A31515" stroke="rgba(255,255,255,.42)" stroke-width="2" style="opacity:0"/>
+      <path id="sp-q" d="M60 27a33 33 0 1 0 21.9 57.7L98 100" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="230" stroke-dashoffset="230"/>
+      <g fill="#fff">
+        <rect id="sp-bar-1" x="40" y="57" width="9" height="13" style="transform-origin:44.5px 70px;transform:scaleY(0)"/>
+        <rect id="sp-bar-2" x="55" y="45" width="9" height="25" style="transform-origin:59.5px 70px;transform:scaleY(0)"/>
+        <rect id="sp-bar-3" x="70" y="35" width="9" height="35" style="transform-origin:74.5px 70px;transform:scaleY(0)"/>
       </g>
-
-      <!-- 3. Trend line + dot -->
-      <g clip-path="url(#sp-glass-clip)" id="sp-trend-group" style="opacity:0">
-        <path id="sp-trend-line" d="M29,55 L40,44 L51,33 L62,23"
-              fill="none" stroke="rgba(255,255,255,.80)" stroke-width="1.6"
-              stroke-linecap="round" stroke-linejoin="round"
-              stroke-dasharray="42" stroke-dashoffset="42"/>
-        <circle id="sp-trend-dot" cx="62" cy="23" r="2.5" fill="#fff" style="opacity:0"/>
-      </g>
-
-      <!-- 1. Ring — draws on via stroke-dashoffset (rendered last so it sits on top) -->
-      <circle id="sp-ring" cx="40" cy="40" r="32"
-              fill="none" stroke="rgba(255,255,255,.90)" stroke-width="3"
-              stroke-dasharray="201" stroke-dashoffset="201"
-              style="transform:rotate(-90deg);transform-origin:40px 40px"/>
-
-      <!-- 4. Letters A, Q, P -->
-      <text id="sp-letter-a" font-family="Arial,'Aptos Display','Aptos',Calibri,'Segoe UI',sans-serif" font-size="50" font-weight="700" fill="#ffffff" style="opacity:0"><tspan x="92" y="54">A</tspan></text>
-      <text id="sp-letter-q" font-family="Arial,'Aptos Display','Aptos',Calibri,'Segoe UI',sans-serif" font-size="50" font-weight="700" fill="#ffffff" style="opacity:0"><tspan x="128" y="54">Q</tspan></text>
-      <text id="sp-letter-p" font-family="Arial,'Aptos Display','Aptos',Calibri,'Segoe UI',sans-serif" font-size="50" font-weight="700" fill="#ffffff" style="opacity:0"><tspan x="165" y="54">P</tspan></text>
-
-      <!-- 5. Full name -->
-      <text id="sp-fullname" x="92" y="72" font-family="'Aptos Display','Aptos',Calibri,'Segoe UI',Arial,sans-serif" font-size="9.5" font-weight="400" fill="rgba(255,255,255,.55)" letter-spacing="1.4" style="opacity:0">ASSESSMENT QUALITY PLATFORM</text>
-
-      <!-- 6. Green badge -->
-      <circle id="sp-check-circle" cx="213" cy="34" r="14" fill="#2B7A3E" style="opacity:0"/>
-
-      <!-- 7. Checkmark -->
-      <path id="sp-checkmark" d="M205 34 L210 40 L222 26" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"
-            stroke-dasharray="22" stroke-dashoffset="22" style="opacity:0"/>
+      <text id="sp-fullname" x="148" y="76" fill="#fff" font-family="'Aptos Display','Aptos',Calibri,'Segoe UI',Arial,sans-serif" font-size="38" font-weight="600" letter-spacing="-.6" style="opacity:0">Assessment Quality Platform</text>
     </svg>
 
     <!-- Progress -->
@@ -437,59 +484,26 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
   }, 2100);
 
   // ── Progress steps ────────────────────────────────────────────────────────
-  // Sequence: magnifier → A → Q → P+badge → full name → bars+trend
-  // All animations complete ~3580ms; TOTAL_MS 3700ms; exit done ~5230ms
+  // Sequence: analytical-Q tile → Q stroke → bars → wordmark.
   var steps = [
     { pct: 17, label: 'Loading theme\u2026',       delay: 150,  draw: function() {
-        // 1. Magnifier ring draws + handle fades in
-        var ring = document.getElementById('sp-ring');
-        if (ring) {
-          ring.style.transition = 'stroke-dashoffset 500ms cubic-bezier(.4,0,.2,1)';
-          ring.style.strokeDashoffset = '0';
-        }
-        anim(document.getElementById('sp-handle'), {opacity:'1'}, 300, 'ease', 100);
+        anim(document.getElementById('sp-tile'), {opacity:'1'}, 300, 'ease', 0);
     }},
     { pct: 33, label: 'Loading libraries\u2026',   delay: 750,  draw: function() {
-        // 2. A
-        anim(document.getElementById('sp-letter-a'), {opacity:'1'}, 250, 'ease', 0);
+        var q = document.getElementById('sp-q');
+        if (q) { q.style.transition='stroke-dashoffset 650ms cubic-bezier(.4,0,.2,1)'; q.style.strokeDashoffset='0'; }
     }},
     { pct: 50, label: 'Preparing workspace\u2026', delay: 1100, draw: function() {
-        // 3. Q
-        anim(document.getElementById('sp-letter-q'), {opacity:'1'}, 250, 'ease', 0);
+        anim(document.getElementById('sp-bar-1'), {transform:'scaleY(1)'}, 300, 'ease', 0);
     }},
     { pct: 67, label: 'Building interface\u2026',  delay: 1500, draw: function() {
-        // 4. P + green quality badge (badge is visually attached to P)
-        anim(document.getElementById('sp-letter-p'), {opacity:'1'}, 250, 'ease', 0);
-        anim(document.getElementById('sp-check-circle'), {opacity:'1'}, 300, 'ease', 100);
-        setTimeout(function() {
-          var ck = document.getElementById('sp-checkmark');
-          if (ck) {
-            ck.style.opacity = '1';
-            ck.style.transition = 'stroke-dashoffset 350ms cubic-bezier(.4,0,.2,1)';
-            ck.style.strokeDashoffset = '0';
-          }
-        }, 200);
+        anim(document.getElementById('sp-bar-2'), {transform:'scaleY(1)'}, 300, 'ease', 0);
     }},
     { pct: 83, label: 'Configuring tool\u2026',    delay: 1950, draw: function() {
-        // 5. Full app name subtitle
-        anim(document.getElementById('sp-fullname'), {opacity:'1'}, 250, 'ease', 0);
+        anim(document.getElementById('sp-bar-3'), {transform:'scaleY(1)'}, 300, 'ease', 0);
     }},
     { pct: 100, label: 'Ready',                    delay: 2350, draw: function() {
-        // 6. Bars one by one, then trend line + dot
-        anim(document.getElementById('sp-bar-1'), {transform:'scaleY(1)'}, 350, 'cubic-bezier(.4,0,.2,1)', 0);
-        anim(document.getElementById('sp-bar-2'), {transform:'scaleY(1)'}, 350, 'cubic-bezier(.4,0,.2,1)', 230);
-        anim(document.getElementById('sp-bar-3'), {transform:'scaleY(1)'}, 350, 'cubic-bezier(.4,0,.2,1)', 460);
-        setTimeout(function() {
-          var tg = document.getElementById('sp-trend-group');
-          var tl = document.getElementById('sp-trend-line');
-          var td = document.getElementById('sp-trend-dot');
-          if (tg) tg.style.opacity = '1';
-          if (tl) {
-            tl.style.transition = 'stroke-dashoffset 450ms cubic-bezier(.4,0,.2,1)';
-            tl.style.strokeDashoffset = '0';
-          }
-          setTimeout(function() { anim(td, {opacity:'1'}, 180, 'ease', 0); }, 350);
-        }, 700);
+        anim(document.getElementById('sp-fullname'), {opacity:'1'}, 350, 'ease', 0);
     }},
   ];
 
@@ -512,8 +526,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
   });
 
   // ── Exit: content fades out, home panel fades in beneath ─────────────────
-  // Last animation (trend dot) finishes ~3580ms; 120ms buffer before exit starts
-  var TOTAL_MS = 3700;
+  var TOTAL_MS = 3200;
   setTimeout(function() {
     var screen = document.getElementById('splash-screen');
     if (!screen) return;
@@ -560,35 +573,35 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
      AQP-Next · Layer 1 · Shell
      ══════════════════════════════════════════════════════════════════════════ -->
 <div id="app-topbar" class="topbar">
-  <div class="logo-mark">AQP</div>
+  <div class="logo-mark" aria-hidden="true"><svg class="aqp-mark" viewBox="0 0 128 128"><rect class="aqp-tile" x="8" y="8" width="112" height="112" rx="28"/><path class="aqp-q" d="M60 27a33 33 0 1 0 21.9 57.7L98 100" stroke-width="9"/><path class="aqp-bars" d="M40 70h9V57h-9v13zm15 0h9V45h-9v25zm15 0h9V35h-9v35z"/></svg></div>
   <div class="logo-text">Assessment Quality Platform</div>
   <div id="topbar-exam-sep" class="topbar-div" style="display:none"></div>
   <span id="topbar-exam-name" style="display:none"></span>
   <div id="topbar-results-nav" class="topbar-results-nav">
     <button class="topbar-nav-btn" onclick="goToSetup()" title="Return to setup screen">
-      <svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg class="fui-icon fui-icon-sm" aria-hidden="true"><use href="#fui-left"/></svg>
       Setup
     </button>
     <button class="topbar-nav-btn btn-reset-top" onclick="openResetModal()" title="Clear results and start over">
-      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/></svg>
+      <svg class="fui-icon fui-icon-sm" aria-hidden="true"><use href="#fui-reset"/></svg>
       Start Over
     </button>
   </div>
   <div id="topbar-setup-nav" class="topbar-setup-nav">
     <button class="topbar-nav-btn" onclick="goHome()" title="Return to home screen">
-      <svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg class="fui-icon fui-icon-sm" aria-hidden="true"><use href="#fui-home"/></svg>
       Home
     </button>
     <button class="topbar-nav-btn btn-reset-top" onclick="openResetModal()" title="Clear all data and start over">
-      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/></svg>
+      <svg class="fui-icon fui-icon-sm" aria-hidden="true"><use href="#fui-reset"/></svg>
       Start Over
     </button>
   </div>
   <div id="topbar-session-zone" class="topbar-session-zone"></div>
   <div class="topbar-actions">
-    <button class="btn-icon" id="btn-faq-topbar" onclick="openFAQ()" title="Help &amp; FAQ" aria-label="Help and FAQ"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.5"/><path d="M6.3 6.2C6.3 5.3 7 4.6 8 4.6s1.7.7 1.7 1.6c0 .8-.6 1.3-1.1 1.7C8.2 8.3 8 8.6 8 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="11.2" r=".75" fill="currentColor"/></svg></button>
-    <button class="btn-icon" id="btn-view-results-topbar" onclick="goToResults()" title="Back to results" aria-label="Back to results" style="display:none;gap:5px;width:auto;padding:0 10px;font-size:12px;font-weight:600;color:var(--c-accent);border-color:var(--c-accent)"><svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M9 2l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Results</button>
-    <button class="btn-icon" id="btn-menu-topbar" onclick="toggleHamburger(this)" title="More options" aria-label="More options" aria-haspopup="menu" aria-controls="hamburger-dropdown" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></button>
+    <button class="btn-icon" id="btn-faq-topbar" onclick="openFAQ()" title="Help &amp; FAQ" aria-label="Help and FAQ"><svg class="fui-icon fui-icon-md" aria-hidden="true"><use href="#fui-question"/></svg></button>
+    <button class="btn-icon" id="btn-view-results-topbar" onclick="goToResults()" title="Back to results" aria-label="Back to results" style="display:none;gap:5px;width:auto;padding:0 10px;font-size:12px;font-weight:600;color:var(--c-accent);border-color:var(--c-accent)"><svg class="fui-icon fui-icon-sm" aria-hidden="true"><use href="#fui-right"/></svg>Results</button>
+    <button class="btn-icon" id="btn-menu-topbar" onclick="toggleHamburger(this)" title="More options" aria-label="More options" aria-haspopup="menu" aria-controls="hamburger-dropdown" aria-expanded="false"><svg class="fui-icon fui-icon-md" aria-hidden="true"><use href="#fui-more"/></svg></button>
   </div>
 </div>
 
@@ -598,26 +611,26 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
     <div class="sidebar-inner">
       <div class="sidebar-top">
         <button class="collapse-btn" id="collapseBtn" onclick="toggleSidebar()" title="Collapse sidebar" aria-label="Collapse sidebar">
-          <svg id="collapseIcon" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg id="collapseIcon" class="fui-icon fui-icon-sm" aria-hidden="true"><use href="#fui-chevron-left"/></svg>
         </button>
       </div>
       <nav class="sidebar-nav">
         <span class="nav-section-label">Item Analysis</span>
-        <button class="nav-item active" id="nav-landing" onclick="sidebarNav('landing',this)" title="Overview"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg><span class="nav-item-label">Overview</span></button>
-        <button class="nav-item" id="nav-mcq" onclick="sidebarNav('mcq',this)" title="Item Analysis"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 5.5l1.5 1.5L8 4"/><path d="M3.5 11.5l1.5 1.5L8 10"/><path d="M3.5 17.5l1.5 1.5L8 16"/><line x1="11" y1="6" x2="20" y2="6"/><line x1="11" y1="12" x2="20" y2="12"/><line x1="11" y1="18" x2="20" y2="18"/></svg><span class="nav-item-label">Item Analysis</span></button>
-        <button class="nav-item" id="nav-distractor" onclick="sidebarNav('distractor',this)" title="Distractor Analysis"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="12" width="4" height="9" rx=".5"/><rect x="10" y="6" width="4" height="15" rx=".5"/><rect x="17" y="9" width="4" height="12" rx=".5"/></svg><span class="nav-item-label">Distractor Analysis</span></button>
-        <button class="nav-item" id="nav-dif" onclick="sidebarNav('dif',this)" title="DIF Analysis"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="3" x2="12" y2="21"/><polyline points="8 8 4 12 8 16"/><polyline points="16 8 20 12 16 16"/></svg><span class="nav-item-label">DIF Analysis</span></button>
+        <button class="nav-item active" id="nav-landing" onclick="sidebarNav('landing',this)" title="Overview"><svg class="fui-icon" aria-hidden="true"><use href="#fui-apps"/></svg><span class="nav-item-label">Overview</span></button>
+        <button class="nav-item" id="nav-mcq" onclick="sidebarNav('mcq',this)" title="Item Analysis"><svg class="fui-icon" aria-hidden="true"><use href="#fui-task-list"/></svg><span class="nav-item-label">Item Analysis</span></button>
+        <button class="nav-item" id="nav-distractor" onclick="sidebarNav('distractor',this)" title="Distractor Analysis"><svg class="fui-icon" aria-hidden="true"><use href="#fui-chart"/></svg><span class="nav-item-label">Distractor Analysis</span></button>
+        <button class="nav-item" id="nav-dif" onclick="sidebarNav('dif',this)" title="DIF Analysis"><svg class="fui-icon" aria-hidden="true"><use href="#fui-scales"/></svg><span class="nav-item-label">DIF Analysis</span></button>
         <div class="nav-div"></div>
         <span class="nav-section-label">Student Feedback</span>
-        <button class="nav-item" id="nav-feedback" onclick="sidebarNav('feedback',this)" title="Feedback Review"><span id="badge-mapping-mirror" class="nav-badge nav-badge-amber"></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><circle cx="9" cy="11" r=".5" fill="currentColor"/><circle cx="12" cy="11" r=".5" fill="currentColor"/><circle cx="15" cy="11" r=".5" fill="currentColor"/></svg><span class="nav-item-label">Feedback Review</span></button>
+        <button class="nav-item" id="nav-feedback" onclick="sidebarNav('feedback',this)" title="Feedback Review"><span id="badge-mapping-mirror" class="nav-badge nav-badge-amber"></span><svg class="fui-icon" aria-hidden="true"><use href="#fui-chat"/></svg><span class="nav-item-label">Feedback Review</span></button>
         <div class="nav-sub" id="nav-mapping" onclick="sidebarNav('mapping',this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();sidebarNav('mapping',this)}" role="button" tabindex="0" title="Unmapped Comments"><svg class="nav-sub-icon" width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M3 1v5h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 4l2 2-2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Unmapped Comments</span><span class="nav-badge nav-badge-amber" id="badge-mapping" style="display:none"></span></div>
         <div class="nav-div"></div>
         <span class="nav-section-label">Tools</span>
-        <button class="nav-item" id="nav-exceptions" onclick="sidebarNav('exceptions',this)" style="justify-content:space-between" title="Exceptions"><span style="display:flex;align-items:center;gap:8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg><span class="nav-item-label">Exceptions</span></span><span class="nav-badge nav-badge-accent" id="badge-exceptions" style="display:none"></span></button>
-        <button class="nav-item" id="nav-nearthreshold" onclick="sidebarNav('nearthreshold',this)" title="Near Threshold"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><span class="nav-item-label">Near Threshold</span></button>
-        <button class="nav-item" id="nav-queue" onclick="sidebarNav('queue',this)" style="justify-content:space-between" title="Review Queue"><span style="display:flex;align-items:center;gap:8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span class="nav-item-label">Review Queue</span></span><span class="nav-badge nav-badge-amber" id="badge-queue" style="display:none"></span></button>
+        <button class="nav-item" id="nav-exceptions" onclick="sidebarNav('exceptions',this)" style="justify-content:space-between" title="Exceptions"><span style="display:flex;align-items:center;gap:8px"><svg class="fui-icon" aria-hidden="true"><use href="#fui-options"/></svg><span class="nav-item-label">Exceptions</span></span><span class="nav-badge nav-badge-accent" id="badge-exceptions" style="display:none"></span></button>
+        <button class="nav-item" id="nav-nearthreshold" onclick="sidebarNav('nearthreshold',this)" title="Near Threshold"><svg class="fui-icon" aria-hidden="true"><use href="#fui-pulse"/></svg><span class="nav-item-label">Near Threshold</span></button>
+        <button class="nav-item" id="nav-queue" onclick="sidebarNav('queue',this)" style="justify-content:space-between" title="Review Queue"><span style="display:flex;align-items:center;gap:8px"><svg class="fui-icon" aria-hidden="true"><use href="#fui-clipboard-task"/></svg><span class="nav-item-label">Review Queue</span></span><span class="nav-badge nav-badge-amber" id="badge-queue" style="display:none"></span></button>
         <div class="nav-div"></div>
-        <button class="nav-item" id="nav-reports" onclick="sidebarNav('reports',this)" title="Reports"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span class="nav-item-label">Reports</span></button>
+        <button class="nav-item" id="nav-reports" onclick="sidebarNav('reports',this)" title="Reports"><svg class="fui-icon" aria-hidden="true"><use href="#fui-document"/></svg><span class="nav-item-label">Reports</span></button>
       </nav>
     </div>
     <div id="sidebar-resize-handle" class="sidebar-resize-handle" aria-hidden="true"></div>
@@ -645,24 +658,10 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 <div id="home-panel" style="display:block;padding-bottom:40px">
   <!-- Home screen header row: logo + hamburger -->
   <div id="header-logo-home" style="display:flex;align-items:flex-end;justify-content:space-between;padding:8px 0 14px;border-bottom:1px solid rgba(0,0,0,.08);margin-bottom:0">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" style="height:72px;width:auto;display:block" role="img" aria-label="AQP — Assessment Quality Platform logo">
-      <title>AQP — Assessment Quality Platform</title>
-      <defs><clipPath id="aqp-hdr-clip"><circle cx="40" cy="40" r="32"/></clipPath></defs>
-      <line x1="63" y1="63" x2="76" y2="77" stroke="#252525" stroke-width="5" stroke-linecap="round"/>
-      <circle cx="40" cy="40" r="32" fill="white"/>
-      <g clip-path="url(#aqp-hdr-clip)">
-        <rect x="25" y="55" width="8" height="30" rx="2" fill="var(--logo-bar-light)"/>
-        <rect x="36" y="44" width="8" height="41" rx="2" fill="var(--logo-bar-mid)"/>
-        <rect x="47" y="33" width="8" height="52" rx="2" fill="var(--logo-bar-dark)"/>
-        <path d="M29,55 L40,44 L51,33 L62,23" fill="none" stroke="var(--logo-bar-dark)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="62" cy="23" r="2.5" fill="var(--logo-bar-dark)"/>
-      </g>
-      <circle cx="40" cy="40" r="32" fill="none" stroke="#252525" stroke-width="2.8"/>
-      <text font-family="Arial,'Aptos Display','Aptos',Calibri,'Segoe UI',sans-serif" font-size="50" font-weight="700" fill="#1a1a1a"><tspan x="92" y="54">A</tspan><tspan x="128" y="54">Q</tspan><tspan x="165" y="54">P</tspan></text>
-      <circle cx="213" cy="34" r="14" fill="#2B7A3E"/>
-      <path d="M205 34 L210 40 L222 26" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-      <text x="92" y="72" font-family="'Aptos Display','Aptos',Calibri,'Segoe UI',Arial,sans-serif" font-size="9.5" font-weight="400" fill="var(--c-muted)" letter-spacing="1.4">ASSESSMENT QUALITY PLATFORM</text>
-    </svg>
+    <div class="aqp-lockup" role="img" aria-label="Assessment Quality Platform">
+      <svg class="aqp-mark aqp-lockup-mark" viewBox="0 0 128 128" aria-hidden="true"><rect class="aqp-tile" x="8" y="8" width="112" height="112" rx="28"/><path class="aqp-q" d="M60 27a33 33 0 1 0 21.9 57.7L98 100" stroke-width="9"/><path class="aqp-bars" d="M40 70h9V57h-9v13zm15 0h9V45h-9v25zm15 0h9V35h-9v35z"/></svg>
+      <div class="aqp-lockup-name">Assessment Quality Platform</div>
+    </div>
   </div>
 
   <!-- Hero -->
@@ -673,22 +672,22 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 
   <div class="home-action-grid" style="padding:0 20px 36px">
     <button class="home-action-card primary" onclick="goToSetup()">
-      <span class="home-card-icon"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+      <span class="home-card-icon"><svg class="fui-icon fui-icon-lg" aria-hidden="true"><use href="#fui-add"/></svg></span>
       <span class="home-card-title">Start a new analysis</span>
       <span class="home-card-desc">Upload exam results, an answer key, student feedback, or a combination.</span>
     </button>
     <button id="home-resume-action" class="home-action-card" onclick="goSetupAndResume()" disabled style="opacity:.55;cursor:default">
-      <span class="home-card-icon"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M3 2h8l2 2v10H3zM5 2v4h6V2M5 14V9h6v5" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></span>
+      <span class="home-card-icon"><svg class="fui-icon fui-icon-lg" aria-hidden="true"><use href="#fui-save"/></svg></span>
       <span class="home-card-title">Resume browser draft</span>
       <span id="home-resume-desc" class="home-card-desc">No recoverable draft is currently stored in this browser.</span>
     </button>
     <button class="home-action-card" onclick="document.getElementById('session-import-input').click()">
-      <span class="home-card-icon"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M8 11V2M4.5 5.5 8 2l3.5 3.5M2 10v3a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span class="home-card-icon"><svg class="fui-icon fui-icon-lg" aria-hidden="true"><use href="#fui-upload"/></svg></span>
       <span class="home-card-title">Import a reopenable backup</span>
       <span class="home-card-desc">Preview and reopen a secure AQP backup created on this or another device.</span>
     </button>
     <button class="home-action-card demo" onclick="loadDemonstrationSession()">
-      <span class="home-card-icon"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M5 2v3.2L2.5 12a1.2 1.2 0 0 0 1.1 1.6h8.8a1.2 1.2 0 0 0 1.1-1.6L11 5.2V2M4 2h8M4.2 10h7.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span class="home-card-icon"><svg class="fui-icon fui-icon-lg" aria-hidden="true"><use href="#fui-beaker"/></svg></span>
       <span class="home-card-title">Explore a demonstration</span>
       <span class="home-card-desc">Open a clearly labelled synthetic bilingual exam with MCQ, DIF, feedback, and reports.</span>
     </button>
@@ -699,9 +698,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
   <div style="margin:0 auto 32px;width:75%;max-width:100%">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--c-muted)">Current browser draft</div><button onclick="openPrivacyPanel()" style="border:0;background:none;color:var(--c-accent);font:600 11.5px var(--font);cursor:pointer">Privacy &amp; local data</button></div>
     <div id="session-history-content" style="border:1px dashed var(--c-border);border-radius:10px;padding:32px 20px;text-align:center;background:var(--c-surface)">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--c-muted)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 12px;display:block;opacity:.6">
-        <circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/>
-      </svg>
+      <svg class="fui-icon" aria-hidden="true" style="width:32px;height:32px;color:var(--c-muted);margin:0 auto 12px;display:block;opacity:.6"><use href="#fui-clock"/></svg>
       <div style="font-size:13px;font-weight:600;color:var(--c-secondary);margin-bottom:6px">No browser draft saved</div>
       <div style="font-size:12px;color:var(--c-muted);line-height:1.6;max-width:390px;margin:0 auto">AQP keeps at most one recoverable draft in this browser after an analysis is run.</div>
     </div>
@@ -712,24 +709,10 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 <div id="setup-panel" style="display:none;padding-bottom:80px">
   <!-- Setup screen header row: logo + hamburger -->
   <div id="header-logo" style="display:flex;align-items:flex-end;justify-content:space-between;padding:8px 0;margin-bottom:0;padding-bottom:14px;border-bottom:1px solid rgba(0,0,0,.08);margin-bottom:20px">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" style="height:72px;width:auto;display:block" role="img" aria-label="AQP — Assessment Quality Platform logo">
-      <title>AQP — Assessment Quality Platform</title>
-      <defs><clipPath id="aqp-setup-clip"><circle cx="40" cy="40" r="32"/></clipPath></defs>
-      <line x1="63" y1="63" x2="76" y2="77" stroke="#252525" stroke-width="5" stroke-linecap="round"/>
-      <circle cx="40" cy="40" r="32" fill="white"/>
-      <g clip-path="url(#aqp-setup-clip)">
-        <rect x="25" y="55" width="8" height="30" rx="2" fill="var(--logo-bar-light)"/>
-        <rect x="36" y="44" width="8" height="41" rx="2" fill="var(--logo-bar-mid)"/>
-        <rect x="47" y="33" width="8" height="52" rx="2" fill="var(--logo-bar-dark)"/>
-        <path d="M29,55 L40,44 L51,33 L62,23" fill="none" stroke="var(--logo-bar-dark)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="62" cy="23" r="2.5" fill="var(--logo-bar-dark)"/>
-      </g>
-      <circle cx="40" cy="40" r="32" fill="none" stroke="#252525" stroke-width="2.8"/>
-      <text font-family="Arial,'Aptos Display','Aptos',Calibri,'Segoe UI',sans-serif" font-size="50" font-weight="700" fill="#1a1a1a"><tspan x="92" y="54">A</tspan><tspan x="128" y="54">Q</tspan><tspan x="165" y="54">P</tspan></text>
-      <circle cx="213" cy="34" r="14" fill="#2B7A3E"/>
-      <path d="M205 34 L210 40 L222 26" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-      <text x="92" y="72" font-family="'Aptos Display','Aptos',Calibri,'Segoe UI',Arial,sans-serif" font-size="9.5" font-weight="400" fill="var(--c-muted)" letter-spacing="1.4">ASSESSMENT QUALITY PLATFORM</text>
-    </svg>
+    <div class="aqp-lockup" role="img" aria-label="Assessment Quality Platform">
+      <svg class="aqp-mark aqp-lockup-mark" viewBox="0 0 128 128" aria-hidden="true"><rect class="aqp-tile" x="8" y="8" width="112" height="112" rx="28"/><path class="aqp-q" d="M60 27a33 33 0 1 0 21.9 57.7L98 100" stroke-width="9"/><path class="aqp-bars" d="M40 70h9V57h-9v13zm15 0h9V45h-9v25zm15 0h9V35h-9v35z"/></svg>
+      <div class="aqp-lockup-name">Assessment Quality Platform</div>
+    </div>
   </div>
 
   <!-- ── Wizard step rail ── -->
@@ -765,7 +748,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
     <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
       <div style="flex:1;min-width:0">
         <div style="font-weight:700;font-size:13.5px;color:var(--c-primary);margin-bottom:2px">
-          💾 <span id="draft-banner-title">Draft session found</span>
+          <svg class="fui-icon fui-icon-md" aria-hidden="true" style="vertical-align:-2px"><use href="#fui-save"/></svg> <span id="draft-banner-title">Draft session found</span>
         </div>
         <div id="draft-banner-meta" style="font-size:12.5px;color:var(--c-muted)"></div>
       </div>
@@ -839,7 +822,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
           <div id="type-card-mcq" role="button" tabindex="0" aria-label="MCQ item analysis" onclick="selectAnalysisType('mcq')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectAnalysisType('mcq')}"
             style="border:2px solid var(--c-border-2);border-radius:12px;padding:18px;cursor:pointer;transition:all .18s;background:var(--c-bg);position:relative">
-            <div style="font-size:24px;margin-bottom:8px">📊</div>
+            <svg class="fui-icon" aria-hidden="true" style="width:24px;height:24px;margin-bottom:8px;color:var(--c-accent)"><use href="#fui-chart"/></svg>
             <div style="font-size:13.5px;font-weight:700;color:var(--c-primary);margin-bottom:4px">MCQ item analysis</div>
             <div style="font-size:12px;color:var(--c-secondary);line-height:1.55">Analyze question difficulty, discrimination, and DIF. Includes distractor analysis and flag review.</div>
           </div>
@@ -851,7 +834,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
           </div>
           <div id="type-card-both" role="button" tabindex="0" aria-label="Combined MCQ and feedback analysis" onclick="selectAnalysisType('both')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectAnalysisType('both')}"
             style="border:2px solid var(--c-border-2);border-radius:12px;padding:18px;cursor:pointer;transition:all .18s;background:var(--c-bg);position:relative">
-            <div style="font-size:24px;margin-bottom:8px">📊💬</div>
+            <div style="display:flex;gap:4px;margin-bottom:8px;color:var(--c-accent)"><svg class="fui-icon" aria-hidden="true" style="width:24px;height:24px"><use href="#fui-chart"/></svg><svg class="fui-icon" aria-hidden="true" style="width:24px;height:24px"><use href="#fui-chat"/></svg></div>
             <div style="font-size:13.5px;font-weight:700;color:var(--c-primary);margin-bottom:4px">Combined analysis</div>
             <div style="font-size:12px;color:var(--c-secondary);line-height:1.55">Run MCQ item analysis and feedback parsing together. Results cross-reference automatically.</div>
           </div>
@@ -954,12 +937,12 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 
   <!-- Dirty state banner -->
   <div id="dirty-banner" style="display:none;margin:10px 0;padding:12px 18px;background:#fff8e6;border-left:3px solid #e8a800;border-radius:6px;font-size:13px;color:#5a3a00;font-weight:500">
-    <span style="font-size:14px;margin-right:6px">⚠</span>Settings have changed since your last analysis. Use the <strong>Update Analysis</strong> button below to refresh your results.
+    <svg class="fui-icon fui-icon-md" aria-hidden="true" style="margin-right:6px"><use href="#fui-warning"/></svg>Settings have changed since your last analysis. Use the <strong>Update Analysis</strong> button below to refresh your results.
   </div>
 
   <!-- ── Upload files ── -->
   <div class="wz-guidance" style="margin-bottom:14px">
-    <span class="wz-guidance-icon"><i class="ti ti-folder-open"></i></span>
+    <span class="wz-guidance-icon"><svg class="fui-icon fui-icon-md" aria-hidden="true"><use href="#fui-folder-open"/></svg></span>
     <div>For <strong>QuestionMark</strong>: upload the raw results export (.xlsx) ensuring you keep only the students who wrote the exam, and the answer key which is an identical document keeping only a single participant row with a perfect score (.xlsx) — these are two separate files. For <strong>Scantron</strong>: upload the single .txt file from the scanning centre — no separate key file is needed, it's embedded in the MASTER row automatically.</div>
   </div>
   <div id="upload-grid" style="display:grid;grid-template-columns:1fr;gap:14px;margin-bottom:14px">
@@ -1269,30 +1252,11 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 
     <!-- Wordmark: small icon + text -->
     <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-      <!-- Magnifying glass icon — white on themed nav background -->
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" style="height:30px;width:auto;display:block;flex-shrink:0" role="img" aria-label="AQP icon">
-        <title>AQP</title>
-        <defs><clipPath id="nav-glass-clip"><circle cx="22" cy="22" r="18"/></clipPath></defs>
-        <line x1="35" y1="35" x2="46" y2="46" stroke="rgba(255,255,255,.92)" stroke-width="4" stroke-linecap="round"/>
-        <circle cx="22" cy="22" r="18" fill="rgba(255,255,255,.07)"/>
-        <g clip-path="url(#nav-glass-clip)">
-          <rect x="12" y="28" width="5" height="20" rx="1.5" fill="rgba(255,255,255,.28)"/>
-          <rect x="19" y="22" width="5" height="26" rx="1.5" fill="rgba(255,255,255,.58)"/>
-          <rect x="26" y="16" width="5" height="32" rx="1.5" fill="rgba(255,255,255,.92)"/>
-          <path d="M14.5,28 L21.5,22 L28.5,16 L35,10" fill="none" stroke="rgba(255,255,255,.75)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-          <circle cx="35" cy="10" r="2" fill="white"/>
-        </g>
-        <circle cx="22" cy="22" r="18" fill="none" stroke="rgba(255,255,255,.88)" stroke-width="2"/>
-      </svg>
+      <svg class="aqp-mark" viewBox="0 0 128 128" style="width:30px;height:30px" role="img" aria-label="AQP analytical Q icon"><rect class="aqp-tile" x="8" y="8" width="112" height="112" rx="28" stroke="rgba(255,255,255,.5)" stroke-width="2"/><path class="aqp-q" d="M60 27a33 33 0 1 0 21.9 57.7L98 100" stroke-width="9"/><path class="aqp-bars" d="M40 70h9V57h-9v13zm15 0h9V45h-9v25zm15 0h9V35h-9v35z"/></svg>
       <!-- Wordmark text: AQP bold + subtitle on second line -->
       <div style="display:flex;flex-direction:column;justify-content:center;line-height:1.15">
         <div style="display:flex;align-items:center;gap:5px">
           <span id="nav-wordmark-text" style="font-size:15px;font-weight:700;color:rgba(255,255,255,.95);letter-spacing:-.2px">AQP</span>
-          <!-- Green checkmark badge -->
-          <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="12" r="11" fill="var(--s-ok)" opacity=".90"/>
-            <path d="M7 12 L10.5 15.5 L17 8.5" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
         </div>
         <span id="nav-results-subtitle" style="font-size:10px;font-weight:500;color:rgba(255,255,255,.60);letter-spacing:.3px;display:none"></span>
         <span id="nav-aqp-subtitle" style="font-size:10px;font-weight:400;color:rgba(255,255,255,.55);letter-spacing:.8px">ASSESSMENT QUALITY PLATFORM</span>
@@ -1364,10 +1328,10 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
     </div>
 
     <div class="tabs no-print" id="main-tab-bar" style="display:none">
-      <div class="tab active" id="tab-analysis" role="tab" tabindex="0" aria-selected="true" onclick="switchMainTabByClick('analysis',this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchMainTabByClick('analysis',this)}">📊 Item Analysis</div>
+      <div class="tab active" id="tab-analysis" role="tab" tabindex="0" aria-selected="true" onclick="switchMainTabByClick('analysis',this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchMainTabByClick('analysis',this)}"><svg class="fui-icon fui-icon-sm" aria-hidden="true"><use href="#fui-chart"/></svg> Item Analysis</div>
       <div class="tab tab-fb" id="tab-feedback-main" role="tab" tabindex="0" aria-selected="false" onclick="switchMainTabByClick('feedback',this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchMainTabByClick('feedback',this)}" style="display:none">💬 Feedback</div>
       <div class="tab" id="tab-review" role="tab" tabindex="0" aria-selected="false" onclick="switchMainTabByClick('review',this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchMainTabByClick('review',this)}" style="display:none">☑ Review Queue</div>
-      <div class="tab" id="tab-reports" role="tab" tabindex="0" aria-selected="false" onclick="switchMainTabByClick('reports',this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchMainTabByClick('reports',this)}">📄 Reports</div>
+      <div class="tab" id="tab-reports" role="tab" tabindex="0" aria-selected="false" onclick="switchMainTabByClick('reports',this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchMainTabByClick('reports',this)}"><svg class="fui-icon fui-icon-sm" aria-hidden="true"><use href="#fui-document"/></svg> Reports</div>
     </div>
 
 <!-- ══════════════════════════════════════════════════════════════════════
@@ -1394,7 +1358,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
   <div class="room-page-hdr">
     <div class="page-eyebrow">Tools</div>
     <div class="page-title">Question Exceptions</div>
-    <div class="page-sub">Set dispositions and alternate keys before re-running analysis. Saving will mark the current results as outdated — a prompt to re-run will appear.</div>
+    <div class="page-sub">Set dispositions and alternate keys, then save. AQP will immediately recalculate the analysis so the updated status appears everywhere.</div>
   </div>
 
   <!-- Definitions strip -->
@@ -1418,7 +1382,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
   </div>
 
   <!-- Column header -->
-  <div style="display:grid;grid-template-columns:60px 60px 130px 1fr 110px;padding:8px 10px;background:#eeeff1;border:1px solid var(--c-border);border-radius:8px 8px 0 0">
+  <div class="excl-grid excl-column-header">
     <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--c-muted)">Q #</div>
     <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--c-muted)">Key</div>
     <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--c-muted)">Disposition</div>
@@ -1428,11 +1392,11 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
   <div id="excl-rows" style="border:1px solid var(--c-border);border-top:none;border-radius:0 0 8px 8px;overflow:hidden;margin-bottom:16px"></div>
 
   <!-- Footer -->
-  <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0 8px">
+  <div class="excl-save-bar">
     <div id="excl-summary" style="font-size:12px;color:var(--c-muted)"></div>
-    <div style="display:flex;gap:10px">
+    <div class="excl-save-actions">
       <button onclick="switchRoom('landing')" class="btn-dl-secondary">Cancel</button>
-      <button onclick="saveExclusions()" class="btn btn-primary" style="padding:9px 20px;font-size:13px">Save Exceptions</button>
+      <button onclick="saveExclusions()" class="btn btn-primary" style="padding:9px 20px;font-size:13px">Save &amp; Update Analysis</button>
     </div>
   </div>
 
@@ -1441,7 +1405,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 <div id="room-distractor" class="room">
   <div class="room-page-hdr">
     <div class="page-eyebrow">Item Analysis</div>
-    <div class="page-title">Distractor Analysis</div>
+    <div class="page-title-row"><div class="page-title">Distractor Analysis</div><span class="beta-badge">Beta</span></div>
     <div class="page-sub">Select a question to see how each answer option performed across four student performance groups (Q1&nbsp;=&nbsp;lowest, Q4&nbsp;=&nbsp;highest). A good item has the correct answer chosen more often as performance rises, while distractors fade — patterns that break this suggest the item may need review.</div>
   </div>
   <div id="da-content"></div>
@@ -1450,7 +1414,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 <div id="room-nearthreshold" class="room">
   <div class="room-page-hdr">
     <div class="page-eyebrow">Tools</div>
-    <div class="page-title">Near Threshold</div>
+    <div class="page-title-row"><div class="page-title">Near Threshold</div><span class="beta-badge">Beta</span></div>
     <div class="page-sub">Questions in statistically ambiguous territory — not clearly flagged, not clearly clean. Review these before finalising reports; use your judgment to include or exclude each one.</div>
   </div>
     <div id="nt-content"></div>
@@ -1480,6 +1444,8 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
           </div>
         </div>
 
+        <div id="dif-kpi-strip" style="display:none"></div>
+
         <!-- CSV download — right, adapts to active table -->
         <div style="margin-left:auto">
           <button id="btn-mcq-csv" onclick="doExport('mcq')" data-tip="Download MCQ item analysis as a CSV file you can open in Excel." class="btn-dl-secondary" style="font-size:11px;padding:4px 10px">
@@ -1504,6 +1470,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 
       <!-- DIF table -->
       <div id="dif-table-wrap" style="display:none">
+        <div class="dif-table-stack">
         <div class="wz-guidance" style="margin-bottom:12px" id="dif-guidance">
           <span class="wz-guidance-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
           <div>DIF analysis compares English and French student performance question by question using 3-block logistic regression. A question is flagged <strong>Important</strong> when its chi-square comparison is statistically significant (p&nbsp;&lt;&nbsp;0.01 under the UGME standard). Nagelkerke ΔR² is reported as an effect-size aid, not used as the formal flagging rule. A flag means the item warrants expert review — it does not automatically indicate bias.</div>
@@ -1525,8 +1492,8 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
         </div>
 
         <div id="dif-table-content">
-        <div id="dif-kpi-strip" style="display:none;margin-bottom:12px"></div>
         <div class="tbl-wrap"><div class="tbl-scroll"><table id="dif-table" class="dif-table"></table></div></div>
+        </div>
         </div>
       </div>
 
@@ -1793,20 +1760,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 
     <!-- Left: icon + tool name only, left aligned -->
     <div style="display:flex;align-items:center;gap:12px;flex-shrink:0">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" style="width:36px;height:auto;flex-shrink:0" role="img" aria-label="AQP icon">
-        <title>AQP</title>
-        <defs><clipPath id="footer-glass-clip"><circle cx="22" cy="22" r="18"/></clipPath></defs>
-        <line x1="35" y1="35" x2="46" y2="46" stroke="#252525" stroke-width="4" stroke-linecap="round"/>
-        <circle cx="22" cy="22" r="18" fill="white"/>
-        <g clip-path="url(#footer-glass-clip)">
-          <rect x="12" y="28" width="5" height="20" rx="1.5" fill="#CCCCCC"/>
-          <rect x="19" y="22" width="5" height="26" rx="1.5" fill="#888888"/>
-          <rect x="26" y="16" width="5" height="32" rx="1.5" fill="#3A3A3A"/>
-          <path d="M14.5,28 L21.5,22 L28.5,16 L35,10" fill="none" stroke="#252525" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-          <circle cx="35" cy="10" r="2" fill="#252525"/>
-        </g>
-        <circle cx="22" cy="22" r="18" fill="none" stroke="#252525" stroke-width="2"/>
-      </svg>
+      <svg class="aqp-mark" viewBox="0 0 128 128" style="width:36px;height:36px" role="img" aria-label="AQP analytical Q icon"><rect class="aqp-tile" x="8" y="8" width="112" height="112" rx="28"/><path class="aqp-q" d="M60 27a33 33 0 1 0 21.9 57.7L98 100" stroke-width="9"/><path class="aqp-bars" d="M40 70h9V57h-9v13zm15 0h9V45h-9v25zm15 0h9V35h-9v35z"/></svg>
     </div>
 
     <!-- Centre: copyright, centred in the footer -->
@@ -2152,10 +2106,10 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 
 // ── App version — single source of truth ─────────────────────────────────
 var APP_VERSION     = '0.8';
-var APP_BUILD       = '20260929-01';
+var APP_BUILD       = '20261001-01';
 var APP_FAQ_VERSION = '0.8';           // Keep aligned with the app version; date records FAQ revisions
-var APP_FAQ_DATE    = 'September 29, 2026'; // Update when FAQ content changes
-var APP_RN_DATE     = 'September 29, 2026'; // Update each version close
+var APP_FAQ_DATE    = 'October 1, 2026'; // Update when FAQ content changes
+var APP_RN_DATE     = 'October 1, 2026'; // Update each version close
 var SESSION_BACKUP_FILE_TYPE = 'aqp-portable-session';
 var SESSION_BACKUP_SCHEMA_VERSION = 1;
 
@@ -2274,9 +2228,9 @@ function openDiagnosticsModal(focusId) {
 
   // Section definitions — label, feedback id, icon
   var sections = G_SOURCE === 'scantron'
-    ? [{ label: 'Scantron File',    id: 'feedback-main', icon: '📋' }]
-    : [{ label: 'QM Results File',  id: 'feedback-main', icon: '📄' },
-       { label: 'QM Answer Key',    id: 'feedback-key',  icon: '🔑' }];
+    ? [{ label: 'Scantron File',    id: 'feedback-main', icon: '<svg class="fui-icon fui-icon-md" aria-hidden="true"><use href="#fui-document-data"/></svg>' }]
+    : [{ label: 'QM Results File',  id: 'feedback-main', icon: '<svg class="fui-icon fui-icon-md" aria-hidden="true"><use href="#fui-document-data"/></svg>' },
+       { label: 'QM Answer Key',    id: 'feedback-key',  icon: '<svg class="fui-icon fui-icon-md" aria-hidden="true"><use href="#fui-task-list"/></svg>' }];
 
   var statusStyles = {
     ok:   { bg:'#f0faf2', border:'var(--s-ok)', badge:'var(--s-ok)', badgeLabel:'OK' },
@@ -2311,7 +2265,7 @@ function openDiagnosticsModal(focusId) {
     return '<div id="diag-section-'+sec.id+'" style="border-radius:8px;border:1px solid '+tborder+';overflow:hidden">' +
       // Coloured title row
       '<div style="background:'+tbg+';padding:10px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid '+tborder+'">' +
-        '<span style="font-size:15px">'+sec.icon+'</span>' +
+        '<span style="display:inline-flex">'+sec.icon+'</span>' +
         '<div style="flex:1;min-width:0">' +
           '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">' +
             '<span style="font-size:13px;font-weight:700;color:'+ttext+'">'+sec.label+'</span>' +
@@ -2721,7 +2675,7 @@ function renderSessionHistory(d) {
   el.innerHTML =
     '<div style="display:flex;align-items:center;gap:14px;padding:16px 20px;flex-wrap:wrap">' +
       '<div style="flex:1;min-width:0;text-align:left">' +
-        '<div style="font-size:14px;font-weight:700;color:var(--c-primary);margin-bottom:5px">💾 ' + title + '</div>' +
+        '<div style="font-size:14px;font-weight:700;color:var(--c-primary);margin-bottom:5px;display:flex;align-items:center;gap:6px"><svg class="fui-icon fui-icon-md" aria-hidden="true"><use href="#fui-save"/></svg>' + title + '</div>' +
         '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px">' + pills + '</div>' +
         '<div style="font-size:11.5px;color:var(--c-muted)">Saved ' + timeAgo + ' · build ' + (d.build || '—') + '</div>' +
       '</div>' +
@@ -5485,6 +5439,10 @@ function _runAnalysis() {
   var n=students.length;
   var excl = G.exclusions || {};
 
+  // Student totals can change after Credit or Alternate Key decisions. Any quartile
+  // breakdown built before this run is therefore stale and must be rebuilt on demand.
+  G._quartileData = null;
+
   // Build effective nQ (denominator) — excludes credited and deleted questions
   var exclActive = Object.keys(excl).filter(function(k){ return excl[k] && excl[k].disposition !== 'include'; });
   var nQEffective = Math.max(1, nQ - exclActive.length);
@@ -6801,7 +6759,7 @@ function uiReportFooterHtml() {
   var profileLine = 'Analysis profile: ' + (allDefault ? 'UGME Exam Standard' : 'Custom thresholds');
   return '<div style="text-align:center;margin-top:40px;padding-top:20px;border-top:1px solid var(--c-border)">' +
     '<div style="font-size:11px;color:var(--c-muted);font-style:italic;margin-bottom:8px">' + byLine + '</div>' +
-    '<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMjAgNzIiIHdpZHRoPSIzMjAiIGhlaWdodD0iNzIiPjxkZWZzPjxjbGlwUGF0aCBpZD0id2UtY2xpcCI+PGNpcmNsZSBjeD0iMzYiIGN5PSIzNiIgcj0iMjkiLz48L2NsaXBQYXRoPjwvZGVmcz48bGluZSB4MT0iNTciIHkxPSI1NyIgeDI9IjcwIiB5Mj0iNzAiIHN0cm9rZT0iIzI1MjUyNSIgc3Ryb2tlLXdpZHRoPSI0LjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxjaXJjbGUgY3g9IjM2IiBjeT0iMzYiIHI9IjI5IiBmaWxsPSJ3aGl0ZSIvPjxnIGNsaXAtcGF0aD0idXJsKCN3ZS1jbGlwKSI+PHJlY3QgeD0iMjIiIHk9IjQ5IiB3aWR0aD0iNyIgaGVpZ2h0PSIyMCIgcng9IjIiIGZpbGw9IiNDQ0NDQ0MiLz48cmVjdCB4PSIzMSIgeT0iNDAiIHdpZHRoPSI3IiBoZWlnaHQ9IjI5IiByeD0iMiIgZmlsbD0iIzg4ODg4OCIvPjxyZWN0IHg9IjQwIiB5PSIzMCIgd2lkdGg9IjciIGhlaWdodD0iMzkiIHJ4PSIyIiBmaWxsPSIjM0EzQTNBIi8+PHBhdGggZD0iTTI1LjUsNDkgTDM0LjUsNDAgTDQzLjUsMzAgTDU1LDIxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTI1MjUiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48Y2lyY2xlIGN4PSI1NSIgY3k9IjIxIiByPSIyLjUiIGZpbGw9IiMyNTI1MjUiLz48L2c+PGNpcmNsZSBjeD0iMzYiIGN5PSIzNiIgcj0iMjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1MjUyNSIgc3Ryb2tlLXdpZHRoPSIyLjUiLz48dGV4dCBmb250LWZhbWlseT0iQXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzgiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMxYTFhMWEiPjx0c3BhbiB4PSI4MCIgeT0iNDYiPkFRUDwvdHNwYW4+PC90ZXh0PjxjaXJjbGUgY3g9IjE5MiIgY3k9IjI4IiByPSIxMiIgZmlsbD0iIzJCN0EzRSIvPjxwYXRoIGQ9Ik0xODUgMjggTDE5MCAzNCBMMjAwIDIxIiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMi4yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48dGV4dCB4PSI4MCIgeT0iNjIiIGZvbnQtZmFtaWx5PSJBcmlhbCxIZWx2ZXRpY2Esc2Fucy1zZXJpZiIgZm9udC1zaXplPSI5LjUiIGZvbnQtd2VpZ2h0PSI0MDAiIGZpbGw9IiM3Njc2NzYiIGxldHRlci1zcGFjaW5nPSIxLjIiPkFTU0VTU01FTlQgUVVBTElUWSBQTEFURk9STTwvdGV4dD48L3N2Zz4=" alt="AQP — Assessment Quality Platform" style="height:40px;display:block;margin:0 auto 10px">' +
+    '<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3MjAgMTI4Ij4KICA8dGl0bGU+QXNzZXNzbWVudCBRdWFsaXR5IFBsYXRmb3JtIGFuYWx5dGljYWwgUSBsb2dvPC90aXRsZT4KICA8cmVjdCB4PSI4IiB5PSI4IiB3aWR0aD0iMTEyIiBoZWlnaHQ9IjExMiIgcng9IjI4IiBmaWxsPSIjQTMxNTE1Ii8+CiAgPHBhdGggZD0iTTYwIDI3YTMzIDMzIDAgMSAwIDIxLjkgNTcuN0w5OCAxMDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSI5IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KICA8cGF0aCBkPSJNNDAgNzBoOVY1N2gtOXYxM3ptMTUgMGg5VjQ1aC05djI1em0xNSAwaDlWMzVoLTl2MzV6IiBmaWxsPSIjRkZGRkZGIi8+CiAgPHRleHQgeD0iMTQ4IiB5PSI3NCIgZmlsbD0iIzI2MzEzQiIgZm9udC1mYW1pbHk9IidIZWx2ZXRpY2EgTmV1ZScsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjM4IiBmb250LXdlaWdodD0iNjAwIiBsZXR0ZXItc3BhY2luZz0iLTAuNiI+QXNzZXNzbWVudCBRdWFsaXR5IFBsYXRmb3JtPC90ZXh0Pgo8L3N2Zz4K" alt="Assessment Quality Platform" style="height:40px;display:block;margin:0 auto 10px">' +
     '<div style="font-size:11px;color:var(--c-muted);font-style:italic">' + genLine + '</div>' +
     '<div style="font-size:10.5px;color:var(--c-muted);font-style:italic;margin-top:3px">' + profileLine + '</div>' +
     '</div>';
@@ -7639,9 +7597,9 @@ function renderDIFKpiStrip() {
   var difBg      = nDIF > 0 ? '#fffbeb' : '#f0fdf4';
   var difBorder  = nDIF > 0 ? '#fde68a' : '#bbf7d0';
   function _pill(val, lbl, valCol, bg, bdr) {
-    return '<div style="display:flex;flex-direction:column;align-items:center;padding:10px 20px;background:'+bg+';border:1px solid '+bdr+';border-radius:8px;min-width:96px">'
-      +'<span style="font-size:34px;font-weight:700;color:'+valCol+';line-height:1.1;font-variant-numeric:tabular-nums">'+val+'</span>'
-      +'<span style="font-size:10px;font-weight:600;color:var(--c-muted);text-transform:uppercase;letter-spacing:.05em;margin-top:4px;white-space:nowrap">'+lbl+'</span>'
+    return '<div style="display:flex;align-items:center;gap:8px;padding:6px 11px;background:'+bg+';border:1px solid '+bdr+';border-radius:8px;min-width:104px">'
+      +'<span style="font-size:22px;font-weight:700;color:'+valCol+';line-height:1;font-variant-numeric:tabular-nums">'+val+'</span>'
+      +'<span style="font-size:9.5px;font-weight:650;color:var(--c-muted);text-transform:uppercase;letter-spacing:.045em;line-height:1.2">'+lbl+'</span>'
       +'</div>';
   }
   strip.innerHTML = '<div style="display:flex;gap:8px;align-items:stretch">'
@@ -7881,6 +7839,9 @@ function getCoordinatorByline() {
 // The app name is rendered in two styled runs to match the nav bar wordmark.
 // Wordmark PNG (logo + title) extracted from reference report — used in all Word export bylines
 var _DOCX_WORDMARK_B64 = "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";
+
+// Analytical-Q wordmark used by all Word report bylines (320 × 60 PNG).
+_DOCX_WORDMARK_B64 = "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";
 
 // "Report generated with:" block — matches the reference report layout exactly:
 //   Centred at bottom of document, after all content.
@@ -9800,6 +9761,7 @@ function switchAnalysisTable(which) {
   var mcqFilter  = document.getElementById('mcq-filter-bar');
   var btnMcqCsv  = document.getElementById('btn-mcq-csv');
   var btnDifCsv  = document.getElementById('btn-dif-csv');
+  var difKpi     = document.getElementById('dif-kpi-strip');
   var btnMcq     = document.getElementById('toggle-btn-mcq');
   var btnDif     = document.getElementById('toggle-btn-dif');
   var isMcq = (which === 'mcq');
@@ -9810,6 +9772,7 @@ function switchAnalysisTable(which) {
   if (mcqFilter) mcqFilter.style.display = isMcq ? '' : 'none';
   if (btnMcqCsv) btnMcqCsv.style.display = isMcq ? '' : 'none';
   if (btnDifCsv) btnDifCsv.style.display = isMcq ? 'none' : '';
+  if (difKpi)    difKpi.style.display    = isMcq ? 'none' : '';
   if (btnMcq)    btnMcq.classList.toggle('seg-active',  isMcq);
   if (btnDif)    btnDif.classList.toggle('seg-active',  !isMcq);
   // Initialise DIF table resizing on first view (must be visible for offsetWidth to work)
@@ -10778,6 +10741,20 @@ var RELEASE_NOTES = [
   {
     version: '0.8',
     builds: [
+      {
+        build: '20261001-01',
+        date:  'October 1, 2026',
+        notes: [
+          'New analytical-Q identity: a garnet rounded-square mark combines a white Q with three analytical bars and now appears consistently in the splash screen, top bar, home and setup headers, results navigation, footer, About panel, favicon, report previews, and Word-report byline.',
+          'Fluent icon consolidation: principal navigation and workflow actions now use locally embedded Microsoft Fluent System Icons Regular 24 px, removing the Tabler webfont dependency while preserving the single-file deployment model.',
+          'Brand handoff assets: production SVG artwork, usage guidance, and the Fluent MIT licence notice are retained with the project for future documentation and institutional packaging.',
+          'Results-room refinement: Overview result groups now have clearer visual separation and category-matched amber, blue, and indigo accents; DIF metrics share the export toolbar; and Near Threshold inclusion actions remain prominent on muted rows.',
+          'Exception workflow: a persistent Save & Update Analysis bar immediately recalculates results, so Credits and Alternate Keys appear in Item Analysis as soon as they are saved.',
+          'Distractor Analysis correction: overall answer bars now use their true percentage instead of scaling the most-selected option to 100%; interpretations spell out Quartile 3 and Quartile 4, distinguish within-quartile values from overall results, and empty options cannot be labelled as key competitors. Quartile membership now rebuilds after Credits or Alternate Keys change student totals.',
+          'Beta labelling: Distractor Analysis and Near Threshold now carry prominent Beta badges while their review rules continue to be validated.',
+          'Core scoring, difficulty, discrimination, reliability, DIF regression, upload validation, persistence, and report content remain unchanged.'
+        ]
+      },
       {
         build: '20260929-01',
         date:  'September 29, 2026',
@@ -11946,7 +11923,7 @@ function openExclusionsModal() {
         : 'font-size:11px;font-weight:700;padding:4px 8px;border-radius:8px;cursor:pointer;border:1px solid var(--c-border);background:#fff;color:var(--c-secondary);white-space:nowrap';
     return '<div class="excl-row" data-idx="' + i + '" style="border-bottom:1px solid var(--c-border)">' +
       // Main row
-      '<div style="display:grid;grid-template-columns:60px 60px 130px 1fr 110px;padding:10px 0;align-items:center;background:' + bgCol + '">' +
+      '<div class="excl-grid excl-main-row" style="background:' + bgCol + '">' +
         '<div style="font-size:13px;font-weight:700;color:var(--c-primary)">Q' + qNum + '</div>' +
         '<div style="font-size:13px;color:var(--c-secondary);font-family:monospace;font-weight:600">' + ((ans||'—').toUpperCase()) + '</div>' +
         '<select onchange="onExclChange(this,' + i + ')" style="font-size:13px;padding:5px 8px;border:1px solid var(--c-border);border-radius:6px;background:#fff;font-family:var(--font);color:var(--c-primary);width:120px">' +
@@ -11954,7 +11931,7 @@ function openExclusionsModal() {
           '<option value="credit"'  + (excl.disposition==='credit' ?' selected':'') + '>Credit</option>' +
           '<option value="delete"'  + (excl.disposition==='delete' ?' selected':'') + '>Delete</option>' +
         '</select>' +
-        '<input type="text" id="excl-reason-' + i + '" placeholder="' + (excl.disposition==='include'?'No reason needed':'Enter reason…') + '" value="' + (excl.reason||'').replace(/"/g,'&quot;') + '" ' +
+        '<input class="excl-reason-input" type="text" id="excl-reason-' + i + '" placeholder="' + (excl.disposition==='include'?'No reason needed':'Enter reason…') + '" value="' + (excl.reason||'').replace(/"/g,'&quot;') + '" ' +
           (excl.disposition==='include'
             ? 'disabled style="width:95%;font-size:13px;padding:5px 8px;border:1px solid var(--c-border);border-radius:6px;font-family:var(--font);background:var(--c-surface);color:var(--c-muted);opacity:.35"'
             : 'style="width:95%;font-size:13px;padding:5px 8px;border:1px solid var(--c-border);border-radius:6px;font-family:var(--font);background:#fff;color:var(--c-primary)"') +
@@ -12003,7 +11980,7 @@ function openExclusionsModal() {
 function onExclChange(sel, idx) {
   var disp = sel.value;
   var row  = sel.closest('.excl-row');
-  var mainRow = row.querySelector('div[style*="grid-template-columns"]');
+  var mainRow = row.querySelector('.excl-main-row');
   if (mainRow) mainRow.style.background = disp === 'credit' ? '#fffbea' : disp === 'delete' ? '#fff5f5' : '#fff';
   var reasonInput = document.getElementById('excl-reason-' + idx);
   if (reasonInput) {
@@ -12128,12 +12105,18 @@ function saveExclusions() {
   });
   if (!valid) return;
   recordAuditEvent('exceptions_saved',{active:Object.keys(G.exclusions).filter(function(k){var e=G.exclusions[k];return e&&(e.disposition!=='include'||(e.altKeys&&e.altKeys.length));}).length});
-  switchRoom('landing');
-  markDirty(); // mark results outdated — stale bar appears
+  markDirty();
   updateSidebarBadges();
   updateExclLink();
-  updateExclBanner(); // show / update the exception view toggle strip
-  saveSession(); // C1 — autosave after exception change
+  updateExclBanner();
+  saveSession();
+  runAnalysis();
+  // A successful recalculation clears G_DIRTY. Keep the editor visible if analysis was blocked.
+  if (!G_DIRTY) {
+    switchRoom('mcq');
+    saveSession();
+    srAnnounce('Exceptions saved. Item Analysis has been updated.');
+  }
 }
 
 function updateExclLink() {
@@ -16015,6 +15998,7 @@ function updateLandingStatus() {
 
     // Flagged Questions
     if (_flagged.length > 0) {
+      _html += '<section class="landing-summary-section landing-summary-flagged">';
       _html += '<div class="landing-summary-hdr">Flagged Questions</div>';
       _html += '<div class="landing-summary-sub">Questions flagged as possibly problematic, requiring director review.</div>';
       _html += '<table class="landing-sum-tbl"><thead><tr>';
@@ -16026,7 +16010,7 @@ function updateLandingStatus() {
         if (r.flag.indexOf('Difficult') >= 0) { comment = r.pct + '% answered correctly'; }
         else if (r.rpbis < 0) { comment = r.pct ? r.pct + '% answered correctly / Negative discrimination' : 'Negative discrimination'; }
         var bw = (r.topWrong && r.p < 0.5) ? '<strong>' + r.topWrong + '</strong>' : '';
-        _html += '<tr>';
+        _html += '<tr class="row-flagged">';
         _html += '<td style="text-align:center;font-weight:700">' + r.num + '</td>';
         _html += '<td style="color:' + flagColor + ';font-style:italic">' + (r.flag || '') + '</td>';
         _html += '<td>' + comment + '</td>';
@@ -16035,11 +16019,12 @@ function updateLandingStatus() {
         _html += '</tr>';
       });
       _html += '</tbody></table>';
+      _html += '</section>';
     }
 
     // DIF-Flagged Questions
     if (_dif.length > 0) {
-      if (_flagged.length > 0) _html += '<div style="margin-top:16px"></div>';
+      _html += '<section class="landing-summary-section landing-summary-dif">';
       _html += '<div class="landing-summary-hdr">DIF-Flagged Questions</div>';
       _html += '<div class="landing-summary-sub">Questions showing a statistically significant English vs French performance gap. Expert content review is recommended — a DIF flag does not automatically indicate bias.</div>';
       _html += '<table class="landing-sum-tbl"><thead><tr>';
@@ -16057,11 +16042,12 @@ function updateLandingStatus() {
         _html += '</tr>';
       });
       _html += '</tbody></table>';
+      _html += '</section>';
     }
 
     // Too Easy Questions
     if (_easy.length > 0) {
-      if (_flagged.length > 0 || _dif.length > 0) _html += '<div style="margin-top:16px"></div>';
+      _html += '<section class="landing-summary-section landing-summary-easy">';
       _html += '<div class="landing-summary-hdr">Too Easy Questions</div>';
       _html += '<div class="landing-summary-sub">Questions answered correctly by ' + (typeof getThresh === 'function' ? Math.round(getThresh('easy')*100) : 96) + '% or more of students. Please revise before using again.</div>';
       _html += '<div class="landing-easy-bar">';
@@ -16071,6 +16057,7 @@ function updateLandingStatus() {
       _html += '<div class="landing-easy-stripe"></div>';
       _html += '<div class="landing-easy-nums">' + _easy.map(function(e){ return e.num; }).join(', ') + '</div>';
       _html += '</div>';
+      _html += '</section>';
     }
 
     if (_html) {
@@ -16201,7 +16188,8 @@ function computeQuartileData() {
     totals.push(kt);
   }
 
-  // Sort indices by score, assign quartile bands 0–3
+  // Sort scores ascending so band 0 is Q1 (lowest) and band 3 is Q4 (highest).
+  // Keep this direction aligned with the room labels and interpretation rules.
   var indices = []; for (var k = 0; k < n; k++) indices.push(k);
   indices.sort(function(a, b) { return totals[a] - totals[b]; });
   var quartiles = new Array(n);
@@ -16304,14 +16292,13 @@ function buildDistractorDetailHtml(idx) {
   // Flat distribution
   html += '<span class="da-sec-lbl">Answer Distribution</span>';
   if (r.distCounts && totalStudents > 0) {
-    var maxCnt = 0;
-    for (var oi = 0; oi < opts.length; oi++) { if ((r.distCounts[opts[oi]] || 0) > maxCnt) maxCnt = r.distCounts[opts[oi]] || 0; }
     html += '<div style="background:var(--c-surface);border:1px solid var(--c-border);border-radius:8px;padding:10px 14px;margin-bottom:2px">';
     for (var oi2 = 0; oi2 < opts.length; oi2++) {
       var opt2 = opts[oi2], cnt2 = r.distCounts[opt2] || 0;
       var pct2 = Math.round(cnt2 / totalStudents * 100);
       var isKey2 = opt2 === key, isAlt2 = altKeys.indexOf(opt2) >= 0;
-      var barPct2 = maxCnt > 0 ? Math.round(cnt2 / maxCnt * 100) : 0;
+      // The bar represents the global percentage, not a value normalised to the most popular option.
+      var barPct2 = pct2;
       html += '<div class="dist-bar-wrap"><div class="dist-opt-label">' + opt2.toUpperCase() + '</div>' +
         '<div class="dist-check">' + (isKey2 ? '✓' : (isAlt2 ? '<span style="font-size:8.5px;font-weight:700;color:var(--s-ok)">alt</span>' : '')) + '</div>' +
         '<div class="dist-bar-bg"><div class="dist-bar-fill" style="width:' + barPct2 + '%;background:' +
@@ -16357,8 +16344,10 @@ function buildDistractorDetailHtml(idx) {
 
   // Interpretation
   html += '<span class="da-sec-lbl">Interpretation</span>';
-  if (!qd || r.excluded === 'delete') {
+  if (r.excluded === 'delete') {
     html += '<div class="da-interp da-nodata">This question is excluded from analysis.</div>';
+  } else if (!qd) {
+    html += '<div class="da-interp da-nodata">Quartile data is not available. Re-run the analysis to generate an interpretation.</div>';
   } else {
     var qTotal = qd.qN[0] + qd.qN[1] + qd.qN[2] + qd.qN[3];
     if (qTotal < 8) {
@@ -16371,19 +16360,22 @@ function buildDistractorDetailHtml(idx) {
         for (var b6 = 0; b6 < 4; b6++) totalAll[o4] += qd.optCounts[b6][o4] || 0;
       }
       if (key) {
-        // P1: Key competition — distractor matches/beats key in Q3 or Q4
+        // P1: Key competition — a genuinely selected distractor matches/beats the key in
+        // one or both higher-performance quartiles. Report every matching quartile explicitly.
+        // Empty options must never compete with a key that also has a zero count in that band.
         for (var oi5 = 0; oi5 < opts.length; oi5++) {
           var o5 = opts[oi5]; if (o5 === key || altKeys.indexOf(o5) >= 0) continue;
+          var competitionBands = [];
           for (var hq = 2; hq <= 3; hq++) {
             var hN = qd.qN[hq]; if (hN < 3) continue;
             var distP = (qd.optCounts[hq][o5] || 0) / hN;
             var keyP = (qd.optCounts[hq][key] || 0) / hN;
-            if (distP >= keyP * 0.85) {
-              patterns.push({ type:'key_competition', tag:'Key Competition',
-                text:'Option ' + o5.toUpperCase() + ' attracted as many or more high-performing students (Q' + (hq+1) + ') as the correct answer. Consider reviewing the key or option ' + o5.toUpperCase() + ' as a defensible answer.' });
-              break;
+            if ((totalAll[o5] || 0) > 0 && distP >= 0.10 && distP >= keyP) {
+              competitionBands.push('Quartile ' + (hq+1) + ': ' + Math.round(distP*100) + '% chose option ' + o5.toUpperCase() + ' vs ' + Math.round(keyP*100) + '% for keyed option ' + key.toUpperCase());
             }
           }
+          if (competitionBands.length) patterns.push({ type:'key_competition', tag:'Key Competition',
+            text:'Within the higher-performance groups, ' + competitionBands.join('; ') + '. These are within-quartile percentages, not the overall answer distribution. Review the key and option ' + o5.toUpperCase() + ' as a possible defensible answer.' });
         }
         // P2: Reversed distractor — more high performers chose it than low performers
         for (var oi6 = 0; oi6 < opts.length; oi6++) {
@@ -16788,20 +16780,7 @@ function updateTopbarExam() {
       <div style="display:flex;align-items:center;justify-content:space-between;gap:20px">
         <!-- Icon + title -->
         <div style="display:flex;align-items:center;gap:18px">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" style="width:52px;height:auto;flex-shrink:0" role="img" aria-label="AQP icon">
-            <title>AQP</title>
-            <defs><clipPath id="about-glass-clip"><circle cx="22" cy="22" r="18"/></clipPath></defs>
-            <line x1="35" y1="35" x2="46" y2="46" stroke="rgba(255,255,255,.92)" stroke-width="4" stroke-linecap="round"/>
-            <circle cx="22" cy="22" r="18" fill="rgba(255,255,255,.07)"/>
-            <g clip-path="url(#about-glass-clip)">
-              <rect x="12" y="28" width="5" height="20" rx="1.5" fill="rgba(255,255,255,.28)"/>
-              <rect x="19" y="22" width="5" height="26" rx="1.5" fill="rgba(255,255,255,.58)"/>
-              <rect x="26" y="16" width="5" height="32" rx="1.5" fill="rgba(255,255,255,.92)"/>
-              <path d="M14.5,28 L21.5,22 L28.5,16 L35,10" fill="none" stroke="rgba(255,255,255,.75)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-              <circle cx="35" cy="10" r="2" fill="white"/>
-            </g>
-            <circle cx="22" cy="22" r="18" fill="none" stroke="rgba(255,255,255,.88)" stroke-width="2"/>
-          </svg>
+          <svg class="aqp-mark" viewBox="0 0 128 128" style="width:52px;height:52px" role="img" aria-label="AQP analytical Q icon"><rect class="aqp-tile" x="8" y="8" width="112" height="112" rx="28" stroke="rgba(255,255,255,.55)" stroke-width="2"/><path class="aqp-q" d="M60 27a33 33 0 1 0 21.9 57.7L98 100" stroke-width="9"/><path class="aqp-bars" d="M40 70h9V57h-9v13zm15 0h9V45h-9v25zm15 0h9V35h-9v35z"/></svg>
           <div>
             <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.8);text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px">Undergraduate Medical Education</div>
             <div id="about-modal-title" style="font-size:26px;font-weight:700;color:#fff;line-height:1.1;font-family:'Aptos Display','Aptos',Calibri,sans-serif">AQP</div>
@@ -16813,7 +16792,7 @@ function updateTopbarExam() {
           </div>
         </div>
         <button onclick="closeAbout()" aria-label="Close" title="Close" style="background:rgba(255,255,255,.12);border:none;border-radius:8px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;flex-shrink:0;transition:background .15s;align-self:flex-start" onmouseover="this.style.background='rgba(255,255,255,.22)'" onmouseout="this.style.background='rgba(255,255,255,.12)'">
-          <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <svg class="fui-icon fui-icon-md" aria-hidden="true"><use href="#fui-dismiss"/></svg>
         </button>
       </div>
     </div>
@@ -17008,7 +16987,7 @@ function updateTopbarExam() {
               <span class="faq-icon">+</span>
             </div>
             <div class="faq-a">
-              Yes — once your files are uploaded and the <strong>Analyze Exam</strong> button is active, a <strong>Question Exceptions</strong> link will appear just above the button. Click it to open the modal, which lists every question with its answer key letter. For each question you can set the disposition to <strong>Include</strong> (default), <strong>Credit</strong>, or <strong>Delete</strong>. A reason is required for any exclusion. You can also add alternate accepted answers — see below. Click <strong>Save Exceptions</strong> when done, then run the analysis normally.
+              Yes. After running the analysis, open <strong>Exceptions</strong> from the Tools section of the sidebar. The room lists every question with its answer key letter. For each question you can set the disposition to <strong>Include</strong> (default), <strong>Credit</strong>, or <strong>Delete</strong>. A reason is required for Credit or Delete. You can also add alternate accepted answers — see below. Click <strong>Save &amp; Update Analysis</strong> when done; AQP recalculates immediately and returns you to the updated Item Analysis.
             </div>
           </div>
 
@@ -17029,7 +17008,7 @@ function updateTopbarExam() {
               <span class="faq-icon">+</span>
             </div>
             <div class="faq-a">
-              Yes — use the <strong>Alternate Key</strong> feature in the Question Exceptions modal. On any question row, click <strong>+ Alt. Key</strong> to expand an inline panel showing answer choices A through E. The original key answer is pre-selected and greyed out for reference. Check any additional letters you want to accept, enter a reason, and click <strong>Save</strong>.<br><br>
+              Yes — use the <strong>Alternate Key</strong> feature in the Exceptions room. On any question row, click <strong>+ Alt. Key</strong> to expand an inline panel showing answer choices A through E. The original key answer is pre-selected and greyed out for reference. Check any additional letters you want to accept, enter a reason, and click <strong>Save</strong>. When all exception edits are complete, click <strong>Save &amp; Update Analysis</strong> in the persistent action bar.<br><br>
               Students who answered the original key <em>or</em> any alternate answer will receive full credit. All statistics (p-value, discrimination, flagging) recalculate to reflect the updated scoring. The Key column in the results table will show the original answer followed by the alternates in parentheses — for example, <strong>A (+D)</strong>. The reason you entered appears in the Comments column.
             </div>
           </div>
@@ -17882,7 +17861,7 @@ function updateTopbarExam() {
       <div id="excl-summary-modal" style="font-size:12px;color:var(--c-muted)"></div>
       <div style="display:flex;gap:10px">
         <button onclick="closeExclusionsModal()" class="btn-dl-secondary">Close</button>
-        <button onclick="saveExclusions()" class="btn btn-primary" style="padding:9px 20px;font-size:13px">Save Exclusions</button>
+        <button onclick="saveExclusions()" class="btn btn-primary" style="padding:9px 20px;font-size:13px">Save &amp; Update Analysis</button>
       </div>
     </div>
 

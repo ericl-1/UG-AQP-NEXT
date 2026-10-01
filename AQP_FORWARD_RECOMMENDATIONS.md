@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document records recommended future work for the Assessment Quality Platform after the QA, remediation, design-system consolidation, automated accessibility pass, and analysis-record consolidation completed for version 0.8, build `20260929-01`.
+This document records recommended future work for the Assessment Quality Platform after the QA, remediation, design-system consolidation, automated accessibility pass, analysis-record consolidation, and identity/icon refresh completed for version 0.8, build `20261001-01`.
 
 These are forward-looking improvements rather than defects remaining from the two QA passes. Completed corrections are documented separately in `AQP_CHANGE_SUMMARY_2026-09-23.md`.
 
@@ -328,13 +328,13 @@ Any future implementation should:
 - Handle all-clear, partial-analysis, sparse-data, and unresolved-review states
 - Receive content review from assessment-methodology stakeholders
 
-#### 22. Consolidate the icon language
+#### 22. Consolidate the icon language (completed in build `20261001-01`)
 
-Replace the remaining mixture of Tabler webfont icons, custom SVG marks, emoji, and text symbols with the user-approved **Fluent System Icons** direction, packaged locally rather than loaded from a public CDN. This was deliberately deferred from build `20260928-02` because it overlaps with the dependency/offline-deployment decision.
+The principal navigation and workflow controls now use the user-approved **Fluent System Icons** direction, with selected paths embedded locally in the single HTML file. The external Tabler webfont dependency was removed. Purpose-built statistical graphics and status/data visualizations remain separate by design.
 
-The future pass should preserve visible text for important actions, use a consistent stroke weight and size scale, remove emoji from formal workflow surfaces, and verify accessible names for every icon-only control.
+Visible text remains on important actions, the icon size scale is centralized, and icon-only controls retain accessible names. Future feature work should extend this same pattern rather than introduce another icon family.
 
-The application mark is a separate branding task. The revised analytical-Q concept is the approved design direction, but final production SVG/PNG assets, small-size legibility, and placement on the splash screen, top bar, footer, and favicon still require an implementation and verification pass.
+The revised analytical-Q application mark is also complete and appears across the splash screen, top bar, primary headers, footer, About panel, favicon, report previews, and Word-report byline. Production SVG sources and usage guidance are retained under `assets/brand/`.
 
 ## Suggested delivery sequence
 
