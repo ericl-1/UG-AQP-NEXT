@@ -28,6 +28,9 @@ assert.match(applicationHtml, /id="fluent-icon-sprite"/, "the local Fluent icon 
 assert.match(applicationHtml, /id="fui-apps"/, "the Fluent navigation family must be embedded");
 assert.match(applicationHtml, /AQP analytical Q icon|Analytical-Q identity/, "the analytical-Q identity must be present");
 assert.match(applicationHtml, /aqp-mark aqp-lockup-mark/, "primary headers must use the analytical-Q lockup");
+assert.match(applicationHtml, /class="sp-grid"/, "the Assessment Pulse splash must retain its ECG-style grid");
+assert.match(applicationHtml, /From responses to confident review/, "the approved splash slogan must be present");
+assert.doesNotMatch(applicationHtml, /id="sp-pct"|id="sp-fill"/, "the splash must not imply artificial loading progress");
 
 let browser;
 try {
@@ -57,6 +60,8 @@ try {
   assert.deepEqual(structure.duplicateIds, [], "IDs must be unique for reliable accessible relationships");
   assert.deepEqual(structure.unnamedDialogs, [], "every dialog needs an accessible name");
   assert.ok(structure.switches.every(s => /^(true|false)$/.test(s.checked) && s.label), "switches need names and checked state");
+  assert.ok(await page.locator("#theme-select").count(), "Settings must expose an independent brand control");
+  assert.ok(await page.locator("#appearance-select").count(), "Settings must expose an independent appearance control");
 
   const contrast = await page.evaluate(() => {
     function rgb(value) {

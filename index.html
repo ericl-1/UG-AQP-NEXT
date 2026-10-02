@@ -18,6 +18,8 @@
   --c-faint:         #63727e;   /* alias for muted — footer, captions */
   --c-accent:        #a31515;   /* primary brand — buttons, active states */
   --c-accent-dark:   #8b1010;   /* hover, emphasis */
+  --c-accent-fill:   #a31515;   /* substantial branded surfaces */
+  --c-accent-fill-hover:#8b1010;
   --c-accent-tint:   #fdf2f2;   /* section header bg, active tab bg */
   --c-bg:            #ffffff;   /* page / card background */
   --c-surface:       #f6f7f9;   /* light surface — button hover, table header */
@@ -67,6 +69,8 @@
   --c-faint:         #746d8a;
   --c-accent:        #6d5fa8;
   --c-accent-dark:   #5c4ea0;
+  --c-accent-fill:   #6d5fa8;
+  --c-accent-fill-hover:#5c4ea0;
   --c-accent-tint:   #f0edf8;
   --c-bg:            #ffffff;
   --c-surface:       #f8f6fc;
@@ -98,7 +102,7 @@
 </style>
 <style>
 /* ═══════════════════════════════════════════════════════════════════════════
-   AQP design system · Calm clinical intelligence · build 20261001-02
+   AQP design system · Calm clinical intelligence · build 20261002-01
    Centralized visual rules for colour, type, spacing, surfaces, controls,
    tables, status communication, motion, and theme parity.
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -301,7 +305,11 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 /* Exceptions editor: shared columns, legible inputs, and a persistent action bar. */
 .excl-grid{display:grid;grid-template-columns:60px 60px 130px minmax(220px,1fr) 110px;padding-left:12px;padding-right:12px;align-items:center}
 .excl-column-header{padding-top:9px;padding-bottom:9px;background:var(--c-surface);border:1px solid var(--c-border);border-radius:8px 8px 0 0}
-.excl-main-row{padding-top:10px;padding-bottom:10px}
+.excl-main-row{padding-top:10px;padding-bottom:10px;background:var(--c-bg)}
+.excl-main-row.excl-credit{background:var(--s-credited-bg)}
+.excl-main-row.excl-delete{background:var(--s-hard-bg)}
+.excl-definitions{background:var(--c-surface)}
+.excl-alt-row{background:var(--c-surface);border-top:1px solid var(--c-border)}
 .excl-reason-input:not(:disabled){border-color:var(--c-border-strong)!important;box-shadow:inset 0 0 0 1px rgba(24,34,43,.035)}
 .excl-save-bar{position:sticky;bottom:-16px;z-index:15;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 14px;margin:0 -2px;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-top:1px solid var(--c-border-2);box-shadow:0 -10px 24px rgba(24,34,43,.08)}
 .excl-save-actions{display:flex;gap:10px;flex-shrink:0}
@@ -362,9 +370,167 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
   #topbar-exam-sep,#topbar-exam-name,.topbar-results-nav,.topbar-setup-nav{display:none!important}
   .topbar-actions{gap:6px}
 }
+
+/* Dark appearance is independent from institutional brand selection. */
+:root[data-appearance="dark"]{
+  color-scheme:dark;
+  --c-primary:#eef2f5;
+  --c-secondary:#c2cbd2;
+  --c-muted:#9aa6b0;
+  --c-faint:#8996a1;
+  --c-accent:#e85b66;
+  --c-accent-dark:#f17a83;
+  --c-accent-fill:#a6192e;
+  --c-accent-fill-hover:#bd263b;
+  --c-accent-tint:#31191e;
+  --c-bg:#151b21;
+  --c-surface:#1d252d;
+  --c-canvas:#0f1419;
+  --c-border:#2c353e;
+  --c-border-2:#3b4650;
+  --c-border-strong:#53606b;
+  --c-dist-bar:#7fa6c2;
+  --c-shadow:0 1px 2px rgba(0,0,0,.28);
+  --c-shadow-raised:0 14px 34px rgba(0,0,0,.38);
+  --c-nav-glass:rgba(63,25,37,.97);
+  --s-ok:#7bc982;
+  --s-ok-bg:#172d1b;
+  --s-warn:#efb552;
+  --s-warn-text:#f0c77e;
+  --s-warn-bg:#302718;
+  --s-hard:#f0786d;
+  --s-hard-bg:#331d1d;
+  --s-credited:#e4bd62;
+  --s-credited-bg:#302918;
+  --s-lowdisc:#e0ae62;
+  --s-lowdisc-bg:#302617;
+  --s-easy:#69aee8;
+  --s-easy-text:#84c3f1;
+  --s-easy-bg:#172a38;
+  --s-check:#b89ae6;
+  --s-check-bg:#281f36;
+  --s-dif:#9ba7f1;
+  --s-dif-bg:#20243c;
+  --s-flag-row:#2d241a;
+  --s-flag-row-h:#3a2d1e;
+  --s-easy-row:#172a38;
+  --s-easy-row-h:#1d3547;
+  --s-dif-row:#20243c;
+  --s-dif-row-h:#292e4c;
+  --c-fb:#68caca;
+  --c-fb-bg:#153030;
+}
+:root[data-theme="elentra"][data-appearance="dark"]{
+  --c-accent:#a99bdf;
+  --c-accent-dark:#c0b4ec;
+  --c-accent-fill:#7867ba;
+  --c-accent-fill-hover:#8a79ca;
+  --c-accent-tint:#29243b;
+  --c-nav-glass:rgba(45,39,69,.97);
+}
+:root[data-appearance="dark"] .aqp-mark .aqp-tile,
+:root[data-appearance="dark"] .sp-mark .sp-tile{fill:var(--c-accent-fill)}
+:root[data-appearance="dark"] .home-action-card.primary,
+:root[data-appearance="dark"] .btn-primary,
+:root[data-appearance="dark"] .btn-dl-primary,
+:root[data-appearance="dark"] .step.complete,
+:root[data-appearance="dark"] .workflow-step.wf-current .workflow-dot{background:var(--c-accent-fill);border-color:var(--c-accent-fill)}
+:root[data-appearance="dark"] .home-action-card.primary:hover,
+:root[data-appearance="dark"] .btn-primary:hover,
+:root[data-appearance="dark"] .btn-dl-primary:hover{background:var(--c-accent-fill-hover);border-color:var(--c-accent-fill-hover)}
+:root[data-appearance="dark"] [style*="background:var(--c-accent)"]{background:var(--c-accent-fill)!important}
+:root[data-appearance="dark"] body,
+:root[data-appearance="dark"] .app-body,
+:root[data-appearance="dark"] .app-main,
+:root[data-appearance="dark"] .content-scroll{background:var(--c-canvas);color:var(--c-primary)}
+:root[data-appearance="dark"] tr:hover td,
+:root[data-appearance="dark"] .fb-freq-table tr:hover td{background:#202932}
+:root[data-appearance="dark"] tr.row-flagged td{background:#2d241a}
+:root[data-appearance="dark"] tr.row-flagged:hover td{background:#3a2d1e}
+:root[data-appearance="dark"] tr.row-easy td{background:#172a38}
+:root[data-appearance="dark"] tr.row-easy:hover td{background:#1d3547}
+:root[data-appearance="dark"] tr.row-dif td{background:#20243c}
+:root[data-appearance="dark"] tr.row-dif:hover td{background:#292e4c}
+:root[data-appearance="dark"] .landing-summary-section{background:linear-gradient(180deg,var(--c-bg),var(--c-surface) 150%);box-shadow:0 7px 22px rgba(0,0,0,.22)}
+:root[data-appearance="dark"] .excl-save-bar{background:rgba(21,27,33,.96);box-shadow:0 -10px 24px rgba(0,0,0,.25)}
+:root[data-appearance="dark"] .fb-info-green,
+:root[data-appearance="dark"] .da-clean{color:var(--s-ok)}
+:root[data-appearance="dark"] .report-readiness.ready{border-color:#365a3c;background:#17271a}
+:root[data-appearance="dark"] .report-readiness.review{border-color:#66542b;background:#2a2418}
+:root[data-appearance="dark"] .exc-banner{background:#2b2418;border-bottom-color:#5f4e28}
+:root[data-appearance="dark"] .workflow-step.wf-complete{color:var(--s-ok)}
+:root[data-appearance="dark"] .workflow-step.wf-complete .workflow-dot{background:var(--s-ok-bg);border-color:#426b48}
+:root[data-appearance="dark"] .debug{background:#090c0f;color:#d8dde2}
+:root[data-appearance="dark"] :not(.report-preview,.report-preview *)[style*="background:#fff"],
+:root[data-appearance="dark"] :not(.report-preview,.report-preview *)[style*="background: #fff"],
+:root[data-appearance="dark"] :not(.report-preview,.report-preview *)[style*="background:#fafafa"]{background:var(--c-bg)!important}
+:root[data-appearance="dark"] :not(.report-preview,.report-preview *)[style*="background:#f8f9fa"],
+:root[data-appearance="dark"] :not(.report-preview,.report-preview *)[style*="background:#f6f7f9"],
+:root[data-appearance="dark"] :not(.report-preview,.report-preview *)[style*="background:#f5f7f8"]{background:var(--c-surface)!important}
+:root[data-appearance="dark"] :not(.report-preview,.report-preview *)[style*="color:#1b5e20"]{color:var(--s-ok)!important}
+:root[data-appearance="dark"] :not(.report-preview,.report-preview *)[style*="color:#5a3a00"],
+:root[data-appearance="dark"] :not(.report-preview,.report-preview *)[style*="color:#92400e"],
+:root[data-appearance="dark"] :not(.report-preview,.report-preview *)[style*="color:#7a4700"]{color:var(--s-warn-text)!important}
+:root[data-appearance="dark"] select,
+:root[data-appearance="dark"] input,
+:root[data-appearance="dark"] textarea{color-scheme:dark}
+
+/* Report previews intentionally remain paper-white in every appearance. */
+.report-preview,
+#report-preview-modal #rpm-body{
+  color-scheme:light;
+  --c-primary:#18222b;--c-secondary:#485762;--c-muted:#66737d;--c-faint:#75818a;
+  --c-bg:#ffffff;--c-surface:#f5f7f8;--c-border:#dfe3e6;--c-border-2:#cfd6da;
+  color:#18222b!important;background:#fff!important;border-color:#dfe3e6!important
+}
+.report-preview td{color:#18222b;background:#fff}.report-preview th{color:#3d4a54;background:#f4f5f7}
+.report-preview tr.row-flagged td,#report-preview-modal #rpm-body tr.row-flagged td{background:#fff8e6!important;color:#18222b!important}
+.report-preview tr.row-easy td,#report-preview-modal #rpm-body tr.row-easy td{background:#e8f4fd!important;color:#18222b!important}
+.report-preview tr.row-dif td,#report-preview-modal #rpm-body tr.row-dif td{background:#e8eaf6!important;color:#18222b!important}
+#report-preview-modal #rpm-body [style*="background:#fff"]{background:#fff!important}
+#report-preview-modal #rpm-body [style*="background:#f8f9fa"],
+#report-preview-modal #rpm-body [style*="background:#f6f7f9"],
+#report-preview-modal #rpm-body [style*="background:#f5f7f8"]{background:#f5f7f8!important}
+
+/* Assessment Pulse splash. */
+#splash-screen{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;overflow:hidden;pointer-events:all;background:var(--c-canvas);color:var(--c-primary);transition:opacity .42s ease}
+.sp-grid{position:absolute;inset:0;opacity:.62;background-image:linear-gradient(var(--c-border) 1px,transparent 1px),linear-gradient(90deg,var(--c-border) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(circle at center,#000 0,rgba(0,0,0,.88) 48%,transparent 88%)}
+.sp-pulse{position:absolute;left:4%;right:4%;top:calc(50% - 64px);height:180px;transform:translateY(-50%);z-index:1}
+.sp-pulse svg{width:100%;height:100%;overflow:visible}
+.sp-pulse-path{fill:none;stroke:var(--c-accent);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1300;stroke-dashoffset:1300;filter:drop-shadow(0 0 8px color-mix(in srgb,var(--c-accent) 40%,transparent));animation:spPulseDraw 1.18s ease forwards}
+.sp-lockup{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;opacity:0;transform:scale(.92);animation:spLockupIn .58s cubic-bezier(.2,.9,.25,1) .72s forwards}
+.sp-mark{width:138px;height:138px;filter:drop-shadow(0 16px 30px color-mix(in srgb,var(--c-accent) 28%,transparent))}
+.sp-mark .sp-tile{fill:var(--c-accent)}.sp-mark .sp-q{fill:none;stroke:#fff;stroke-width:8;stroke-linecap:round;stroke-linejoin:round}.sp-mark .sp-bars{fill:#fff}
+.sp-title{font:650 42px/1.1 var(--font);letter-spacing:-1.2px;color:var(--c-primary)}
+.sp-slogan{font:500 15px/1.4 var(--font);color:var(--c-secondary)}
+.sp-status{display:flex;align-items:center;gap:9px;margin-top:5px;font:650 11px/1 var(--font);text-transform:uppercase;letter-spacing:.13em;color:var(--c-muted)}
+.sp-status::before{content:"";width:25px;height:2px;border-radius:2px;background:var(--c-accent)}
+.sp-version{position:absolute;bottom:24px;z-index:3;font:500 11px/1.2 var(--font);letter-spacing:.03em;color:var(--c-faint);opacity:0;animation:spCopyIn .4s ease 1s forwards}
+@keyframes spPulseDraw{0%{stroke-dashoffset:1300;opacity:.2}78%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:0;opacity:.22}}
+@keyframes spLockupIn{to{opacity:1;transform:scale(1)}}
+@keyframes spCopyIn{to{opacity:1}}
+@media(max-width:640px){.sp-mark{width:112px;height:112px}.sp-title{font-size:30px}.sp-pulse{left:-20%;right:-20%;top:calc(50% - 56px)}.sp-grid{background-size:38px 38px}}
+@media(prefers-reduced-motion:reduce){.sp-pulse-path{animation:none;stroke-dashoffset:0;opacity:.22}.sp-lockup,.sp-version{animation:none;opacity:1;transform:none}}
+@media print{
+  :root{color-scheme:light;--c-primary:#18222b;--c-secondary:#485762;--c-muted:#66737d;--c-faint:#75818a;--c-bg:#fff;--c-surface:#f5f7f8;--c-canvas:#fff;--c-border:#dfe3e6;--c-border-2:#cfd6da}
+  body{background:#fff!important;color:#18222b!important}
+}
 </style>
 </head>
 <body>
+
+<script>
+(function(){
+  try {
+    var brand=localStorage.getItem('ugme-theme')||'';
+    var mode=localStorage.getItem('ugme-appearance')||'system';
+    if(brand)document.documentElement.setAttribute('data-theme',brand);
+    var dark=mode==='dark'||(mode==='system'&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);
+    document.documentElement.setAttribute('data-appearance',dark?'dark':'light');
+    document.documentElement.setAttribute('data-appearance-mode',mode);
+  } catch(e) {}
+})();
+</script>
 
 <!-- Local SVG symbol library: Microsoft Fluent System Icons, Regular 24 px. -->
 <svg id="fluent-icon-sprite" aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden">
@@ -410,161 +576,68 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
   <symbol id="fui-clock" viewBox="0 0 24 24"><path d="M3.5 12a8.5 8.5 0 1 1 17 0 8.5 8.5 0 0 1-17 0M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20m0 4.65a.75.75 0 0 0-1.5.1v6.1c.06.37.37.65.75.65h4.1a.75.75 0 0 0-.1-1.5H12V6.65"/></symbol>
 </svg>
 
-<!-- ── Splash Screen ─────────────────────────────────────────────────────── -->
-<div id="splash-screen" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(155deg,#c41c1c 0%,#7a0a0a 40%,#2a0505 75%,#0e0202 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:all;transition:opacity .4s ease">
-
-  <div style="display:flex;flex-direction:column;align-items:center;gap:36px;width:400px">
-
-    <!-- Analytical-Q identity — animated draw sequence -->
-    <svg id="splash-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 128" style="width:100%;display:block" role="img" aria-label="Assessment Quality Platform">
-      <rect id="sp-tile" x="8" y="8" width="112" height="112" rx="28" fill="#A31515" stroke="rgba(255,255,255,.42)" stroke-width="2" style="opacity:0"/>
-      <path id="sp-q" d="M60 27a33 33 0 1 0 21.9 57.7L98 100" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="230" stroke-dashoffset="230"/>
-      <g fill="#fff">
-        <rect id="sp-bar-1" x="40" y="57" width="9" height="13" style="transform-origin:44.5px 70px;transform:scaleY(0)"/>
-        <rect id="sp-bar-2" x="55" y="45" width="9" height="25" style="transform-origin:59.5px 70px;transform:scaleY(0)"/>
-        <rect id="sp-bar-3" x="70" y="35" width="9" height="35" style="transform-origin:74.5px 70px;transform:scaleY(0)"/>
-      </g>
-      <text id="sp-fullname" x="148" y="76" fill="#fff" font-family="'Aptos Display','Aptos',Calibri,'Segoe UI',Arial,sans-serif" font-size="38" font-weight="600" letter-spacing="-.6" style="opacity:0">Assessment Quality Platform</text>
+<!-- ── Assessment Pulse splash ──────────────────────────────────────────── -->
+<div id="splash-screen" aria-label="Assessment Quality Platform is opening">
+  <div class="sp-grid" aria-hidden="true"></div>
+  <div class="sp-pulse" aria-hidden="true">
+    <svg viewBox="0 0 1200 180" preserveAspectRatio="none">
+      <path class="sp-pulse-path" pathLength="1300" d="M0 90H360l30-1 14-12 13 28 17-72 20 112 20-55h726"/>
     </svg>
-
-    <!-- Progress -->
-    <div style="width:100%;opacity:0" id="sp-prog-wrap">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <div id="sp-label" style="font-size:11px;font-weight:600;color:rgba(255,255,255,.6);letter-spacing:.8px;text-transform:uppercase">Initialising</div>
-        <div id="sp-pct" style="font-size:11px;font-weight:700;color:rgba(255,255,255,.88)">0%</div>
-      </div>
-      <div style="width:100%;height:3px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden">
-        <div id="sp-fill" style="height:100%;width:0%;background:rgba(255,255,255,.85);border-radius:2px;transition:width .45s cubic-bezier(.4,0,.2,1)"></div>
-      </div>
-    </div>
-
-    <!-- Version -->
-    <div id="sp-ver" style="font-size:11px;color:rgba(255,255,255,.45);letter-spacing:.3px;opacity:0"></div>
-
   </div>
+  <div class="sp-lockup">
+    <svg class="sp-mark" viewBox="0 0 128 128" role="img" aria-label="AQP analytical Q mark">
+      <rect class="sp-tile" x="8" y="8" width="112" height="112" rx="28"/>
+      <path class="sp-q" d="M60 27a33 33 0 1 0 21.9 57.7L98 100"/>
+      <path class="sp-bars" d="M40 70h9V57h-9v13zm15 0h9V45h-9v25zm15 0h9V35h-9v35z"/>
+    </svg>
+    <div class="sp-title">Assessment Quality Platform</div>
+    <div class="sp-slogan">From responses to confident review</div>
+    <div class="sp-status">Preparing your workspace</div>
+  </div>
+  <div id="sp-ver" class="sp-version"></div>
 </div>
 
 <script>
 (function() {
   if (window._splashShown) {
-    var s = document.getElementById('splash-screen');
-    if (s) s.style.display = 'none';
+    var duplicate = document.getElementById('splash-screen');
+    if (duplicate) duplicate.style.display = 'none';
     return;
   }
   window._splashShown = true;
 
-  // ── Helpers ───────────────────────────────────────────────────────────────
-  function anim(el, props, duration, easing, delay) {
-    if (!el) return;
-    setTimeout(function() {
-      var transArr = Object.keys(props).map(function(p){ return p + ' ' + duration + 'ms ' + (easing||'ease'); });
-      el.style.transition = transArr.join(',');
-      Object.keys(props).forEach(function(p){ el.style[p] = props[p]; });
-    }, delay || 0);
+  function centrePulseOnMark() {
+    var mark = document.querySelector('#splash-screen .sp-mark');
+    var pulse = document.querySelector('#splash-screen .sp-pulse');
+    if (!mark || !pulse) return;
+    var bounds = mark.getBoundingClientRect();
+    pulse.style.top = (bounds.top + bounds.height / 2) + 'px';
   }
+  centrePulseOnMark();
+  window.addEventListener('resize', centrePulseOnMark);
 
-  // ── AQP Logo animation sequence ──────────────────────────────────────────
-  var logo = document.getElementById('splash-logo');
-  if (logo) { logo.style.opacity='0'; logo.style.transform='translateY(10px)'; }
-  anim(logo, {opacity:'1', transform:'translateY(0)'}, 400, 'ease', 100);
-
-  // Progress bar fades in early
-  var pw = document.getElementById('sp-prog-wrap');
-  anim(pw, {opacity:'1'}, 300, 'ease', 300);
-
-  // Version string — appears mid-sequence after full name is visible
-  setTimeout(function() {
-    var vEl = document.getElementById('sp-ver');
-    if (vEl) {
-      if (typeof APP_VERSION !== 'undefined') {
-        vEl.textContent = 'v' + APP_VERSION + ' \u00B7 build ' + APP_BUILD + ' \u00B7 Undergraduate Medical Education';
-      }
-      anim(vEl, {opacity:'1'}, 300, 'ease', 0);
+  var versionAttempts = 0;
+  function setSplashVersion() {
+    var version = document.getElementById('sp-ver');
+    if (!version) return;
+    if (typeof APP_VERSION !== 'undefined' && typeof APP_BUILD !== 'undefined') {
+      version.textContent = 'v' + APP_VERSION + ' · build ' + APP_BUILD + ' · Undergraduate Medical Education';
+    } else if (versionAttempts++ < 20) {
+      setTimeout(setSplashVersion, 50);
     }
-  }, 2100);
+  }
+  setTimeout(setSplashVersion, 0);
 
-  // ── Progress steps ────────────────────────────────────────────────────────
-  // Sequence: analytical-Q tile → Q stroke → bars → wordmark.
-  var steps = [
-    { pct: 17, label: 'Loading theme\u2026',       delay: 150,  draw: function() {
-        anim(document.getElementById('sp-tile'), {opacity:'1'}, 300, 'ease', 0);
-    }},
-    { pct: 33, label: 'Loading libraries\u2026',   delay: 750,  draw: function() {
-        var q = document.getElementById('sp-q');
-        if (q) { q.style.transition='stroke-dashoffset 650ms cubic-bezier(.4,0,.2,1)'; q.style.strokeDashoffset='0'; }
-    }},
-    { pct: 50, label: 'Preparing workspace\u2026', delay: 1100, draw: function() {
-        anim(document.getElementById('sp-bar-1'), {transform:'scaleY(1)'}, 300, 'ease', 0);
-    }},
-    { pct: 67, label: 'Building interface\u2026',  delay: 1500, draw: function() {
-        anim(document.getElementById('sp-bar-2'), {transform:'scaleY(1)'}, 300, 'ease', 0);
-    }},
-    { pct: 83, label: 'Configuring tool\u2026',    delay: 1950, draw: function() {
-        anim(document.getElementById('sp-bar-3'), {transform:'scaleY(1)'}, 300, 'ease', 0);
-    }},
-    { pct: 100, label: 'Ready',                    delay: 2350, draw: function() {
-        anim(document.getElementById('sp-fullname'), {opacity:'1'}, 350, 'ease', 0);
-    }},
-  ];
-
-  var fill  = document.getElementById('sp-fill');
-  var label = document.getElementById('sp-label');
-  var pct   = document.getElementById('sp-pct');
-  steps.forEach(function(s) {
-    setTimeout(function() {
-      if (fill)  fill.style.width  = s.pct + '%';
-      if (label) label.textContent = s.label;
-      if (pct)   pct.textContent   = s.pct + '%';
-      if (s.draw) s.draw();
-      if (s.pct === 100) {
-        setTimeout(function() {
-          if (label) label.style.color = 'rgba(255,255,255,.95)';
-          if (pct)   pct.style.color   = '#ffffff';
-        }, 350);
-      }
-    }, s.delay);
-  });
-
-  // ── Exit: content fades out, home panel fades in beneath ─────────────────
-  var TOTAL_MS = 3200;
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   setTimeout(function() {
     var screen = document.getElementById('splash-screen');
     if (!screen) return;
-
-    var homePanel = document.getElementById('home-panel');
-    if (homePanel) {
-      homePanel.style.opacity = '0';
-      homePanel.style.transition = 'none';
-    }
-
-    // Step 1: disintegrate — splash content scales up, blurs, and fades
-    var inner = screen.querySelector('div');
-    if (inner) {
-      inner.style.transition = 'opacity 1.1s ease, transform 1.3s cubic-bezier(.15,0,.7,1), filter 1.1s ease';
-      inner.style.opacity = '0';
-      inner.style.transform = 'scale(1.22) translateY(-18px)';
-      inner.style.filter = 'blur(18px)';
-    }
-
-    // Step 2: background dissolves after content is mostly gone
+    screen.style.opacity = '0';
     setTimeout(function() {
-      screen.style.transition = 'opacity .55s ease';
-      screen.style.opacity = '0';
-
-      if (homePanel) {
-        homePanel.style.transition = 'opacity .55s ease';
-        homePanel.style.opacity = '1';
-      }
-
-      // Step 3: clean up
-      setTimeout(function() {
-        screen.style.display = 'none';
-        if (inner) { inner.style.transition = ''; inner.style.transform = ''; inner.style.filter = ''; }
-        if (homePanel) { homePanel.style.transition = ''; homePanel.style.opacity = ''; }
-      }, 580);
-    }, 950);
-  }, TOTAL_MS);
-
+      screen.style.display = 'none';
+      window.removeEventListener('resize', centrePulseOnMark);
+    }, 450);
+  }, reduced ? 450 : 1900);
 })();
 </script>
 
@@ -1362,7 +1435,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
   </div>
 
   <!-- Definitions strip -->
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;background:#f7f8f9;border:1px solid var(--c-border);border-radius:10px 10px 0 0;overflow:hidden">
+  <div class="excl-definitions" style="display:grid;grid-template-columns:1fr 1fr 1fr;border:1px solid var(--c-border);border-radius:10px 10px 0 0;overflow:hidden">
     <div style="display:flex;align-items:flex-start;gap:8px;padding:14px 18px">
       <div style="margin-top:4px;width:10px;height:10px;border-radius:2px;background:var(--s-ok);flex-shrink:0"></div>
       <div style="font-size:12.5px;color:var(--c-secondary);line-height:1.6"><strong style="color:var(--c-primary)">Include</strong> — Question is included in analysis as-is. Default for all questions.</div>
@@ -1376,7 +1449,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
       <div style="font-size:12.5px;color:var(--c-secondary);line-height:1.6"><strong style="color:var(--c-primary)">Delete</strong> — Question removed entirely. No points, no stats, not included in exam average, flagging, or DIF.</div>
     </div>
   </div>
-  <div style="display:flex;align-items:flex-start;gap:8px;padding:10px 18px;background:#f7f8f9;border:1px solid var(--c-border);border-top:none;border-radius:0 0 10px 10px;margin-bottom:16px">
+  <div class="excl-definitions" style="display:flex;align-items:flex-start;gap:8px;padding:10px 18px;border:1px solid var(--c-border);border-top:none;border-radius:0 0 10px 10px;margin-bottom:16px">
     <div style="margin-top:4px;width:10px;height:10px;border-radius:2px;background:var(--c-secondary);flex-shrink:0"></div>
     <div style="font-size:12.5px;color:var(--c-secondary);line-height:1.6"><strong style="color:var(--c-primary)">Alt. Key</strong> — Accept one or more additional correct answers. Students answering the original key <em>or</em> any alternate receive full credit. Stats recalculate accordingly.</div>
   </div>
@@ -1823,18 +1896,31 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
     <div>
       <div style="font-size:10px;font-weight:700;color:var(--c-accent);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px;padding-bottom:5px;border-bottom:2px solid var(--c-accent)">General</div>
 
-    <!-- Theme -->
+    <!-- Brand and appearance -->
     <div style="margin-bottom:0">
       <div style="font-size:10px;font-weight:700;color:var(--c-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Appearance</div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--c-surface);border-radius:8px;border:1px solid var(--c-border)">
-        <div>
-          <div style="font-size:12px;font-weight:600;color:var(--c-secondary)">Colour Theme</div>
-          <div style="font-size:11px;color:var(--c-muted)">Choose the visual style of the application</div>
+      <div style="display:flex;flex-direction:column;border-radius:8px;border:1px solid var(--c-border);overflow:hidden">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--c-surface);border-bottom:1px solid var(--c-border);gap:18px">
+          <div>
+            <div style="font-size:12px;font-weight:600;color:var(--c-secondary)">Brand</div>
+            <div style="font-size:11px;color:var(--c-muted)">Choose the institutional colour identity</div>
+          </div>
+          <select id="theme-select" aria-label="Brand theme" onchange="applyTheme(this.value)" style="font-size:12px;font-weight:600;color:var(--c-secondary);background:var(--c-bg);border:1px solid var(--c-border);border-radius:6px;padding:5px 10px;cursor:pointer;font-family:var(--font)">
+            <option value="">uOttawa</option>
+            <option value="elentra">Elentra</option>
+          </select>
         </div>
-        <select id="theme-select" aria-label="Colour theme" onchange="applyTheme(this.value)" style="font-size:12px;font-weight:600;color:var(--c-secondary);background:var(--c-bg);border:1px solid var(--c-border);border-radius:6px;padding:5px 10px;cursor:pointer;font-family:var(--font)">
-          <option value="">uOttawa Theme</option>
-          <option value="elentra">Elentra Theme</option>
-        </select>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--c-surface);gap:18px">
+          <div>
+            <div style="font-size:12px;font-weight:600;color:var(--c-secondary)">Mode</div>
+            <div style="font-size:11px;color:var(--c-muted)">Use a light, dark, or system-matched interface</div>
+          </div>
+          <select id="appearance-select" aria-label="Appearance mode" onchange="applyAppearance(this.value)" style="font-size:12px;font-weight:600;color:var(--c-secondary);background:var(--c-bg);border:1px solid var(--c-border);border-radius:6px;padding:5px 10px;cursor:pointer;font-family:var(--font)">
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+            <option value="system">System</option>
+          </select>
+        </div>
       </div>
     </div>
     </div><!-- /General section -->
@@ -2107,10 +2193,10 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 
 // ── App version — single source of truth ─────────────────────────────────
 var APP_VERSION     = '0.8';
-var APP_BUILD       = '20261001-02';
+var APP_BUILD       = '20261002-01';
 var APP_FAQ_VERSION = '0.8';           // Keep aligned with the app version; date records FAQ revisions
-var APP_FAQ_DATE    = 'October 1, 2026'; // Update when FAQ content changes
-var APP_RN_DATE     = 'October 1, 2026'; // Update each version close
+var APP_FAQ_DATE    = 'October 2, 2026'; // Update when FAQ content changes
+var APP_RN_DATE     = 'October 2, 2026'; // Update each version close
 var SESSION_BACKUP_FILE_TYPE = 'aqp-portable-session';
 var SESSION_BACKUP_SCHEMA_VERSION = 1;
 
@@ -2341,10 +2427,33 @@ function applyTheme(theme) {
   }
   try { localStorage.setItem('ugme-theme', theme); } catch(e) {}
 }
-(function _restoreThemeOnLoad() {
-  var saved = '';
-  try { saved = localStorage.getItem('ugme-theme') || ''; } catch(e) {}
-  if (saved) applyTheme(saved);
+var _appearanceMedia = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+function applyAppearance(mode, persist) {
+  if (['light','dark','system'].indexOf(mode) < 0) mode = 'system';
+  var resolved = mode === 'system' ? (_appearanceMedia && _appearanceMedia.matches ? 'dark' : 'light') : mode;
+  document.documentElement.setAttribute('data-appearance-mode', mode);
+  document.documentElement.setAttribute('data-appearance', resolved);
+  if (persist !== false) {
+    try { localStorage.setItem('ugme-appearance', mode); } catch(e) {}
+  }
+  var control = document.getElementById('appearance-select');
+  if (control) control.value = mode;
+}
+function _syncSystemAppearance() {
+  if (document.documentElement.getAttribute('data-appearance-mode') === 'system') applyAppearance('system', false);
+}
+if (_appearanceMedia) {
+  if (_appearanceMedia.addEventListener) _appearanceMedia.addEventListener('change', _syncSystemAppearance);
+  else if (_appearanceMedia.addListener) _appearanceMedia.addListener(_syncSystemAppearance);
+}
+(function _restoreAppearanceOnLoad() {
+  var savedTheme = '', savedAppearance = 'system';
+  try {
+    savedTheme = localStorage.getItem('ugme-theme') || '';
+    savedAppearance = localStorage.getItem('ugme-appearance') || 'system';
+  } catch(e) {}
+  applyTheme(savedTheme);
+  applyAppearance(savedAppearance, false);
 })();
 // ── C1: Session persistence ───────────────────────────────────────────────
 // Saves G, FB (minus raw rows), ExamSession, flags, and key DOM fields to
@@ -2732,7 +2841,12 @@ function clearLocalAqpData(allData) {
   if(!confirm(message))return;
   try {
     localStorage.removeItem(_DRAFT_KEY);
-    if(allData&&document.getElementById('privacy-clear-theme').checked)localStorage.removeItem('ugme-theme');
+    if(allData&&document.getElementById('privacy-clear-theme').checked){
+      localStorage.removeItem('ugme-theme');
+      localStorage.removeItem('ugme-appearance');
+      applyTheme('');
+      applyAppearance('system',false);
+    }
   } catch(e) {}
   if(G._lastN||(FB&&FB.ready))_sessionAutosaveSuppressed=true;
   renderSessionHistory(null);
@@ -2750,6 +2864,8 @@ function openSettings() {
   if (sel) {
     try { sel.value = localStorage.getItem('ugme-theme') || ''; } catch(e) { sel.value = ''; }
   }
+  var appearanceSel = document.getElementById('appearance-select');
+  if (appearanceSel) appearanceSel.value = document.documentElement.getAttribute('data-appearance-mode') || 'system';
   // Reset impact warning panel to clean state
   var iw = document.getElementById('settings-impact-warning');
   if (iw) iw.style.display = 'none';
@@ -7772,6 +7888,15 @@ function renderDIFReport() {
       '<td>'+(r.fPct>r.ePct?'FR students performed better':'EN students performed better')+'</td>'+
       '<td style="text-align:center">'+r.disc+'</td></tr>';
   }
+  var suppressionHtml='';
+  if(suppressed.length){
+    suppressionHtml='<div style="margin-top:16px;padding:12px 14px;background:#fff8e6;border:1px solid #ead49a;border-left:4px solid #d4860a;border-radius:7px;font-size:11.5px;color:#303840">'+
+      '<div style="font-size:12px;font-weight:700;margin-bottom:3px">DIF estimation notes</div>'+
+      '<div style="color:#5a6472;margin-bottom:8px">'+suppressed.length+' of '+G.dif.length+' questions could not be estimated reliably. They were excluded from DIF flagging but remain listed here for methodological transparency.</div>'+
+      '<ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px">'+
+      suppressed.map(function(d){return '<li><b>Question '+d.num+' — '+escHtml(difSuppressionShortLabel(d.suppressionCode))+':</b> '+escHtml(d.suppressionReason)+'</li>';}).join('')+
+      '</ul></div>';
+  }
 
   document.getElementById('dif-report').innerHTML =
     '<p style="font-size:16px;font-weight:700;text-align:center;margin:0;line-height:1.3">FACULTY OF MEDICINE - UNDERGRADUATE MEDICAL EDUCATION</p>'+
@@ -7796,7 +7921,7 @@ function renderDIFReport() {
       ? '<p style="margin-bottom:8px"><b>DIF Results</b><br><i>The following question'+(flagged.length!==1?'s':'')+' showed statistically significant DIF (p &lt; '+formatDifThreshold()+'):</i></p>'+
         '<table style="width:100%;margin:0 0 12px;border-collapse:collapse"><thead><tr style="text-align:center"><th>Question</th><th>Elentra ID</th><th>EN % Correct</th><th>FR % Correct</th><th>Interpretation</th><th>Discrimination</th></tr></thead><tbody>'+difTableRows+'</tbody></table>'
       : '<p><i>No items with statistically significant DIF were detected (p &lt; '+formatDifThreshold()+').</i></p>')+
-    (suppressed.length?'<div style="margin-top:14px;padding:10px 12px;background:#fff8e6;border-left:3px solid #d4860a;font-size:11.5px"><b>DIF estimation notes</b><br>'+suppressed.map(function(d){return 'Q'+d.num+': '+escHtml(d.suppressionReason);}).join('<br>')+'</div>':'')+
+    suppressionHtml+
     uiReportFooterHtml();
 }
 
@@ -10738,6 +10863,22 @@ var RELEASE_NOTES = [
     version: '0.8',
     builds: [
       {
+        build: '20261002-01',
+        date:  'October 2, 2026',
+        notes: [
+          'Independent appearance controls: Settings now separates the institutional Brand (uOttawa or Elentra) from interface Mode (Light, Dark, or System).',
+          'Dark mode: a professional charcoal palette now covers setup, analysis rooms, navigation, dialogs, tables, statuses, and controls while preserving semantic flag colours and readable contrast.',
+          'System mode: AQP follows the operating-system light/dark preference and updates automatically when that preference changes.',
+          'Report fidelity: in-app report previews, printed output, and downloaded reports intentionally remain paper-white regardless of interface mode.',
+          'Dark-mode completion: Question Exceptions definitions, decision rows, inputs, and Alternate Key workspaces now use native dark surfaces; Credit and Delete decisions use restrained dark semantic highlights.',
+          'Report-preview isolation: flagged, easy, and DIF question-row highlights now retain their intended light paper colours instead of inheriting dark analysis-table colours.',
+          'DIF report readability: estimation suppressions are now presented as a structured coverage note with question numbers, short status labels, and full methodological reasons.',
+          'Assessment Pulse splash: the opening screen now uses a theme-aware analytical pulse, ECG-style grid, larger AQP identity, and the line “From responses to confident review.”',
+          'Local preference handling: brand and appearance choices are retained in this browser and can be reset together from the Privacy & Local Data panel.',
+          'No scoring, item-analysis, DIF, feedback, exception, or report calculations changed in this build.'
+        ]
+      },
+      {
         build: '20261001-02',
         date:  'October 1, 2026',
         notes: [
@@ -11922,20 +12063,20 @@ function openExclusionsModal() {
   rows.innerHTML = key.map(function(ans, i) {
     var qNum = i + 1;
     var excl = G.exclusions[i] || { disposition: 'include', reason: '', altKeys: [], altReason: '' };
-    var bgCol = excl.disposition === 'credit' ? '#fffbea' : excl.disposition === 'delete' ? '#fff5f5' : '#fff';
+    var dispositionClass = excl.disposition === 'credit' ? ' excl-credit' : excl.disposition === 'delete' ? ' excl-delete' : '';
     var hasAlt = excl.altKeys && excl.altKeys.length > 0;
     var isDeleted = excl.disposition === 'delete';
     var altBtnStyle = isDeleted
       ? 'font-size:11px;font-weight:700;padding:4px 8px;border-radius:8px;cursor:not-allowed;opacity:.35;border:1px solid var(--c-border);background:#f3f4f6;color:var(--c-muted);white-space:nowrap'
       : hasAlt
         ? 'font-size:11px;font-weight:700;padding:4px 8px;border-radius:5px;cursor:pointer;border:1px solid var(--c-accent);background:var(--c-accent);color:#fff;white-space:nowrap'
-        : 'font-size:11px;font-weight:700;padding:4px 8px;border-radius:8px;cursor:pointer;border:1px solid var(--c-border);background:#fff;color:var(--c-secondary);white-space:nowrap';
+        : 'font-size:11px;font-weight:700;padding:4px 8px;border-radius:8px;cursor:pointer;border:1px solid var(--c-border);background:var(--c-bg);color:var(--c-secondary);white-space:nowrap';
     return '<div class="excl-row" data-idx="' + i + '" style="border-bottom:1px solid var(--c-border)">' +
       // Main row
-      '<div class="excl-grid excl-main-row" style="background:' + bgCol + '">' +
+      '<div class="excl-grid excl-main-row' + dispositionClass + '">' +
         '<div style="font-size:13px;font-weight:700;color:var(--c-primary)">Q' + qNum + '</div>' +
         '<div style="font-size:13px;color:var(--c-secondary);font-family:monospace;font-weight:600">' + ((ans||'—').toUpperCase()) + '</div>' +
-        '<select onchange="onExclChange(this,' + i + ')" style="font-size:13px;padding:5px 8px;border:1px solid var(--c-border);border-radius:6px;background:#fff;font-family:var(--font);color:var(--c-primary);width:120px">' +
+        '<select onchange="onExclChange(this,' + i + ')" style="font-size:13px;padding:5px 8px;border:1px solid var(--c-border);border-radius:6px;background:var(--c-bg);font-family:var(--font);color:var(--c-primary);width:120px">' +
           '<option value="include"' + (excl.disposition==='include'?' selected':'') + '>Include</option>' +
           '<option value="credit"'  + (excl.disposition==='credit' ?' selected':'') + '>Credit</option>' +
           '<option value="delete"'  + (excl.disposition==='delete' ?' selected':'') + '>Delete</option>' +
@@ -11943,7 +12084,7 @@ function openExclusionsModal() {
         '<input class="excl-reason-input" type="text" id="excl-reason-' + i + '" placeholder="' + (excl.disposition==='include'?'No reason needed':'Enter reason…') + '" value="' + (excl.reason||'').replace(/"/g,'&quot;') + '" ' +
           (excl.disposition==='include'
             ? 'disabled style="width:95%;font-size:13px;padding:5px 8px;border:1px solid var(--c-border);border-radius:6px;font-family:var(--font);background:var(--c-surface);color:var(--c-muted);opacity:.35"'
-            : 'style="width:95%;font-size:13px;padding:5px 8px;border:1px solid var(--c-border);border-radius:6px;font-family:var(--font);background:#fff;color:var(--c-primary)"') +
+            : 'style="width:95%;font-size:13px;padding:5px 8px;border:1px solid var(--c-border);border-radius:6px;font-family:var(--font);background:var(--c-bg);color:var(--c-primary)"') +
         '>' +
         '<div style="display:flex;justify-content:center">' +
           '<button id="altkey-btn-' + i + '" ' + (isDeleted ? 'disabled ' : '') + 'onclick="toggleAltKeyRow(' + i + ')" style="' + altBtnStyle + '">' +
@@ -11952,7 +12093,7 @@ function openExclusionsModal() {
         '</div>' +
       '</div>' +
       // Alt key expansion row — hidden by default unless already has saved alt keys
-      '<div id="altkey-row-' + i + '" style="display:' + (hasAlt ? 'flex' : 'none') + ';align-items:flex-start;gap:16px;padding:10px 16px 14px 60px;background:#f4f6fb;border-top:1px solid #dde6f5">' +
+      '<div id="altkey-row-' + i + '" class="excl-alt-row" style="display:' + (hasAlt ? 'flex' : 'none') + ';align-items:flex-start;gap:16px;padding:10px 16px 14px 60px">' +
         // Checkboxes
         '<div>' +
           '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--c-muted);margin-bottom:8px">Also accept</div>' +
@@ -11972,12 +12113,12 @@ function openExclusionsModal() {
         // Reason
         '<div style="flex:1">' +
           '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--c-muted);margin-bottom:8px">Reason</div>' +
-          '<input type="text" id="altkey-reason-' + i + '" value="' + (excl.altReason||'').replace(/"/g,'&quot;') + '" placeholder="Why is this alternate answer accepted?" style="width:100%;font-size:13px;padding:6px 10px;border:1px solid var(--c-border);border-radius:6px;font-family:var(--font);background:#fff;color:var(--c-primary);box-sizing:border-box">' +
+          '<input type="text" id="altkey-reason-' + i + '" value="' + (excl.altReason||'').replace(/"/g,'&quot;') + '" placeholder="Why is this alternate answer accepted?" style="width:100%;font-size:13px;padding:6px 10px;border:1px solid var(--c-border);border-radius:6px;font-family:var(--font);background:var(--c-bg);color:var(--c-primary);box-sizing:border-box">' +
         '</div>' +
         // Save / Cancel
         '<div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;padding-top:20px">' +
           '<button onclick="saveAltKey(' + i + ')" style="font-size:12px;font-weight:700;padding:5px 14px;border-radius:8px;border:none;background:var(--c-accent);color:#fff;cursor:pointer">Save</button>' +
-          '<button onclick="cancelAltKey(' + i + ')" style="font-size:12px;font-weight:700;padding:5px 14px;border-radius:8px;border:1px solid var(--c-border);background:#fff;color:var(--c-secondary);cursor:pointer">Cancel</button>' +
+          '<button onclick="cancelAltKey(' + i + ')" style="font-size:12px;font-weight:700;padding:5px 14px;border-radius:8px;border:1px solid var(--c-border);background:var(--c-bg);color:var(--c-secondary);cursor:pointer">Cancel</button>' +
         '</div>' +
       '</div>' +
     '</div>';
@@ -11990,12 +12131,15 @@ function onExclChange(sel, idx) {
   var disp = sel.value;
   var row  = sel.closest('.excl-row');
   var mainRow = row.querySelector('.excl-main-row');
-  if (mainRow) mainRow.style.background = disp === 'credit' ? '#fffbea' : disp === 'delete' ? '#fff5f5' : '#fff';
+  if (mainRow) {
+    mainRow.classList.toggle('excl-credit', disp === 'credit');
+    mainRow.classList.toggle('excl-delete', disp === 'delete');
+  }
   var reasonInput = document.getElementById('excl-reason-' + idx);
   if (reasonInput) {
     reasonInput.disabled = disp === 'include';
     reasonInput.style.opacity = disp === 'include' ? '.35' : '1';
-    reasonInput.style.background = disp === 'include' ? 'var(--c-surface)' : '#fff';
+    reasonInput.style.background = disp === 'include' ? 'var(--c-surface)' : 'var(--c-bg)';
     reasonInput.style.color = disp === 'include' ? 'var(--c-muted)' : 'var(--c-primary)';
     reasonInput.placeholder = disp === 'include' ? 'No reason needed' : 'Enter reason…';
     if (disp === 'include') reasonInput.value = '';
@@ -12054,7 +12198,7 @@ function saveAltKey(idx) {
       btn.style.borderColor = 'var(--c-accent)';
     } else {
       btn.textContent = '+ Alt. Key';
-      btn.style.background = '#fff';
+      btn.style.background = 'var(--c-bg)';
       btn.style.color = 'var(--c-secondary)';
       btn.style.borderColor = 'var(--c-border)';
     }
@@ -17041,14 +17185,24 @@ function updateTopbarExam() {
             </div>
           </div>
 
-          <!-- Theme selector FAQ entry -->
+          <!-- Brand and appearance FAQ entry -->
           <div class="faq-item">
             <div class="faq-q" onclick="toggleFAQ(this)">
-              <span>Can I change the colour theme of the app?</span>
+              <span>Can I change the brand colours or use Dark Mode?</span>
               <span class="faq-icon">+</span>
             </div>
             <div class="faq-a" style="display:none">
-              Yes. Open <strong>Settings</strong> (hamburger menu, top right) and choose a theme from the <strong>Colour Theme</strong> dropdown under <em>Appearance</em>. Two options are available: <strong>uOttawa Theme</strong> (garnet, the default) and <strong>Elentra Theme</strong> (purple). Your choice is saved automatically and restored the next time you open the tool.
+              Yes. Open <strong>Settings</strong> (More Options menu, top right). Under <em>Appearance</em>, <strong>Brand</strong> selects the uOttawa or Elentra colour identity, while <strong>Mode</strong> selects Light, Dark, or System. System follows your device preference and changes automatically when the device preference changes. These choices are saved only in this browser and restored the next time you open AQP.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFAQ(this)">
+              <span>Does Dark Mode change report previews or exported reports?</span>
+              <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-a" style="display:none">
+              No. Dark Mode changes the working interface only. Report previews, printed reports, and downloaded report documents remain light with a white page background so they preserve their established letter format and are ready to print or distribute.
             </div>
           </div>
         </div>
@@ -17733,7 +17887,7 @@ function updateTopbarExam() {
       <div style="font-size:12px;font-weight:700;color:var(--c-primary);margin-bottom:8px">Current browser storage</div>
       <div id="privacy-draft-details" style="border:1px solid var(--c-border);border-radius:9px;padding:13px 15px;margin-bottom:16px"></div>
       <div style="font-size:11.5px;line-height:1.6;color:var(--c-muted);margin-bottom:16px">Reopenable AQP backups are downloaded files. Clearing browser data cannot remove files already downloaded to this computer or copied elsewhere.</div>
-      <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--c-secondary);margin-bottom:14px"><input id="privacy-clear-theme" type="checkbox" style="accent-color:var(--c-accent)"> Also reset the saved colour theme</label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--c-secondary);margin-bottom:14px"><input id="privacy-clear-theme" type="checkbox" style="accent-color:var(--c-accent)"> Also reset saved brand and appearance preferences</label>
       <div style="display:flex;gap:8px;flex-wrap:wrap"><button id="privacy-clear-draft" class="btn-dl-secondary" onclick="clearLocalAqpData(false)">Clear saved draft</button><button class="btn-dl-primary" style="background:var(--s-hard)" onclick="clearLocalAqpData(true)">Clear all AQP local data</button></div>
     </div>
   </div>

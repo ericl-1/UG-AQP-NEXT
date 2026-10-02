@@ -3,11 +3,26 @@
 ## Build identity
 
 - Starting point: AQP 0.8, build `20260923-01` (`Downloads/index.html`)
-- Current development build: AQP 0.8, build `20261001-02`
-- Working branch: `feature/feedback-navigation`
+- Current development build: AQP 0.8, build `20261002-01`
+- Working branch: `feature/dark-mode-splash`
 - Working file: `index.html` in the isolated development worktree
 - The Downloads baseline was not modified.
-- Builds through `20261001-01` were merged into GitHub `main` and deployed through GitHub Pages. Build `20261001-02` is being developed on the isolated `feature/feedback-navigation` branch and is not live until its pull request is approved and merged.
+- Builds through `20261001-02` were merged into GitHub `main` and deployed through GitHub Pages. Build `20261002-01` is being developed on the isolated `feature/dark-mode-splash` branch and is not live until its pull request is approved and merged.
+
+## Build 20261002-01 — Dark Mode and Assessment Pulse splash
+
+- Separated institutional **Brand** (uOttawa or Elentra) from interface **Mode** (Light, Dark, or System) in Settings; either brand can now be used with either appearance.
+- Added a professional charcoal Dark Mode across setup, analysis rooms, navigation, dialogs, tables, statuses, and controls while retaining category-specific semantic colours.
+- Added System mode, which follows the operating-system appearance preference and responds when that preference changes.
+- Kept report previews, print output, and exported reports intentionally light and paper-white so their established distribution format does not change.
+- Completed the Exceptions dark-mode treatment: definition panels, question rows, fields, expanded Alternate Key workspaces, and Credit/Delete decision highlights now use dark-mode surface and semantic tokens rather than hard-coded light fills.
+- Isolated flagged, easy, and DIF table-row highlights inside report previews so they retain their intended light paper colours even when the working interface is dark.
+- Reworked the standalone DIF report's dense suppression block into a structured estimation-coverage note with question numbers, short status labels, and the full methodological reason for each non-estimated item.
+- Replaced the former progress splash with the approved **Assessment Pulse** concept: an ECG-style grid, analytical pulse centred through the application mark, larger logo/title, and the slogan **“From responses to confident review.”**
+- Made the splash inherit the selected brand and appearance and respect reduced-motion preferences.
+- Saved brand and appearance locally as separate preferences and updated Privacy & Local Data so both can be reset together.
+- Updated the in-app FAQ, release notes, retained documentation, and automated regression coverage.
+- Scoring, item analysis, DIF, feedback, exception handling, and report calculations were not changed.
 
 ## Build 20261001-02 — Student Feedback navigation structure
 
