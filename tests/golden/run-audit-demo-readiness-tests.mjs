@@ -143,7 +143,7 @@ try {
       };
     })(),
   }));
-  assert.equal(initial.build, "20261001-02");
+  assert.equal(initial.build, "20261002-01");
   assert.equal(initial.title, "AQP Synthetic Demonstration Exam");
   assert.equal(initial.bannerVisible, true);
   assert.equal(initial.isDemo, true);
@@ -172,7 +172,7 @@ try {
   assert.equal(initial.difKpiInToolbar, true, "DIF KPI tiles must share the toolbar row with the CSV action");
   assert.equal(initial.readiness.ready, false, "unreviewed demo flags should produce advisory readiness");
   assert.equal(initial.audit.demonstration, true);
-  assert.equal(initial.audit.application.build, "20261001-02");
+  assert.equal(initial.audit.application.build, "20261002-01");
   assert.equal(initial.audit.sourceFiles.demonstration.name, "Built-in synthetic dataset");
   assert.ok(initial.audit.inputInterpretation.reconciliation);
   assert.ok(initial.audit.events.some(event => event.type === "demonstration_loaded"));
@@ -190,6 +190,75 @@ try {
   assert.equal(initial.design.uottawa.topBrandFill, initial.design.uottawa.footerBrandFill, "uOttawa brand marks must share the active theme colour");
   assert.equal(initial.design.elentra.topBrandFill, initial.design.elentra.footerBrandFill, "Elentra brand marks must share the active theme colour");
   assert.notEqual(initial.design.elentra.topBrandFill, initial.design.uottawa.topBrandFill, "analytical-Q marks must follow the selected theme");
+
+  const appearances = await page.evaluate(() => {
+    const capture = () => {
+      const root = getComputedStyle(document.documentElement);
+      const body = getComputedStyle(document.body);
+      return {
+        mode: document.documentElement.getAttribute("data-appearance-mode"),
+        resolved: document.documentElement.getAttribute("data-appearance"),
+        canvas: root.getPropertyValue("--c-canvas").trim(),
+        bodyBackground: body.backgroundColor,
+        brand: document.documentElement.getAttribute("data-theme") || "",
+      };
+    };
+    applyTheme("");
+    applyAppearance("dark");
+    const darkUottawa = capture();
+    applyTheme("elentra");
+    const darkElentra = capture();
+    const preview = document.createElement("div");
+    preview.className = "report-preview";
+    preview.textContent = "Paper preview";
+    document.body.appendChild(preview);
+    const previewStyle = getComputedStyle(preview);
+    const paper = { background: previewStyle.backgroundColor, color: previewStyle.color };
+    preview.remove();
+    openReportPreviewModal("mcq");
+    const modalPreviewStyle = getComputedStyle(document.getElementById("rpm-body"));
+    const modalPaper = { background: modalPreviewStyle.backgroundColor, color: modalPreviewStyle.color };
+    const modalFlaggedCell = document.querySelector("#rpm-body tr.row-flagged td");
+    const modalFlagged = modalFlaggedCell ? getComputedStyle(modalFlaggedCell).backgroundColor : "";
+    closeReportPreviewModal();
+    switchRoom("exceptions");
+    const secondDisposition = document.querySelector('#excl-rows .excl-row[data-idx="1"] select');
+    secondDisposition.value = "credit";
+    onExclChange(secondDisposition, 1);
+    toggleAltKeyRow(0);
+    const exceptionSurface = selector => getComputedStyle(document.querySelector(selector)).backgroundColor;
+    const exceptionColours = {
+      definitions: exceptionSurface(".excl-definitions"),
+      included: exceptionSurface(".excl-main-row"),
+      credited: exceptionSurface(".excl-main-row.excl-credit"),
+      altKey: exceptionSurface(".excl-alt-row"),
+    };
+    switchRoom("landing");
+    applyAppearance("light");
+    const lightElentra = capture();
+    applyAppearance("system");
+    const system = capture();
+    applyTheme("");
+    return { darkUottawa, darkElentra, lightElentra, system, paper, modalPaper, modalFlagged, exceptionColours };
+  });
+  assert.equal(appearances.darkUottawa.mode, "dark");
+  assert.equal(appearances.darkUottawa.resolved, "dark");
+  assert.notEqual(appearances.darkUottawa.bodyBackground, "rgb(255, 255, 255)");
+  assert.equal(appearances.darkElentra.resolved, "dark", "changing brand must not change appearance");
+  assert.equal(appearances.darkElentra.brand, "elentra");
+  assert.equal(appearances.lightElentra.resolved, "light");
+  assert.equal(appearances.lightElentra.brand, "elentra", "changing appearance must not change brand");
+  assert.equal(appearances.system.mode, "system");
+  assert.match(appearances.system.resolved, /^(light|dark)$/);
+  assert.equal(appearances.paper.background, "rgb(255, 255, 255)", "report previews must remain paper-white in dark mode");
+  assert.equal(appearances.paper.color, "rgb(24, 34, 43)");
+  assert.equal(appearances.modalPaper.background, "rgb(255, 255, 255)", "the report-preview modal must remain paper-white in dark mode");
+  assert.equal(appearances.modalPaper.color, "rgb(24, 34, 43)");
+  assert.equal(appearances.modalFlagged, "rgb(255, 248, 230)", "flagged report rows must retain their paper-report highlight in dark mode");
+  assert.notEqual(appearances.exceptionColours.definitions, "rgb(247, 248, 249)", "exception definitions must use a dark-mode surface");
+  assert.notEqual(appearances.exceptionColours.included, "rgb(255, 255, 255)", "included exception rows must use a dark-mode surface");
+  assert.notEqual(appearances.exceptionColours.credited, "rgb(255, 251, 234)", "credit decisions must use a dark semantic highlight");
+  assert.equal(appearances.exceptionColours.altKey, appearances.exceptionColours.definitions, "alternate-key workspaces must use the dark surface token");
 
   const feedbackNavigation = await page.evaluate(() => {
     const navIds = [...document.querySelectorAll("#main-sidebar .sidebar-nav > .nav-item")].map(el => el.id);
@@ -294,7 +363,7 @@ try {
   assert.match(path.basename(jsonPath), /_analysis-record\.json$/);
   assert.equal(json.recordType, "aqp-analysis-record");
   assert.equal(json.schemaVersion, "1.0");
-  assert.equal(json.meta.build, "20261001-02");
+  assert.equal(json.meta.build, "20261002-01");
   assert.deepEqual(json.summary, recordUi.canonical.summary);
   assert.deepEqual(json.thresholds, recordUi.canonical.thresholds);
   assert.deepEqual(json.questions, recordUi.canonical.questions);

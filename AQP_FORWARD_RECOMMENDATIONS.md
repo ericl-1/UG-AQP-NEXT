@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document records recommended future work for the Assessment Quality Platform after the QA, remediation, design-system consolidation, automated accessibility pass, analysis-record consolidation, identity/icon refresh, and Student Feedback navigation restructure completed for version 0.8, build `20261001-02`.
+This document records recommended future work for the Assessment Quality Platform after the QA, remediation, design-system consolidation, automated accessibility pass, analysis-record consolidation, identity/icon refresh, Student Feedback navigation restructure, and Dark Mode/Assessment Pulse refresh completed for version 0.8, build `20261002-01`.
 
 These are forward-looking improvements rather than defects remaining from the two QA passes. Completed corrections are documented separately in `AQP_CHANGE_SUMMARY_2026-09-23.md`.
 
