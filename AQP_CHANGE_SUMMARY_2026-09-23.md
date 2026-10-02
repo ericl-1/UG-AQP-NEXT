@@ -3,11 +3,24 @@
 ## Build identity
 
 - Starting point: AQP 0.8, build `20260923-01` (`Downloads/index.html`)
-- Current development build: AQP 0.8, build `20261001-01`
-- Working branch: `feature/analysis-record-consolidation`
-- Working file: `index.html` in the isolated analysis-record consolidation worktree
+- Current development build: AQP 0.8, build `20261001-02`
+- Working branch: `feature/feedback-navigation`
+- Working file: `index.html` in the isolated development worktree
 - The Downloads baseline was not modified.
-- Builds through `20260928-03` were merged into GitHub `main` and deployed through GitHub Pages. Builds `20260929-01` and `20261001-01` are being developed on the isolated `feature/analysis-record-consolidation` branch and are not live until its pull request is approved and merged.
+- Builds through `20261001-01` were merged into GitHub `main` and deployed through GitHub Pages. Build `20261001-02` is being developed on the isolated `feature/feedback-navigation` branch and is not live until its pull request is approved and merged.
+
+## Build 20261001-02 — Student Feedback navigation structure
+
+- Restructured the Student Feedback sidebar into three equal destinations: **Overview**, **Feedback Review**, and **Unmapped Comments**.
+- Moved the existing feedback KPI summary and Top Commented Questions chart into the dedicated Overview room without changing their calculations or content.
+- Promoted Unmapped Comments from an indented sub-room to a full navigation room while retaining its unresolved-comment badge.
+- Kept Feedback Review focused on comment review and categorisation by hiding the overview panel in that room.
+- Positioned Feedback Overview metrics directly below the room title and description so the page hierarchy reads correctly.
+- Made the analytical-Q marks in the interface inherit the active uOttawa or Elentra accent colour rather than remaining garnet in both themes.
+- Added a proper all-mapped empty state to Unmapped Comments, preventing the former `NaN%` progress display when no comments require attribution.
+- Updated the in-app FAQ, release notes, and retained browser coverage for the new navigation structure.
+- This is intentionally a structural first pass. A richer Feedback Overview and a purpose-built Distractor Analysis report remain documented backlog items.
+- Feedback parsing, category assignment, mapping decisions, MCQ calculations, DIF, persistence, and report generation were not changed.
 
 ## Build 20261001-01 — analytical-Q identity and Fluent icons
 

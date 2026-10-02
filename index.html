@@ -98,7 +98,7 @@
 </style>
 <style>
 /* ═══════════════════════════════════════════════════════════════════════════
-   AQP design system · Calm clinical intelligence · build 20261001-01
+   AQP design system · Calm clinical intelligence · build 20261001-02
    Centralized visual rules for colour, type, spacing, surfaces, controls,
    tables, status communication, motion, and theme parity.
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -343,9 +343,9 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 .nav-item>.fui-icon,.nav-item>span>.fui-icon{width:16px;height:16px;color:var(--c-muted);transition:color var(--motion-fast) var(--motion-ease)}
 .nav-item.active>.fui-icon,.nav-item.active>span>.fui-icon{color:var(--c-accent)}
 
-/* Analytical-Q identity system. The garnet tile remains constant across themes. */
+/* Analytical-Q identity system. The tile follows the active interface theme. */
 .aqp-mark{display:block;fill:none;flex:0 0 auto}
-.aqp-mark .aqp-tile{fill:#A31515}.aqp-mark .aqp-q{fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round}.aqp-mark .aqp-bars{fill:#fff}
+.aqp-mark .aqp-tile{fill:var(--c-accent)}.aqp-mark .aqp-q{fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round}.aqp-mark .aqp-bars{fill:#fff}
 .aqp-lockup{display:flex;align-items:center;gap:18px;color:#26313B}
 .aqp-lockup-mark{width:72px;height:72px}.aqp-lockup-name{font-size:28px;font-weight:650;letter-spacing:-.6px;line-height:1.12;color:var(--c-primary)}
 .logo-mark{padding:0;background:transparent!important;overflow:visible}.logo-mark .aqp-mark{width:100%;height:100%}
@@ -622,8 +622,9 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
         <button class="nav-item" id="nav-dif" onclick="sidebarNav('dif',this)" title="DIF Analysis"><svg class="fui-icon" aria-hidden="true"><use href="#fui-scales"/></svg><span class="nav-item-label">DIF Analysis</span></button>
         <div class="nav-div"></div>
         <span class="nav-section-label">Student Feedback</span>
-        <button class="nav-item" id="nav-feedback" onclick="sidebarNav('feedback',this)" title="Feedback Review"><span id="badge-mapping-mirror" class="nav-badge nav-badge-amber"></span><svg class="fui-icon" aria-hidden="true"><use href="#fui-chat"/></svg><span class="nav-item-label">Feedback Review</span></button>
-        <div class="nav-sub" id="nav-mapping" onclick="sidebarNav('mapping',this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();sidebarNav('mapping',this)}" role="button" tabindex="0" title="Unmapped Comments"><svg class="nav-sub-icon" width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M3 1v5h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 4l2 2-2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Unmapped Comments</span><span class="nav-badge nav-badge-amber" id="badge-mapping" style="display:none"></span></div>
+        <button class="nav-item" id="nav-feedback-overview" onclick="sidebarNav('feedback-overview',this)" title="Feedback Overview"><svg class="fui-icon" aria-hidden="true"><use href="#fui-apps"/></svg><span class="nav-item-label">Overview</span></button>
+        <button class="nav-item" id="nav-feedback" onclick="sidebarNav('feedback',this)" title="Feedback Review"><svg class="fui-icon" aria-hidden="true"><use href="#fui-chat"/></svg><span class="nav-item-label">Feedback Review</span></button>
+        <button class="nav-item" id="nav-mapping" onclick="sidebarNav('mapping',this)" style="justify-content:space-between" title="Unmapped Comments"><span style="display:flex;align-items:center;gap:8px"><svg class="fui-icon" aria-hidden="true"><use href="#fui-warning"/></svg><span class="nav-item-label">Unmapped Comments</span></span><span class="nav-badge nav-badge-amber" id="badge-mapping" style="display:none"></span></button>
         <div class="nav-div"></div>
         <span class="nav-section-label">Tools</span>
         <button class="nav-item" id="nav-exceptions" onclick="sidebarNav('exceptions',this)" style="justify-content:space-between" title="Exceptions"><span style="display:flex;align-items:center;gap:8px"><svg class="fui-icon" aria-hidden="true"><use href="#fui-options"/></svg><span class="nav-item-label">Exceptions</span></span><span class="nav-badge nav-badge-accent" id="badge-exceptions" style="display:none"></span></button>
@@ -1093,7 +1094,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
     <!-- Pre-upload guidance -->
     <div class="wz-guidance" style="margin-bottom:14px">
       <span class="wz-guidance-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
-      <div>Upload your QuestionMark feedback export (.xlsx). The app will parse student comments and match them to question numbers automatically. Any comments that couldn't be matched will be shown in the <strong>Comment Mapping</strong> room after analysis for your review.</div>
+      <div>Upload your QuestionMark feedback export (.xlsx). The app will parse student comments and match them to question numbers automatically. Any comments that couldn't be matched will be shown in the <strong>Unmapped Comments</strong> room after analysis for your review.</div>
     </div>
     <!-- Upload -->
     <div class="section-card" style="margin-bottom:14px">
@@ -1184,7 +1185,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
       <div id="combined-fb-body" style="padding:16px 18px 20px">
         <div class="wz-guidance" id="combined-fb-attribution-guidance" style="display:none">
           <span class="wz-guidance-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><circle cx="9" cy="11" r=".5" fill="currentColor"/><circle cx="12" cy="11" r=".5" fill="currentColor"/><circle cx="15" cy="11" r=".5" fill="currentColor"/></svg></span>
-          <div>The app automatically matches comments to question numbers where possible. Any comments that couldn’t be matched will be available for review in the <strong>Comment Mapping</strong> room after analysis — this is normal and expected. Click the run button below to proceed.</div>
+          <div>The app automatically matches comments to question numbers where possible. Any comments that couldn’t be matched will be available for review in the <strong>Unmapped Comments</strong> room after analysis — this is normal and expected. Click the run button below to proceed.</div>
         </div>
         <div id="combined-fb-upload-zone" class="upload-row-item" role="button" tabindex="0" aria-label="Upload student feedback file"
           onclick="document.getElementById('combined-fb-file-input').click()"
@@ -1324,7 +1325,6 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
         <div class="card" id="new-summary-card" style="display:none;padding:0;overflow:hidden;border:none;box-shadow:none"></div>
         <div id="summary-separator" style="display:none;border-top:3px solid rgba(0,0,0,.28);margin:8px 0"></div>
       </div>
-      <div id="kpi-zone-fb" style="display:none;border:1px solid var(--c-border);border-radius:8px;overflow:hidden;margin-bottom:0"></div>
     </div>
 
     <div class="tabs no-print" id="main-tab-bar" style="display:none">
@@ -1743,6 +1743,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
         <div class="page-title" id="rph-fb-title">Feedback</div>
         <div class="page-sub" id="rph-fb-sub">Student comments parsed and categorized by question</div>
       </div>
+      <div id="kpi-zone-fb" style="display:none;border:1px solid var(--c-border);border-radius:8px;overflow:hidden;margin-bottom:16px"></div>
       <div class="section active" id="section-feedback">
         <div id="fb-toolbar-host"></div>
         <div id="fb-results-content" style="overflow-x:hidden">
@@ -2106,7 +2107,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 
 // ── App version — single source of truth ─────────────────────────────────
 var APP_VERSION     = '0.8';
-var APP_BUILD       = '20261001-01';
+var APP_BUILD       = '20261001-02';
 var APP_FAQ_VERSION = '0.8';           // Keep aligned with the app version; date records FAQ revisions
 var APP_FAQ_DATE    = 'October 1, 2026'; // Update when FAQ content changes
 var APP_RN_DATE     = 'October 1, 2026'; // Update each version close
@@ -9150,11 +9151,11 @@ function renderFbPreflightPanel() {
   var _cbGuid = document.getElementById('combined-fb-attribution-guidance');
   if (_cbGuid) _cbGuid.style.display = 'flex';
 
-  // Combined mode: note about pending comments going to Comment Mapping room
+  // Combined mode: note about pending comments going to Unmapped Comments
   if (typeof G_ANALYSIS_TYPE !== 'undefined' && G_ANALYSIS_TYPE === 'both' && pendCount > 0) {
     var noteDiv = document.createElement('div');
     noteDiv.style.cssText = 'margin-top:8px;font-size:11.5px;color:var(--c-muted);padding:6px 10px;background:var(--c-surface);border-radius:6px;border:1px solid var(--c-border)';
-    noteDiv.textContent = pendCount + ' unmatched comment' + (pendCount===1?'':'s') + ' will be available for review in the Comment Mapping room after analysis.';
+    noteDiv.textContent = pendCount + ' unmatched comment' + (pendCount===1?'':'s') + ' will be available for review in the Unmapped Comments room after analysis.';
     panel.appendChild(noteDiv);
   }
   checkRunReady(); // update run button state after feedback is parsed
@@ -9724,7 +9725,7 @@ function switchMainTab(name, el) {
     });
     threshBanner.style.display = (isFeedback || allDefault) ? 'none' : 'flex';
   }
-  // KPI zone: show MCQ KPIs for analysis tab, feedback KPIs for feedback tab, hide for reports
+  // KPI zones: MCQ summary is shared above rooms; Feedback Overview sits below its own room header.
   var kpiZone   = document.getElementById('kpi-zone');
   var kpiMcq    = document.getElementById('kpi-zone-mcq');
   var kpiFb     = document.getElementById('kpi-zone-fb');
@@ -9734,16 +9735,11 @@ function switchMainTab(name, el) {
     if (_currentRoom === 'landing' && name === 'analysis' && hasMcqKpi) {
       kpiZone.style.display = '';
       if (kpiMcq) kpiMcq.style.display = '';
-      if (kpiFb)  kpiFb.style.display  = 'none';
-
-    } else if (_currentRoom === 'feedback' && name === 'feedback' && hasFbKpi) {
-      kpiZone.style.display = '';
-      if (kpiMcq) kpiMcq.style.display = 'none';
-      if (kpiFb)  kpiFb.style.display  = '';
     } else {
       kpiZone.style.display = 'none';
     }
   }
+  if (kpiFb) kpiFb.style.display = (_currentRoom === 'feedback-overview' && name === 'feedback' && hasFbKpi) ? '' : 'none';
   // Show/hide review tab based on MCQ data
   var tabReview = document.getElementById('tab-review');
   if (tabReview) tabReview.style.display = ExamSession.hasMcq ? '' : 'none';
@@ -10741,6 +10737,19 @@ var RELEASE_NOTES = [
   {
     version: '0.8',
     builds: [
+      {
+        build: '20261001-02',
+        date:  'October 1, 2026',
+        notes: [
+          'Student Feedback navigation: Overview, Feedback Review, and Unmapped Comments are now three distinct rooms under the Student Feedback heading.',
+          'Focused overview: the existing feedback summary metrics and Top Commented Questions chart now appear in the dedicated Overview room instead of remaining above the detailed review workspace.',
+          'Clearer mapping access: Unmapped Comments is promoted from an indented sub-room to a full navigation destination while retaining its unresolved-comment badge.',
+          'Room hierarchy and theming polish: Feedback Overview metrics now sit directly below the room title and description, and the analytical-Q marks in the interface follow the selected uOttawa or Elentra accent colour.',
+          'Unmapped Comments empty state: sessions with no unresolved comments now show a clear all-mapped confirmation instead of an empty table and an undefined progress percentage.',
+          'This is a structural navigation pass. Feedback calculations, categorisation, detailed review controls, unmapped-comment decisions, and report output are unchanged.',
+          'Richer Feedback Overview content and a purpose-built Distractor Analysis report are recorded in the forward backlog for separate design and methodology review.'
+        ]
+      },
       {
         build: '20261001-01',
         date:  'October 1, 2026',
@@ -13400,7 +13409,7 @@ function runFeedbackAnalysis() {
   FB.examTitle = (document.getElementById('exam-title')||{}).value || '';
   FB.examDate  = (document.getElementById('exam-date')||{}).value || '';
   FB.pending   = FB.parsed.reduce(function(acc,p,i){ if(p.status==='pending') acc.push(i); return acc; }, []);
-  // Always finalise — pending items stay as 'pending' for Comment Mapping room
+  // Always finalise — pending items stay as 'pending' for the Unmapped Comments room
   finaliseFeedback();
 }
 
@@ -13893,7 +13902,7 @@ function finaliseFeedback() {
   if (FB.pending && FB.pending.length) {
     FB.pending.forEach(function(idx) {
       if (FB.parsed[idx].status !== 'pending') return;
-      fbCommitStaged(idx); // commit staged only; leave pending for Comment Mapping
+      fbCommitStaged(idx); // commit staged only; leave pending for Unmapped Comments
     });
   }
   groupComments();
@@ -13981,10 +13990,9 @@ function finaliseFeedback() {
     }
     return;
   }
-  // Standalone feedback — switch to feedback tab as normal
+  // Standalone feedback — begin with the feedback-specific overview.
   updateReportCards();
-  switchMainTab('feedback', tabEl);
-  renderFeedbackTab('byq');
+  switchRoom('feedback-overview');
   var _ca=document.getElementById('contentArea');if(_ca)_ca.scrollTop=0;
 }
 
@@ -14005,13 +14013,21 @@ function renderMappingScreen() {
   var resolved = 0;
 
   function buildMapHTML() {
+    if (total === 0) {
+      return '<div class="room-empty-state" style="min-height:320px">' +
+        '<div class="room-empty-icon" style="color:var(--s-ok);background:var(--s-ok-bg);border-color:rgba(30,110,48,.22)"><svg class="fui-icon fui-icon-lg" aria-hidden="true"><use href="#fui-check"/></svg></div>' +
+        '<h2 class="room-empty-title">No unmapped comments</h2>' +
+        '<p class="room-empty-sub">Every feedback comment was matched to a question or routed to General feedback. There is nothing to resolve here.</p>' +
+        '<button class="btn" onclick="sidebarNav(\'feedback\',document.getElementById(\'nav-feedback\'))">Open Feedback Review</button>' +
+      '</div>';
+    }
     var html = '<div style="padding:16px;background:var(--c-surface);min-height:400px">';
     html += '<div class="fb-info-box fb-info-amber" style="margin-bottom:14px">';
     html += '<span>⚠</span><div><strong>' + FB.pending.length + ' comment' + (FB.pending.length===1?'':'s') + ' need your review.</strong> ';
     html += 'The tool found these but could not confidently assign them to a question — it is asking you to verify. For each one: enter a question number, click <strong>General</strong> if it is not about a specific question, or <strong>Discard</strong> if it is not useful feedback.</div></div>';
     // Progress
     var resolvedNow = FB.pending.filter(function(i){ return FB.parsed[i].status !== 'pending'; }).length;
-    var pct = Math.round(resolvedNow / total * 100);
+    var pct = total > 0 ? Math.round(resolvedNow / total * 100) : 100;
     html += '<div style="background:var(--c-bg);border:1px solid var(--c-border);border-radius:8px;overflow:hidden;margin-bottom:14px">';
     html += '<div style="padding:9px 14px;background:var(--c-surface);border-bottom:1px solid var(--c-border);display:flex;align-items:center;gap:10px">';
     html += '<span style="font-size:12px;font-weight:700;color:var(--c-primary)">Unassigned comments</span>';
@@ -14462,18 +14478,10 @@ function renderFbKpiZone() {
     '</div>';
 
   zone.innerHTML = html;
-  var kpiZone = document.getElementById('kpi-zone');
-  var kpiMcq  = document.getElementById('kpi-zone-mcq');
   var activeTab = (document.querySelector('#main-tab-bar .tab.active') || {}).id || '';
   // Only show KPI zone in rooms that support it
-  var _fbKpiRoomOk = (typeof _currentRoom === 'undefined') || ['landing','mcq','dif','feedback','mapping'].indexOf(_currentRoom) >= 0;
-  if (kpiZone && _fbKpiRoomOk) kpiZone.style.display = '';
-  zone.style.display = '';
-  if (activeTab !== 'tab-feedback-main') {
-    zone.style.display = 'none';
-  } else {
-    if (kpiMcq) kpiMcq.style.display = 'none';
-  }
+  var _fbKpiRoomOk = (typeof _currentRoom === 'undefined') || _currentRoom === 'feedback-overview';
+  zone.style.display = (_fbKpiRoomOk && activeTab === 'tab-feedback-main') ? '' : 'none';
 }
 
 
@@ -14778,7 +14786,7 @@ function renderFeedbackTab(view) {
     var _pb = '<div style="display:flex;align-items:center;gap:10px;padding:9px 14px;background:#fff8e6;border:1px solid rgba(232,168,0,.4);border-radius:8px;font-size:12px;color:#5a3a00;margin-bottom:12px">';
     _pb += '<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 2L1 14h14L8 2z" stroke="#92400e" stroke-width="1.4" stroke-linejoin="round"/></svg>';
     _pb += '<span style="flex:1"><strong>' + _pendBannerCount + ' comment' + (_pendBannerCount === 1 ? '' : 's') + '</strong> still need attribution review \u2014 not included in the views below.</span>';
-    _pb += '<button onclick="sidebarNav(\'mapping\', document.getElementById(\'nav-mapping\'))" style="font-size:11px;font-weight:700;color:#92400e;background:rgba(146,64,14,.1);border:1px solid rgba(146,64,14,.3);border-radius:6px;padding:3px 12px;cursor:pointer;white-space:nowrap;font-family:var(--font)">Go to Comment Mapping \u2192</button>';
+    _pb += '<button onclick="sidebarNav(\'mapping\', document.getElementById(\'nav-mapping\'))" style="font-size:11px;font-weight:700;color:#92400e;background:rgba(146,64,14,.1);border:1px solid rgba(146,64,14,.3);border-radius:6px;padding:3px 12px;cursor:pointer;white-space:nowrap;font-family:var(--font)">Review Unmapped Comments \u2192</button>';
     _pb += '</div>';
     html += _pb;
   }
@@ -15767,7 +15775,7 @@ function updateSidebarBadges() {
     }
   }
 
-  // Comment mapping badge — count of comments still pending review
+  // Unmapped Comments badge — count of comments still pending review
   var badgeMap = document.getElementById('badge-mapping');
   if (badgeMap) {
     var nPending = 0;
@@ -15776,14 +15784,11 @@ function updateSidebarBadges() {
         return FB.parsed[i] && FB.parsed[i].status === 'pending';
       }).length;
     }
-    var badgeMirror = document.getElementById('badge-mapping-mirror');
     if (nPending > 0) {
       badgeMap.textContent = nPending;
       badgeMap.style.display = 'inline-flex';
-      if (badgeMirror) { badgeMirror.textContent = nPending; }
     } else {
       badgeMap.style.display = 'none';
-      if (badgeMirror) { badgeMirror.textContent = ''; }
     }
   }
 }
@@ -15799,8 +15804,9 @@ function switchRoom(room) {
   _currentRoom = room;
 
   // Hide all dedicated room divs (room-landing handled separately below)
-  // Hide KPI zone in all rooms — shown only on landing page (future build)
+  // Hide both overview zones before the destination room selectively restores its own.
   var _kpiZ = document.getElementById('kpi-zone'); if (_kpiZ) _kpiZ.style.display = 'none';
+  var _kpiFbRoom = document.getElementById('kpi-zone-fb'); if (_kpiFbRoom) _kpiFbRoom.style.display = 'none';
 
   ['room-exceptions','room-distractor','room-nearthreshold'].forEach(function(id) {
     var el = document.getElementById(id); if (el) el.style.display = 'none';
@@ -15845,6 +15851,17 @@ function switchRoom(room) {
     var roomExcl=document.getElementById('room-exceptions');
     if(roomExcl) roomExcl.style.display='block';
     openExclusionsModal(); // renders rows into #excl-rows (no modal shown)
+  } else if (room === 'feedback-overview') {
+    switchMainTab('feedback', document.getElementById('tab-feedback-main'));
+    var rphFbOverviewTitle = document.getElementById('rph-fb-title');
+    var rphFbOverviewSub   = document.getElementById('rph-fb-sub');
+    if (rphFbOverviewTitle) rphFbOverviewTitle.textContent = 'Feedback Overview';
+    if (rphFbOverviewSub)   rphFbOverviewSub.textContent   = 'A summary of participation, coverage, categories, and the questions receiving the most feedback';
+    var fbOverviewToolbar = document.getElementById('fb-toolbar-host');
+    var fbOverviewContent = document.getElementById('fb-results-content');
+    if (fbOverviewToolbar) fbOverviewToolbar.innerHTML = '';
+    if (fbOverviewContent) fbOverviewContent.innerHTML = FB.ready ? '' : emptyStateHtml('💬', 'No feedback analysis loaded', 'Upload a QuestionMark feedback export to create the feedback overview.');
+    if (FB.ready) renderFbKpiZone();
   } else if (room === 'feedback') {
     switchMainTab('feedback', document.getElementById('tab-feedback-main'));
     // Re-render feedback content — clears mapping screen if active
@@ -15852,14 +15869,15 @@ function switchRoom(room) {
     // Reset page header to feedback defaults
     var rphFbTitle2 = document.getElementById('rph-fb-title');
     var rphFbSub2   = document.getElementById('rph-fb-sub');
-    if (rphFbTitle2) rphFbTitle2.textContent = 'Feedback';
+    if (rphFbTitle2) rphFbTitle2.textContent = 'Feedback Review';
     if (rphFbSub2)   rphFbSub2.textContent   = 'Student comments parsed and categorized by question';
   } else if (room === 'mapping') {
+    switchMainTab('feedback', document.getElementById('tab-feedback-main'));
     renderMappingScreen();
     // Update feedback section page header to reflect mapping context
     var rphFbTitle = document.getElementById('rph-fb-title');
     var rphFbSub   = document.getElementById('rph-fb-sub');
-    if (rphFbTitle) rphFbTitle.textContent = 'Comment Mapping';
+    if (rphFbTitle) rphFbTitle.textContent = 'Unmapped Comments';
     if (rphFbSub)   rphFbSub.textContent   = 'Review comments that couldn’t be automatically attributed — assign, mark as general, or discard each one.';
     var fbGuid = document.getElementById('fb-room-guidance');
     if (fbGuid) fbGuid.style.display = 'none';
@@ -15918,7 +15936,7 @@ function _updateSidebarActive(room) {
   var map = {
     landing:'nav-landing', mcq:'nav-mcq', dif:'nav-dif',
     distractor:'nav-distractor', nearthreshold:'nav-nearthreshold',
-    exceptions:'nav-exceptions', feedback:'nav-feedback',
+    exceptions:'nav-exceptions', 'feedback-overview':'nav-feedback-overview', feedback:'nav-feedback',
     mapping:'nav-mapping', queue:'nav-queue', reports:'nav-reports'
   };
   document.querySelectorAll('#main-sidebar .nav-item, #main-sidebar .nav-sub').forEach(function(el){
@@ -17546,7 +17564,7 @@ function updateTopbarExam() {
               <span class="faq-icon">+</span>
             </div>
             <div class="faq-a">
-              The <strong>Feedback Overview</strong> panel appears at the top of the Feedback Review room and gives you a summary of the feedback session at a glance. It has four cells and a ranked chart:<br><br>
+              The <strong>Feedback Overview</strong> is its own room under Student Feedback and gives you a summary of the feedback session at a glance. It has four cells and a ranked chart:<br><br>
               <strong>Flagged Qs w/ Feedback</strong> (top-left) — how many MCQ-flagged questions also received student comments. This is the most actionable number: when a question is both statistically flagged and draws student concern, that convergence is the strongest signal for coordinator review. Requires an MCQ analysis to be loaded in the same session.<br><br>
               <strong>Students Responded</strong> (top-right) — how many students submitted at least one feedback comment, with a percentage of the enrolled cohort and a gradient bar showing response rate.<br><br>
               <strong>Comment Categories</strong> (bottom-left) — breakdown of attributed comments by category: Content, Translation, Other, and Uncategorized. Shows a proportional colour bar and counts. Discarded comments are excluded from all counts.<br><br>
@@ -17561,7 +17579,7 @@ function updateTopbarExam() {
               <span class="faq-icon">+</span>
             </div>
             <div class="faq-a">
-              The <strong>Feedback Report</strong> is a structured Word document listing all comments organised by question number, in ascending order. It opens with a visual Feedback Overview summary card — the same four KPIs and Top Commented chart shown in the Feedback Review room — followed by all comments per question and any General feedback. To export it, go to the <strong>Reports</strong> tab and click <strong>Export</strong> on the Feedback report row. To preview it first, click the <strong>Preview</strong> link.
+              The <strong>Feedback Report</strong> is a structured Word document listing all comments organised by question number, in ascending order. It opens with a visual Feedback Overview summary card — the same four KPIs and Top Commented chart shown in the Student Feedback <strong>Overview</strong> room — followed by all comments per question and any General feedback. To export it, go to the <strong>Reports</strong> tab and click <strong>Export</strong> on the Feedback report row. To preview it first, click the <strong>Preview</strong> link.
             </div>
           </div>
 

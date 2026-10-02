@@ -110,11 +110,15 @@ try {
       const tableStyle = getComputedStyle(document.querySelector(".mcq-table"));
       const primaryButton = document.querySelector(".btn-primary, .btn-dl-primary");
       const activeIcon = document.querySelector(".nav-item.active .fui-icon");
+      const topBrandTile = document.querySelector(".topbar .aqp-tile");
+      const footerBrandTile = document.querySelector(".footer-inner .aqp-tile");
       if (activeIcon) activeIcon.style.transition = "none";
       const uottawa = {
         accent: rootStyle.getPropertyValue("--c-accent").trim(),
         success: rootStyle.getPropertyValue("--s-ok").trim(),
         radius: rootStyle.getPropertyValue("--radius-md").trim(),
+        topBrandFill: topBrandTile ? getComputedStyle(topBrandTile).fill : "",
+        footerBrandFill: footerBrandTile ? getComputedStyle(footerBrandTile).fill : "",
       };
       document.documentElement.dataset.theme = "elentra";
       const elentraStyle = getComputedStyle(document.documentElement);
@@ -123,6 +127,8 @@ try {
         success: elentraStyle.getPropertyValue("--s-ok").trim(),
         radius: elentraStyle.getPropertyValue("--radius-md").trim(),
         activeIconColor: activeIcon ? getComputedStyle(activeIcon).color : "",
+        topBrandFill: topBrandTile ? getComputedStyle(topBrandTile).fill : "",
+        footerBrandFill: footerBrandTile ? getComputedStyle(footerBrandTile).fill : "",
       };
       document.documentElement.dataset.theme = "uottawa";
       const uottawaIconColor = activeIcon ? getComputedStyle(activeIcon).color : "";
@@ -137,7 +143,7 @@ try {
       };
     })(),
   }));
-  assert.equal(initial.build, "20261001-01");
+  assert.equal(initial.build, "20261001-02");
   assert.equal(initial.title, "AQP Synthetic Demonstration Exam");
   assert.equal(initial.bannerVisible, true);
   assert.equal(initial.isDemo, true);
@@ -166,7 +172,7 @@ try {
   assert.equal(initial.difKpiInToolbar, true, "DIF KPI tiles must share the toolbar row with the CSV action");
   assert.equal(initial.readiness.ready, false, "unreviewed demo flags should produce advisory readiness");
   assert.equal(initial.audit.demonstration, true);
-  assert.equal(initial.audit.application.build, "20261001-01");
+  assert.equal(initial.audit.application.build, "20261001-02");
   assert.equal(initial.audit.sourceFiles.demonstration.name, "Built-in synthetic dataset");
   assert.ok(initial.audit.inputInterpretation.reconciliation);
   assert.ok(initial.audit.events.some(event => event.type === "demonstration_loaded"));
@@ -181,6 +187,67 @@ try {
   assert.notEqual(initial.design.elentra.accent, initial.design.uottawa.accent);
   assert.notEqual(initial.design.elentra.activeIconColor, initial.design.uottawa.activeIconColor, "Fluent active-state icons must follow the selected theme");
   assert.equal(initial.design.elentra.success, initial.design.uottawa.success, "semantic status colours must remain stable across themes");
+  assert.equal(initial.design.uottawa.topBrandFill, initial.design.uottawa.footerBrandFill, "uOttawa brand marks must share the active theme colour");
+  assert.equal(initial.design.elentra.topBrandFill, initial.design.elentra.footerBrandFill, "Elentra brand marks must share the active theme colour");
+  assert.notEqual(initial.design.elentra.topBrandFill, initial.design.uottawa.topBrandFill, "analytical-Q marks must follow the selected theme");
+
+  const feedbackNavigation = await page.evaluate(() => {
+    const navIds = [...document.querySelectorAll("#main-sidebar .sidebar-nav > .nav-item")].map(el => el.id);
+    const capture = room => {
+      switchRoom(room);
+      return {
+        room: _currentRoom,
+        title: document.getElementById("rph-fb-title")?.textContent.trim() || "",
+        kpiVisible: getComputedStyle(document.getElementById("kpi-zone-fb")).display !== "none",
+        activeNav: document.querySelector("#main-sidebar .nav-item[aria-current='page']")?.id || "",
+        toolbarText: document.getElementById("fb-toolbar-host")?.textContent.trim() || "",
+        contentText: document.getElementById("fb-results-content")?.textContent.trim() || "",
+        hierarchy: (() => {
+          const section = document.getElementById("main-section-feedback");
+          const header = section?.querySelector(".room-page-hdr");
+          const kpis = document.getElementById("kpi-zone-fb");
+          const details = document.getElementById("section-feedback");
+          if (!section || !header || !kpis || !details) return false;
+          return !!(header.compareDocumentPosition(kpis) & Node.DOCUMENT_POSITION_FOLLOWING)
+            && !!(kpis.compareDocumentPosition(details) & Node.DOCUMENT_POSITION_FOLLOWING);
+        })(),
+      };
+    };
+    const overview = capture("feedback-overview");
+    const review = capture("feedback");
+    const unmapped = capture("mapping");
+    switchRoom("landing");
+    return {
+      navIds,
+      mappingIsFullRoom: document.getElementById("nav-mapping")?.classList.contains("nav-item"),
+      mappingIsSubRoom: document.getElementById("nav-mapping")?.classList.contains("nav-sub"),
+      overview,
+      review,
+      unmapped,
+    };
+  });
+  const feedbackNavStart = feedbackNavigation.navIds.indexOf("nav-feedback-overview");
+  assert.deepEqual(
+    feedbackNavigation.navIds.slice(feedbackNavStart, feedbackNavStart + 3),
+    ["nav-feedback-overview", "nav-feedback", "nav-mapping"],
+    "Student Feedback navigation must present Overview, Feedback Review, then Unmapped Comments"
+  );
+  assert.equal(feedbackNavigation.mappingIsFullRoom, true);
+  assert.equal(feedbackNavigation.mappingIsSubRoom, false);
+  assert.deepEqual(
+    { room: feedbackNavigation.overview.room, title: feedbackNavigation.overview.title, kpiVisible: feedbackNavigation.overview.kpiVisible, activeNav: feedbackNavigation.overview.activeNav },
+    { room: "feedback-overview", title: "Feedback Overview", kpiVisible: true, activeNav: "nav-feedback-overview" }
+  );
+  assert.equal(feedbackNavigation.overview.toolbarText, "", "Feedback Overview must not inherit detailed review controls");
+  assert.equal(feedbackNavigation.overview.hierarchy, true, "Feedback Overview KPIs must sit below the room header and above detail content");
+  assert.equal(feedbackNavigation.review.title, "Feedback Review");
+  assert.equal(feedbackNavigation.review.kpiVisible, false, "Feedback Review must remain focused on detailed comments");
+  assert.equal(feedbackNavigation.review.activeNav, "nav-feedback");
+  assert.equal(feedbackNavigation.unmapped.title, "Unmapped Comments");
+  assert.equal(feedbackNavigation.unmapped.kpiVisible, false);
+  assert.equal(feedbackNavigation.unmapped.activeNav, "nav-mapping");
+  assert.match(feedbackNavigation.unmapped.contentText, /No unmapped comments/);
+  assert.doesNotMatch(feedbackNavigation.unmapped.contentText, /NaN%/);
 
   const ready = await page.evaluate(() => {
     const now = new Date().toISOString();
@@ -227,7 +294,7 @@ try {
   assert.match(path.basename(jsonPath), /_analysis-record\.json$/);
   assert.equal(json.recordType, "aqp-analysis-record");
   assert.equal(json.schemaVersion, "1.0");
-  assert.equal(json.meta.build, "20261001-01");
+  assert.equal(json.meta.build, "20261001-02");
   assert.deepEqual(json.summary, recordUi.canonical.summary);
   assert.deepEqual(json.thresholds, recordUi.canonical.thresholds);
   assert.deepEqual(json.questions, recordUi.canonical.questions);

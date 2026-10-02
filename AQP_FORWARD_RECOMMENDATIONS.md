@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document records recommended future work for the Assessment Quality Platform after the QA, remediation, design-system consolidation, automated accessibility pass, analysis-record consolidation, and identity/icon refresh completed for version 0.8, build `20261001-01`.
+This document records recommended future work for the Assessment Quality Platform after the QA, remediation, design-system consolidation, automated accessibility pass, analysis-record consolidation, identity/icon refresh, and Student Feedback navigation restructure completed for version 0.8, build `20261001-02`.
 
 These are forward-looking improvements rather than defects remaining from the two QA passes. Completed corrections are documented separately in `AQP_CHANGE_SUMMARY_2026-09-23.md`.
 
@@ -335,6 +335,34 @@ The principal navigation and workflow controls now use the user-approved **Fluen
 Visible text remains on important actions, the icon size scale is centralized, and icon-only controls retain accessible names. Future feature work should extend this same pattern rather than introduce another icon family.
 
 The revised analytical-Q application mark is also complete and appears across the splash screen, top bar, primary headers, footer, About panel, favicon, report previews, and Word-report byline. Production SVG sources and usage guidance are retained under `assets/brand/`.
+
+#### 23. Expand the Student Feedback Overview
+
+Build `20261001-02` established the room structure and moved the existing feedback summary into a dedicated **Overview** room. Treat that as the stable navigation foundation, then separately design and validate a richer overview that helps coordinators understand readiness and decide where to begin.
+
+Future work should consider:
+
+- A concise feedback-analysis status and any unresolved mapping work
+- Participation, question coverage, category distribution, and concentration of comments
+- Clear pathways into the most actionable questions and into Unmapped Comments
+- Avoiding duplication of the detailed controls already available in Feedback Review
+- Empty, feedback-only, combined-analysis, and all-clear states
+- Content and terminology review with assessment stakeholders before adding interpretive narrative
+
+#### 24. Design a Distractor Analysis report
+
+Define a purpose-built report for Distractor Analysis before adding another export button. The report should have an explicit audience and decision purpose, and should distinguish observed response data from automated review signals.
+
+The design review should determine whether the report includes:
+
+- A concise exam-level summary and list of items warranting review
+- Overall option distributions and performance-quartile tables for selected questions
+- Key Competition, Reversed Distractor, and Non-Functioning Distractor explanations
+- Original and accepted alternate keys, with exceptions clearly documented
+- Methodology notes, limitations, and the room's Beta status
+- HTML preview and Word export, or a smaller evidence appendix attached to the MCQ report
+
+Complete methodology and report-audience review before implementation so preliminary pattern rules are not presented as final academic decisions.
 
 ## Suggested delivery sequence
 
