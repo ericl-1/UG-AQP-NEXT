@@ -3,11 +3,22 @@
 ## Build identity
 
 - Starting point: AQP 0.8, build `20260923-01` (`Downloads/index.html`)
-- Current development build: AQP 0.8, build `20261002-01`
-- Working branch: `feature/dark-mode-splash`
+- Current development build: AQP 0.8, build `20261002-02`
+- Working branch: `feature/feedback-overview`
 - Working file: `index.html` in the isolated development worktree
 - The Downloads baseline was not modified.
-- Builds through `20261001-02` were merged into GitHub `main` and deployed through GitHub Pages. Build `20261002-01` is being developed on the isolated `feature/dark-mode-splash` branch and is not live until its pull request is approved and merged.
+- Builds through `20261002-01` were merged into GitHub `main` and deployed through GitHub Pages. Build `20261002-02` is being developed on the isolated `feature/feedback-overview` branch and is not live until its pull request is approved and merged.
+
+## Build 20261002-02 — Feedback Overview workflow
+
+- Added a readiness banner that distinguishes fully routed feedback from sessions with unresolved comments and explains the next action in plain language.
+- Added direct actions to open detailed Feedback Review or resolve Unmapped Comments without searching through the sidebar.
+- Added a compact routing summary for responses received, question-attributed responses, General feedback, unresolved comments, and discarded-response context.
+- Made every Top Commented Questions entry actionable: selecting one opens that question in Feedback Review, scrolls it into view, and places keyboard focus on its section.
+- Preserved the existing participation, MCQ-overlap, category, question-coverage, and concentration metrics without duplicating detailed comment controls.
+- Added responsive stacking and theme-aware surfaces for Light, Dark, uOttawa, and Elentra combinations.
+- Updated the in-app FAQ, release notes, forward roadmap, and retained browser regression coverage.
+- Feedback parsing, categorisation, question attribution, MCQ calculations, DIF, persistence, and report generation were not changed.
 
 ## Build 20261002-01 — Dark Mode and Assessment Pulse splash
 

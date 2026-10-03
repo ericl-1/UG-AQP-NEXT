@@ -102,7 +102,7 @@
 </style>
 <style>
 /* ═══════════════════════════════════════════════════════════════════════════
-   AQP design system · Calm clinical intelligence · build 20261002-01
+   AQP design system · Calm clinical intelligence · build 20261002-02
    Centralized visual rules for colour, type, spacing, surfaces, controls,
    tables, status communication, motion, and theme parity.
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -285,6 +285,28 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 }
 .fb-info-green,.da-clean{background:var(--s-ok-bg);border-color:var(--s-ok);color:#24512e}
 .fb-info-amber,.da-issue{background:var(--s-warn-bg);border-color:var(--s-warn);color:var(--s-warn-text)}
+.fb-overview-status{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--c-border);background:var(--c-surface)}
+.fb-overview-status-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.fb-overview-status.ready .fb-overview-status-icon{color:var(--s-ok);background:var(--s-ok-bg)}
+.fb-overview-status.review .fb-overview-status-icon{color:var(--s-warn-text);background:var(--s-warn-bg)}
+.fb-overview-status-copy{min-width:0;flex:1}
+.fb-overview-status-title{font-size:13.5px;font-weight:700;color:var(--c-primary);margin-bottom:2px}
+.fb-overview-status-sub{font-size:12px;line-height:1.5;color:var(--c-muted)}
+.fb-overview-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.fb-overview-routing{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:var(--c-bg);border-bottom:1px solid var(--c-border)}
+.fb-overview-route{padding:13px 16px;border-right:1px solid var(--c-border)}
+.fb-overview-route:last-child{border-right:0}
+.fb-overview-route-value{display:block;font-size:22px;font-weight:700;line-height:1.1;color:var(--c-primary);font-variant-numeric:tabular-nums}
+.fb-overview-route-label{display:block;margin-top:3px;font-size:10.5px;font-weight:650;line-height:1.35;text-transform:uppercase;letter-spacing:.045em;color:var(--c-muted)}
+.fb-overview-route.attention .fb-overview-route-value{color:var(--s-warn-text)}
+.fb-top-question{width:100%;display:flex;align-items:center;gap:8px;padding:3px 0;border:0;background:transparent;color:inherit;text-align:left;font:inherit;cursor:pointer;border-radius:6px}
+.fb-top-question:hover,.fb-top-question:focus-visible{background:var(--c-surface);outline:0;box-shadow:0 0 0 3px var(--c-accent-tint)}
+.fb-top-question:focus-visible{position:relative;z-index:1}
+#fb-results-content .fb-section{scroll-margin-top:72px}
+.fb-volume-clear{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;margin-bottom:10px;border:1px solid #bbf7d0;border-radius:7px;background:#f0fdf4;color:#166534}
+:root[data-appearance="dark"] .fb-volume-clear{border-color:#365a3c;background:var(--s-ok-bg);color:var(--s-ok)}
+@media(max-width:900px){.fb-overview-detail-grid{flex-direction:column}.fb-overview-detail-grid>div:first-child{flex-basis:auto!important;border-right:0!important;border-bottom:1px solid var(--c-border)}}
+@media(max-width:760px){.fb-overview-status{align-items:flex-start;flex-wrap:wrap}.fb-overview-actions{width:100%;justify-content:flex-start;padding-left:46px}.fb-overview-routing{grid-template-columns:repeat(2,minmax(0,1fr))}.fb-overview-route:nth-child(2){border-right:0}.fb-overview-route:nth-child(-n+2){border-bottom:1px solid var(--c-border)}}
 .report-readiness{padding:var(--space-4) var(--space-5);box-shadow:none}
 .report-readiness.ready{border-color:#b8d6be;background:#f7fbf8}
 .report-readiness.review{border-color:#e5c985;background:#fffbf2}
@@ -2193,7 +2215,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 
 // ── App version — single source of truth ─────────────────────────────────
 var APP_VERSION     = '0.8';
-var APP_BUILD       = '20261002-01';
+var APP_BUILD       = '20261002-02';
 var APP_FAQ_VERSION = '0.8';           // Keep aligned with the app version; date records FAQ revisions
 var APP_FAQ_DATE    = 'October 2, 2026'; // Update when FAQ content changes
 var APP_RN_DATE     = 'October 2, 2026'; // Update each version close
@@ -10863,6 +10885,18 @@ var RELEASE_NOTES = [
     version: '0.8',
     builds: [
       {
+        build: '20261002-02',
+        date:  'October 2, 2026',
+        notes: [
+          'Feedback Overview workflow: a new readiness banner clearly distinguishes fully routed feedback from sessions with unresolved comments and links directly to the required next action.',
+          'Routing summary: coordinators can now see responses received, question-attributed responses, General feedback, unresolved comments, and discarded-response context at a glance.',
+          'Actionable question summary: Top Commented Questions entries now open the corresponding question directly in Feedback Review with keyboard focus placed on the selected section.',
+          'Responsive and theme-aware presentation: the overview stacks cleanly on narrower screens and uses shared surface tokens in both Light and Dark modes.',
+          'The in-app FAQ, retained project documentation, and browser regression coverage were updated for the richer overview.',
+          'Feedback parsing, categorisation, question attribution, MCQ calculations, DIF, persistence, and report output were not changed.'
+        ]
+      },
+      {
         build: '20261002-01',
         date:  'October 2, 2026',
         notes: [
@@ -14342,6 +14376,20 @@ function toggleFbOverview() {
   btn.className = open ? 'toggle-link' : 'toggle-link open';
 }
 
+function openFeedbackQuestion(q) {
+  switchRoom('feedback');
+  _fbView = 'byq';
+  _fbSearch = '';
+  renderFeedbackTabKeep('byq');
+  setTimeout(function() {
+    var target = document.getElementById('fb-question-' + q);
+    if (!target) return;
+    target.scrollIntoView({behavior:'smooth', block:'start'});
+    target.setAttribute('tabindex', '-1');
+    target.focus({preventScroll:true});
+  }, 30);
+}
+
 // ── Shared category counter — identical logic to the BY CATEGORY filter buttons ──
 // Iterates FB.grouped (attributed) + FB.general (unattributed) only,
 // so it counts the same population the filter buttons see.
@@ -14375,6 +14423,13 @@ function renderFbKpiZone() {
   var sortedQs  = fbAllQs();
   var sourceRows = (function(){ var _s={}; (FB.parsed||[]).forEach(function(p){ _s[p.rawIdx]=true; }); return Object.keys(_s).length; })();
   var totalAttr  = FB.parsed.filter(function(p){return p.status!=='discard' && p.qNums.length > 0;}).length;
+  var unresolvedCount = (FB.pending || []).filter(function(idx){ return FB.parsed[idx] && FB.parsed[idx].status === 'pending'; }).length;
+  var generalCount = (FB.general || []).length;
+  var discardedCount = (FB.parsed || []).filter(function(p){ return p.status === 'discard'; }).length;
+  var attributedRows = (FB.parsed || []).filter(function(p) {
+    if (!p || p.status === 'discard' || p.status === 'general' || p.status === 'pending') return false;
+    return (p.status === 'mapped' && ((p.mappedQs && p.mappedQs.length) || p.mappedQ != null)) || (p.qNums && p.qNums.length > 0);
+  }).length;
   var freq = sortedQs.map(function(q){
     var cc=(FB.grouped[q]||[]).length, bc=FB.bareRefs[q]||0;
     return {q:q, count:cc+bc, commentCount:cc, bareCount:bc};
@@ -14425,11 +14480,11 @@ function renderFbKpiZone() {
   // Style constants
   var FLBL   = 'font-size:11px;font-weight:700;color:var(--c-muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px';
   var FVAL34 = 'font-size:34px;font-weight:700;line-height:1;margin-bottom:4px';
-  var BR     = 'border-right:1px solid rgba(0,0,0,.1);';
-  var BB     = 'border-bottom:1px solid rgba(0,0,0,.06);';
+  var BR     = 'border-right:1px solid var(--c-border);';
+  var BB     = 'border-bottom:1px solid var(--c-border);';
   var MARKER = 'position:absolute;top:-4px;width:8px;height:18px;background:#111;border:2.5px solid #fff;border-radius:2px;box-shadow:0 1px 6px rgba(0,0,0,.65);transform:translateX(-50%)';
 
-  var left = '<div style="flex:0 0 55%;padding:16px 0 16px 16px;border-right:2px solid rgba(0,0,0,.1)">';
+  var left = '<div style="flex:0 0 55%;padding:16px 0 16px 16px;border-right:1px solid var(--c-border)">';
   left += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0">';
 
   // ── Cell 1 (top-left): Flagged Qs with Feedback — primary action signal ──
@@ -14557,9 +14612,9 @@ function renderFbKpiZone() {
   } else if (!hasHighOrMed) {
     // All-clear state — no question reached medium threshold
     right +=
-      '<div style="display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:7px;margin-bottom:10px">' +
+      '<div class="fb-volume-clear">' +
         '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="8" cy="8" r="7" stroke="var(--s-ok)" stroke-width="1.5"/><path d="M5 8l2 2 4-4" stroke="var(--s-ok)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
-        '<div style="font-size:11.5px;color:#166534;line-height:1.5">No questions reached the medium volume threshold (\u2265' + MED_THRESH + ' responses) — no items require priority review based on comment volume alone.</div>' +
+        '<div style="font-size:11.5px;line-height:1.5">No questions reached the medium volume threshold (\u2265' + MED_THRESH + ' responses) — no items require priority review based on comment volume alone.</div>' +
       '</div>';
     // Still show top questions at low volume
     var topN = freq.slice(0, 5);
@@ -14568,13 +14623,13 @@ function renderFbKpiZone() {
     topN.forEach(function(item) {
       var barW = Math.round(item.count / maxCount * 100);
       right +=
-        '<div style="display:flex;align-items:center;gap:8px">' +
+        '<button type="button" class="fb-top-question" onclick="openFeedbackQuestion(' + item.q + ')" aria-label="Open feedback for question ' + item.q + '">' +
           '<span style="font-size:12px;font-weight:700;color:var(--c-secondary);width:32px;flex-shrink:0">Q' + item.q + '</span>' +
-          '<div style="flex:1;position:relative;height:8px;background:rgba(0,0,0,.07);border-radius:4px;overflow:hidden">' +
+          '<div style="flex:1;position:relative;height:8px;background:var(--c-border);border-radius:4px;overflow:hidden">' +
             '<div style="height:100%;width:' + barW + '%;background:var(--c-fb);border-radius:4px;opacity:.4"></div>' +
           '</div>' +
           '<span style="font-size:11px;color:var(--c-muted);width:18px;text-align:right;flex-shrink:0">' + item.count + '</span>' +
-        '</div>';
+        '</button>';
     });
     right += '</div>';
   } else {
@@ -14592,14 +14647,14 @@ function renderFbKpiZone() {
         volBadge = '<span class="fb-flag-med" style="font-size:9px;padding:1px 5px;margin-left:4px;flex-shrink:0">Med</span>';
       }
       right +=
-        '<div style="display:flex;align-items:center;gap:8px">' +
+        '<button type="button" class="fb-top-question" onclick="openFeedbackQuestion(' + item.q + ')" aria-label="Open feedback for question ' + item.q + '">' +
           '<span style="font-size:12px;font-weight:700;color:' + rankColor + ';width:32px;flex-shrink:0">Q' + item.q + '</span>' +
-          '<div style="flex:1;position:relative;height:10px;background:rgba(0,0,0,.07);border-radius:4px;overflow:hidden">' +
+          '<div style="flex:1;position:relative;height:10px;background:var(--c-border);border-radius:4px;overflow:hidden">' +
             '<div style="height:100%;width:' + barW + '%;background:var(--c-fb);border-radius:4px;opacity:' + (idx === 0 ? '1' : '0.55') + '"></div>' +
           '</div>' +
           '<span style="font-size:11px;font-weight:600;color:var(--c-secondary);width:22px;text-align:right;flex-shrink:0">' + item.count + '</span>' +
           volBadge +
-        '</div>';
+        '</button>';
     });
     right += '</div>';
     if (freq.length > 8) {
@@ -14609,6 +14664,28 @@ function renderFbKpiZone() {
   right += '</div>';
 
   // ── Wrapper ──────────────────────────────────────────────────────────────
+  var statusReady = unresolvedCount === 0;
+  var statusIcon = statusReady ? 'fui-check' : 'fui-warning';
+  var statusTitle = statusReady ? 'Feedback is ready for coordinator review' : unresolvedCount + ' comment' + (unresolvedCount === 1 ? ' still needs' : 's still need') + ' routing';
+  var statusSub = statusReady
+    ? 'Every response has been routed to a question, General feedback, or Discarded. Review the detail before exporting.'
+    : 'Resolve the remaining unmapped feedback so question coverage and report content are complete.';
+  var statusHtml =
+    '<div class="fb-overview-status ' + (statusReady ? 'ready' : 'review') + '" role="status">' +
+      '<div class="fb-overview-status-icon"><svg class="fui-icon fui-icon-md" aria-hidden="true"><use href="#' + statusIcon + '"/></svg></div>' +
+      '<div class="fb-overview-status-copy"><div class="fb-overview-status-title">' + statusTitle + '</div><div class="fb-overview-status-sub">' + statusSub + '</div></div>' +
+      '<div class="fb-overview-actions">' +
+        (!statusReady ? '<button type="button" class="btn btn-primary btn-sm" onclick="sidebarNav(\'mapping\',document.getElementById(\'nav-mapping\'))">Resolve unmapped</button>' : '') +
+        '<button type="button" class="btn btn-sm" onclick="sidebarNav(\'feedback\',document.getElementById(\'nav-feedback\'))">Open Feedback Review</button>' +
+      '</div>' +
+    '</div>';
+  var routingHtml =
+    '<div class="fb-overview-routing" aria-label="Feedback routing summary">' +
+      '<div class="fb-overview-route"><span class="fb-overview-route-value">' + sourceRows + '</span><span class="fb-overview-route-label">Responses received</span></div>' +
+      '<div class="fb-overview-route"><span class="fb-overview-route-value">' + attributedRows + '</span><span class="fb-overview-route-label">Question-attributed</span></div>' +
+      '<div class="fb-overview-route"><span class="fb-overview-route-value">' + generalCount + '</span><span class="fb-overview-route-label">General feedback</span></div>' +
+      '<div class="fb-overview-route' + (unresolvedCount ? ' attention' : '') + '"><span class="fb-overview-route-value">' + unresolvedCount + '</span><span class="fb-overview-route-label">Unmapped' + (discardedCount ? ' · ' + discardedCount + ' discarded' : '') + '</span></div>' +
+    '</div>';
   var html =
     '<div style="background:#fafafa;padding:10px 16px;border-radius:8px 8px 0 0;border-bottom:1px solid var(--c-border);display:flex;align-items:center;justify-content:space-between">' +
       '<span style="font-size:15px;font-weight:700;color:var(--c-fb);letter-spacing:-.2px">Feedback Overview</span>' +
@@ -14618,7 +14695,8 @@ function renderFbKpiZone() {
       '</button>' +
     '</div>' +
     '<div id="fb-overview-collapsible">' +
-      '<div style="display:flex;align-items:stretch">' + left + right + '</div>' +
+      statusHtml + routingHtml +
+      '<div class="fb-overview-detail-grid" style="display:flex;align-items:stretch">' + left + right + '</div>' +
     '</div>';
 
   zone.innerHTML = html;
@@ -15039,7 +15117,7 @@ function renderFeedbackTab(view) {
       var bareCount = (_fbSearch && _fbSearch.trim()) ? 0 : (FB.bareRefs[q] || 0);
       var rawBareCount = FB.bareRefs[q] || 0;
       var totalCount = comments.length + bareCount;
-      html += '<div class="fb-section">';
+      html += '<div class="fb-section" id="fb-question-' + q + '">';
       html += '<div class="fb-section-hdr">';
       html += '<div style="display:flex;align-items:center;gap:8px"><span class="fb-section-q">Question ' + q + '</span><span style="font-size:12px;color:var(--c-muted)">' + commentLabel(comments.length, bareCount) + '</span>' + (totalCount>=HIGH_THRESH||totalCount>=MED_THRESH?fbVolumeBadge(totalCount):'') + '</div>';
       html += mcqXref(q);
@@ -17718,12 +17796,14 @@ function updateTopbarExam() {
               <span class="faq-icon">+</span>
             </div>
             <div class="faq-a">
-              The <strong>Feedback Overview</strong> is its own room under Student Feedback and gives you a summary of the feedback session at a glance. It has four cells and a ranked chart:<br><br>
+              The <strong>Feedback Overview</strong> is its own room under Student Feedback and gives you a summary of the feedback session at a glance. The status banner first tells you whether all comments have been routed or whether unmapped feedback still needs attention. Its buttons open Feedback Review or take you directly to Unmapped Comments.<br><br>
+              The routing summary shows responses received, question-attributed responses, General feedback, and unresolved comments. Discarded responses are noted beside the unresolved total when present.<br><br>
+              Below that, four analytical cells and a ranked chart provide more context:<br><br>
               <strong>Flagged Qs w/ Feedback</strong> (top-left) — how many MCQ-flagged questions also received student comments. This is the most actionable number: when a question is both statistically flagged and draws student concern, that convergence is the strongest signal for coordinator review. Requires an MCQ analysis to be loaded in the same session.<br><br>
               <strong>Students Responded</strong> (top-right) — how many students submitted at least one feedback comment, with a percentage of the enrolled cohort and a gradient bar showing response rate.<br><br>
               <strong>Comment Categories</strong> (bottom-left) — breakdown of attributed comments by category: Content, Translation, Other, and Uncategorized. Shows a proportional colour bar and counts. Discarded comments are excluded from all counts.<br><br>
               <strong>Questions Reached</strong> (bottom-right) — how many exam questions received at least one attributed comment, as a percentage of the exam. A low percentage means comments are concentrated on a small subset of questions; a high percentage means feedback is spread across the exam.<br><br>
-              <strong>Top Commented Questions</strong> (right panel) — ranked list of the most-commented questions with proportional bars and volume badges (! High ≥8, Med ≥4). When no question reaches the medium threshold, a green all-clear message appears.
+              <strong>Top Commented Questions</strong> (right panel) — ranked list of the most-commented questions with proportional bars and volume badges (! High ≥8, Med ≥4). Select a question to open its detailed comments in Feedback Review. When no question reaches the medium threshold, a green all-clear message appears.
             </div>
           </div>
 

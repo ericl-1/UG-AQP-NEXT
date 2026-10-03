@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document records recommended future work for the Assessment Quality Platform after the QA, remediation, design-system consolidation, automated accessibility pass, analysis-record consolidation, identity/icon refresh, Student Feedback navigation restructure, and Dark Mode/Assessment Pulse refresh completed for version 0.8, build `20261002-01`.
+This document records recommended future work for the Assessment Quality Platform after the QA, remediation, design-system consolidation, automated accessibility pass, analysis-record consolidation, identity/icon refresh, Student Feedback navigation restructure, Dark Mode/Assessment Pulse refresh, and Feedback Overview workflow completed for version 0.8, build `20261002-02`.
 
 These are forward-looking improvements rather than defects remaining from the two QA passes. Completed corrections are documented separately in `AQP_CHANGE_SUMMARY_2026-09-23.md`.
 
@@ -336,18 +336,19 @@ Visible text remains on important actions, the icon size scale is centralized, a
 
 The revised analytical-Q application mark is also complete and appears across the splash screen, top bar, primary headers, footer, About panel, favicon, report previews, and Word-report byline. Production SVG sources and usage guidance are retained under `assets/brand/`.
 
-#### 23. Expand the Student Feedback Overview
+#### 23. Expand the Student Feedback Overview (completed in build `20261002-02`)
 
-Build `20261001-02` established the room structure and moved the existing feedback summary into a dedicated **Overview** room. Treat that as the stable navigation foundation, then separately design and validate a richer overview that helps coordinators understand readiness and decide where to begin.
+Build `20261001-02` established the room structure. Build `20261002-02` completed the richer coordinator overview with readiness state, routing totals, participation, question coverage, category distribution, MCQ/feedback overlap, comment concentration, and direct paths into detailed review and unresolved mapping.
 
-Future work should consider:
+The completed implementation:
 
-- A concise feedback-analysis status and any unresolved mapping work
-- Participation, question coverage, category distribution, and concentration of comments
-- Clear pathways into the most actionable questions and into Unmapped Comments
-- Avoiding duplication of the detailed controls already available in Feedback Review
-- Empty, feedback-only, combined-analysis, and all-clear states
-- Content and terminology review with assessment stakeholders before adding interpretive narrative
+- Shows a concise feedback-analysis status and any unresolved mapping work
+- Summarizes participation, question coverage, category distribution, and concentration of comments
+- Links directly to the most-commented questions and to Unmapped Comments
+- Avoids duplicating detailed categorisation and reassignment controls from Feedback Review
+- Supports feedback-only, combined-analysis, all-clear, unresolved, and empty states
+
+Content and terminology should still receive assessment-stakeholder review before any interpretive narrative is added.
 
 #### 24. Design a Distractor Analysis report
 
