@@ -143,7 +143,7 @@ try {
       };
     })(),
   }));
-  assert.equal(initial.build, "20261002-01");
+  assert.equal(initial.build, "20261002-02");
   assert.equal(initial.title, "AQP Synthetic Demonstration Exam");
   assert.equal(initial.bannerVisible, true);
   assert.equal(initial.isDemo, true);
@@ -172,7 +172,7 @@ try {
   assert.equal(initial.difKpiInToolbar, true, "DIF KPI tiles must share the toolbar row with the CSV action");
   assert.equal(initial.readiness.ready, false, "unreviewed demo flags should produce advisory readiness");
   assert.equal(initial.audit.demonstration, true);
-  assert.equal(initial.audit.application.build, "20261002-01");
+  assert.equal(initial.audit.application.build, "20261002-02");
   assert.equal(initial.audit.sourceFiles.demonstration.name, "Built-in synthetic dataset");
   assert.ok(initial.audit.inputInterpretation.reconciliation);
   assert.ok(initial.audit.events.some(event => event.type === "demonstration_loaded"));
@@ -190,6 +190,55 @@ try {
   assert.equal(initial.design.uottawa.topBrandFill, initial.design.uottawa.footerBrandFill, "uOttawa brand marks must share the active theme colour");
   assert.equal(initial.design.elentra.topBrandFill, initial.design.elentra.footerBrandFill, "Elentra brand marks must share the active theme colour");
   assert.notEqual(initial.design.elentra.topBrandFill, initial.design.uottawa.topBrandFill, "analytical-Q marks must follow the selected theme");
+
+  const feedbackOverview = await page.evaluate(() => {
+    switchRoom("feedback-overview");
+    const routing = [...document.querySelectorAll(".fb-overview-route")].map(el => ({
+      value: el.querySelector(".fb-overview-route-value")?.textContent.trim(),
+      label: el.querySelector(".fb-overview-route-label")?.textContent.trim(),
+    }));
+    return {
+      title: document.querySelector(".fb-overview-status-title")?.textContent.trim(),
+      routing,
+      reviewAction: [...document.querySelectorAll(".fb-overview-actions button")].some(el => /Open Feedback Review/i.test(el.textContent)),
+      topQuestionCount: document.querySelectorAll(".fb-top-question").length,
+      topQuestionLabels: [...document.querySelectorAll(".fb-top-question")].map(el => el.getAttribute("aria-label")),
+    };
+  });
+  assert.match(feedbackOverview.title, /ready for coordinator review/i);
+  assert.deepEqual(feedbackOverview.routing, [
+    { value: "5", label: "Responses received" },
+    { value: "4", label: "Question-attributed" },
+    { value: "1", label: "General feedback" },
+    { value: "0", label: "Unmapped" },
+  ]);
+  assert.equal(feedbackOverview.reviewAction, true, "Feedback Overview must provide a direct path to detailed review");
+  assert.ok(feedbackOverview.topQuestionCount > 0, "Feedback Overview must surface the most-commented questions");
+  assert.ok(feedbackOverview.topQuestionLabels.every(label => /^Open feedback for question \d+$/.test(label)), "top-question actions need clear accessible names");
+  const unresolvedFeedback = await page.evaluate(() => {
+    FB.parsed[0].status = "pending";
+    FB.parsed[0].qNums = [];
+    FB.pending = [0];
+    groupComments();
+    renderFbKpiZone();
+    return {
+      title: document.querySelector(".fb-overview-status-title")?.textContent.trim(),
+      action: [...document.querySelectorAll(".fb-overview-actions button")].some(el => /Resolve unmapped/i.test(el.textContent)),
+      unmapped: [...document.querySelectorAll(".fb-overview-route")].find(el => /Unmapped/i.test(el.textContent))?.querySelector(".fb-overview-route-value")?.textContent.trim(),
+    };
+  });
+  assert.match(unresolvedFeedback.title, /1 comment still needs/i);
+  assert.equal(unresolvedFeedback.action, true, "unresolved feedback must provide a direct mapping action");
+  assert.equal(unresolvedFeedback.unmapped, "1");
+  await page.evaluate(() => { loadDemonstrationSession(true); switchRoom("feedback-overview"); });
+  await page.waitForFunction(() => document.querySelectorAll(".fb-top-question").length > 0);
+  await page.evaluate(() => {
+    const first = document.querySelector(".fb-top-question");
+    const match = first?.getAttribute("aria-label")?.match(/(\d+)$/);
+    openFeedbackQuestion(Number(match?.[1]));
+  });
+  await page.waitForFunction(() => document.querySelector("#nav-feedback.active") && document.activeElement?.id?.startsWith("fb-question-"));
+  await page.evaluate(() => switchRoom("landing"));
 
   const appearances = await page.evaluate(() => {
     const capture = () => {
@@ -363,7 +412,7 @@ try {
   assert.match(path.basename(jsonPath), /_analysis-record\.json$/);
   assert.equal(json.recordType, "aqp-analysis-record");
   assert.equal(json.schemaVersion, "1.0");
-  assert.equal(json.meta.build, "20261002-01");
+  assert.equal(json.meta.build, "20261002-02");
   assert.deepEqual(json.summary, recordUi.canonical.summary);
   assert.deepEqual(json.thresholds, recordUi.canonical.thresholds);
   assert.deepEqual(json.questions, recordUi.canonical.questions);

@@ -92,7 +92,7 @@ try {
       latestReleaseDate: RELEASE_NOTES[0].builds[0].date,
       faqText: document.getElementById("faq-overlay").innerText,
     }));
-    assert.equal(buildMetadata.build, "20261002-01");
+    assert.equal(buildMetadata.build, "20261002-02");
     assert.equal(buildMetadata.faqVersion, "0.8");
     assert.equal(buildMetadata.faqDate, "October 2, 2026");
     assert.equal(buildMetadata.releaseDate, "October 2, 2026");
