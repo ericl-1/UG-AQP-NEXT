@@ -3,11 +3,26 @@
 ## Build identity
 
 - Starting point: AQP 0.8, build `20260923-01` (`Downloads/index.html`)
-- Current development build: AQP 0.8, build `20261002-02`
-- Working branch: `feature/feedback-overview`
+- Current development build: AQP 0.8, build `20261004-01`
+- Working branch: `feature/uat-dark-theme-polish`
 - Working file: `index.html` in the isolated development worktree
 - The Downloads baseline was not modified.
-- Builds through `20261002-01` were merged into GitHub `main` and deployed through GitHub Pages. Build `20261002-02` is being developed on the isolated `feature/feedback-overview` branch and is not live until its pull request is approved and merged.
+- Builds through `20261003-01` have been retained in GitHub. Build `20261004-01` is being developed in the isolated worktree and is not live until its pull request is approved and merged.
+
+## Build 20261004-01 — Distractor Analysis live-review enhancement
+
+- Preserved the existing question-list and detail-panel workflow rather than replacing the room or adding a new report.
+- Added a compact **What happened** summary that presents the strongest observed response evidence before interpretation.
+- Separated observed evidence from automated interpretation and added a clear reminder that pattern signals require expert judgment.
+- Improved chart communication: keyed and alternate options are labelled directly, overall bars state their response denominator, and quartile columns show group sizes and within-group context.
+- Added related evidence for linked student feedback, DIF status, and applied exceptions without importing Review Queue state or duplicating decision controls.
+- Added an accessible on-demand Methodology panel explaining Q1–Q4 ordering, signal limitations, and alternate-key handling.
+- Deferred a standalone Distractor Analysis report until operational use identifies a clear audience and decision/retention need.
+- Removed technical DIF model-estimation notes from director-facing DIF-only and combined previews and Word exports. The DIF room, CSV/JSON Analysis records, and audit trail continue to retain complete non-estimation statuses and reasons.
+- Simplified the default DIF workspace for non-statistical audiences. The primary table now presents **Review for DIF**, **No DIF detected**, or **Unable to assess** alongside EN/FR performance and the gap; the seven model statistics remain available through an accessible **Show statistical details** control.
+- Made **Unable to assess** interactive: selecting it first explains the limitation in plain language, followed by a clearly labelled technical reason for program-evaluation review. This replaces the ambiguous **Not estimated** wording without changing suppression rules or calculations.
+- Updated the in-app FAQ, release notes, roadmap, and browser regression coverage.
+- Scoring, quartile assignment, pattern thresholds, item analysis, DIF, feedback, exceptions, and report calculations were not changed.
 
 ## Build 20261002-02 — Feedback Overview workflow
 

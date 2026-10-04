@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document records recommended future work for the Assessment Quality Platform after the QA, remediation, design-system consolidation, automated accessibility pass, analysis-record consolidation, identity/icon refresh, Student Feedback navigation restructure, Dark Mode/Assessment Pulse refresh, and Feedback Overview workflow completed for version 0.8, build `20261002-02`.
+This document records recommended future work for the Assessment Quality Platform after the QA, remediation, design-system consolidation, automated accessibility pass, analysis-record consolidation, identity/icon refresh, Student Feedback navigation restructure, Dark Mode/Assessment Pulse refresh, Feedback Overview workflow, and Distractor Analysis live-review enhancement completed for version 0.8, build `20261004-01`.
 
 These are forward-looking improvements rather than defects remaining from the two QA passes. Completed corrections are documented separately in `AQP_CHANGE_SUMMARY_2026-09-23.md`.
 
@@ -350,20 +350,17 @@ The completed implementation:
 
 Content and terminology should still receive assessment-stakeholder review before any interpretive narrative is added.
 
-#### 24. Design a Distractor Analysis report
+#### 24. Validate the need for a Distractor Analysis report (deferred by design)
 
-Define a purpose-built report for Distractor Analysis before adding another export button. The report should have an explicit audience and decision purpose, and should distinguish observed response data from automated review signals.
+The immediate use case is live coordinator or committee review, not distribution of a new report. Build `20261004-01` therefore strengthens the existing room with an evidence-first summary, clearer chart denominators and option roles, linked feedback/DIF/exception context, separated interpretation, and on-demand methodology. Review Queue status remains outside this room, and no export was added.
 
-The design review should determine whether the report includes:
+Revisit a report only after operational use identifies a durable audience, decision purpose, and retention requirement. If that need emerges, determine whether the smallest useful output is:
 
-- A concise exam-level summary and list of items warranting review
-- Overall option distributions and performance-quartile tables for selected questions
-- Key Competition, Reversed Distractor, and Non-Functioning Distractor explanations
-- Original and accepted alternate keys, with exceptions clearly documented
-- Methodology notes, limitations, and the room's Beta status
-- HTML preview and Word export, or a smaller evidence appendix attached to the MCQ report
+- A selected-item evidence appendix attached to the MCQ report
+- A meeting snapshot for explicitly chosen questions
+- A full standalone report with exam-level summary and methodology
 
-Complete methodology and report-audience review before implementation so preliminary pattern rules are not presented as final academic decisions.
+Any future output must distinguish observed response data from automated signals, document original and accepted alternate keys, retain the Beta/methodology limitations, and receive methodology and report-audience review before implementation.
 
 ## Suggested delivery sequence
 
