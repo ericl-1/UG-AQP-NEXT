@@ -102,7 +102,7 @@
 </style>
 <style>
 /* ═══════════════════════════════════════════════════════════════════════════
-   AQP design system · Calm clinical intelligence · build 20261002-02
+   AQP design system · Calm clinical intelligence · build 20261003-01
    Centralized visual rules for colour, type, spacing, surfaces, controls,
    tables, status communication, motion, and theme parity.
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -179,6 +179,18 @@ h3,.section-hdr-title{font-size:15px;line-height:1.35;font-weight:650;color:var(
 }
 .topbar .btn-icon{width:36px;height:36px}
 .topbar .btn-icon:hover,.topbar-nav-btn:hover{background:var(--c-surface);border-color:var(--c-border-strong);color:var(--c-primary)}
+.appearance-quick-btn{position:relative}
+.appearance-brand-dot{position:absolute;right:6px;bottom:5px;width:7px;height:7px;border:1.5px solid var(--c-bg);border-radius:50%;background:var(--c-accent-fill);box-shadow:0 0 0 1px color-mix(in srgb,var(--c-accent-fill) 32%,transparent)}
+.appearance-popover{position:fixed;width:min(280px,calc(100vw - 16px));padding:14px;background:var(--c-bg);color:var(--c-primary);border:1px solid var(--c-border-2);border-radius:var(--radius-md);box-shadow:var(--c-shadow-raised);z-index:10000}
+.appearance-popover-title{font-size:14px;font-weight:700;color:var(--c-primary);margin-bottom:12px}
+.appearance-quick-row{display:grid;grid-template-columns:62px 1fr;align-items:center;gap:10px;margin-top:10px}
+.appearance-quick-label{font-size:11px;font-weight:650;letter-spacing:.04em;text-transform:uppercase;color:var(--c-muted)}
+.appearance-segment{display:grid;gap:4px;padding:3px;background:var(--c-surface);border:1px solid var(--c-border);border-radius:9px}
+.appearance-segment.brand{grid-template-columns:1fr 1fr}.appearance-segment.mode{grid-template-columns:repeat(3,1fr)}
+.appearance-choice{min-height:32px;padding:5px 7px;border:0;border-radius:6px;background:transparent;color:var(--c-secondary);font:600 11.5px/1.2 var(--font);cursor:pointer;white-space:nowrap}
+.appearance-choice:hover{background:var(--c-bg);color:var(--c-primary)}
+.appearance-choice[aria-pressed="true"]{background:var(--c-bg);color:var(--c-accent);box-shadow:var(--c-shadow);font-weight:700}
+.appearance-choice:focus-visible{outline:2px solid var(--c-accent);outline-offset:1px}
 .app-body,.app-main,.content-scroll{background:var(--c-canvas)}
 .sidebar{width:220px;background:var(--c-bg);border-right:1px solid var(--c-border);color:var(--c-primary);transition:width var(--motion-standard) var(--motion-ease)}
 .sidebar-top{padding:12px 10px 8px}
@@ -235,7 +247,7 @@ h3,.section-hdr-title{font-size:15px;line-height:1.35;font-weight:650;color:var(
 .home-action-card:hover{transform:translateY(-2px);box-shadow:var(--c-shadow-raised);border-color:var(--c-border-strong)}
 .home-action-card.primary{background:var(--c-accent);border-color:var(--c-accent)}
 .home-action-card.demo{border-color:var(--c-border);background:var(--c-bg)}
-.home-action-card.demo .home-card-icon{background:var(--c-accent-tint);color:var(--c-accent)}
+.home-action-card.demo .home-card-icon{background:var(--c-surface);color:var(--c-accent)}
 .home-card-icon{border-radius:var(--radius-sm);margin-bottom:var(--space-4)}
 
 /* Inputs and segmented controls */
@@ -414,7 +426,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
   --c-dist-bar:#7fa6c2;
   --c-shadow:0 1px 2px rgba(0,0,0,.28);
   --c-shadow-raised:0 14px 34px rgba(0,0,0,.38);
-  --c-nav-glass:rgba(63,25,37,.97);
+  --c-nav-glass:rgba(166,25,46,.98);
   --s-ok:#7bc982;
   --s-ok-bg:#172d1b;
   --s-warn:#efb552;
@@ -433,8 +445,8 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
   --s-check-bg:#281f36;
   --s-dif:#9ba7f1;
   --s-dif-bg:#20243c;
-  --s-flag-row:#2d241a;
-  --s-flag-row-h:#3a2d1e;
+  --s-flag-row:#3b3022;
+  --s-flag-row-h:#493a27;
   --s-easy-row:#172a38;
   --s-easy-row-h:#1d3547;
   --s-dif-row:#20243c;
@@ -448,7 +460,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
   --c-accent-fill:#7867ba;
   --c-accent-fill-hover:#8a79ca;
   --c-accent-tint:#29243b;
-  --c-nav-glass:rgba(45,39,69,.97);
+  --c-nav-glass:rgba(120,103,186,.98);
 }
 :root[data-appearance="dark"] .aqp-mark .aqp-tile,
 :root[data-appearance="dark"] .sp-mark .sp-tile{fill:var(--c-accent-fill)}
@@ -467,8 +479,8 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 :root[data-appearance="dark"] .content-scroll{background:var(--c-canvas);color:var(--c-primary)}
 :root[data-appearance="dark"] tr:hover td,
 :root[data-appearance="dark"] .fb-freq-table tr:hover td{background:#202932}
-:root[data-appearance="dark"] tr.row-flagged td{background:#2d241a}
-:root[data-appearance="dark"] tr.row-flagged:hover td{background:#3a2d1e}
+:root[data-appearance="dark"] tr.row-flagged td{background:var(--s-flag-row)}
+:root[data-appearance="dark"] tr.row-flagged:hover td{background:var(--s-flag-row-h)}
 :root[data-appearance="dark"] tr.row-easy td{background:#172a38}
 :root[data-appearance="dark"] tr.row-easy:hover td{background:#1d3547}
 :root[data-appearance="dark"] tr.row-dif td{background:#20243c}
@@ -496,6 +508,58 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 :root[data-appearance="dark"] select,
 :root[data-appearance="dark"] input,
 :root[data-appearance="dark"] textarea{color-scheme:dark}
+
+/* Dark-mode completion pass: shared chrome, state chips, and modal content. */
+.app-version-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(0,0,0,.08);box-shadow:0 1px 3px rgba(0,0,0,.05);border-radius:20px;padding:4px 12px 4px 8px;transition:background .15s,border-color .15s}
+.session-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.session-pill-loaded{color:var(--s-ok);background:var(--s-ok-bg);border:1px solid color-mix(in srgb,var(--s-ok) 48%,transparent)}
+.session-pill-stale{color:var(--s-warn-text);background:var(--s-warn-bg);border:1px solid color-mix(in srgb,var(--s-warn) 58%,transparent)}
+.session-pill-report{color:var(--s-easy-text);background:var(--s-easy-bg);border:1px solid color-mix(in srgb,var(--s-easy) 42%,transparent)}
+.kpi-status-badge{display:inline-flex;padding:2px 9px;border-radius:5px;font-size:11px;font-weight:700}
+.dif-kpi-pill{display:flex;align-items:center;gap:8px;padding:6px 11px;border:1px solid var(--c-border-2);border-radius:8px;min-width:104px;background:var(--c-surface)}
+.dif-kpi-pill.is-en{background:var(--s-easy-bg);border-color:color-mix(in srgb,var(--s-easy) 45%,transparent)}
+.dif-kpi-pill.is-fr,.dif-kpi-pill.is-clear{background:var(--s-ok-bg);border-color:color-mix(in srgb,var(--s-ok) 45%,transparent)}
+.dif-kpi-pill.is-flagged{background:var(--s-warn-bg);border-color:color-mix(in srgb,var(--s-warn) 50%,transparent)}
+.dif-gap-chip{display:inline-flex;align-items:center;border-radius:5px;padding:2px 7px;font-size:10.5px;font-weight:650;background:var(--s-warn-bg);color:var(--s-warn-text);border:1px solid color-mix(in srgb,var(--s-warn) 40%,transparent)}
+.review-flag-badge{font-size:10px;font-weight:700;border-radius:5px;padding:2px 7px;white-space:nowrap}
+.review-flag-badge.is-concern{background:var(--s-hard-bg);color:var(--s-hard);border:1px solid color-mix(in srgb,var(--s-hard) 34%,transparent)}
+.review-flag-badge.is-easy{background:var(--s-easy-bg);color:var(--s-easy-text);border:1px solid color-mix(in srgb,var(--s-easy) 34%,transparent)}
+.fb-general-header{background:color-mix(in srgb,var(--c-accent-tint) 62%,var(--c-surface))!important}
+.recovery-group{border-color:color-mix(in srgb,var(--s-ok) 42%,var(--c-border))!important;background:color-mix(in srgb,var(--s-ok-bg) 74%,var(--c-bg))!important}
+.recovery-group .report-group-title,.recovery-group .recovery-icon{color:var(--s-ok)!important}
+.recovery-format-badge{color:var(--s-ok)!important;background:var(--s-ok-bg)!important;border-color:color-mix(in srgb,var(--s-ok) 35%,transparent)!important}
+
+:root[data-appearance="dark"] .app-version-pill{background:var(--c-surface)!important;border-color:var(--c-border-2)!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+:root[data-appearance="dark"] #hamburger-dropdown{background:rgba(29,37,45,.98)!important;border-color:var(--c-border-2)!important;box-shadow:0 16px 40px rgba(0,0,0,.48)!important;backdrop-filter:blur(18px)!important;-webkit-backdrop-filter:blur(18px)!important}
+:root[data-appearance="dark"] .home-action-card.demo .home-card-icon{background:var(--c-surface);color:var(--c-accent)}
+:root[data-appearance="dark"] .kpi-status-badge[style*="#eaf3de"]{background:var(--s-ok-bg)!important;color:var(--s-ok)!important}
+:root[data-appearance="dark"] .kpi-status-badge[style*="#faeeda"]{background:var(--s-warn-bg)!important;color:var(--s-warn-text)!important}
+:root[data-appearance="dark"] .kpi-status-badge[style*="#fce8e8"],
+:root[data-appearance="dark"] .kpi-status-badge[style*="#fcd4d4"]{background:var(--s-hard-bg)!important;color:var(--s-hard)!important}
+:root[data-appearance="dark"] .fb-flag-high{background:var(--s-hard-bg);color:var(--s-hard);border:1px solid color-mix(in srgb,var(--s-hard) 32%,transparent)}
+:root[data-appearance="dark"] .fb-flag-med{background:var(--s-warn-bg);color:var(--s-warn-text);border:1px solid color-mix(in srgb,var(--s-warn) 34%,transparent)}
+:root[data-appearance="dark"] .b-deleted{background:var(--s-hard-bg);color:var(--s-hard)}
+:root[data-appearance="dark"] .nav-badge-amber{background:var(--s-warn-bg);color:var(--s-warn-text);border-color:color-mix(in srgb,var(--s-warn) 42%,transparent)}
+:root[data-appearance="dark"] [role="dialog"]:not(#report-preview-modal)>div{background:var(--c-bg)!important;color:var(--c-primary)}
+:root[data-appearance="dark"] [role="dialog"]:not(#report-preview-modal) [style*="background:#f7f8f9"],
+:root[data-appearance="dark"] [role="dialog"]:not(#report-preview-modal) [style*="background:#eeeff1"],
+:root[data-appearance="dark"] [role="dialog"]:not(#report-preview-modal) [style*="background:#f0f4ff"],
+:root[data-appearance="dark"] [role="dialog"]:not(#report-preview-modal) [style*="background:#f4f2f9"]{background:var(--c-surface)!important}
+:root[data-appearance="dark"] [role="dialog"]:not(#report-preview-modal) [style*="color:#555"],
+:root[data-appearance="dark"] [role="dialog"]:not(#report-preview-modal) [style*="color:#4b5563"],
+:root[data-appearance="dark"] [role="dialog"]:not(#report-preview-modal) [style*="color:#5a6472"]{color:var(--c-secondary)!important}
+:root[data-appearance="dark"] [role="dialog"]:not(#report-preview-modal) [style*="background:#fff8e6"],
+:root[data-appearance="dark"] [role="dialog"]:not(#report-preview-modal) [style*="background:#fff8e0"],
+:root[data-appearance="dark"] [role="dialog"]:not(#report-preview-modal) [style*="background:#fffbea"]{background:var(--s-warn-bg)!important;color:var(--s-warn-text)!important;border-color:color-mix(in srgb,var(--s-warn) 45%,transparent)!important}
+:root[data-appearance="dark"] [role="dialog"]:not(#report-preview-modal) [style*="background:#fff0f0"]{background:var(--s-hard-bg)!important;color:var(--s-hard)!important;border-color:color-mix(in srgb,var(--s-hard) 38%,transparent)!important}
+:root[data-appearance="dark"] [role="dialog"]:not(#report-preview-modal) [style*="background:#e8f5e9"],
+:root[data-appearance="dark"] [role="dialog"]:not(#report-preview-modal) [style*="background:#e8f5eb"],
+:root[data-appearance="dark"] [role="dialog"]:not(#report-preview-modal) [style*="background:#f7fbf8"]{background:var(--s-ok-bg)!important;color:var(--s-ok)!important;border-color:color-mix(in srgb,var(--s-ok) 38%,transparent)!important}
+:root[data-appearance="dark"] [role="dialog"]:not(#report-preview-modal) [style*="background:#e3f2fd"],
+:root[data-appearance="dark"] [role="dialog"]:not(#report-preview-modal) [style*="background:#e8f0fd"],
+:root[data-appearance="dark"] [role="dialog"]:not(#report-preview-modal) [style*="background:#e8f4fd"]{background:var(--s-easy-bg)!important;color:var(--s-easy-text)!important;border-color:color-mix(in srgb,var(--s-easy) 38%,transparent)!important}
+:root[data-appearance="dark"] [role="dialog"]:not(#report-preview-modal) [style*="background:#f3f4f6"],
+:root[data-appearance="dark"] [role="dialog"]:not(#report-preview-modal) [style*="background:#f2f2f2"]{background:var(--c-surface)!important;color:var(--c-secondary)!important;border-color:var(--c-border-2)!important}
 
 /* Report previews intentionally remain paper-white in every appearance. */
 .report-preview,
@@ -572,6 +636,9 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
   <symbol id="fui-download" viewBox="0 0 24 24"><path d="M18.25 20.5a.75.75 0 1 1 0 1.5h-13a.75.75 0 1 1 0-1.5zm-6.6-18.49h.1c.38 0 .7.28.74.64l.01.1v13.7l3.72-3.73a.75.75 0 0 1 .98-.07l.08.07c.27.27.3.68.07.98l-.07.08-5 5a.75.75 0 0 1-.97.07l-.09-.07-5-5a.75.75 0 0 1 .98-1.13l.08.07L11 16.43V2.76c0-.38.28-.7.65-.75h.1z"/></symbol>
   <symbol id="fui-beaker" viewBox="0 0 24 24"><path d="M8 4.5h1v6.24q0 .57-.27 1.07l-3.59 6.6A1.75 1.75 0 0 0 6.68 21h10.64a1.75 1.75 0 0 0 1.54-2.59l-3.59-6.6q-.27-.5-.27-1.07V4.5h1A.75.75 0 0 0 16 3H8a.75.75 0 0 0 0 1.5m2.5 6.24V4.5h3v6.24q0 .95.45 1.79l.8 1.47h-5.5l.8-1.47q.45-.84.45-1.8M8.43 15.5h7.14l1.97 3.63a.25.25 0 0 1-.22.37H6.68a.25.25 0 0 1-.22-.37z"/></symbol>
   <symbol id="fui-question" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20m0 1.67a8.34 8.34 0 0 0 0 16.66 8.34 8.34 0 0 0 0-16.66m0 11.83a1 1 0 1 1 0 2 1 1 0 0 1 0-2m0-8.75a2.75 2.75 0 0 1 2.75 2.75c0 1.01-.3 1.57-1.05 2.36l-.17.17c-.62.62-.78.89-.78 1.47a.75.75 0 0 1-1.5 0c0-1.01.3-1.57 1.05-2.36l.17-.17c.62-.62.78-.89.78-1.47a1.25 1.25 0 0 0-2.5-.13v.13a.75.75 0 0 1-1.5 0A2.75 2.75 0 0 1 12 6.75"/></symbol>
+  <symbol id="fui-sun" viewBox="0 0 24 24"><path d="M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10m0 1.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7m0-6.5c.41 0 .75.34.75.75v1.5a.75.75 0 0 1-1.5 0v-1.5c0-.41.34-.75.75-.75m0 17c.41 0 .75.34.75.75v1.5a.75.75 0 0 1-1.5 0v-1.5c0-.41.34-.75.75-.75M2 12c0-.41.34-.75.75-.75h1.5a.75.75 0 0 1 0 1.5h-1.5A.75.75 0 0 1 2 12m17 0c0-.41.34-.75.75-.75h1.5a.75.75 0 0 1 0 1.5h-1.5A.75.75 0 0 1 19 12M4.93 4.93c.3-.3.77-.3 1.06 0l1.06 1.06a.75.75 0 0 1-1.06 1.06L4.93 5.99a.75.75 0 0 1 0-1.06m12.02 12.02c.3-.3.77-.3 1.06 0l1.06 1.06a.75.75 0 0 1-1.06 1.06l-1.06-1.06a.75.75 0 0 1 0-1.06M19.07 4.93c.3.3.3.77 0 1.06l-1.06 1.06a.75.75 0 0 1-1.06-1.06l1.06-1.06c.3-.3.77-.3 1.06 0M7.05 16.95c.3.3.3.77 0 1.06l-1.06 1.06a.75.75 0 1 1-1.06-1.06l1.06-1.06c.3-.3.77-.3 1.06 0"/></symbol>
+  <symbol id="fui-moon" viewBox="0 0 24 24"><path d="M11.28 2.19a.75.75 0 0 1 .16.82 8.5 8.5 0 0 0 9.55 11.55.75.75 0 0 1 .82 1.03A10 10 0 1 1 10.46 2.08c.3-.08.62-.04.82.11M9.7 4.05a8.5 8.5 0 1 0 10.04 12.1A10 10 0 0 1 9.7 4.05"/></symbol>
+  <symbol id="fui-system" viewBox="0 0 24 24"><path d="M4.25 3h15.5A2.25 2.25 0 0 1 22 5.25v10.5A2.25 2.25 0 0 1 19.75 18h-7v1.5h3.5a.75.75 0 0 1 0 1.5h-8.5a.75.75 0 0 1 0-1.5h3.5V18h-7A2.25 2.25 0 0 1 2 15.75V5.25A2.25 2.25 0 0 1 4.25 3m0 1.5a.75.75 0 0 0-.75.75v10.5c0 .41.34.75.75.75h15.5c.41 0 .75-.34.75-.75V5.25a.75.75 0 0 0-.75-.75z"/></symbol>
   <symbol id="fui-more" viewBox="0 0 24 24"><path d="M12 7.75a1.75 1.75 0 1 1 0-3.5 1.75 1.75 0 0 1 0 3.5m0 6a1.75 1.75 0 1 1 0-3.5 1.75 1.75 0 0 1 0 3.5M10.25 18a1.75 1.75 0 1 0 3.5 0 1.75 1.75 0 0 0-3.5 0"/></symbol>
   <symbol id="fui-left" viewBox="0 0 24 24"><path d="M10.73 19.8a.75.75 0 0 0 1.04-1.1l-6.25-5.95h14.73a.75.75 0 0 0 0-1.5H5.52l6.25-5.95a.75.75 0 0 0-1.04-1.1l-7.42 7.08a1 1 0 0 0 0 1.44z"/></symbol>
   <symbol id="fui-right" viewBox="0 0 24 24"><path d="M13.27 4.2a.75.75 0 0 0-1.04 1.1l6.25 5.95H3.75a.75.75 0 0 0 0 1.5h14.73l-6.25 5.95a.75.75 0 0 0 1.04 1.1l7.42-7.08a1 1 0 0 0 0-1.44z"/></symbol>
@@ -696,6 +763,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
   <div class="topbar-actions">
     <button class="btn-icon" id="btn-faq-topbar" onclick="openFAQ()" title="Help &amp; FAQ" aria-label="Help and FAQ"><svg class="fui-icon fui-icon-md" aria-hidden="true"><use href="#fui-question"/></svg></button>
     <button class="btn-icon" id="btn-view-results-topbar" onclick="goToResults()" title="Back to results" aria-label="Back to results" style="display:none;gap:5px;width:auto;padding:0 10px;font-size:12px;font-weight:600;color:var(--c-accent);border-color:var(--c-accent)"><svg class="fui-icon fui-icon-sm" aria-hidden="true"><use href="#fui-right"/></svg>Results</button>
+    <button class="btn-icon appearance-quick-btn" id="btn-appearance-topbar" onclick="toggleAppearancePopover(this)" title="Appearance" aria-label="Appearance" aria-haspopup="dialog" aria-controls="appearance-popover" aria-expanded="false"><svg class="fui-icon fui-icon-md" aria-hidden="true"><use id="appearance-mode-icon" href="#fui-system"/></svg><span id="appearance-brand-dot" class="appearance-brand-dot" aria-hidden="true"></span></button>
     <button class="btn-icon" id="btn-menu-topbar" onclick="toggleHamburger(this)" title="More options" aria-label="More options" aria-haspopup="menu" aria-controls="hamburger-dropdown" aria-expanded="false"><svg class="fui-icon fui-icon-md" aria-hidden="true"><use href="#fui-more"/></svg></button>
   </div>
 </div>
@@ -1752,15 +1820,15 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 
         </div><!-- end rp-section-session -->
 
-        <div id="rp-section-recovery" class="report-group" style="display:none;border-color:rgba(43,122,62,.35);background:#f7fbf8">
-          <div class="report-group-title" style="color:#2B7A3E">Session recovery</div>
+        <div id="rp-section-recovery" class="report-group recovery-group" style="display:none">
+          <div class="report-group-title">Session recovery</div>
           <div class="report-group-note">Use this only to continue working in AQP. It contains de-identified response-level data and any feedback text, so handle it securely.</div>
           <div id="rp-card-backup" style="display:none;align-items:center;padding:13px 16px;border:1px solid var(--c-border);border-radius:10px;margin-bottom:0;gap:14px;background:var(--c-bg)">
-            <div style="flex-shrink:0;width:28px;display:flex;align-items:center;justify-content:center;color:#2B7A3E">
+            <div class="recovery-icon" style="flex-shrink:0;width:28px;display:flex;align-items:center;justify-content:center">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h11l3 3v15H5z"/><path d="M8 3v6h8V3M8 21v-7h8v7"/></svg>
             </div>
             <div style="flex:1;min-width:0">
-              <div style="font-size:13px;font-weight:600;color:var(--c-primary);margin-bottom:2px">Reopenable AQP backup <span style="font-size:10px;font-weight:500;color:#2B7A3E;background:#e8f5eb;border:1px solid rgba(43,122,62,.25);border-radius:4px;padding:1px 6px;vertical-align:middle">JSON</span></div>
+              <div style="font-size:13px;font-weight:600;color:var(--c-primary);margin-bottom:2px">Reopenable AQP backup <span class="recovery-format-badge" style="font-size:10px;font-weight:500;border:1px solid;border-radius:4px;padding:1px 6px;vertical-align:middle">JSON</span></div>
               <div style="font-size:11.5px;color:var(--c-muted)">De-identified responses, decisions, and feedback text for reopening this session on another device. Handle securely.</div>
             </div>
             <div style="display:flex;align-items:center;gap:14px;flex-shrink:0">
@@ -1869,7 +1937,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 
     <!-- Right: version pill + build number -->
     <button onclick="openReleaseNotes()" title="View release notes" aria-label="View release notes" style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;background:none;border:none;padding:0;cursor:pointer;font-family:var(--font)">
-      <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(0,0,0,.08);box-shadow:0 1px 3px rgba(0,0,0,.05);border-radius:20px;padding:4px 12px 4px 8px;transition:background .15s">
+      <div class="app-version-pill">
         <div style="width:7px;height:7px;border-radius:50%;background:var(--s-ok)"></div>
         <span data-appversion style="font-size:11px;font-weight:700;color:var(--c-secondary);letter-spacing:.3px"></span>
       </div>
@@ -2215,10 +2283,10 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 
 // ── App version — single source of truth ─────────────────────────────────
 var APP_VERSION     = '0.8';
-var APP_BUILD       = '20261002-02';
+var APP_BUILD       = '20261003-01';
 var APP_FAQ_VERSION = '0.8';           // Keep aligned with the app version; date records FAQ revisions
-var APP_FAQ_DATE    = 'October 2, 2026'; // Update when FAQ content changes
-var APP_RN_DATE     = 'October 2, 2026'; // Update each version close
+var APP_FAQ_DATE    = 'October 3, 2026'; // Update when FAQ content changes
+var APP_RN_DATE     = 'October 3, 2026'; // Update each version close
 var SESSION_BACKUP_FILE_TYPE = 'aqp-portable-session';
 var SESSION_BACKUP_SCHEMA_VERSION = 1;
 
@@ -2448,6 +2516,7 @@ function applyTheme(theme) {
     document.documentElement.removeAttribute('data-theme');
   }
   try { localStorage.setItem('ugme-theme', theme); } catch(e) {}
+  syncAppearanceControls();
 }
 var _appearanceMedia = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
 function applyAppearance(mode, persist) {
@@ -2460,7 +2529,34 @@ function applyAppearance(mode, persist) {
   }
   var control = document.getElementById('appearance-select');
   if (control) control.value = mode;
+  syncAppearanceControls();
 }
+function syncAppearanceControls() {
+  var root = document.documentElement;
+  var brand = root.getAttribute('data-theme') === 'elentra' ? 'elentra' : '';
+  var mode = root.getAttribute('data-appearance-mode') || 'system';
+  var brandName = brand === 'elentra' ? 'Elentra' : 'uOttawa';
+  var modeName = mode.charAt(0).toUpperCase() + mode.slice(1);
+  var button = document.getElementById('btn-appearance-topbar');
+  if (button) {
+    button.title = 'Appearance: ' + brandName + ' · ' + modeName;
+    button.setAttribute('aria-label', 'Appearance: ' + brandName + ', ' + modeName);
+  }
+  var icon = document.getElementById('appearance-mode-icon');
+  if (icon) icon.setAttribute('href', mode === 'dark' ? '#fui-moon' : mode === 'light' ? '#fui-sun' : '#fui-system');
+  var themeControl = document.getElementById('theme-select');
+  if (themeControl) themeControl.value = brand;
+  var appearanceControl = document.getElementById('appearance-select');
+  if (appearanceControl) appearanceControl.value = mode;
+  document.querySelectorAll('[data-quick-brand]').forEach(function(choice) {
+    choice.setAttribute('aria-pressed', choice.getAttribute('data-quick-brand') === brand ? 'true' : 'false');
+  });
+  document.querySelectorAll('[data-quick-mode]').forEach(function(choice) {
+    choice.setAttribute('aria-pressed', choice.getAttribute('data-quick-mode') === mode ? 'true' : 'false');
+  });
+}
+function setQuickBrand(brand) { applyTheme(brand); }
+function setQuickAppearance(mode) { applyAppearance(mode); }
 function _syncSystemAppearance() {
   if (document.documentElement.getAttribute('data-appearance-mode') === 'system') applyAppearance('system', false);
 }
@@ -2477,6 +2573,7 @@ if (_appearanceMedia) {
   applyTheme(savedTheme);
   applyAppearance(savedAppearance, false);
 })();
+document.addEventListener('DOMContentLoaded', syncAppearanceControls);
 // ── C1: Session persistence ───────────────────────────────────────────────
 // Saves G, FB (minus raw rows), ExamSession, flags, and key DOM fields to
 // localStorage['aqp-draft']. Called after every significant action.
@@ -6193,7 +6290,7 @@ function renderNewSummary(n, avg, alpha, nE, nF) {
         +'<div style="font-size:11px;font-weight:700;color:var(--c-muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">Exam Avg. <button class="alpha-info-btn" data-ctx="exam-avg" onclick="showCtxPanel(\'exam-avg\',this)" aria-label="Learn about the exam average">\u24d8</button></div>'
         +'<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:6px">'
           +'<span style="font-size:38px;font-weight:700;line-height:1;color:'+(avgN>=75?'var(--s-ok)':avgN>=60?'var(--s-warn-text)':avgN>=50?'#b52020':'var(--c-accent-dark)')+'">'+avgN.toFixed(1)+'%</span>'
-          +'<span style="display:inline-block;padding:2px 9px;border-radius:4px;font-size:11px;font-weight:700;background:'+avgBadgeBg+';color:'+avgBadgeColor+'">'+avgBadge+'</span>'
+          +'<span class="kpi-status-badge" style="background:'+avgBadgeBg+';color:'+avgBadgeColor+'">'+avgBadge+'</span>'
         +'</div>'
         +(_showDelta?'<div style="margin-top:3px">'+_delta(avgN, G._initial.avg, true, '%')+'</div>':'')
         +(eScores.length&&fScores.length?'<div style="font-size:11.5px;color:var(--c-muted);margin-top:2px">EN '+eAvg.toFixed(0)+'% · FR '+fAvg.toFixed(0)+'%</div>':'')
@@ -6205,7 +6302,7 @@ function renderNewSummary(n, avg, alpha, nE, nF) {
         +'<div style="font-size:11px;font-weight:700;color:var(--c-muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">Reliability (\u03b1) <button class="alpha-info-btn" data-ctx="alpha" onclick="showCtxPanel(\'alpha\',this)" aria-label="Learn about Cronbach\'s alpha">\u24d8</button></div>'
         +'<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:8px">'
           +'<span style="font-size:38px;font-weight:700;color:#6a3fa0;line-height:1">'+alphaN.toFixed(2)+'</span>'
-          +'<span style="display:inline-block;padding:2px 9px;border-radius:4px;font-size:11px;font-weight:700;background:'+alphaBadgeBg+';color:'+alphaBadgeColor+'">'+alphaBadge+'</span>'
+          +'<span class="kpi-status-badge" style="background:'+alphaBadgeBg+';color:'+alphaBadgeColor+'">'+alphaBadge+'</span>'
         +'</div>'
         +(_showDelta?'<div style="margin-bottom:6px">'+_delta(alphaN, G._initial ? G._initial.alpha : null, true, 'dec')+'</div>':'')
         +'<div style="position:relative;height:6px;background:var(--c-border);border-radius:3px;margin-bottom:4px">'
@@ -7169,12 +7266,21 @@ function buildFbReportOverviewHtml(o) {
   if (o.freq.length > 6) right += '<div style="font-size:9px;color:#94a3b8;margin-top:5px;font-style:italic">+ ' + (o.freq.length - 6) + ' more</div>';
   right += '</div>';
 
+  var statusReady = !o.unresolvedCount;
+  var statusBlock = '<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:'+(statusReady?'#f0fdf4':'#fff8e0')+';border-bottom:1px solid '+(statusReady?'#bbf7d0':'#ead49a')+'">'
+    +'<span style="width:22px;height:22px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;background:'+(statusReady?'#dcfce7':'#fef3c7')+';color:'+(statusReady?'#166534':'#8b5a00')+';font-weight:700">'+(statusReady?'✓':'!')+'</span>'
+    +'<div><div style="font-size:11px;font-weight:700;color:#18222b">'+(statusReady?'Feedback routing complete':o.unresolvedCount+' comment'+(o.unresolvedCount===1?'':'s')+' still need routing')+'</div>'
+    +'<div style="font-size:9.5px;color:#66737d">'+(statusReady?'All responses are ready for coordinator review.':'Resolve unmapped feedback before final distribution.')+'</div></div></div>';
+  var routingBlock = '<div style="display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid rgba(0,0,0,.08)">'
+    +[['Responses received',o.sourceRows],['Question-attributed',o.attributedRows],['General feedback',o.generalCount],['Unmapped'+(o.discardedCount?' · '+o.discardedCount+' discarded':''),o.unresolvedCount]].map(function(r,i){return '<div style="padding:9px 12px;'+(i<3?'border-right:1px solid rgba(0,0,0,.08);':'')+'"><div style="font-size:17px;font-weight:700;color:'+(i===3&&o.unresolvedCount?'#8b5a00':'#18222b')+'">'+r[1]+'</div><div style="font-size:8.5px;font-weight:700;color:#66737d;text-transform:uppercase;letter-spacing:.4px">'+r[0]+'</div></div>';}).join('')
+    +'</div>';
   return '<div style="border:1px solid var(--c-border);border-radius:10px;overflow:hidden;background:#fff;margin:0 auto 20px;font-family:Calibri,Arial,sans-serif">'
     // Header
     + '<div style="background:#fafafa;padding:8px 12px;border-bottom:1px solid var(--c-border);display:flex;align-items:center;gap:6px">'
       + '<div style="width:32px;height:3px;border-radius:2px;background:#0d7a7a"></div>'
       + '<span style="font-size:13px;font-weight:700;color:#0d7a7a;letter-spacing:-.2px">Feedback Overview</span>'
     + '</div>'
+    + statusBlock + routingBlock
     // Body: 2×2 grid left + top commented right
     + '<div style="display:grid;grid-template-columns:55% 45%;border-bottom:1px solid rgba(0,0,0,.06)">'
       // Left: 2×2
@@ -7691,6 +7797,7 @@ function renderFullReport(avg, alpha) {
 
     // DIF Analysis section
     '<p style="font-size:15px;font-weight:700;color:#404040;margin:20px 0 4px;padding-bottom:4px;border-bottom:2px solid var(--c-accent)">Differential Item Functioning (DIF) Analysis</p>'+
+    buildDifReportOverviewHtml()+
     '<p style="margin-bottom:10px">This section presents the results of a Differential Item Functioning (DIF) analysis for the MCQ exam. DIF is a statistical analysis of each item on an exam to determine the degree to which the item might be performing differently depending on a particular subgroup of examinees. For UGME exams, we are interested in determining if there is any evidence of DIF when comparing the performance of English and French students on each question.</p>'+
     '<p style="margin-bottom:10px">If DIF is present, it does not automatically mean an item is biased toward a subgroup. DIF may occur by chance, so each item that has a statistically significant DIF should be reviewed by content experts.</p>'+
     '<p style="font-weight:700;margin-bottom:8px">The following should be reviewed if a question is flagged:</p>'+
@@ -7732,22 +7839,71 @@ function renderDIFKpiStrip() {
   var nDIF = (G.dif || []).filter(function(d){ return d.imp; }).length + _ntGetDifItems().length;
   var enLbl = (((document.getElementById('eng-code')||{}).value)||'EN').trim().toUpperCase();
   var frLbl = (((document.getElementById('fre-code')||{}).value)||'FR').trim().toUpperCase();
-  var difValCol  = nDIF > 0 ? '#92400e' : '#166534';
-  var difBg      = nDIF > 0 ? '#fffbeb' : '#f0fdf4';
-  var difBorder  = nDIF > 0 ? '#fde68a' : '#bbf7d0';
-  function _pill(val, lbl, valCol, bg, bdr) {
-    return '<div style="display:flex;align-items:center;gap:8px;padding:6px 11px;background:'+bg+';border:1px solid '+bdr+';border-radius:8px;min-width:104px">'
+  var difValCol  = nDIF > 0 ? 'var(--s-warn-text)' : 'var(--s-ok)';
+  function _pill(val, lbl, valCol, stateClass) {
+    return '<div class="dif-kpi-pill '+stateClass+'">'
       +'<span style="font-size:22px;font-weight:700;color:'+valCol+';line-height:1;font-variant-numeric:tabular-nums">'+val+'</span>'
       +'<span style="font-size:9.5px;font-weight:650;color:var(--c-muted);text-transform:uppercase;letter-spacing:.045em;line-height:1.2">'+lbl+'</span>'
       +'</div>';
   }
   strip.innerHTML = '<div style="display:flex;gap:8px;align-items:stretch">'
-    +_pill(nE, enLbl+' Students', 'var(--s-easy)', '#eff6ff', '#bfdbfe')
-    +_pill(nF, frLbl+' Students', '#3b6d11', '#f0fdf4', '#bbf7d0')
-    +_pill(nQ, 'Questions', 'var(--c-secondary)', 'var(--c-surface)', 'var(--c-border-2)')
-    +_pill(nDIF, 'DIF Flagged', difValCol, difBg, difBorder)
+    +_pill(nE, enLbl+' Students', 'var(--s-easy-text)', 'is-en')
+    +_pill(nF, frLbl+' Students', 'var(--s-ok)', 'is-fr')
+    +_pill(nQ, 'Questions', 'var(--c-secondary)', '')
+    +_pill(nDIF, 'DIF Flagged', difValCol, nDIF > 0 ? 'is-flagged' : 'is-clear')
     +'</div>';
   strip.style.display = '';
+}
+
+// Report-safe DIF summary. Report previews and Word exports deliberately use
+// fixed light colours so the document is identical in Light and Dark modes.
+function getDifReportKpiData() {
+  return {
+    nE: G._lastNE || 0,
+    nF: G._lastNF || 0,
+    nQ: G.nQ || (G.dif || []).length,
+    nDIF: (G.dif || []).filter(function(d){ return d.imp; }).length + _ntGetDifItems().length,
+    enLabel: ((((document.getElementById('eng-code')||{}).value)||'EN').trim().toUpperCase()),
+    frLabel: ((((document.getElementById('fre-code')||{}).value)||'FR').trim().toUpperCase())
+  };
+}
+function buildDifReportOverviewHtml() {
+  var d = getDifReportKpiData();
+  function cell(value,label,valueColor,bg,border) {
+    return '<div style="padding:14px 16px;background:'+bg+';border:1px solid '+border+';border-radius:8px;display:flex;align-items:center;gap:10px">'
+      +'<span style="font-size:26px;font-weight:700;line-height:1;color:'+valueColor+'">'+value+'</span>'
+      +'<span style="font-size:9.5px;font-weight:700;line-height:1.25;color:#66737d;text-transform:uppercase;letter-spacing:.5px">'+label+'</span>'
+      +'</div>';
+  }
+  return '<div class="report-kpi-summary" style="border:1px solid #dfe3e6;border-radius:10px;padding:14px 16px;background:#fff;margin:0 0 20px">'
+    +'<div style="font-size:14px;font-weight:700;color:#A31515;margin-bottom:10px">DIF Overview</div>'
+    +'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">'
+      +cell(d.nE,d.enLabel+' students','#185fa5','#eff6ff','#bfdbfe')
+      +cell(d.nF,d.frLabel+' students','#2e7d32','#f0fdf4','#bbf7d0')
+      +cell(d.nQ,'questions','#485762','#f5f7f8','#cfd6da')
+      +cell(d.nDIF,'DIF flagged',d.nDIF?'#8b5a00':'#2e7d32',d.nDIF?'#fff8e0':'#f0fdf4',d.nDIF?'#ead49a':'#bbf7d0')
+    +'</div></div>';
+}
+function buildDifKpiCanvas() {
+  var d = getDifReportKpiData(), dpr=2, W=880, H=150;
+  var cv=document.createElement('canvas'); cv.width=W*dpr; cv.height=H*dpr;
+  var c=cv.getContext('2d'); c.scale(dpr,dpr); c.fillStyle='#fff'; c.fillRect(0,0,W,H);
+  c.strokeStyle='#dfe3e6'; c.lineWidth=1; c.strokeRect(.5,.5,W-1,H-1);
+  c.fillStyle='#A31515'; c.font='bold 14px Calibri,Arial,sans-serif'; c.fillText('DIF Overview',16,27);
+  var cells=[
+    {v:d.nE,l:d.enLabel+' STUDENTS',col:'#185fa5',bg:'#eff6ff',bd:'#bfdbfe'},
+    {v:d.nF,l:d.frLabel+' STUDENTS',col:'#2e7d32',bg:'#f0fdf4',bd:'#bbf7d0'},
+    {v:d.nQ,l:'QUESTIONS',col:'#485762',bg:'#f5f7f8',bd:'#cfd6da'},
+    {v:d.nDIF,l:'DIF FLAGGED',col:d.nDIF?'#8b5a00':'#2e7d32',bg:d.nDIF?'#fff8e0':'#f0fdf4',bd:d.nDIF?'#ead49a':'#bbf7d0'}
+  ];
+  var gap=8, x0=16, y=42, cw=(W-32-gap*3)/4, ch=90;
+  cells.forEach(function(k,i){
+    var x=x0+i*(cw+gap); c.fillStyle=k.bg; c.strokeStyle=k.bd; c.lineWidth=1;
+    c.beginPath(); c.roundRect(x,y,cw,ch,7); c.fill(); c.stroke();
+    c.fillStyle=k.col; c.font='bold 28px Calibri,Arial,sans-serif'; c.fillText(String(k.v),x+14,y+43);
+    c.fillStyle='#66737d'; c.font='bold 9px Calibri,Arial,sans-serif'; c.fillText(k.l,x+14,y+65);
+  });
+  return cv.toDataURL('image/png',1.0);
 }
 
 // ── Render: DIF table ─────────────────────────────────────────────────────
@@ -7840,17 +7996,15 @@ function renderDIFTable() {
       var diff=r.ePct-r.fPct;
       var absDiff=Math.abs(diff);
       var higher=diff>0?'EN':diff<0?'FR':'';
-      var gapCol=absDiff>=getThresh('gapred')?'var(--c-accent)':absDiff>=getThresh('gapamber')?'#8b5a00':'var(--c-muted)';
-      var gapBg=absDiff>=getThresh('gapred')?'#fde8e8':absDiff>=getThresh('gapamber')?'#fff8e0':'transparent';
-      var gapBorder=absDiff>=getThresh('gapamber')?'0.5px solid '+(absDiff>=getThresh('gapred')?'rgba(163,21,21,.2)':'rgba(139,90,0,.2)'):'none';
+      var gapClass=absDiff>=getThresh('gapred')?' b-hard':absDiff>=getThresh('gapamber')?'':'';
       var arrow=higher==='EN'?'↑ EN':higher==='FR'?'↑ FR':'—';
       var gapCell=absDiff>0
-        ? '<span style="font-size:9.5px;padding:2px 6px;border-radius:4px;background:'+gapBg+';color:'+gapCol+';border:'+gapBorder+';white-space:nowrap">'+arrow+' '+absDiff+'%</span>'
-        : '<span style="color:#ccc;font-size:10px">—</span>';
+        ? '<span class="dif-gap-chip'+gapClass+'">'+arrow+' '+absDiff+'%</span>'
+        : '<span style="color:var(--c-faint);font-size:10px">—</span>';
       function _pctCell(pct, n, col) {
         return '<td style="padding:6px 10px;vertical-align:middle">'
           +'<span style="font-size:12.5px;font-weight:600;color:var(--c-primary)">'+pct+'%</span>'
-          +'<span style="font-size:10px;color:#8a95a0"> ('+n+')</span>'
+          +'<span style="font-size:10px;color:var(--c-muted)"> ('+n+')</span>'
           +'<div style="margin-top:4px;height:4px;border-radius:2px;background:var(--c-border);overflow:hidden">'
             +'<div style="height:4px;border-radius:2px;background:'+col+';width:'+pct+'%"></div>'
           +'</div>'
@@ -7928,6 +8082,8 @@ function renderDIFReport() {
 
     '<p style="margin-bottom:10px">Dear Director(s), committee members,</p>'+
     '<p style="margin-bottom:16px">The following report presents the results of a Differential Item Functioning (DIF) analysis for the above-noted examination.</p>'+
+
+    buildDifReportOverviewHtml()+
 
     '<p style="font-size:15px;font-weight:700;color:#404040;margin:0 0 12px;padding-bottom:4px;border-bottom:2px solid var(--c-accent)">Differential Item Functioning (DIF) Analysis</p>'+
     '<p style="margin-bottom:10px">This section presents the results of a Differential Item Functioning (DIF) analysis for the MCQ exam. DIF is a statistical analysis of each item on an exam to determine the degree to which the item might be performing differently depending on a particular subgroup of examinees. For UGME exams, we are interested in determining if there is any evidence of DIF when comparing the performance of English and French students on each question.</p>'+
@@ -8017,7 +8173,7 @@ function docxReportByline(dateStr) {
   var imgXml = '<w:p>' + nsImg + '<w:r><w:rPr><w:noProof/></w:rPr><w:drawing>' +
     '<wp:inline distT="0" distB="0" distL="0" distR="0" ' +
     'xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing">' +
-    '<wp:extent cx="1097280" cy="284400"/>' +
+    '<wp:extent cx="1250000" cy="320000"/>' +
     '<wp:docPr id="9002" name="Wordmark"/>' +
     '<a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">' +
     '<a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture">' +
@@ -8028,7 +8184,7 @@ function docxReportByline(dateStr) {
     '<a:stretch><a:fillRect/></a:stretch>' +
     '</pic:blipFill>' +
     '<pic:spPr><a:xfrm><a:off x="0" y="0"/>' +
-    '<a:ext cx="1097280" cy="284400"/></a:xfrm>' +
+    '<a:ext cx="1250000" cy="320000"/></a:xfrm>' +
     '<a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr>' +
     '</pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p>';
   xml += imgXml;
@@ -8636,6 +8792,11 @@ function _doExportReportBuild(type, title, safe, dateStr, a2, avg, dateSuffix, f
     body+=docxH2('Differential Item Functioning (DIF) Analysis');
     // Garnet connector line below DIF heading (left-aligned, posOffset 12065 EMU)
     body+=docxGarnetLine(1004, 12065, 'left');
+    var difKpiB64F = buildDifKpiCanvas();
+    if (difKpiB64F) {
+      body += docxImage(difKpiB64F, 5943600, 1012500, 'rImgDifKpiFull');
+      body += docxPara('',{spAfter:80});
+    }
     // DIF intro — updated text per reference
     body+=docxPara('This section presents the results of a Differential Item Functioning (DIF) analysis for the MCQ exam. DIF is a statistical analysis of each item on an exam to determine the degree to which the item might be performing differently depending on a particular subgroup of examinees. For UGME exams, we are interested in determining if there is any evidence of DIF when comparing the performance of English and French students on each question.',{sz:24,spAfter:160});
     body+=docxPara('',{sz:24,spAfter:0});
@@ -8669,7 +8830,10 @@ function _doExportReportBuild(type, title, safe, dateStr, a2, avg, dateSuffix, f
     }
     body += docxDifSuppressionNotes();
     body += docxReportByline(esc(genTs3));
-        buildDocx(body, null, title, kpiB64F ? [{id:'rImgKpi1', filename:'kpi.png', b64:kpiB64F}] : null).then(function(blob){
+    var fullReportImages=[];
+    if(kpiB64F) fullReportImages.push({id:'rImgKpi1', filename:'kpi.png', b64:kpiB64F});
+    if(difKpiB64F) fullReportImages.push({id:'rImgDifKpiFull', filename:'dif-kpi.png', b64:difKpiB64F});
+    buildDocx(body, null, title, fullReportImages.length ? fullReportImages : null).then(function(blob){
       var url=URL.createObjectURL(blob);
       var a=document.createElement('a'); a.href=url; a.download=filename;
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
@@ -8845,9 +9009,15 @@ function _doExportReportBuild(type, title, safe, dateStr, a2, avg, dateSuffix, f
     body += docxPara('The following report presents the results of a Differential Item Functioning (DIF) analysis for the above-noted examination.',{sz:24,spAfter:160});
     body += docxPara('',{sz:24,spAfter:0});
 
+    // ── DIF Summary — same four metrics as the room and HTML preview ────────
+    body += docxH2('DIF Overview');
+    body += docxGarnetLine(1002, 12065, 'left');
+    var difKpiB64D = buildDifKpiCanvas();
+    if (difKpiB64D) body += docxImage(difKpiB64D, 5943600, 1012500, 'rImgDifKpi');
+
     // ── DIF Analysis section ──────────────────────────────────────────────────
     body += docxH2('Differential Item Functioning (DIF) Analysis');
-    body += docxGarnetLine(1002, 12065, 'left');
+    body += docxGarnetLine(1003, 12065, 'left');
     body += docxPara('This section presents the results of a Differential Item Functioning (DIF) analysis for the MCQ exam. DIF is a statistical analysis of each item on an exam to determine the degree to which the item might be performing differently depending on a particular subgroup of examinees. For UGME exams, we are interested in determining if there is any evidence of DIF when comparing the performance of English and French students on each question.',{sz:24,spAfter:160});
     body += docxPara('',{sz:24,spAfter:0});
     body += docxPara('If DIF is present, it does not automatically mean an item is biased toward a subgroup. DIF may occur by chance, so each item that has a statistically significant DIF should be reviewed by content experts.',{sz:24,spAfter:160});
@@ -8882,7 +9052,7 @@ function _doExportReportBuild(type, title, safe, dateStr, a2, avg, dateSuffix, f
 
     body += docxDifSuppressionNotes();
     body += docxReportByline(genTsD);
-    buildDocx(body, null, title).then(function(blob){
+    buildDocx(body, null, title, difKpiB64D ? [{id:'rImgDifKpi', filename:'dif-kpi.png', b64:difKpiB64D}] : null).then(function(blob){
       var url=URL.createObjectURL(blob);
       var a=document.createElement('a'); a.href=url; a.download=filename;
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
@@ -9419,7 +9589,7 @@ function renderReviewQueue() {
     reviewed + ' of ' + all.length + ' question' + (all.length===1?'':'s') + ' reviewed</div>';
   html += '</div>';
   if (reviewed === all.length) {
-    html += '<div style="font-size:12px;font-weight:700;color:var(--s-ok);background:#e8f5e9;border:1px solid #a5d6a7;border-radius:6px;padding:4px 12px">\u2714 Review complete</div>';
+    html += '<div class="session-pill session-pill-loaded">\u2714 Review complete</div>';
   } else {
     html += '<button onclick="_reviewState={};renderReviewQueue();updateReviewTabLabel();" ' +
       'style="font-size:11px;color:var(--c-muted);background:none;border:1px solid var(--c-border);border-radius:6px;padding:3px 10px;cursor:pointer">Reset all</button>';
@@ -9463,8 +9633,7 @@ function renderReviewQueue() {
     var isDone = !!_reviewState[q.num];
     var isConcern = q.flag !== 'Too easy';
     var flagColor = isConcern ? 'var(--s-hard)' : 'var(--s-easy-text)';
-    var flagBg    = isConcern ? '#fff8e6' : '#e8f4fd';
-    var flagBorder = isConcern ? 'rgba(192,57,43,.2)' : 'rgba(10,90,156,.2)';
+    var flagBorder = isConcern ? 'color-mix(in srgb,var(--s-hard) 34%,transparent)' : 'color-mix(in srgb,var(--s-easy) 34%,transparent)';
 
     html += '<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:' +
       (isDone ? 'var(--c-surface)' : 'var(--c-bg)') +
@@ -9487,8 +9656,7 @@ function renderReviewQueue() {
 
     // Flag badge + stats
     html += '<div style="flex:1;min-width:0">';
-    html += '<span style="font-size:10px;font-weight:700;background:' + flagBg + ';color:' + flagColor +
-      ';border:1px solid ' + flagBorder + ';border-radius:4px;padding:2px 7px;white-space:nowrap">' + q.flag + '</span>';
+    html += '<span class="review-flag-badge ' + (isConcern ? 'is-concern' : 'is-easy') + '">' + q.flag + '</span>';
     html += '<div style="font-size:11px;color:var(--c-muted);margin-top:3px">';
     html += 'Difficulty\u202f' + (q.p !== undefined ? q.p.toFixed(2) : '\u2014');
     if (q.rpbis !== undefined) html += ' \u00b7 Discrimination\u202f' + q.rpbis.toFixed(2);
@@ -9625,13 +9793,10 @@ function renderSessionStatus() {
 
   function pill(label, loaded, isStale) {
     if (loaded) {
-      var bg    = isStale ? '#fff8e6' : '#f0faf0';
-      var bdr   = isStale ? '#e8a000' : 'var(--s-ok)';
-      var col   = isStale ? '#7a4700' : '#1a5c1a';
       var icon  = isStale
         ? '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><circle cx="8" cy="8" r="7" stroke="#e8a000" stroke-width="1.5"/><path d="M8 4.5v4" stroke="#e8a000" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="11" r="1" fill="#e8a000"/></svg>'
         : '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><circle cx="8" cy="8" r="7" stroke="var(--s-ok)" stroke-width="1.5"/><path d="M5 8l2 2 4-4" stroke="var(--s-ok)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-      return '<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;background:' + bg + ';border:1px solid ' + bdr + ';font-size:11px;font-weight:600;color:' + col + ';white-space:nowrap">' + icon + label + '</span>';
+      return '<span class="session-pill ' + (isStale ? 'session-pill-stale' : 'session-pill-loaded') + '">' + icon + label + '</span>';
     } else {
       return '<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;background:var(--c-surface);border:1px solid var(--c-border);font-size:11px;font-weight:500;color:var(--c-muted);white-space:nowrap">' + label + '</span>';
     }
@@ -9650,7 +9815,7 @@ function renderSessionStatus() {
         ? '<span style="width:1px;height:14px;background:var(--c-border);display:inline-block;flex-shrink:0;margin:0 2px"></span>' +
           '<span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--c-muted);white-space:nowrap">Available reports</span>' +
           rpts.map(function(r){
-            return '<span style="font-size:11px;font-weight:600;color:var(--s-easy);background:#e8f4fd;border:1px solid #b8d9f5;border-radius:20px;padding:3px 9px;white-space:nowrap">' + r + '</span>';
+            return '<span class="session-pill session-pill-report">' + r + '</span>';
           }).join('')
         : '') +
     '</div>';
@@ -10821,6 +10986,7 @@ document.addEventListener('click', function(e) {
 function toggleHamburger(btn) {
   var dd = document.getElementById('hamburger-dropdown');
   if (!dd) return;
+  closeAppearancePopover(false);
   if (dd.style.display !== 'none' && dd._anchor === btn) {
     closeHamburger(); return;
   }
@@ -10837,6 +11003,35 @@ function toggleHamburger(btn) {
   dd.querySelectorAll('a').forEach(function(item){ item.setAttribute('role', 'menuitem'); });
   var firstItem = dd.querySelector('[role="menuitem"]');
   if (firstItem) setTimeout(function(){ firstItem.focus(); }, 0);
+}
+
+// ── Quick appearance picker ───────────────────────────────────────────────
+function toggleAppearancePopover(btn) {
+  var popover = document.getElementById('appearance-popover');
+  if (!popover) return;
+  if (popover.style.display !== 'none') { closeAppearancePopover(true); return; }
+  closeHamburger(false);
+  syncAppearanceControls();
+  popover.style.display = 'block';
+  popover.style.visibility = 'hidden';
+  var r = btn.getBoundingClientRect();
+  var width = popover.offsetWidth;
+  popover.style.top = (r.bottom + 7) + 'px';
+  popover.style.left = Math.max(8, Math.min(document.documentElement.clientWidth - width - 8, r.right - width)) + 'px';
+  popover.style.visibility = 'visible';
+  popover._anchor = btn;
+  btn.setAttribute('aria-expanded', 'true');
+  var selected = popover.querySelector('[aria-pressed="true"]');
+  if (selected) setTimeout(function(){ selected.focus(); }, 0);
+}
+function closeAppearancePopover(restoreFocus) {
+  var popover = document.getElementById('appearance-popover');
+  if (!popover) return;
+  var anchor = popover._anchor || document.getElementById('btn-appearance-topbar');
+  if (anchor) anchor.setAttribute('aria-expanded', 'false');
+  popover.style.display = 'none';
+  popover._anchor = null;
+  if (restoreFocus && anchor) anchor.focus();
 }
 function closeHamburger(restoreFocus) {
   var dd = document.getElementById('hamburger-dropdown');
@@ -10858,7 +11053,24 @@ document.addEventListener('click', function(e) {
   if ((b1 && b1.contains(e.target)) || (b2 && b2.contains(e.target)) || (b3 && b3.contains(e.target)) || (b4 && b4.contains(e.target))) return;
   if (!dd.contains(e.target)) closeHamburger();
 });
+document.addEventListener('click', function(e) {
+  var popover = document.getElementById('appearance-popover');
+  var button = document.getElementById('btn-appearance-topbar');
+  if (!popover || popover.style.display === 'none') return;
+  if ((button && button.contains(e.target)) || popover.contains(e.target)) return;
+  closeAppearancePopover(false);
+});
 document.addEventListener('keydown', function(e) {
+  var appearancePopover = document.getElementById('appearance-popover');
+  if (appearancePopover && appearancePopover.style.display !== 'none') {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      closeAppearancePopover(true);
+    } else if (e.key === 'Tab' && !appearancePopover.contains(document.activeElement)) {
+      closeAppearancePopover(false);
+    }
+    return;
+  }
   var dd = document.getElementById('hamburger-dropdown');
   if (!dd || dd.style.display === 'none') return;
   if (e.key === 'Escape') {
@@ -10884,6 +11096,19 @@ var RELEASE_NOTES = [
   {
     version: '0.8',
     builds: [
+      {
+        build: '20261003-01',
+        date:  'October 3, 2026',
+        notes: [
+          'A compact Appearance control in the top bar now provides immediate access to uOttawa or Elentra branding and Light, Dark, or System mode while preserving the full Settings controls.',
+          'The About description now explains AQP’s inputs, analysis outputs, local-browser privacy model, and the advisory role of its flags and recommendations more clearly.',
+          'Dark-mode UAT polish: home menus, footer version badge, session/report pills, modal content, Overview status badges, flagged/easy rows, DIF metrics and gap indicators, feedback volume states, Review Queue badges, and Reports session recovery now use theme-aware surfaces and contrast.',
+          'Brand consistency: dark uOttawa and Elentra dialogs now use brighter mode-appropriate accent headers, while the demonstration action icon follows the same visual construction as the other home actions.',
+          'Report consistency: MCQ, DIF, combined, and Feedback previews remain deliberately paper-white, including semantic table highlights and current KPI summary sections.',
+          'Word export polish: DIF and Feedback reports now include their current light-paper KPI summaries, and the Generated by AQP wordmark uses its correct aspect ratio.',
+          'No scoring, difficulty, discrimination, reliability, DIF regression, feedback categorisation, exception, or near-threshold calculations changed in this build.'
+        ]
+      },
       {
         build: '20261002-02',
         date:  'October 2, 2026',
@@ -14715,6 +14940,13 @@ function renderFeedbackReportPreview(container) {
   var sortedQs = fbAllQs();
   var sourceRows = (function(){ var _s={}; (FB.parsed||[]).forEach(function(p){ _s[p.rawIdx]=true; }); return Object.keys(_s).length; })();
   var totalAttr = FB.parsed.filter(function(p){return p.status!=='discard' && p.qNums.length > 0;}).length;
+  var unresolvedCount = (FB.pending||[]).filter(function(idx){ return FB.parsed[idx] && FB.parsed[idx].status === 'pending'; }).length;
+  var generalCount = (FB.general||[]).length;
+  var discardedCount = (FB.parsed||[]).filter(function(p){ return p.status === 'discard'; }).length;
+  var attributedRows = (FB.parsed||[]).filter(function(p){
+    if (!p || p.status === 'discard' || p.status === 'general' || p.status === 'pending') return false;
+    return (p.status === 'mapped' && ((p.mappedQs && p.mappedQs.length) || p.mappedQ != null)) || (p.qNums && p.qNums.length > 0);
+  }).length;
   var freq = sortedQs.map(function(q){
     var cc=(FB.grouped[q]||[]).length, bc=FB.bareRefs[q]||0;
     return {q:q, count:cc+bc, commentCount:cc, bareCount:bc};
@@ -14778,7 +15010,9 @@ function renderFeedbackReportPreview(container) {
     nContent: _rContent, nTranslation: _rTranslation,
     nOther: _rOther, nUncategorized: _rUncategorized, nBookmarked: _rBookmarked,
     freq: freqSorted, HIGH_THRESH: HIGH_THRESH, MED_THRESH: MED_THRESH,
-    catsVisible: fbCategoriesVisible()
+    catsVisible: fbCategoriesVisible(),
+    unresolvedCount: unresolvedCount, attributedRows: attributedRows,
+    generalCount: generalCount, discardedCount: discardedCount
   });
 
   // Comments by question — all questions, sorted by question number ascending
@@ -15179,7 +15413,7 @@ function renderFeedbackTab(view) {
       // Skip General section entirely if searching and no matches
       if (_genToShow.length > 0) {
         html += '<div class="fb-section">';
-        html += '<div class="fb-section-hdr" style="background:#f4f2f9">';
+        html += '<div class="fb-section-hdr fb-general-header">';
         html += '<div><span class="fb-section-q">General Feedback</span> <span style="font-size:11px;color:var(--c-muted);margin-left:8px">' +
           (_fbSearch && _fbSearch.trim() ? _genToShow.length + ' of ' + FB.general.length : FB.general.length) +
           ' comments — not attributed to a specific question</span></div>';
@@ -15464,6 +15698,13 @@ function buildFbKpiCanvas() {
   var sortedQs  = fbAllQs();
   var sourceRows = (function(){ var _s={}; (FB.parsed||[]).forEach(function(p){ _s[p.rawIdx]=true; }); return Object.keys(_s).length; })();
   var totalAttr  = FB.parsed.filter(function(p){return p.status!=='discard' && p.qNums.length > 0;}).length;
+  var unresolvedCount = (FB.pending||[]).filter(function(idx){ return FB.parsed[idx] && FB.parsed[idx].status === 'pending'; }).length;
+  var generalCount = (FB.general||[]).length;
+  var discardedCount = (FB.parsed||[]).filter(function(p){ return p.status === 'discard'; }).length;
+  var attributedRows = (FB.parsed||[]).filter(function(p){
+    if (!p || p.status === 'discard' || p.status === 'general' || p.status === 'pending') return false;
+    return (p.status === 'mapped' && ((p.mappedQs && p.mappedQs.length) || p.mappedQ != null)) || (p.qNums && p.qNums.length > 0);
+  }).length;
   var freq = sortedQs.map(function(q){
     var cc=(FB.grouped[q]||[]).length, bc=FB.bareRefs[q]||0;
     return {q:q, count:cc+bc};
@@ -15500,8 +15741,8 @@ function buildFbKpiCanvas() {
   var catTotal       = nContent + nTranslation + nOther + nUncategorized;
   var HIGH_THRESH = 8, MED_THRESH = 4;
 
-  // ── Canvas — tighter height ───────────────────────────────────────────────
-  var dpr=2, W=880, H=310;
+  // ── Canvas — light-paper report summary, including readiness and routing ──
+  var dpr=2, W=880, H=400;
   var cv = document.createElement('canvas');
   cv.width=W*dpr; cv.height=H*dpr;
   var c = cv.getContext('2d');
@@ -15542,7 +15783,36 @@ function buildFbKpiCanvas() {
   c.strokeStyle=BORDER; c.lineWidth=0.5;
   c.beginPath(); c.moveTo(0,26); c.lineTo(W,26); c.stroke();
 
-  var gridY=26, gridH=H-gridY;
+  // Readiness band
+  var statusReady = unresolvedCount === 0;
+  c.fillStyle = statusReady ? '#f0fdf4' : '#fff8e0'; c.fillRect(0,26,W,42);
+  c.strokeStyle = statusReady ? '#bbf7d0' : '#ead49a'; c.lineWidth=.8;
+  c.beginPath(); c.moveTo(0,68); c.lineTo(W,68); c.stroke();
+  c.fillStyle = statusReady ? '#dcfce7' : '#fef3c7'; c.beginPath(); c.roundRect(14,35,22,22,6); c.fill();
+  c.fillStyle = statusReady ? '#166534' : '#8b5a00'; c.font='bold 12px Calibri,Arial,sans-serif';
+  c.fillText(statusReady ? '\u2713' : '!', 21,51);
+  c.fillStyle='#18222b'; c.font='bold 10px Calibri,Arial,sans-serif';
+  c.fillText(statusReady ? 'Feedback routing complete' : unresolvedCount+' comment'+(unresolvedCount===1?'':'s')+' still need routing', 46,44);
+  c.fillStyle='#66737d'; c.font='8.5px Calibri,Arial,sans-serif';
+  c.fillText(statusReady ? 'All responses are ready for coordinator review.' : 'Resolve unmapped feedback before final distribution.', 46,56);
+
+  // Routing totals band
+  var routeY=68, routeH=48, routeW=W/4;
+  var routeData=[
+    ['Responses received',sourceRows],
+    ['Question-attributed',attributedRows],
+    ['General feedback',generalCount],
+    ['Unmapped'+(discardedCount?' · '+discardedCount+' discarded':''),unresolvedCount]
+  ];
+  routeData.forEach(function(row,idx){
+    var x=idx*routeW;
+    if(idx){ c.strokeStyle=BORDER; c.lineWidth=.6; c.beginPath(); c.moveTo(x,routeY+6); c.lineTo(x,routeY+routeH-6); c.stroke(); }
+    c.fillStyle=(idx===3&&unresolvedCount)?'#8b5a00':'#18222b'; c.font='bold 17px Calibri,Arial,sans-serif'; c.fillText(String(row[1]),x+12,routeY+22);
+    c.fillStyle='#66737d'; c.font='bold 7.5px Calibri,Arial,sans-serif'; c.fillText(row[0].toUpperCase(),x+12,routeY+37);
+  });
+  c.strokeStyle=BORDER; c.lineWidth=.8; c.beginPath(); c.moveTo(0,routeY+routeH); c.lineTo(W,routeY+routeH); c.stroke();
+
+  var gridY=116, gridH=H-gridY;
   var leftW=Math.round(W*0.55), rightX=leftW;
   var midX=Math.round(leftW/2), midY=gridY+Math.round(gridH/2);
   var PAD=12;
@@ -15699,8 +15969,8 @@ function exportFeedbackReport() {
     body += docxPara("Summary", {bold:true, sz:24, spAfter:80, color:"A31515"});
     var fbKpiB64 = buildFbKpiCanvas();
     if (fbKpiB64) {
-      // 880×310 canvas at 6.5" wide → height = 5943600 × 310/880 ≈ 2094750 EMU
-      body += docxImage(fbKpiB64, 5943600, 2094750, 'rImgFbKpi');
+      // 880×400 canvas at 6.5" wide → height = 5943600 × 400/880 ≈ 2701636 EMU
+      body += docxImage(fbKpiB64, 5943600, 2701636, 'rImgFbKpi');
       body += docxPara("", {spAfter:80});
     }
 
@@ -17044,8 +17314,9 @@ function updateTopbarExam() {
       <div>
         <div style="font-size:11px;font-weight:700;color:var(--c-muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">About</div>
         <p style="font-size:13px;line-height:1.75;color:var(--c-secondary);margin:0">
-          The <strong style="color:var(--c-primary)">Assessment Quality Platform (AQP)</strong> automates the generation and reporting of MCQ item, DIF, and student feedback analyses for UGME-related exams. The application allows uploading raw data from a QuestionMark or Scantron export and generates item statistics, score distributions, and formatted Word reports in seconds. For methodology details, instructions or guidance, see the <a href="#" onclick="closeAbout();openFAQ();return false;" style="color:var(--c-accent);font-weight:600;text-decoration:none">FAQ / Help</a> page.
+          The <strong style="color:var(--c-primary)">Assessment Quality Platform (AQP)</strong> is a browser-based workspace for reviewing multiple-choice exam performance and student feedback. It transforms QuestionMark or Scantron results, answer keys, and feedback exports into item-level evidence—including difficulty, discrimination, reliability, distractor patterns, language-stream DIF, and categorized comments—and produces review-ready reports.
         </p>
+        <p style="font-size:13px;line-height:1.75;color:var(--c-secondary);margin:10px 0 0">All analysis runs locally in your browser. AQP does not send uploaded files to an AQP server or maintain a central database. Its flags and recommendations support coordinator and content-expert review; they are not automatic determinations of question quality or bias.</p>
         <p style="font-size:12px;line-height:1.6;color:var(--c-muted);margin:10px 0 0;font-style:italic">Note: session history, multi-user access, and report archiving require a future backend integration — see the <a href="#" onclick="closeAbout();openFAQ();return false;" style="color:var(--c-accent);font-weight:600;text-decoration:none;font-style:normal">FAQ</a> for current limitations.</p>
       </div>
 
@@ -17270,7 +17541,7 @@ function updateTopbarExam() {
               <span class="faq-icon">+</span>
             </div>
             <div class="faq-a" style="display:none">
-              Yes. Open <strong>Settings</strong> (More Options menu, top right). Under <em>Appearance</em>, <strong>Brand</strong> selects the uOttawa or Elentra colour identity, while <strong>Mode</strong> selects Light, Dark, or System. System follows your device preference and changes automatically when the device preference changes. These choices are saved only in this browser and restored the next time you open AQP.
+              Yes. Use the <strong>Appearance</strong> button in the top-right bar for quick access, or open <strong>Settings</strong> from More Options. <strong>Brand</strong> selects the uOttawa or Elentra colour identity, while <strong>Mode</strong> selects Light, Dark, or System. System follows your device preference and changes automatically when the device preference changes. These choices are saved only in this browser and restored the next time you open AQP.
             </div>
           </div>
 
@@ -17969,6 +18240,26 @@ function updateTopbarExam() {
       <div style="font-size:11.5px;line-height:1.6;color:var(--c-muted);margin-bottom:16px">Reopenable AQP backups are downloaded files. Clearing browser data cannot remove files already downloaded to this computer or copied elsewhere.</div>
       <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--c-secondary);margin-bottom:14px"><input id="privacy-clear-theme" type="checkbox" style="accent-color:var(--c-accent)"> Also reset saved brand and appearance preferences</label>
       <div style="display:flex;gap:8px;flex-wrap:wrap"><button id="privacy-clear-draft" class="btn-dl-secondary" onclick="clearLocalAqpData(false)">Clear saved draft</button><button class="btn-dl-primary" style="background:var(--s-hard)" onclick="clearLocalAqpData(true)">Clear all AQP local data</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Quick appearance picker ── -->
+<div id="appearance-popover" class="appearance-popover" role="dialog" aria-modal="false" aria-labelledby="appearance-popover-title" style="display:none">
+  <div id="appearance-popover-title" class="appearance-popover-title">Appearance</div>
+  <div class="appearance-quick-row">
+    <div class="appearance-quick-label">Brand</div>
+    <div class="appearance-segment brand" role="group" aria-label="Brand colours">
+      <button type="button" class="appearance-choice" data-quick-brand="" aria-pressed="false" onclick="setQuickBrand('')">uOttawa</button>
+      <button type="button" class="appearance-choice" data-quick-brand="elentra" aria-pressed="false" onclick="setQuickBrand('elentra')">Elentra</button>
+    </div>
+  </div>
+  <div class="appearance-quick-row">
+    <div class="appearance-quick-label">Mode</div>
+    <div class="appearance-segment mode" role="group" aria-label="Colour mode">
+      <button type="button" class="appearance-choice" data-quick-mode="light" aria-pressed="false" onclick="setQuickAppearance('light')">Light</button>
+      <button type="button" class="appearance-choice" data-quick-mode="dark" aria-pressed="false" onclick="setQuickAppearance('dark')">Dark</button>
+      <button type="button" class="appearance-choice" data-quick-mode="system" aria-pressed="false" onclick="setQuickAppearance('system')">System</button>
     </div>
   </div>
 </div>
