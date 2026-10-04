@@ -31,6 +31,16 @@ assert.match(applicationHtml, /aqp-mark aqp-lockup-mark/, "primary headers must 
 assert.match(applicationHtml, /class="sp-grid"/, "the Assessment Pulse splash must retain its ECG-style grid");
 assert.match(applicationHtml, /From responses to confident review/, "the approved splash slogan must be present");
 assert.doesNotMatch(applicationHtml, /id="sp-pct"|id="sp-fill"/, "the splash must not imply artificial loading progress");
+assert.match(applicationHtml, /APP_BUILD\s*=\s*'20261003-01'/, "the UAT theme-polish build must be stamped");
+assert.match(applicationHtml, /class="app-version-pill"/, "the footer version must use the theme-aware pill");
+assert.match(applicationHtml, /id="btn-appearance-topbar"/, "the top bar must expose the approved quick Appearance control");
+assert.match(applicationHtml, /id="appearance-popover"[^>]*role="dialog"/, "the quick Appearance control must expose a named dialog");
+assert.match(applicationHtml, /is a browser-based workspace for reviewing multiple-choice exam performance and student feedback/, "the About modal must use the approved product description");
+assert.match(applicationHtml, /function buildDifReportOverviewHtml\(/, "DIF previews need the current KPI overview");
+assert.match(applicationHtml, /function buildDifKpiCanvas\(/, "DIF Word exports need the current KPI overview");
+assert.match(applicationHtml, /rImgDifKpiFull/, "the combined Word report must include the DIF KPI overview");
+assert.match(applicationHtml, /unresolvedCount: unresolvedCount, attributedRows: attributedRows/, "Feedback previews need current routing metrics");
+assert.match(applicationHtml, /1250000[\s\S]*320000/, "the Word-report AQP wordmark must retain its corrected aspect ratio");
 
 let browser;
 try {
@@ -105,6 +115,43 @@ try {
   await page.keyboard.press("Escape");
   assert.equal(await page.locator("#faq-overlay").evaluate(el => getComputedStyle(el).display), "none");
 
+  const appearanceButton = page.locator("#btn-appearance-topbar");
+  await page.evaluate(() => { applyTheme(""); applyAppearance("light"); });
+  await appearanceButton.focus();
+  await appearanceButton.press("Enter");
+  assert.equal(await appearanceButton.getAttribute("aria-expanded"), "true");
+  assert.equal(await page.locator("#appearance-popover").getAttribute("role"), "dialog");
+  await page.waitForFunction(() => document.activeElement?.classList.contains("appearance-choice"));
+  await page.locator('[data-quick-brand="elentra"]').click();
+  await page.locator('[data-quick-mode="dark"]').click();
+  const quickAppearance = await page.evaluate(() => ({
+    brand: document.documentElement.getAttribute("data-theme"),
+    mode: document.documentElement.getAttribute("data-appearance-mode"),
+    resolved: document.documentElement.getAttribute("data-appearance"),
+    savedBrand: localStorage.getItem("ugme-theme"),
+    savedMode: localStorage.getItem("ugme-appearance"),
+    settingsBrand: document.getElementById("theme-select").value,
+    settingsMode: document.getElementById("appearance-select").value,
+    buttonLabel: document.getElementById("btn-appearance-topbar").getAttribute("aria-label"),
+    icon: document.getElementById("appearance-mode-icon").getAttribute("href"),
+    popoverSurface: getComputedStyle(document.getElementById("appearance-popover")).backgroundColor,
+    popoverRight: Math.round(document.getElementById("appearance-popover").getBoundingClientRect().right),
+    viewportWidth: document.documentElement.clientWidth,
+  }));
+  assert.deepEqual({ ...quickAppearance, popoverSurface: undefined, popoverRight: undefined, viewportWidth: undefined }, {
+    brand: "elentra", mode: "dark", resolved: "dark",
+    savedBrand: "elentra", savedMode: "dark",
+    settingsBrand: "elentra", settingsMode: "dark",
+    buttonLabel: "Appearance: Elentra, Dark", icon: "#fui-moon",
+    popoverSurface: undefined, popoverRight: undefined, viewportWidth: undefined,
+  });
+  assert.doesNotMatch(quickAppearance.popoverSurface, /rgba?\(255, 255, 255/, "the quick Appearance panel must follow Dark Mode");
+  assert.ok(quickAppearance.popoverRight <= quickAppearance.viewportWidth, "the quick Appearance panel must remain inside the viewport");
+  await page.keyboard.press("Escape");
+  assert.equal(await appearanceButton.getAttribute("aria-expanded"), "false");
+  assert.equal(await page.evaluate(() => document.activeElement?.id), "btn-appearance-topbar");
+  await page.evaluate(() => { applyTheme(""); applyAppearance("light"); });
+
   const menu = page.locator("#btn-menu-topbar");
   await menu.focus();
   await menu.press("Enter");
@@ -133,11 +180,44 @@ try {
 
   await page.evaluate(() => loadDemonstrationSession(true));
   await page.waitForFunction(() => G._lastN === 40 && G.mcq?.length === 12);
+  await page.evaluate(() => applyAppearance("dark"));
+  await page.waitForTimeout(250);
+  const darkMode = await page.evaluate(() => {
+    const color = selector => getComputedStyle(document.querySelector(selector)).backgroundColor;
+    openSettings();
+    const modalShell = color("#settings-modal > div");
+    const modalHeader = color("#settings-modal > div > div:first-child");
+    const profileBadge = color("#settings-profile-badge");
+    cancelSettings();
+    return {
+      appearance: document.documentElement.getAttribute("data-appearance"),
+      versionPill: color(".app-version-pill"),
+      menu: color("#hamburger-dropdown"),
+      modalShell,
+      modalHeader,
+      profileBadge,
+      sessionPill: color("#session-pills .session-pill"),
+    };
+  });
+  assert.equal(darkMode.appearance, "dark", `Dark Mode must resolve before visual checks: ${JSON.stringify(darkMode)}`);
+  assert.doesNotMatch(darkMode.versionPill, /rgba?\(255, 255, 255/, "the Dark Mode version pill must not retain a light fill");
+  assert.doesNotMatch(darkMode.menu, /rgba?\(255, 255, 255/, "the Dark Mode menu must use a solid dark surface");
+  assert.doesNotMatch(darkMode.modalShell, /rgba?\(255, 255, 255/, "modal bodies must follow Dark Mode");
+  assert.doesNotMatch(darkMode.profileBadge, /rgba?\(232, 245, 233/, "modal badges must follow Dark Mode");
+  assert.doesNotMatch(darkMode.sessionPill, /rgba?\(255, 255, 255/, "session pills must follow Dark Mode");
+  assert.notEqual(darkMode.modalHeader, darkMode.modalShell, "modal headers need a distinct brand-colour surface");
   await page.evaluate(() => switchRoom("reports"));
   const previewTrigger = page.locator("#rp-card-mcq button, #rp-card-mcq").first();
   await previewTrigger.focus();
   await page.evaluate(() => openReportPreviewModal("mcq"));
   assert.equal(await page.evaluate(() => document.activeElement?.getAttribute("aria-label")), "Close preview");
+  const paperPreview = await page.evaluate(() => {
+    const body = getComputedStyle(document.querySelector("#report-preview-modal #rpm-body"));
+    const flagged = document.querySelector("#report-preview-modal tr.row-flagged td");
+    return { body: body.backgroundColor, flagged: flagged ? getComputedStyle(flagged).backgroundColor : null };
+  });
+  assert.equal(paperPreview.body, "rgb(255, 255, 255)", "report previews must stay paper-white in Dark Mode");
+  if (paperPreview.flagged) assert.equal(paperPreview.flagged, "rgb(255, 248, 230)", "flagged report rows must retain the light-paper highlight");
   await page.keyboard.press("Escape");
   assert.equal(await page.locator("#report-preview-modal").evaluate(el => getComputedStyle(el).display), "none");
 
