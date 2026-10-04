@@ -76,6 +76,23 @@ try {
     suppressions: G.dif.filter(d => d.suppressionCode).map(d => ({ number: d.num, code: d.suppressionCode, reason: d.suppressionReason })),
     readiness: getReportReadiness(),
     difText: document.getElementById("dif-table").innerText,
+    difView: (() => {
+      const table = document.getElementById("dif-table");
+      const button = document.getElementById("btn-dif-technical");
+      const defaultHeaders = [...table.querySelectorAll("thead th:not(.dif-tech-col)")].map(th => th.textContent.trim());
+      const technicalHeaders = [...table.querySelectorAll("thead th.dif-tech-col")].map(th => th.textContent.trim());
+      const technicalInitiallyHidden = [...table.querySelectorAll(".dif-tech-col")].every(cell => getComputedStyle(cell).display === "none");
+      toggleDIFTechnical();
+      const technicalShown = [...table.querySelectorAll("thead th.dif-tech-col")].every(cell => getComputedStyle(cell).display !== "none");
+      const expandedLabel = button.textContent.trim();
+      toggleDIFTechnical();
+      const unable = table.querySelector(".dif-result-button");
+      unable?.click();
+      const details = unable ? document.getElementById(unable.getAttribute("aria-controls")) : null;
+      const unableDetails = { expanded: unable?.getAttribute("aria-expanded"), hidden: details?.hidden, text: details?.textContent.trim() };
+      unable?.click();
+      return { defaultHeaders, technicalHeaders, technicalInitiallyHidden, technicalShown, expandedLabel, unableDetails };
+    })(),
     distractorQ2: (() => { computeQuartileData(); return buildDistractorDetailHtml(1); })(),
     distractorQ3: (() => {
       computeQuartileData();
@@ -88,6 +105,10 @@ try {
       ]));
       return {
         html,
+        evidence: host.querySelector(".da-evidence-text")?.textContent.trim(),
+        relatedLabels: [...host.querySelectorAll(".da-related-label")].map(el => el.textContent.trim()),
+        optionRoles: [...host.querySelectorAll(".da-option-role")].map(el => el.textContent.trim()),
+        quartileSizes: [...host.querySelectorAll(".da-quartile-n")].map(el => el.textContent.trim()),
         qN: [...G._quartileData[2].qN],
         c: G._quartileData[2].optCounts.map(group => group.c),
         d: G._quartileData[2].optCounts.map(group => group.d),
@@ -95,6 +116,14 @@ try {
         globalD: G.mcq[2].distCounts.d,
         distributionWidths,
       };
+    })(),
+    distractorMethodology: (() => {
+      const button = document.querySelector("#room-distractor .da-method-btn");
+      const panel = document.getElementById("da-methodology-panel");
+      toggleDistractorMethodology(button);
+      const result = { expanded: button.getAttribute("aria-expanded"), hidden: panel.hidden, text: panel.textContent };
+      toggleDistractorMethodology(button);
+      return result;
     })(),
     betaRooms: [...document.querySelectorAll("#room-distractor .beta-badge, #room-nearthreshold .beta-badge")].map(el => ({
       text: el.textContent.trim(),
@@ -143,7 +172,7 @@ try {
       };
     })(),
   }));
-  assert.equal(initial.build, "20261003-01");
+  assert.equal(initial.build, "20261004-01");
   assert.equal(initial.title, "AQP Synthetic Demonstration Exam");
   assert.equal(initial.bannerVisible, true);
   assert.equal(initial.isDemo, true);
@@ -152,7 +181,16 @@ try {
   assert.equal(initial.feedback, 5);
   assert.ok(initial.suppressions.length > 0, `demo must exercise DIF suppression; enabled=${initial.enabled}, hasStream=${initial.hasStream}, difLength=${initial.difLength}, table=${initial.difText}`);
   assert.ok(initial.suppressions.every(s => s.code && s.reason), "every suppression needs a code and explanation");
-  assert.match(initial.difText, /Not estimated|Sparse cells|separation|Singular model|No convergence/i);
+  assert.match(initial.difText, /Unable to assess/i);
+  assert.deepEqual(initial.difView.defaultHeaders, ["Question", "Elentra ID", "DIF Result", "EN% correct", "FR% correct", "Δ Gap", "Comments"]);
+  assert.deepEqual(initial.difView.technicalHeaders, ["B1 χ²", "B1 R²", "B3 χ²", "B3 R²", "χ² diff", "R² diff", "p-value"]);
+  assert.equal(initial.difView.technicalInitiallyHidden, true, "technical DIF columns must be hidden in the default coordinator view");
+  assert.equal(initial.difView.technicalShown, true, "Show statistical details must reveal every model column");
+  assert.equal(initial.difView.expandedLabel, "Hide statistical details");
+  assert.equal(initial.difView.unableDetails.expanded, "true");
+  assert.equal(initial.difView.unableDetails.hidden, false);
+  assert.match(initial.difView.unableDetails.text, /What this means:/i);
+  assert.match(initial.difView.unableDetails.text, /Technical details:/i);
   assert.doesNotMatch(initial.distractorQ2, /Option (A|D|E).*possible defensible answer/i, "unselected options must not be labelled key competitors");
   assert.match(initial.distractorQ2, /Quartile 3: 100% chose option C vs 0% for keyed option B/i, "real key competition must identify both percentages and the keyed option");
   assert.deepEqual(initial.distractorQ3.qN, [10, 10, 10, 10], "demo Q3 must retain four equal performance groups");
@@ -165,6 +203,13 @@ try {
   assert.match(initial.distractorQ3.html, /Quartile 3: 100% chose option D vs 0% for keyed option C/i);
   assert.match(initial.distractorQ3.html, /Quartile 4: 100% chose option D vs 0% for keyed option C/i);
   assert.match(initial.distractorQ3.html, /within-quartile percentages, not the overall answer distribution/i);
+  assert.match(initial.distractorQ3.evidence, /Quartile 3: 100% chose option D vs 0% for keyed option C/i, "observed evidence must be presented separately before interpretation");
+  assert.deepEqual(initial.distractorQ3.relatedLabels, ["Student feedback", "DIF analysis", "Exception"], "related evidence must exclude Review Queue state");
+  assert.ok(initial.distractorQ3.optionRoles.includes("✓ key"), "keyed options must be labelled directly in charts");
+  assert.deepEqual(initial.distractorQ3.quartileSizes, ["N=10", "N=10", "N=10", "N=10"], "quartile headers must disclose their group sizes");
+  assert.equal(initial.distractorMethodology.expanded, "true");
+  assert.equal(initial.distractorMethodology.hidden, false);
+  assert.match(initial.distractorMethodology.text, /evidence prompts, not automated decisions/i);
   assert.doesNotMatch(initial.distractorQ3.html, /In Q[1-4],/i, "interpretations must not use ambiguous Q1–Q4 abbreviations");
   assert.equal(initial.betaRooms.length, 2, "Distractor Analysis and Near Threshold must both carry Beta badges");
   assert.ok(initial.betaRooms.every(badge => badge.text === "Beta" && ["flex", "inline-flex"].includes(badge.display)));
@@ -172,7 +217,7 @@ try {
   assert.equal(initial.difKpiInToolbar, true, "DIF KPI tiles must share the toolbar row with the CSV action");
   assert.equal(initial.readiness.ready, false, "unreviewed demo flags should produce advisory readiness");
   assert.equal(initial.audit.demonstration, true);
-  assert.equal(initial.audit.application.build, "20261003-01");
+  assert.equal(initial.audit.application.build, "20261004-01");
   assert.equal(initial.audit.sourceFiles.demonstration.name, "Built-in synthetic dataset");
   assert.ok(initial.audit.inputInterpretation.reconciliation);
   assert.ok(initial.audit.events.some(event => event.type === "demonstration_loaded"));
@@ -393,6 +438,17 @@ try {
   assert.match(recordUi.recordText, /JSON/);
   assert.match(recordUi.backupText, /Reopenable AQP backup/);
 
+  const reportAudience = await page.evaluate(() => {
+    renderDIFReport();
+    renderFullReport(G._lastAvg, G._lastAlpha);
+    return {
+      dif: document.getElementById("dif-report").innerText,
+      combined: document.getElementById("full-report").innerText,
+    };
+  });
+  assert.doesNotMatch(reportAudience.dif, /DIF estimation notes|could not be estimated reliably/i, "DIF preview must remain focused on actionable flags");
+  assert.doesNotMatch(reportAudience.combined, /DIF estimation notes|could not be estimated reliably/i, "combined preview must remain focused on actionable flags");
+
   const csvPath = await saveDownload(page, () => exportSessionRecord(), ".csv");
   const jsonPath = await saveDownload(page, () => exportSessionJSON(), ".json");
   const backupPath = await saveDownload(page, () => exportPortableSession(), ".json");
@@ -412,7 +468,7 @@ try {
   assert.match(path.basename(jsonPath), /_analysis-record\.json$/);
   assert.equal(json.recordType, "aqp-analysis-record");
   assert.equal(json.schemaVersion, "1.0");
-  assert.equal(json.meta.build, "20261003-01");
+  assert.equal(json.meta.build, "20261004-01");
   assert.deepEqual(json.summary, recordUi.canonical.summary);
   assert.deepEqual(json.thresholds, recordUi.canonical.thresholds);
   assert.deepEqual(json.questions, recordUi.canonical.questions);
@@ -425,9 +481,8 @@ try {
   const difText = await docxText(page, difDocx);
   const fullText = await docxText(page, fullDocx);
   for (const text of [difText, fullText]) {
-    assert.match(text, /DIF estimation notes/);
-    assert.match(text, /could not be estimated reliably/);
-    assert.ok(initial.suppressions.some(s => text.includes(s.reason)), "Word report must preserve a precise suppression reason");
+    assert.doesNotMatch(text, /DIF estimation notes|could not be estimated reliably/i, "distributed Word reports must remain focused on actionable DIF flags");
+    assert.ok(initial.suppressions.every(s => !text.includes(s.reason)), "technical suppression reasons must remain outside distributed Word reports");
   }
 
   const backup = JSON.parse(await fs.readFile(backupPath, "utf8"));
