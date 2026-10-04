@@ -102,7 +102,7 @@
 </style>
 <style>
 /* ═══════════════════════════════════════════════════════════════════════════
-   AQP design system · Calm clinical intelligence · build 20261003-01
+   AQP design system · Calm clinical intelligence · build 20261004-01
    Centralized visual rules for colour, type, spacing, surfaces, controls,
    tables, status communication, motion, and theme parity.
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -225,6 +225,40 @@ h3,.section-hdr-title{font-size:15px;line-height:1.35;font-weight:650;color:var(
 .report-group-title{margin:0 0 var(--space-2)}
 .report-group-note{margin:0 0 var(--space-3);max-width:720px}
 .da-qhdr{padding:12px var(--space-4);background:var(--c-surface);border:0;border-radius:var(--radius-sm);margin-bottom:var(--space-4)}
+.da-room-heading-row{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--space-5)}
+.da-room-heading-row>div:first-child{min-width:0}
+.da-method-btn{flex-shrink:0;margin-top:18px}
+.da-method-panel{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;margin-top:var(--space-4);overflow:hidden;border:1px solid var(--c-border);border-radius:var(--radius-sm);background:var(--c-border)}
+.da-method-panel[hidden]{display:none}
+.da-method-panel>div{display:flex;flex-direction:column;gap:5px;padding:12px 14px;background:var(--c-surface)}
+.da-method-panel strong{font-size:11px;color:var(--c-primary)}
+.da-method-panel span{font-size:11px;line-height:1.55;color:var(--c-muted)}
+.da-qhdr{justify-content:space-between}
+.da-qhdr-main,.da-qhdr-metrics{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.da-qhdr-id{font-size:10.5px;color:var(--c-muted);font-variant-numeric:tabular-nums}
+.da-qhdr-stat strong{color:var(--c-primary);font-variant-numeric:tabular-nums}
+.da-qhdr-stat.da-stat-concern strong{color:var(--s-hard)}
+.da-what-happened{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:11px 14px;margin-bottom:12px;border:1px solid var(--c-border);border-left:4px solid var(--s-lowdisc);border-radius:var(--radius-sm);background:var(--c-surface)}
+.da-what-happened.da-what-issue{border-left-color:var(--s-hard);background:var(--s-hard-bg)}
+.da-what-happened.da-what-clean{border-left-color:var(--s-ok);background:var(--s-ok-bg)}
+.da-evidence-copy{min-width:0}
+.da-evidence-label{display:block;margin-bottom:3px;font-size:9.5px;font-weight:800;letter-spacing:.65px;text-transform:uppercase;color:var(--c-muted)}
+.da-evidence-text{font-size:12.5px;line-height:1.55;color:var(--c-primary)}
+.da-signal-row{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end;flex-shrink:0}
+.da-signal{display:inline-flex;align-items:center;padding:3px 7px;border:1px solid var(--c-border-2);border-radius:999px;background:var(--c-bg);color:var(--c-secondary);font-size:9.5px;font-weight:700;white-space:nowrap}
+.da-chart-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:14px 0 8px}
+.da-chart-head .da-sec-lbl{margin:0}
+.da-chart-note{font-size:10px;color:var(--c-muted)}
+.dist-check{width:38px;text-align:left}
+.da-option-role{font-size:8.5px;font-weight:800;letter-spacing:.25px;text-transform:uppercase;color:var(--s-ok);white-space:nowrap}
+.da-quartile-head{display:flex;align-items:center;justify-content:center;gap:5px;flex-wrap:wrap}
+.da-quartile-n{font-size:8.5px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--c-muted)}
+.da-related-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:2px}
+.da-related-card{padding:10px 12px;border:1px solid var(--c-border);border-radius:var(--radius-sm);background:var(--c-surface)}
+.da-related-label{display:block;margin-bottom:3px;font-size:9px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--c-muted)}
+.da-related-value{font-size:11.5px;font-weight:650;line-height:1.45;color:var(--c-primary)}
+.da-interpretation-note{margin-top:8px;padding-top:8px;border-top:1px solid currentColor;font-size:10.5px;line-height:1.5;opacity:.75}
+@media(max-width:760px){.da-room-heading-row{display:block}.da-method-btn{margin-top:12px}.da-method-panel,.da-related-grid{grid-template-columns:1fr}.da-what-happened{display:block}.da-signal-row{justify-content:flex-start;margin-top:8px}}
 .dist-expand-wrap{border-color:var(--c-border);background:var(--c-surface);border-radius:0 0 var(--radius-sm) var(--radius-sm)}
 
 /* Unified actions */
@@ -353,7 +387,21 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 #dif-kpi-strip{flex:1;min-width:0}
 #dif-kpi-strip>div{flex-wrap:wrap}
 .dif-table-stack .wz-guidance{margin-bottom:0!important;border-radius:10px 10px 0 0}
-.dif-table-stack .tbl-wrap{border-top:0;border-radius:0 0 10px 10px}
+.dif-result-guide{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:12px 14px;background:var(--c-surface);border-left:1px solid var(--c-border);border-right:1px solid var(--c-border);border-top:1px solid var(--c-border)}
+.dif-result-guide-copy{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:11.5px;line-height:1.55;color:var(--c-secondary)}
+.dif-result-guide-copy strong{color:var(--c-primary)}
+.dif-result-guide .btn-dl-secondary{flex-shrink:0}
+.dif-table-stack .tbl-wrap{border-radius:0 0 10px 10px}
+.dif-table.dif-technical-hidden .dif-tech-col{display:none}
+.dif-result-cell{min-width:150px;vertical-align:top}
+.dif-result-button{font-family:var(--font);cursor:pointer;text-align:left}
+.dif-result-button:focus-visible{outline:3px solid color-mix(in srgb,var(--c-accent) 35%,transparent);outline-offset:2px}
+.dif-result-sub{margin-top:4px;font-size:10.5px;line-height:1.35;color:var(--c-secondary);max-width:220px}
+.dif-result-details{margin-top:8px;padding:9px 10px;border:1px solid var(--c-border);border-radius:8px;background:var(--c-surface);font-size:10.5px;line-height:1.5;color:var(--c-secondary);max-width:340px}
+.dif-result-details strong{color:var(--c-primary)}
+.dif-result-details-tech{margin-top:7px;padding-top:7px;border-top:1px solid var(--c-border);color:var(--c-muted)}
+.dif-unable{color:var(--s-warn-text);background:var(--s-warn-bg);border:1px solid color-mix(in srgb,var(--s-warn) 45%,transparent)}
+@media(max-width:760px){.dif-result-guide{flex-direction:column}.dif-result-guide .btn-dl-secondary{align-self:flex-start}}
 
 /* Keep the Near Threshold action available even while the candidate row is muted. */
 .nt-table tr.nt-excluded td{opacity:.42}
@@ -1567,9 +1615,19 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 
 <div id="room-distractor" class="room">
   <div class="room-page-hdr">
-    <div class="page-eyebrow">Item Analysis</div>
-    <div class="page-title-row"><div class="page-title">Distractor Analysis</div><span class="beta-badge">Beta</span></div>
-    <div class="page-sub">Select a question to see how each answer option performed across four student performance groups (Q1&nbsp;=&nbsp;lowest, Q4&nbsp;=&nbsp;highest). A good item has the correct answer chosen more often as performance rises, while distractors fade — patterns that break this suggest the item may need review.</div>
+    <div class="da-room-heading-row">
+      <div>
+        <div class="page-eyebrow">Item Analysis</div>
+        <div class="page-title-row"><div class="page-title">Distractor Analysis</div><span class="beta-badge">Beta</span></div>
+        <div class="page-sub">Select a question to see how each answer option performed across four student performance groups (Q1&nbsp;=&nbsp;lowest, Q4&nbsp;=&nbsp;highest). A good item has the correct answer chosen more often as performance rises, while distractors fade — patterns that break this suggest the item may need review.</div>
+      </div>
+      <button class="btn-dl-secondary da-method-btn" type="button" aria-expanded="false" aria-controls="da-methodology-panel" onclick="toggleDistractorMethodology(this)">Methodology</button>
+    </div>
+    <div id="da-methodology-panel" class="da-method-panel" hidden>
+      <div><strong>Quartiles</strong><span>Students are ranked by total exam score. Q1 is the lowest-performing group and Q4 is the highest-performing group.</span></div>
+      <div><strong>Detected signals</strong><span>Patterns identify answer behaviour that warrants expert review. They are evidence prompts, not automated decisions about item quality.</span></div>
+      <div><strong>Alternate keys</strong><span>The original and alternate keys are treated as correct and are excluded from distractor warnings after the analysis is updated.</span></div>
+    </div>
   </div>
   <div id="da-content"></div>
 </div><!-- /room-distractor -->
@@ -1636,7 +1694,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
         <div class="dif-table-stack">
         <div class="wz-guidance" style="margin-bottom:12px" id="dif-guidance">
           <span class="wz-guidance-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
-          <div>DIF analysis compares English and French student performance question by question using 3-block logistic regression. A question is flagged <strong>Important</strong> when its chi-square comparison is statistically significant (p&nbsp;&lt;&nbsp;0.01 under the UGME standard). Nagelkerke ΔR² is reported as an effect-size aid, not used as the formal flagging rule. A flag means the item warrants expert review — it does not automatically indicate bias.</div>
+          <div>DIF analysis compares English and French student performance question by question. <strong>Review for DIF</strong> means a statistically significant difference was found and the item warrants expert review — it does not automatically indicate bias. Use <strong>Show statistical details</strong> when a program evaluator needs the underlying model results.</div>
         </div>
 
         <!-- Not-enabled state -->
@@ -1655,6 +1713,14 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
         </div>
 
         <div id="dif-table-content">
+        <div class="dif-result-guide">
+          <div class="dif-result-guide-copy" aria-label="DIF result guide">
+            <span><strong>Review for DIF</strong> — statistically significant; expert review is needed.</span>
+            <span><strong>No DIF detected</strong> — no statistically significant difference was found.</span>
+            <span><strong>Unable to assess</strong> — the available responses could not support a reliable comparison.</span>
+          </div>
+          <button id="btn-dif-technical" type="button" class="btn-dl-secondary" aria-expanded="false" aria-controls="dif-table" onclick="toggleDIFTechnical(this)" style="font-size:11px;padding:5px 10px">Show statistical details</button>
+        </div>
         <div class="tbl-wrap"><div class="tbl-scroll"><table id="dif-table" class="dif-table"></table></div></div>
         </div>
         </div>
@@ -2283,10 +2349,10 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 
 // ── App version — single source of truth ─────────────────────────────────
 var APP_VERSION     = '0.8';
-var APP_BUILD       = '20261003-01';
+var APP_BUILD       = '20261004-01';
 var APP_FAQ_VERSION = '0.8';           // Keep aligned with the app version; date records FAQ revisions
-var APP_FAQ_DATE    = 'October 3, 2026'; // Update when FAQ content changes
-var APP_RN_DATE     = 'October 3, 2026'; // Update each version close
+var APP_FAQ_DATE    = 'October 4, 2026'; // Update when FAQ content changes
+var APP_RN_DATE     = 'October 4, 2026'; // Update each version close
 var SESSION_BACKUP_FILE_TYPE = 'aqp-portable-session';
 var SESSION_BACKUP_SCHEMA_VERSION = 1;
 
@@ -7921,37 +7987,89 @@ function difSuppressionShortLabel(code) {
   return labels[code]||'Not estimable';
 }
 
-function docxDifSuppressionNotes() {
-  var suppressed=(G.dif||[]).filter(function(d){return d && d.suppressionCode;});
-  if(!suppressed.length) return '';
-  var out=docxPara('DIF estimation notes',{bold:true,sz:24,spAfter:80});
-  out+=docxPara('The following questions were not classified as having or not having DIF because the statistical model could not be estimated reliably:',{sz:22,spAfter:80});
-  suppressed.forEach(function(d){
-    out+=docxPara('Question '+d.num+': '+(d.suppressionReason||difSuppressionShortLabel(d.suppressionCode))+'.',{sz:22,spAfter:60});
-  });
-  return out+docxPara('',{spAfter:80});
+var G_DIF_SHOW_TECHNICAL = false;
+
+function difSuppressionPlainText(code) {
+  code=String(code||'').replace(/^block[13]_/, '');
+  if(code==='sparse_cells') {
+    return {
+      short:'Too few correct or incorrect responses',
+      explanation:'There were too few correct or incorrect responses in at least one language group to make a reliable comparison.'
+    };
+  }
+  return {
+    short:'The response pattern did not support a stable comparison',
+    explanation:'The statistical model could not produce a stable comparison from the response pattern for this question.'
+  };
+}
+
+function buildDIFResultCell(r) {
+  if(r.suppressionCode) {
+    var plain=difSuppressionPlainText(r.suppressionCode);
+    var detailsId='dif-result-details-'+r.num;
+    return '<td class="dif-result-cell">'+
+      '<button type="button" class="badge dif-unable dif-result-button" aria-expanded="false" aria-controls="'+detailsId+'" onclick="toggleDIFResultDetails(this)">Unable to assess</button>'+
+      '<div class="dif-result-sub">'+escHtml(plain.short)+'</div>'+
+      '<div class="dif-result-details" id="'+detailsId+'" hidden>'+
+        '<div><strong>What this means:</strong> '+escHtml(plain.explanation)+'</div>'+
+        '<div class="dif-result-details-tech"><strong>Technical details:</strong> '+escHtml(difSuppressionShortLabel(r.suppressionCode))+'. '+escHtml(r.suppressionReason||'No additional detail was recorded.')+'</div>'+
+      '</div>'+
+    '</td>';
+  }
+  return '<td class="dif-result-cell">'+(r.imp
+    ? '<span class="badge b-dif">Review for DIF</span><div class="dif-result-sub">Statistically significant; expert review is needed.</div>'
+    : '<span class="badge b-ok">No DIF detected</span><div class="dif-result-sub">No statistically significant difference was found.</div>')+'</td>';
+}
+
+function toggleDIFResultDetails(btn) {
+  if(!btn) return;
+  var details=document.getElementById(btn.getAttribute('aria-controls'));
+  if(!details) return;
+  var willOpen=details.hidden;
+  details.hidden=!willOpen;
+  btn.setAttribute('aria-expanded',willOpen?'true':'false');
+}
+
+function syncDIFTechnicalControl() {
+  var table=document.getElementById('dif-table');
+  var btn=document.getElementById('btn-dif-technical');
+  if(table) table.classList.toggle('dif-technical-hidden',!G_DIF_SHOW_TECHNICAL);
+  if(btn) {
+    btn.setAttribute('aria-expanded',G_DIF_SHOW_TECHNICAL?'true':'false');
+    btn.textContent=G_DIF_SHOW_TECHNICAL?'Hide statistical details':'Show statistical details';
+  }
+}
+
+function toggleDIFTechnical() {
+  G_DIF_SHOW_TECHNICAL=!G_DIF_SHOW_TECHNICAL;
+  renderDIFTable();
+  syncDIFTechnicalControl();
+  var table=document.getElementById('dif-table');
+  if(G_DIF_SHOW_TECHNICAL&&table&&table.offsetParent!==null) setTimeout(function(){ makeTableResizable('dif-table'); },50);
 }
 
 function renderDIFTable() {
   var difHasEid = G.mcq && G.mcq.some(function(r){ return r.elentraId; });
   var difEidTh = difHasEid ? '<th style="width:72px;font-size:10px;white-space:normal;line-height:1.3" data-tip="Elentra item ID.">Elentra ID</th>' : '';
   var difEidCell = function(mcqR) { return difHasEid ? '<td style="font-size:12px;color:var(--c-secondary);text-align:center">' + (mcqR.elentraId || '—') + '</td>' : ''; };
+  var techHeaders =
+    '<th class="dif-tech-col" style="width:54px" data-tip="Chi-square from Block 1 (total score only).">B1 &#967;&sup2;</th>'+
+    '<th class="dif-tech-col" style="width:48px" data-tip="Nagelkerke R-squared from Block 1.">B1 R&sup2;</th>'+
+    '<th class="dif-tech-col" style="width:54px" data-tip="Chi-square from Block 3 (score + language + interaction).">B3 &#967;&sup2;</th>'+
+    '<th class="dif-tech-col" style="width:48px" data-tip="Nagelkerke R-squared from Block 3.">B3 R&sup2;</th>'+
+    '<th class="dif-tech-col" style="width:54px" data-tip="Chi-square difference between Block 3 and Block 1, assessed on 2 degrees of freedom.">&#967;&sup2; diff</th>'+
+    '<th class="dif-tech-col" style="width:48px" data-tip="R-squared difference between Block 3 and Block 1.">R&sup2; diff</th>'+
+    '<th class="dif-tech-col" style="width:54px" data-tip="P-value for the chi-square difference. Items below the configured DIF significance threshold are flagged.">p-value</th>';
   var html=
     '<thead><tr>'+
-    '<th style="width:36px" data-tip="Question number.">#</th>'+
+    '<th style="width:58px" data-tip="Question number.">Question</th>'+
     difEidTh+
-    '<th style="width:54px" data-tip="Chi-square from Block 1 (total score only).">B1 &#967;&sup2;</th>'+
-    '<th style="width:48px" data-tip="Nagelkerke R-squared from Block 1.">B1 R&sup2;</th>'+
-    '<th style="width:54px" data-tip="Chi-square from Block 3 (score + language + interaction).">B3 &#967;&sup2;</th>'+
-    '<th style="width:48px" data-tip="Nagelkerke R-squared from Block 3.">B3 R&sup2;</th>'+
-    '<th style="width:54px" data-tip="Chi-square difference between Block 3 and Block 1, assessed on 2 degrees of freedom.">&#967;&sup2; diff</th>'+
-    '<th style="width:48px" data-tip="R-squared difference between Block 3 and Block 1.">R&sup2; diff</th>'+
-    '<th style="width:54px" data-tip="P-value for the chi-square difference. Items below the configured DIF significance threshold are flagged.">p-value</th>'+
-    '<th style="width:60px;white-space:normal;line-height:1.3" data-tip="Yes = statistically significant DIF under the configured p-value threshold. Requires content expert review.">Important</th>'+
+    '<th style="width:170px" data-tip="Plain-language outcome of the DIF analysis.">DIF Result</th>'+
     '<th style="width:60px;white-space:normal;line-height:1.3" data-tip="Percentage of English-stream students who answered correctly.">EN% correct</th>'+
     '<th style="width:60px;white-space:normal;line-height:1.3" data-tip="Percentage of French-stream students who answered correctly.">FR% correct</th>'+
     '<th style="width:54px" data-tip="Difference between EN and FR correct rates. Arrow shows which group answered higher. Amber = 8–14% gap; Red = 15%+ gap.">&#916; Gap</th>'+
     '<th style="width:120px" data-tip="Comments for this question — shows reason for Credit or Delete, and any alternate key notes.">Comments</th>'+
+    techHeaders+
     '</tr></thead><tbody>';
   // Build a lookup from question number to DIF result
   var difByNum = {};
@@ -7965,8 +8083,10 @@ function renderDIFTable() {
       html+='<tr style="background:#fafafa">'+
         '<td style="font-size:13px;font-weight:700;color:var(--c-accent-dark);text-align:left;white-space:nowrap">'+mcqR.num+'&nbsp;&nbsp;<span style="background:var(--s-hard);color:#fff;font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;vertical-align:middle">Deleted</span></td>'+
         difEidCell(mcqR)+
-        '<td colspan="11" style="font-size:12px;color:var(--c-muted);font-style:italic">Excluded from analysis</td>'+
-        '<td style="font-size:11px;color:var(--c-muted);font-style:italic">'+(mcqR.reason?'Reason: '+mcqR.reason:'')+'</td>'+
+        '<td class="dif-result-cell"><span class="badge b-deleted">Excluded</span><div class="dif-result-sub">Deleted questions are not included in DIF analysis.</div></td>'+
+        '<td>—</td><td>—</td><td>—</td>'+
+        '<td style="font-size:11px;color:var(--c-muted);font-style:italic">'+(mcqR.reason?'Reason: '+escHtml(mcqR.reason):'')+'</td>'+
+        '<td class="dif-tech-col" colspan="7" style="font-size:12px;color:var(--c-muted);font-style:italic">Excluded from analysis</td>'+
       '</tr>';
       continue;
     }
@@ -7976,8 +8096,10 @@ function renderDIFTable() {
       html+='<tr style="background:#fffbea">'+
         '<td style="font-size:13px;font-weight:700;color:var(--c-accent-dark);text-align:left;white-space:nowrap">'+mcqR.num+'&nbsp;&nbsp;<span style="background:#fff8dc;color:#7a5500;font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;vertical-align:middle">Credited</span></td>'+
         difEidCell(mcqR)+
-        '<td colspan="11" style="font-size:12px;color:var(--c-muted);font-style:italic">Excluded from analysis</td>'+
-        '<td style="font-size:11px;color:var(--c-muted);font-style:italic">'+(mcqR.reason?'Reason: '+mcqR.reason:'')+'</td>'+
+        '<td class="dif-result-cell"><span class="badge b-credited">Excluded</span><div class="dif-result-sub">Credited questions are not included in DIF analysis.</div></td>'+
+        '<td>—</td><td>—</td><td>—</td>'+
+        '<td style="font-size:11px;color:var(--c-muted);font-style:italic">'+(mcqR.reason?'Reason: '+escHtml(mcqR.reason):'')+'</td>'+
+        '<td class="dif-tech-col" colspan="7" style="font-size:12px;color:var(--c-muted);font-style:italic">Excluded from analysis</td>'+
       '</tr>';
       continue;
     }
@@ -7989,9 +8111,7 @@ function renderDIFTable() {
     html+='<tr'+rc+'>'+
       '<td style="font-size:13px;font-weight:700;color:var(--c-accent-dark);text-align:left">'+r.num+'</td>'+
       difEidCell(mcqR)+
-      '<td>'+r.chi1+'</td><td>'+r.r1+'</td><td>'+r.chi3+'</td><td>'+r.r3+'</td>'+
-      '<td>'+r.cd+'</td><td>'+r.rd+'</td><td>'+r.sig+'</td>'+
-      '<td>'+(r.suppressionCode?'<span class="badge b-low-disc" data-tip="'+escHtml(r.suppressionReason)+'">Not estimated<br><span style="font-size:8px;font-weight:500">'+escHtml(difSuppressionShortLabel(r.suppressionCode))+'</span></span>':r.imp?'<span class="badge b-dif">Yes &mdash; DIF</span>':'<span class="badge b-ok">No</span>')+'</td>'+
+      buildDIFResultCell(r)+
       (function(){
       var diff=r.ePct-r.fPct;
       var absDiff=Math.abs(diff);
@@ -8025,19 +8145,22 @@ function renderDIFTable() {
              _pctCell(r.fPct, r.nF, '#5c4fc7')+
              '<td style="text-align:center;padding:6px 10px">'+gapCell+_gapBar+'</td>';
     })()+
-      '<td></td>'+
+      '<td>'+(mcqR.altKeys&&mcqR.altKeys.length?'Alternate key'+(mcqR.altKeys.length>1?'s':'')+': '+mcqR.altKeys.map(function(k){return escHtml(String(k).toUpperCase());}).join(', '):'')+'</td>'+
+      '<td class="dif-tech-col">'+r.chi1+'</td><td class="dif-tech-col">'+r.r1+'</td><td class="dif-tech-col">'+r.chi3+'</td><td class="dif-tech-col">'+r.r3+'</td>'+
+      '<td class="dif-tech-col">'+r.cd+'</td><td class="dif-tech-col">'+r.rd+'</td><td class="dif-tech-col">'+r.sig+'</td>'+
       '</tr>';
   }
   html+='</tbody>';
   if (!G._hasStream) {
     document.getElementById('dif-table').innerHTML =
-      '<tbody><tr><td colspan="13" style="padding:20px;text-align:center;color:#b0813a;font-size:12px">'+
+      '<tbody><tr><td colspan="14" style="padding:20px;text-align:center;color:#b0813a;font-size:12px">'+
       '<b>⚠ DIF analysis is disabled for this exam.</b><br><br>'+
       'The results file did not include a Stream column, which is required to identify English and French student groups.<br><br>'+
       'To enable DIF analysis: ensure your QM results export includes a <b>Stream</b> column with language codes (e.g. <b>E</b> for English, <b>F</b> for French), then re-upload the results file.</td></tr></tbody>';
     return;
   }
   document.getElementById('dif-table').innerHTML=html;
+  syncDIFTechnicalControl();
   // makeTableResizable for dif-table called on first view in switchAnalysisTable
 }
 
@@ -8049,7 +8172,6 @@ function renderDIFReport() {
   var examLine = title + (dateStr ? ' &mdash; ' + dateStr : '');
   var i, flagged=[];
   for(i=0;i<G.dif.length;i++){if(G.dif[i].imp){flagged.push(G.dif[i]);}}
-  var suppressed=G.dif.filter(function(d){return !!d.suppressionCode;});
   var _ntDifRpt=_ntGetDifItems(); if(_ntDifRpt.length){flagged=flagged.concat(_ntDifRpt);flagged.sort(function(a,b){return (a.num||0)-(b.num||0)});}
 
   // DIF results table rows
@@ -8064,16 +8186,6 @@ function renderDIFReport() {
       '<td>'+(r.fPct>r.ePct?'FR students performed better':'EN students performed better')+'</td>'+
       '<td style="text-align:center">'+r.disc+'</td></tr>';
   }
-  var suppressionHtml='';
-  if(suppressed.length){
-    suppressionHtml='<div style="margin-top:16px;padding:12px 14px;background:#fff8e6;border:1px solid #ead49a;border-left:4px solid #d4860a;border-radius:7px;font-size:11.5px;color:#303840">'+
-      '<div style="font-size:12px;font-weight:700;margin-bottom:3px">DIF estimation notes</div>'+
-      '<div style="color:#5a6472;margin-bottom:8px">'+suppressed.length+' of '+G.dif.length+' questions could not be estimated reliably. They were excluded from DIF flagging but remain listed here for methodological transparency.</div>'+
-      '<ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px">'+
-      suppressed.map(function(d){return '<li><b>Question '+d.num+' — '+escHtml(difSuppressionShortLabel(d.suppressionCode))+':</b> '+escHtml(d.suppressionReason)+'</li>';}).join('')+
-      '</ul></div>';
-  }
-
   document.getElementById('dif-report').innerHTML =
     '<p style="font-size:16px;font-weight:700;text-align:center;margin:0;line-height:1.3">FACULTY OF MEDICINE - UNDERGRADUATE MEDICAL EDUCATION</p>'+
     '<p style="font-size:14px;font-weight:700;text-align:center;margin:0;line-height:1.3">DIF Analysis Report</p>'+
@@ -8099,7 +8211,6 @@ function renderDIFReport() {
       ? '<p style="margin-bottom:8px"><b>DIF Results</b><br><i>The following question'+(flagged.length!==1?'s':'')+' showed statistically significant DIF (p &lt; '+formatDifThreshold()+'):</i></p>'+
         '<table style="width:100%;margin:0 0 12px;border-collapse:collapse"><thead><tr style="text-align:center"><th>Question</th><th>Elentra ID</th><th>EN % Correct</th><th>FR % Correct</th><th>Interpretation</th><th>Discrimination</th></tr></thead><tbody>'+difTableRows+'</tbody></table>'
       : '<p><i>No items with statistically significant DIF were detected (p &lt; '+formatDifThreshold()+').</i></p>')+
-    suppressionHtml+
     uiReportFooterHtml();
 }
 
@@ -8828,7 +8939,6 @@ function _doExportReportBuild(type, title, safe, dateStr, a2, avg, dateSuffix, f
     } else {
       body+=docxPara('No items with statistically significant DIF were detected (p < '+formatDifThreshold()+').',{italic:true,sz:24,spAfter:160});
     }
-    body += docxDifSuppressionNotes();
     body += docxReportByline(esc(genTs3));
     var fullReportImages=[];
     if(kpiB64F) fullReportImages.push({id:'rImgKpi1', filename:'kpi.png', b64:kpiB64F});
@@ -9050,7 +9160,6 @@ function _doExportReportBuild(type, title, safe, dateStr, a2, avg, dateSuffix, f
       body += docxPara('No items with statistically significant DIF were detected (p < '+formatDifThreshold()+').',{italic:true,sz:24,spAfter:160});
     }
 
-    body += docxDifSuppressionNotes();
     body += docxReportByline(genTsD);
     buildDocx(body, null, title, difKpiB64D ? [{id:'rImgDifKpi', filename:'dif-kpi.png', b64:difKpiB64D}] : null).then(function(blob){
       var url=URL.createObjectURL(blob);
@@ -10086,7 +10195,7 @@ function switchAnalysisTable(which) {
   // Initialise DIF table resizing on first view (must be visible for offsetWidth to work)
   if (!isMcq) {
     var difTable = document.getElementById('dif-table');
-    if (difTable && difTable.style.tableLayout !== 'fixed') {
+    if (G_DIF_SHOW_TECHNICAL && difTable && difTable.style.tableLayout !== 'fixed') {
       setTimeout(function(){ makeTableResizable('dif-table'); }, 50);
     }
   }
@@ -11096,6 +11205,20 @@ var RELEASE_NOTES = [
   {
     version: '0.8',
     builds: [
+      {
+        build: '20261004-01',
+        date:  'October 4, 2026',
+        notes: [
+          'Distractor Analysis live-review enhancement: the existing question-list workflow now adds a compact evidence-first hierarchy without introducing a separate report or decision workflow.',
+          'Observed evidence and automated interpretation are presented separately so coordinators can distinguish response facts from possible item-quality implications.',
+          'Answer Distribution now labels keyed and alternate answers directly and states the count/percentage denominator; quartile columns show their group sizes and clarify that values are within-group percentages.',
+          'Related evidence brings linked feedback, DIF status, and applied exceptions into the selected-question view while leaving actions in their established rooms.',
+          'An on-demand Methodology panel explains quartile ordering, the advisory nature of detected signals, and how alternate keys are handled.',
+          'Audience-focused DIF reporting: technical model-estimation notes have been removed from DIF-only and combined previews and Word reports. Full non-estimation reasons remain available in the DIF workspace, CSV/JSON Analysis records, and audit trail.',
+          'The DIF workspace now opens in a coordinator-friendly view with three plain-language outcomes: Review for DIF, No DIF detected, and Unable to assess. The seven model statistics remain available through Show statistical details, and Unable to assess explains the limitation in plain language before its technical reason.',
+          'No scoring, quartile assignment, distractor-pattern threshold, item-analysis, DIF, feedback, exception, or report calculations changed in this build.'
+        ]
+      },
       {
         build: '20261003-01',
         date:  'October 3, 2026',
@@ -16766,6 +16889,125 @@ function selectDistractorQuestion(idx) {
   if (panel) panel.innerHTML = buildDistractorDetailHtml(idx);
 }
 
+function toggleDistractorMethodology(btn) {
+  var panel = document.getElementById('da-methodology-panel');
+  if (!panel) return;
+  var willOpen = panel.hidden;
+  panel.hidden = !willOpen;
+  if (btn) {
+    btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+    btn.textContent = willOpen ? 'Hide methodology' : 'Methodology';
+  }
+}
+
+function getDistractorPatternAnalysis(r, qd, key, altKeys, opts) {
+  var result = { patterns:[], evidence:'', state:'neutral', qTotal:0 };
+  if (r.excluded === 'delete') {
+    result.evidence = 'This question is excluded from the analysis.';
+    return result;
+  }
+  if (!qd) {
+    result.evidence = 'Quartile evidence is unavailable until the analysis is run again.';
+    return result;
+  }
+  result.qTotal = qd.qN[0] + qd.qN[1] + qd.qN[2] + qd.qN[3];
+  if (result.qTotal < 8) {
+    result.evidence = 'Only ' + result.qTotal + ' valid responses are available; automated pattern detection is suppressed.';
+    return result;
+  }
+
+  var totalAll = {};
+  for (var oi = 0; oi < opts.length; oi++) {
+    var opt = opts[oi]; totalAll[opt] = 0;
+    for (var band = 0; band < 4; band++) totalAll[opt] += qd.optCounts[band][opt] || 0;
+  }
+  if (key) {
+    for (var oi2 = 0; oi2 < opts.length; oi2++) {
+      var competitor = opts[oi2];
+      if (competitor === key || altKeys.indexOf(competitor) >= 0) continue;
+      var competitionBands = [];
+      for (var hq = 2; hq <= 3; hq++) {
+        var hN = qd.qN[hq]; if (hN < 3) continue;
+        var distP = (qd.optCounts[hq][competitor] || 0) / hN;
+        var keyP = (qd.optCounts[hq][key] || 0) / hN;
+        if ((totalAll[competitor] || 0) > 0 && distP >= 0.10 && distP >= keyP) {
+          competitionBands.push('Quartile ' + (hq + 1) + ': ' + Math.round(distP * 100) + '% chose option ' + competitor.toUpperCase() + ' vs ' + Math.round(keyP * 100) + '% for keyed option ' + key.toUpperCase());
+        }
+      }
+      if (competitionBands.length) result.patterns.push({
+        type:'key_competition', tag:'Key Competition', evidence:competitionBands.join('; ') + '.',
+        text:'Within the higher-performance groups, ' + competitionBands.join('; ') + '. These are within-quartile percentages, not the overall answer distribution. Review the key and option ' + competitor.toUpperCase() + ' as a possible defensible answer.'
+      });
+    }
+    for (var oi3 = 0; oi3 < opts.length; oi3++) {
+      var reversed = opts[oi3];
+      if (reversed === key || altKeys.indexOf(reversed) >= 0) continue;
+      var lowN = qd.qN[0] + qd.qN[1], highN = qd.qN[2] + qd.qN[3];
+      var lowCnt = (qd.optCounts[0][reversed] || 0) + (qd.optCounts[1][reversed] || 0);
+      var highCnt = (qd.optCounts[2][reversed] || 0) + (qd.optCounts[3][reversed] || 0);
+      var lowPct = lowN > 0 ? lowCnt / lowN : 0, highPct = highN > 0 ? highCnt / highN : 0;
+      if (highPct > lowPct && highPct > 0.07) result.patterns.push({
+        type:'reversed', tag:'Reversed Distractor',
+        evidence:'Option ' + reversed.toUpperCase() + ' was selected by ' + Math.round(highPct * 100) + '% of students in the two higher quartiles and ' + Math.round(lowPct * 100) + '% in the two lower quartiles.',
+        text:'Option ' + reversed.toUpperCase() + ' is attracting more high-performing than low-performing students. This may indicate a defensible alternative answer.'
+      });
+    }
+  }
+  for (var oi4 = 0; oi4 < opts.length; oi4++) {
+    var weak = opts[oi4];
+    if (weak === key || altKeys.indexOf(weak) >= 0) continue;
+    if ((totalAll[weak] || 0) > 0 && totalAll[weak] / result.qTotal < 0.05) result.patterns.push({
+      type:'non_functioning', tag:'Non-Functioning',
+      evidence:'Option ' + weak.toUpperCase() + ' was selected by ' + totalAll[weak] + ' of ' + result.qTotal + ' students (' + Math.round(totalAll[weak] / result.qTotal * 100) + '%).',
+      text:'Option ' + weak.toUpperCase() + ' was chosen by fewer than 5% of students. Consider replacing this distractor.'
+    });
+  }
+  if (result.patterns.length === 0 && key) {
+    var keyOk = true;
+    for (var b = 0; b < 3; b++) {
+      var n1 = qd.qN[b], n2 = qd.qN[b + 1];
+      if (n1 < 2 || n2 < 2 || (qd.optCounts[b][key] || 0) / n1 >= (qd.optCounts[b + 1][key] || 0) / n2) { keyOk = false; break; }
+    }
+    var distractorsOk = keyOk;
+    for (var oi5 = 0; oi5 < opts.length && distractorsOk; oi5++) {
+      var declining = opts[oi5];
+      if (declining === key || altKeys.indexOf(declining) >= 0) continue;
+      for (var b2 = 0; b2 < 3; b2++) {
+        var n3 = qd.qN[b2], n4 = qd.qN[b2 + 1]; if (n3 < 2 || n4 < 2) continue;
+        if ((qd.optCounts[b2][declining] || 0) / n3 < (qd.optCounts[b2 + 1][declining] || 0) / n4) { distractorsOk = false; break; }
+      }
+    }
+    if (keyOk && distractorsOk) result.patterns.push({ type:'clean', tag:null, evidence:'Selection of keyed option ' + key.toUpperCase() + ' rises across all four quartiles and no strong distractor signal was detected.', text:'This item is functioning as intended.' });
+  }
+  if (result.patterns.length === 0) result.patterns.push({ type:'nopattern', tag:null, evidence:'No strong automated distractor signal was detected in the available response pattern.', text:'No strong patterns detected. Review the quartile breakdown above.' });
+  var issue = result.patterns.filter(function(p){ return p.type !== 'clean' && p.type !== 'nopattern'; });
+  result.state = result.patterns.some(function(p){ return p.type === 'clean'; }) ? 'clean' : (issue.length ? 'issue' : 'neutral');
+  result.evidence = (issue[0] || result.patterns[0]).evidence;
+  return result;
+}
+
+function getDistractorRelatedEvidence(r) {
+  var feedbackCount = 0;
+  if (FB && FB.parsed && FB.parsed.length) FB.parsed.forEach(function(p) {
+    if (!p || p.status === 'discard') return;
+    var nums = p.mappedQs || (p.mappedQ != null ? [p.mappedQ] : p.qNums) || [];
+    if (nums.indexOf(r.num) >= 0) feedbackCount++;
+  });
+  var feedbackText = !(FB && FB.ready) ? 'Not loaded' : (feedbackCount ? feedbackCount + ' linked comment' + (feedbackCount === 1 ? '' : 's') : 'No linked comments');
+  var difText = 'Not loaded';
+  if (G_DIF_ENABLED && G.dif && G.dif.length) {
+    var dif = G.dif.filter(function(d){ return d.num === r.num; })[0];
+    if (!dif) difText = 'No result available';
+    else if (dif.suppressionCode) difText = 'Not estimated · ' + difSuppressionShortLabel(dif.suppressionCode);
+    else difText = (dif.imp ? 'Flagged' : 'Not flagged') + ' · p ' + (isNaN(Number(dif.sig)) ? escHtml(String(dif.sig || '—')) : Number(dif.sig).toFixed(4));
+  }
+  var exceptionText = 'None applied';
+  if (r.excluded === 'delete') exceptionText = 'Deleted from analysis';
+  else if (r.excluded === 'credit') exceptionText = 'Credited';
+  else if (r.altKeys && r.altKeys.length) exceptionText = 'Alternate key' + (r.altKeys.length > 1 ? 's' : '') + ': ' + r.altKeys.map(function(k){ return String(k).toUpperCase(); }).join(', ');
+  return { feedback:feedbackText, dif:difText, exception:exceptionText };
+}
+
 function buildDistractorDetailHtml(idx) {
   var r = G.mcq[idx];
   if (!r) return '<div style="padding:20px;color:var(--c-muted)">Question not found.</div>';
@@ -16774,6 +17016,9 @@ function buildDistractorDetailHtml(idx) {
   var altKeys = (r.altKeys && r.altKeys.length) ? r.altKeys.map(function(k){return k.toLowerCase();}) : [];
   var opts = ['a','b','c','d','e'];
   var totalStudents = r.n || 0;
+
+  var analysis = getDistractorPatternAnalysis(r, qd, key, altKeys, opts);
+  var related = getDistractorRelatedEvidence(r);
 
   // Question header
   var flagHtml = '';
@@ -16790,17 +17035,23 @@ function buildDistractorDetailHtml(idx) {
     if (_ntFiDa3) flagHtml = flagBadge(_ntFiDa3.flag);
   }
 
-  var statHtml = '';
-  if (r.p !== null && r.p !== undefined) statHtml += '<span class="da-qhdr-stat">Difficulty (p): ' + (typeof r.p === 'number' ? r.p.toFixed(2) : r.p) + '</span>';
-  if (r.rpbis !== null && r.rpbis !== undefined) statHtml += '<span class="da-qhdr-stat" style="margin-left:14px">Discrimination (rpBis): ' + (typeof r.rpbis === 'number' ? r.rpbis.toFixed(2) : r.rpbis) + '</span>';
-
-  var html = '<div class="da-qhdr">' +
+  var pText = (typeof r.p === 'number' ? r.p.toFixed(2) : r.p);
+  var rpText = (typeof r.rpbis === 'number' ? r.rpbis.toFixed(2) : r.rpbis);
+  var rpConcern = typeof r.rpbis === 'number' && r.rpbis < getThresh('disc');
+  var html = '<div class="da-qhdr"><div class="da-qhdr-main">' +
     '<span class="da-qhdr-title">Q' + r.num + '</span>' +
-    (r.key ? '<span class="da-qhdr-stat">Key: <strong style="color:var(--c-primary)">' + r.key.toUpperCase() + '</strong>' + (altKeys.length ? ' <span style="font-size:10px;color:var(--s-ok);margin-left:3px">+' + altKeys.map(function(k){return k.toUpperCase();}).join(', ') + ' alt</span>' : '') + '</span>' : '') +
-    statHtml + flagHtml + '</div>';
+    (r.elentraId ? '<span class="da-qhdr-id">Elentra ID ' + escHtml(String(r.elentraId)) + '</span>' : '') +
+    (r.key ? '<span class="da-qhdr-stat">Key <strong>' + escHtml(r.key.toUpperCase()) + '</strong>' + (altKeys.length ? ' <span class="da-option-role">+ ' + altKeys.map(function(k){return escHtml(k.toUpperCase());}).join(', ') + ' alt</span>' : '') + '</span>' : '') +
+    '</div><div class="da-qhdr-metrics">' +
+    (pText !== null && pText !== undefined ? '<span class="da-qhdr-stat">Difficulty <strong>' + pText + '</strong></span>' : '') +
+    (rpText !== null && rpText !== undefined ? '<span class="da-qhdr-stat' + (rpConcern ? ' da-stat-concern' : '') + '">Discrimination <strong>' + rpText + '</strong></span>' : '') +
+    '<span class="da-qhdr-stat">Responses <strong>' + totalStudents + '</strong></span>' + flagHtml + '</div></div>';
+
+  var signalHtml = analysis.patterns.filter(function(p){ return p.tag; }).map(function(p){ return '<span class="da-signal">' + escHtml(p.tag) + '</span>'; }).join('');
+  html += '<div class="da-what-happened da-what-' + analysis.state + '"><div class="da-evidence-copy"><span class="da-evidence-label">What happened</span><div class="da-evidence-text">' + escHtml(analysis.evidence) + '</div></div>' + (signalHtml ? '<div class="da-signal-row" aria-label="Detected signals">' + signalHtml + '</div>' : '') + '</div>';
 
   // Flat distribution
-  html += '<span class="da-sec-lbl">Answer Distribution</span>';
+  html += '<div class="da-chart-head"><span class="da-sec-lbl">Answer Distribution</span><span class="da-chart-note">Overall count and percentage of ' + totalStudents + ' responses</span></div>';
   if (r.distCounts && totalStudents > 0) {
     html += '<div style="background:var(--c-surface);border:1px solid var(--c-border);border-radius:8px;padding:10px 14px;margin-bottom:2px">';
     for (var oi2 = 0; oi2 < opts.length; oi2++) {
@@ -16810,10 +17061,10 @@ function buildDistractorDetailHtml(idx) {
       // The bar represents the global percentage, not a value normalised to the most popular option.
       var barPct2 = pct2;
       html += '<div class="dist-bar-wrap"><div class="dist-opt-label">' + opt2.toUpperCase() + '</div>' +
-        '<div class="dist-check">' + (isKey2 ? '✓' : (isAlt2 ? '<span style="font-size:8.5px;font-weight:700;color:var(--s-ok)">alt</span>' : '')) + '</div>' +
+        '<div class="dist-check">' + (isKey2 ? '<span class="da-option-role">✓ key</span>' : (isAlt2 ? '<span class="da-option-role">alt</span>' : '')) + '</div>' +
         '<div class="dist-bar-bg"><div class="dist-bar-fill" style="width:' + barPct2 + '%;background:' +
         (isKey2 || isAlt2 ? 'var(--s-ok)' : 'var(--c-dist-bar)') + '"></div></div>' +
-        '<div class="dist-pct">' + pct2 + '%</div><div class="dist-count">(' + cnt2 + ')</div></div>';
+        '<div class="dist-pct">' + pct2 + '%</div><div class="dist-count">' + cnt2 + '</div></div>';
     }
     if (r.noResp > 0) html += '<div style="color:#d4860a;font-size:10.5px;margin-top:4px">⚠ ' + r.noResp + ' non-response' + (r.noResp !== 1 ? 's' : '') + ' excluded</div>';
     html += '</div>';
@@ -16822,19 +17073,18 @@ function buildDistractorDetailHtml(idx) {
   }
 
   // Quartile breakdown table
-  html += '<span class="da-sec-lbl">Performance by Quartile</span>';
+  html += '<div class="da-chart-head"><span class="da-sec-lbl">Performance by Quartile</span><span class="da-chart-note">Within-group percentages</span></div>';
   if (qd && (qd.qN[0] + qd.qN[1] + qd.qN[2] + qd.qN[3]) > 0) {
     html += '<div style="border:1px solid var(--c-border);border-radius:8px;overflow:hidden;margin-bottom:2px">' +
       '<table class="da-qtbl"><thead><tr>' +
-      '<th>Option</th><th>Q1 <span style="font-weight:400;opacity:.7">(low)</span></th><th>Q2</th><th>Q3</th>' +
-      '<th>Q4 <span style="font-weight:400;opacity:.7">(high)</span></th></tr></thead><tbody>';
+      '<th>Option</th>' + qd.qN.map(function(n,b){ return '<th><div class="da-quartile-head">Q' + (b + 1) + (b === 0 ? ' <span>(low)</span>' : (b === 3 ? ' <span>(high)</span>' : '')) + '<span class="da-quartile-n">N=' + n + '</span></div></th>'; }).join('') + '</tr></thead><tbody>';
     for (var oi3 = 0; oi3 < opts.length; oi3++) {
       var opt3 = opts[oi3], isKey3 = opt3 === key, isAlt3 = altKeys.indexOf(opt3) >= 0;
       var totOpt3 = 0;
       for (var b3 = 0; b3 < 4; b3++) totOpt3 += qd.optCounts[b3][opt3] || 0;
       if (totOpt3 === 0 && !isKey3 && !isAlt3) continue;
       html += '<tr' + (isKey3 || isAlt3 ? ' class="da-key-row"' : '') + '>' +
-        '<td><strong>' + opt3.toUpperCase() + '</strong>' + (isKey3 ? ' <span style="color:var(--s-ok);font-size:11px">✓</span>' : (isAlt3 ? ' <span style="font-size:8.5px;font-weight:700;color:var(--s-ok)">alt</span>' : '')) + '</td>';
+        '<td><strong>' + opt3.toUpperCase() + '</strong>' + (isKey3 ? ' <span class="da-option-role">✓ key</span>' : (isAlt3 ? ' <span class="da-option-role">alt</span>' : '')) + '</td>';
       for (var b4 = 0; b4 < 4; b4++) {
         var cnt3 = qd.optCounts[b4][opt3] || 0, qNb = qd.qN[b4];
         var pct3 = qNb > 0 ? Math.round(cnt3 / qNb * 100) : 0;
@@ -16845,102 +17095,27 @@ function buildDistractorDetailHtml(idx) {
       }
       html += '</tr>';
     }
-    html += '<tr style="background:var(--c-surface)"><td style="font-size:10px;color:var(--c-muted);font-weight:600">N</td>';
-    for (var b5 = 0; b5 < 4; b5++) html += '<td style="font-size:10px;color:var(--c-muted)">' + qd.qN[b5] + '</td>';
-    html += '</tr></tbody></table></div>';
+    html += '</tbody></table></div>';
   } else {
     html += '<div style="padding:10px;color:var(--c-muted);font-size:12px">Quartile data not available. Run a full analysis first.</div>';
   }
 
-  // Interpretation
-  html += '<span class="da-sec-lbl">Interpretation</span>';
-  if (r.excluded === 'delete') {
-    html += '<div class="da-interp da-nodata">This question is excluded from analysis.</div>';
-  } else if (!qd) {
-    html += '<div class="da-interp da-nodata">Quartile data is not available. Re-run the analysis to generate an interpretation.</div>';
-  } else {
-    var qTotal = qd.qN[0] + qd.qN[1] + qd.qN[2] + qd.qN[3];
-    if (qTotal < 8) {
-      html += '<div class="da-interp da-nodata">Insufficient response data for pattern detection.</div>';
-    } else {
-      var patterns = [];
-      var totalN2 = qTotal, totalAll = {};
-      for (var oi4 = 0; oi4 < opts.length; oi4++) {
-        var o4 = opts[oi4]; totalAll[o4] = 0;
-        for (var b6 = 0; b6 < 4; b6++) totalAll[o4] += qd.optCounts[b6][o4] || 0;
-      }
-      if (key) {
-        // P1: Key competition — a genuinely selected distractor matches/beats the key in
-        // one or both higher-performance quartiles. Report every matching quartile explicitly.
-        // Empty options must never compete with a key that also has a zero count in that band.
-        for (var oi5 = 0; oi5 < opts.length; oi5++) {
-          var o5 = opts[oi5]; if (o5 === key || altKeys.indexOf(o5) >= 0) continue;
-          var competitionBands = [];
-          for (var hq = 2; hq <= 3; hq++) {
-            var hN = qd.qN[hq]; if (hN < 3) continue;
-            var distP = (qd.optCounts[hq][o5] || 0) / hN;
-            var keyP = (qd.optCounts[hq][key] || 0) / hN;
-            if ((totalAll[o5] || 0) > 0 && distP >= 0.10 && distP >= keyP) {
-              competitionBands.push('Quartile ' + (hq+1) + ': ' + Math.round(distP*100) + '% chose option ' + o5.toUpperCase() + ' vs ' + Math.round(keyP*100) + '% for keyed option ' + key.toUpperCase());
-            }
-          }
-          if (competitionBands.length) patterns.push({ type:'key_competition', tag:'Key Competition',
-            text:'Within the higher-performance groups, ' + competitionBands.join('; ') + '. These are within-quartile percentages, not the overall answer distribution. Review the key and option ' + o5.toUpperCase() + ' as a possible defensible answer.' });
-        }
-        // P2: Reversed distractor — more high performers chose it than low performers
-        for (var oi6 = 0; oi6 < opts.length; oi6++) {
-          var o6 = opts[oi6]; if (o6 === key || altKeys.indexOf(o6) >= 0) continue;
-          var lowN = qd.qN[0] + qd.qN[1], highN2 = qd.qN[2] + qd.qN[3];
-          var lowCnt = (qd.optCounts[0][o6]||0) + (qd.optCounts[1][o6]||0);
-          var highCnt = (qd.optCounts[2][o6]||0) + (qd.optCounts[3][o6]||0);
-          var lowPct = lowN > 0 ? lowCnt / lowN : 0;
-          var highPct2 = highN2 > 0 ? highCnt / highN2 : 0;
-          if (highPct2 > lowPct && highPct2 > 0.07) {
-            patterns.push({ type:'reversed', tag:'Reversed Distractor',
-              text:'Option ' + o6.toUpperCase() + ' is attracting more high-performing than low-performing students. This may indicate a defensible alternative answer.' });
-          }
-        }
-      }
-      // P3: Non-functioning distractor — fewer than 5% overall
-      for (var oi7 = 0; oi7 < opts.length; oi7++) {
-        var o7 = opts[oi7]; if (o7 === key || altKeys.indexOf(o7) >= 0) continue;
-        if ((totalAll[o7]||0) > 0 && totalN2 > 0 && totalAll[o7] / totalN2 < 0.05) {
-          patterns.push({ type:'non_functioning', tag:'Non-Functioning',
-            text:'Option ' + o7.toUpperCase() + ' was chosen by fewer than 5% of students. Consider replacing this distractor.' });
-        }
-      }
-      // P4: Clean item
-      if (patterns.length === 0 && key) {
-        var keyOk = true;
-        for (var b7 = 0; b7 < 3; b7++) {
-          var n1=qd.qN[b7], n2=qd.qN[b7+1]; if(n1<2||n2<2){keyOk=false;break;}
-          if((qd.optCounts[b7][key]||0)/n1>=(qd.optCounts[b7+1][key]||0)/n2){keyOk=false;break;}
-        }
-        var distrOk = keyOk;
-        if (distrOk) {
-          for (var oi8 = 0; oi8 < opts.length && distrOk; oi8++) {
-            var o8 = opts[oi8]; if (o8 === key || altKeys.indexOf(o8) >= 0) continue;
-            for (var b8 = 0; b8 < 3; b8++) {
-              var n3=qd.qN[b8], n4=qd.qN[b8+1]; if(n3<2||n4<2) continue;
-              if((qd.optCounts[b8][o8]||0)/n3<(qd.optCounts[b8+1][o8]||0)/n4){distrOk=false;break;}
-            }
-          }
-        }
-        if (keyOk && distrOk) patterns.push({ type:'clean', tag:null, text:'This item is functioning as intended.' });
-      }
-      if (patterns.length === 0) patterns.push({ type:'nopattern', tag:null, text:'No strong patterns detected. Review the quartile breakdown above.' });
+  // Related evidence is deliberately informational; decisions remain in their source rooms.
+  html += '<span class="da-sec-lbl">Related Evidence</span><div class="da-related-grid">' +
+    '<div class="da-related-card"><span class="da-related-label">Student feedback</span><div class="da-related-value">' + escHtml(related.feedback) + '</div></div>' +
+    '<div class="da-related-card"><span class="da-related-label">DIF analysis</span><div class="da-related-value">' + related.dif + '</div></div>' +
+    '<div class="da-related-card"><span class="da-related-label">Exception</span><div class="da-related-value">' + escHtml(related.exception) + '</div></div></div>';
 
-      var hasIssues = patterns.some(function(p){return p.type!=='clean'&&p.type!=='nopattern';});
-      var isClean2  = patterns.some(function(p){return p.type==='clean';});
-      var cls = isClean2 ? 'da-clean' : (hasIssues ? 'da-issue' : 'da-nodata');
-      html += '<div class="da-interp ' + cls + '">';
-      for (var pi = 0; pi < patterns.length; pi++) {
-        var pat = patterns[pi];
-        html += '<div class="da-pattern-row">' + (pat.tag ? '<span class="da-pattern-tag">' + pat.tag + '</span>' : '') + '<span>' + pat.text + '</span></div>';
-      }
-      html += '</div>';
-    }
+  // Interpretation is kept separate from observed evidence.
+  html += '<span class="da-sec-lbl">Interpretation</span>';
+  var interpClass = analysis.state === 'clean' ? 'da-clean' : (analysis.state === 'issue' ? 'da-issue' : 'da-nodata');
+  html += '<div class="da-interp ' + interpClass + '">';
+  for (var pi = 0; pi < analysis.patterns.length; pi++) {
+    var pat = analysis.patterns[pi];
+    html += '<div class="da-pattern-row">' + (pat.tag ? '<span class="da-pattern-tag">' + escHtml(pat.tag) + ':</span>' : '') + '<span>' + escHtml(pat.text) + '</span></div>';
   }
+  if (!analysis.patterns.length) html += '<div>' + escHtml(analysis.evidence) + '</div>';
+  html += '<div class="da-interpretation-note">Use these signals with the item wording, course context, and expert judgment. They do not establish that an answer key or distractor is incorrect.</div></div>';
   return html;
 }
 
@@ -17821,11 +17996,13 @@ function updateTopbarExam() {
 
           <div class="faq-item">
             <div class="faq-q" onclick="toggleFAQ(this)">
-              <span>Why does a DIF row say “Not estimated”?</span>
+              <span>What do the DIF Result labels mean?</span>
               <span class="faq-icon">+</span>
             </div>
             <div class="faq-a">
-              “Not estimated” means AQP could not obtain a statistically reliable DIF model for that question. The row gives the specific reason, such as sparse language-by-outcome cells, a singular model, complete or quasi-complete separation, failure to converge, or invalid model statistics. This is different from “No DIF detected”: a suppressed result is unknown, not evidence that the item behaved equivalently. The same reason is preserved in the CSV, JSON, HTML preview, and Word DIF reports.
+              <strong>Review for DIF</strong> means AQP found a statistically significant difference between English and French student performance. It prompts expert review but does not by itself prove that a question is biased.<br><br>
+              <strong>No DIF detected</strong> means the analysis did not find a statistically significant difference for that question.<br><br>
+              <strong>Unable to assess</strong> means the available responses could not support a reliable comparison — usually because too few students in one language group answered correctly or incorrectly, or because the response pattern was too uniform for a stable model. This is not the same as No DIF detected. Select the label to see a plain-language explanation and its technical details. Full model statistics are available from <strong>Show statistical details</strong> and in the CSV/JSON Analysis record; director-facing reports remain focused on questions requiring action.
             </div>
           </div>
 
@@ -17858,12 +18035,13 @@ function updateTopbarExam() {
 
           <div class="faq-item">
             <div class="faq-q" onclick="toggleFAQ(this)">
-              <span>What is the distractor analysis and how do I open it?</span>
+              <span>What does Distractor Analysis show?</span>
               <span class="faq-icon">+</span>
             </div>
             <div class="faq-a">
-              The distractor analysis shows how students were distributed across each answer choice for a given question. Click the <strong>▶</strong> arrow at the left of any row in the Item Analysis table to expand it. You will see a bar for each answer option (A, B, C, D, E) showing the proportion of students who chose it, with the correct answer highlighted.<br><br>
-              This helps identify which wrong answers were attractive to students, which can reveal whether a distractor was misleading or whether the question wording may be ambiguous. Use <strong>Expand all</strong> at the top of the table to open distractor panels for all questions at once.
+              Open <strong>Distractor Analysis</strong> from the Item Analysis section of the sidebar and select a question. The <strong>What happened</strong> summary reports the observed response pattern, followed by overall option counts and percentages and a four-quartile comparison from Q1 (lowest-performing group) to Q4 (highest-performing group). Keyed and accepted alternate answers are labelled directly.<br><br>
+              <strong>Related Evidence</strong> shows linked student feedback, DIF status, and any applied exception for the selected question. The separate <strong>Interpretation</strong> area explains possible meanings of detected patterns; these are review prompts, not academic decisions. Select <strong>Methodology</strong> for details about quartiles, signals, and alternate-key handling.<br><br>
+              A smaller answer-distribution view remains available from the <strong>▶</strong> control in the Item Analysis table when a quick in-table check is sufficient.
             </div>
           </div>
 
