@@ -171,8 +171,84 @@ try {
         elentra,
       };
     })(),
+    setupDarkTreatment: (() => {
+      const root = document.documentElement;
+      const originalTheme = root.dataset.theme;
+      const originalAppearance = root.dataset.appearance;
+      const setup = document.getElementById("setup-panel");
+      const originalSetupDisplay = setup.style.display;
+      const originalAnalysisType = G_ANALYSIS_TYPE;
+      root.dataset.theme = "uottawa";
+      root.dataset.appearance = "dark";
+      setup.style.display = "block";
+      const colour = value => {
+        const probe = document.createElement("div");
+        probe.style.background = value;
+        document.body.appendChild(probe);
+        const result = getComputedStyle(probe).backgroundColor;
+        probe.remove();
+        return result;
+      };
+      const draft = document.getElementById("draft-resume-banner");
+      draft.style.display = "block";
+      showFeedback("feedback-main", "ok", ["Results loaded", "Ready"]);
+      const uploadFeedbackOk = getComputedStyle(document.getElementById("feedback-main")).backgroundColor;
+      showFeedback("feedback-main", "warn", ["Review upload", "Warning"]);
+      const uploadFeedbackWarn = getComputedStyle(document.getElementById("feedback-main")).backgroundColor;
+      showFeedback("feedback-main", "err", ["Upload blocked", "Error"]);
+      const uploadFeedbackError = getComputedStyle(document.getElementById("feedback-main")).backgroundColor;
+      const qmPreview = document.getElementById("qm-preview");
+      qmPreview.innerHTML = '<div class="upload-preview-notice" style="background:#f0f4ff">Notice</div>' + renderAnalysisReconciliation("qm");
+      G_ANALYSIS_TYPE = "fb";
+      const fbPanel = document.getElementById("fb-preflight-panel");
+      fbPanel.innerHTML = [
+        '<div class="fb-preflight-ready" style="background:#e8f5e9">Ready</div>',
+        '<div class="fb-preflight-warning" style="background:#fff8e6">Warning</div>',
+        '<div class="upload-confirmed-state" style="background:#fff">Confirmed</div>',
+      ].join("");
+      const fbReady = fbPanel.querySelector(".fb-preflight-ready");
+      const fbWarning = fbPanel.querySelector(".fb-preflight-warning");
+      const fbConfirmed = fbPanel.querySelector(".upload-confirmed-state");
+      const uottawa = {
+        expectedBg: colour("var(--c-bg)"),
+        expectedSurface: colour("var(--c-surface)"),
+        expectedOk: colour("var(--s-ok-bg)"),
+        expectedWarn: colour("var(--s-warn-bg)"),
+        expectedError: colour("var(--s-hard-bg)"),
+        expectedInfo: colour("var(--c-accent-tint)"),
+        draft: getComputedStyle(draft).backgroundColor,
+        footer: getComputedStyle(document.getElementById("setup-run-footer")).backgroundColor,
+        upload: getComputedStyle(document.getElementById("ua-main")).backgroundColor,
+        uploadFeedbackOk,
+        uploadFeedbackWarn,
+        uploadFeedbackError,
+        previewNotice: getComputedStyle(qmPreview.querySelector(".upload-preview-notice")).backgroundColor,
+        reconciliation: getComputedStyle(qmPreview.querySelector(".analysis-reconciliation")).backgroundColor,
+        reconciliationCell: getComputedStyle(qmPreview.querySelector(".recon-cell")).backgroundColor,
+        feedbackReady: getComputedStyle(fbReady).backgroundColor,
+        feedbackWarning: getComputedStyle(fbWarning).backgroundColor,
+        feedbackConfirmed: getComputedStyle(fbConfirmed).backgroundColor,
+      };
+      root.dataset.theme = "elentra";
+      const elentra = {
+        draft: getComputedStyle(draft).backgroundColor,
+        footer: getComputedStyle(document.getElementById("setup-run-footer")).backgroundColor,
+        upload: getComputedStyle(document.getElementById("ua-main")).backgroundColor,
+        previewNotice: getComputedStyle(qmPreview.querySelector(".upload-preview-notice")).backgroundColor,
+      };
+      draft.style.display = "none";
+      qmPreview.innerHTML = "";
+      fbPanel.innerHTML = "";
+      fbPanel.style.display = "none";
+      document.getElementById("feedback-main").style.display = "none";
+      G_ANALYSIS_TYPE = originalAnalysisType;
+      root.dataset.theme = originalTheme;
+      root.dataset.appearance = originalAppearance;
+      setup.style.display = originalSetupDisplay;
+      return { uottawa, elentra };
+    })(),
   }));
-  assert.equal(initial.build, "20261004-01");
+  assert.equal(initial.build, "20261004-02");
   assert.equal(initial.title, "AQP Synthetic Demonstration Exam");
   assert.equal(initial.bannerVisible, true);
   assert.equal(initial.isDemo, true);
@@ -217,7 +293,7 @@ try {
   assert.equal(initial.difKpiInToolbar, true, "DIF KPI tiles must share the toolbar row with the CSV action");
   assert.equal(initial.readiness.ready, false, "unreviewed demo flags should produce advisory readiness");
   assert.equal(initial.audit.demonstration, true);
-  assert.equal(initial.audit.application.build, "20261004-01");
+  assert.equal(initial.audit.application.build, "20261004-02");
   assert.equal(initial.audit.sourceFiles.demonstration.name, "Built-in synthetic dataset");
   assert.ok(initial.audit.inputInterpretation.reconciliation);
   assert.ok(initial.audit.events.some(event => event.type === "demonstration_loaded"));
@@ -235,6 +311,21 @@ try {
   assert.equal(initial.design.uottawa.topBrandFill, initial.design.uottawa.footerBrandFill, "uOttawa brand marks must share the active theme colour");
   assert.equal(initial.design.elentra.topBrandFill, initial.design.elentra.footerBrandFill, "Elentra brand marks must share the active theme colour");
   assert.notEqual(initial.design.elentra.topBrandFill, initial.design.uottawa.topBrandFill, "analytical-Q marks must follow the selected theme");
+  assert.notEqual(initial.setupDarkTreatment.uottawa.draft, "rgb(254, 247, 247)", "saved-draft recovery must not retain its light fill in Dark Mode");
+  assert.notEqual(initial.setupDarkTreatment.uottawa.footer, "rgb(255, 255, 255)", "wizard action bars must not remain white in Dark Mode");
+  assert.equal(initial.setupDarkTreatment.uottawa.upload, initial.setupDarkTreatment.uottawa.expectedSurface, "upload fields must use the dark surface token");
+  assert.equal(initial.setupDarkTreatment.uottawa.uploadFeedbackOk, initial.setupDarkTreatment.uottawa.expectedOk, "successful file validation must use the dark success surface");
+  assert.equal(initial.setupDarkTreatment.uottawa.uploadFeedbackWarn, initial.setupDarkTreatment.uottawa.expectedWarn, "upload warnings must use the dark warning surface");
+  assert.equal(initial.setupDarkTreatment.uottawa.uploadFeedbackError, initial.setupDarkTreatment.uottawa.expectedError, "upload errors must use the dark error surface");
+  assert.equal(initial.setupDarkTreatment.uottawa.previewNotice, initial.setupDarkTreatment.uottawa.expectedInfo, "validation notices must use the dark information surface");
+  assert.equal(initial.setupDarkTreatment.uottawa.reconciliation, initial.setupDarkTreatment.uottawa.expectedSurface, "reconciliation must use the dark validation surface");
+  assert.equal(initial.setupDarkTreatment.uottawa.reconciliationCell, initial.setupDarkTreatment.uottawa.expectedBg, "reconciliation cells must use the dark content surface");
+  assert.equal(initial.setupDarkTreatment.uottawa.feedbackReady, initial.setupDarkTreatment.uottawa.expectedOk, "feedback confirmation must use the dark success surface");
+  assert.equal(initial.setupDarkTreatment.uottawa.feedbackWarning, initial.setupDarkTreatment.uottawa.expectedWarn, "feedback review warnings must use the dark warning surface");
+  assert.equal(initial.setupDarkTreatment.uottawa.feedbackConfirmed, initial.setupDarkTreatment.uottawa.expectedOk, "confirmed feedback uploads must use the dark success surface");
+  assert.equal(initial.setupDarkTreatment.elentra.footer, initial.setupDarkTreatment.uottawa.footer, "wizard chrome must remain consistently dark under Elentra branding");
+  assert.equal(initial.setupDarkTreatment.elentra.upload, initial.setupDarkTreatment.uottawa.upload, "upload fields must remain consistently dark under Elentra branding");
+  assert.notEqual(initial.setupDarkTreatment.elentra.previewNotice, "rgb(240, 244, 255)", "Elentra validation notices must not retain the light fill");
 
   const feedbackOverview = await page.evaluate(() => {
     switchRoom("feedback-overview");
@@ -468,7 +559,7 @@ try {
   assert.match(path.basename(jsonPath), /_analysis-record\.json$/);
   assert.equal(json.recordType, "aqp-analysis-record");
   assert.equal(json.schemaVersion, "1.0");
-  assert.equal(json.meta.build, "20261004-01");
+  assert.equal(json.meta.build, "20261004-02");
   assert.deepEqual(json.summary, recordUi.canonical.summary);
   assert.deepEqual(json.thresholds, recordUi.canonical.thresholds);
   assert.deepEqual(json.questions, recordUi.canonical.questions);

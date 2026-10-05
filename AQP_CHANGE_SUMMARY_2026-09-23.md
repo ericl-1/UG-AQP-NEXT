@@ -3,11 +3,18 @@
 ## Build identity
 
 - Starting point: AQP 0.8, build `20260923-01` (`Downloads/index.html`)
-- Current development build: AQP 0.8, build `20261004-01`
-- Working branch: `feature/uat-dark-theme-polish`
+- Current development build: AQP 0.8, build `20261004-02`
+- Working branch: `feature/distractor-dif-review`
 - Working file: `index.html` in the isolated development worktree
 - The Downloads baseline was not modified.
-- Builds through `20261003-01` have been retained in GitHub. Build `20261004-01` is being developed in the isolated worktree and is not live until its pull request is approved and merged.
+- Builds through `20261003-01` have been retained in GitHub. Build `20261004-02` is being developed in the isolated worktree and is not live until its pull request is approved and merged.
+
+## Build 20261004-02 — Setup wizard Dark Mode completion
+
+- Converted the saved-draft recovery banner, wizard action bars, upload fields, inline file-status messages, validation previews, reconciliation summaries, and feedback confirmation states from hard-coded light fills to theme-aware surfaces.
+- Covered QuestionMark, Scantron, standalone feedback, and combined-analysis upload paths, including empty, loaded, ready, warning, blocking, and confirmed states.
+- Applied the same semantic success, warning, error, information, border, text, and hover treatments under dark uOttawa and dark Elentra branding.
+- Upload parsing, validation rules, analysis calculations, navigation, and report output were not changed.
 
 ## Build 20261004-01 — Distractor Analysis live-review enhancement
 
