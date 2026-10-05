@@ -31,7 +31,7 @@ assert.match(applicationHtml, /aqp-mark aqp-lockup-mark/, "primary headers must 
 assert.match(applicationHtml, /class="sp-grid"/, "the Assessment Pulse splash must retain its ECG-style grid");
 assert.match(applicationHtml, /From responses to confident review/, "the approved splash slogan must be present");
 assert.doesNotMatch(applicationHtml, /id="sp-pct"|id="sp-fill"/, "the splash must not imply artificial loading progress");
-assert.match(applicationHtml, /APP_BUILD\s*=\s*'20261004-01'/, "the Distractor Analysis live-review build must be stamped");
+assert.match(applicationHtml, /APP_BUILD\s*=\s*'20261004-02'/, "the setup-wizard Dark Mode completion build must be stamped");
 assert.match(applicationHtml, /class="btn-dl-secondary da-method-btn"[^>]+aria-expanded="false"[^>]+aria-controls="da-methodology-panel"/, "Distractor methodology must use an accessible disclosure control");
 assert.match(applicationHtml, /class="app-version-pill"/, "the footer version must use the theme-aware pill");
 assert.match(applicationHtml, /id="btn-appearance-topbar"/, "the top bar must expose the approved quick Appearance control");

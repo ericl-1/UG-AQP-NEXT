@@ -102,7 +102,7 @@
 </style>
 <style>
 /* ═══════════════════════════════════════════════════════════════════════════
-   AQP design system · Calm clinical intelligence · build 20261004-01
+   AQP design system · Calm clinical intelligence · build 20261004-02
    Centralized visual rules for colour, type, spacing, surfaces, controls,
    tables, status communication, motion, and theme parity.
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -556,6 +556,52 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 :root[data-appearance="dark"] select,
 :root[data-appearance="dark"] input,
 :root[data-appearance="dark"] textarea{color-scheme:dark}
+
+/* Setup wizard dark-mode completion: uploads, validation, saved draft, and action bars. */
+:root[data-appearance="dark"] #draft-resume-banner{background:color-mix(in srgb,var(--c-accent-tint) 76%,var(--c-bg))!important;border-left-color:var(--c-accent)!important}
+:root[data-appearance="dark"] #draft-resume-banner button[style*="background:#fff"]{background:var(--c-surface)!important;color:var(--c-primary)!important;border-color:var(--c-border-2)!important}
+:root[data-appearance="dark"] #draft-resume-banner button[style*="background:#fff"]:hover{background:var(--c-bg)!important;border-color:var(--c-accent)!important}
+:root[data-appearance="dark"] #setup-configure-footer,
+:root[data-appearance="dark"] #setup-run-footer,
+:root[data-appearance="dark"] #setup-run-footer-p5,
+:root[data-appearance="dark"] #setup-fb-footer{background:color-mix(in srgb,var(--c-bg) 94%,transparent)!important;border-top-color:var(--c-border-2)!important;box-shadow:0 -8px 22px rgba(0,0,0,.30)!important;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+:root[data-appearance="dark"] #setup-panel .section-hdr{background:var(--c-surface)}
+:root[data-appearance="dark"] #setup-panel .upload-row-item{background:var(--c-surface);border-color:var(--c-border-2)}
+:root[data-appearance="dark"] #setup-panel .upload-row-item:hover,
+:root[data-appearance="dark"] #setup-panel .upload-row-item:focus-visible{background:color-mix(in srgb,var(--c-accent-tint) 58%,var(--c-surface));border-color:var(--c-accent)}
+:root[data-appearance="dark"] #setup-panel .upload-row-item.ur-loaded{background:color-mix(in srgb,var(--s-ok-bg) 72%,var(--c-surface));border-color:var(--s-ok)}
+:root[data-appearance="dark"] #setup-panel .upload-row-item.ur-loaded .add-pill{background:var(--s-ok-bg)!important;color:var(--s-ok)!important;border-color:var(--s-ok)!important}
+:root[data-appearance="dark"] #setup-panel .upload-feedback-ok,
+:root[data-appearance="dark"] #setup-panel .fb-preflight-ready,
+:root[data-appearance="dark"] #setup-panel .upload-confirmed-state,
+:root[data-appearance="dark"] #setup-panel [style*="background:#e8f5e9"],
+:root[data-appearance="dark"] #setup-panel [style*="background:#edf8ed"],
+:root[data-appearance="dark"] #setup-panel [style*="background:#f0faf2"],
+:root[data-appearance="dark"] #setup-panel [style*="background:#e8f5eb"]{background:var(--s-ok-bg)!important;color:var(--s-ok)!important;border-color:color-mix(in srgb,var(--s-ok) 48%,var(--c-border))!important}
+:root[data-appearance="dark"] #setup-panel .upload-feedback-warn,
+:root[data-appearance="dark"] #setup-panel .fb-preflight-warning,
+:root[data-appearance="dark"] #setup-panel [style*="background:#fff8e6"],
+:root[data-appearance="dark"] #setup-panel [style*="background:#fffbf0"],
+:root[data-appearance="dark"] #setup-panel [style*="background:#fff3cd"]{background:var(--s-warn-bg)!important;color:var(--s-warn-text)!important;border-color:color-mix(in srgb,var(--s-warn) 48%,var(--c-border))!important}
+:root[data-appearance="dark"] #setup-panel .upload-feedback-err,
+:root[data-appearance="dark"] #setup-panel [style*="background:#fff0f0"],
+:root[data-appearance="dark"] #setup-panel [style*="background:#fff5f5"]{background:var(--s-hard-bg)!important;color:var(--s-hard)!important;border-color:color-mix(in srgb,var(--s-hard) 46%,var(--c-border))!important}
+:root[data-appearance="dark"] #setup-panel .upload-preview-notice,
+:root[data-appearance="dark"] #setup-panel [style*="background:#f0f4ff"]{background:var(--c-accent-tint)!important;color:var(--c-secondary)!important;border-color:var(--c-border)!important}
+:root[data-appearance="dark"] #setup-panel .analysis-reconciliation{background:var(--c-surface)!important;border-color:var(--c-border)!important}
+:root[data-appearance="dark"] #setup-panel .recon-cell{background:var(--c-bg)!important;border-color:var(--c-border-2)!important}
+:root[data-appearance="dark"] #setup-panel [style*="color:#1a5c1a"],
+:root[data-appearance="dark"] #setup-panel [style*="color:#1b5e20"],
+:root[data-appearance="dark"] #setup-panel [style*="color:#4caf50"]{color:var(--s-ok)!important}
+:root[data-appearance="dark"] #setup-panel [style*="color:#7a4700"],
+:root[data-appearance="dark"] #setup-panel [style*="color:#7a5800"],
+:root[data-appearance="dark"] #setup-panel [style*="color:#856404"],
+:root[data-appearance="dark"] #setup-panel [style*="color:#a07020"],
+:root[data-appearance="dark"] #setup-panel [style*="color:#9a5a00"],
+:root[data-appearance="dark"] #setup-panel [style*="color:#8a5200"]{color:var(--s-warn-text)!important}
+:root[data-appearance="dark"] #setup-panel [style*="color:#7a1010"],
+:root[data-appearance="dark"] #setup-panel [style*="color:#b71c1c"]{color:var(--s-hard)!important}
+:root[data-appearance="dark"] #setup-panel [style*="color:#555"]{color:var(--c-secondary)!important}
 
 /* Dark-mode completion pass: shared chrome, state chips, and modal content. */
 .app-version-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(0,0,0,.08);box-shadow:0 1px 3px rgba(0,0,0,.05);border-radius:20px;padding:4px 12px 4px 8px;transition:background .15s,border-color .15s}
@@ -2349,7 +2395,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 
 // ── App version — single source of truth ─────────────────────────────────
 var APP_VERSION     = '0.8';
-var APP_BUILD       = '20261004-01';
+var APP_BUILD       = '20261004-02';
 var APP_FAQ_VERSION = '0.8';           // Keep aligned with the app version; date records FAQ revisions
 var APP_FAQ_DATE    = 'October 4, 2026'; // Update when FAQ content changes
 var APP_RN_DATE     = 'October 4, 2026'; // Update each version close
@@ -2436,6 +2482,7 @@ function expandUploadCard(type) {
 function showFeedback(id, type, lines, dbgText) {
   var el=document.getElementById(id);
   if(!el) return;
+  el.className='upload-feedback upload-feedback-'+type;
   var styles={
     ok:  {bg:'#f0faf2',border:'var(--s-ok)',left:'var(--s-ok)',icon:'✓',iconBg:'var(--s-ok)',titleColor:'#1b5e20'},
     err: {bg:'#fff5f5',border:'#e53935',left:'var(--s-hard)',icon:'✗',iconBg:'var(--s-hard)',titleColor:'#b71c1c'},
@@ -4696,7 +4743,7 @@ function analysisReconciliationSnapshot(source) {
 function reconciliationCell(id,label,value,detail,status) {
   var colour=status==='bad'?'var(--s-hard)':status==='warn'?'#9a5a00':status==='ok'?'#1a5c1a':'var(--c-primary)';
   var icon=status==='bad'?'!':status==='warn'?'⚠':status==='ok'?'✓':'·';
-  return '<div id="'+id+'" style="padding:10px 12px;border:1px solid var(--c-border);border-radius:8px;background:#fff;min-height:58px">'+
+  return '<div id="'+id+'" class="recon-cell" style="padding:10px 12px;border:1px solid var(--c-border);border-radius:8px;background:#fff;min-height:58px">'+
     '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.45px;color:var(--c-muted);margin-bottom:4px">'+escHtml(label)+'</div>'+
     '<div style="display:flex;align-items:flex-start;gap:6px"><span aria-hidden="true" style="color:'+colour+';font-size:12px;font-weight:800;line-height:18px">'+icon+'</span><div>'+
       '<div style="font-size:13px;font-weight:700;color:'+colour+'">'+escHtml(value)+'</div>'+
@@ -4728,7 +4775,7 @@ function renderAnalysisReconciliation(source) {
       ? '<div class="recon-action" style="background:#fff8e6;border:1px solid #ead49a;color:#7a4700"><div><strong>Review recommended.</strong><br><span style="font-size:11px">Check the highlighted findings. If the interpretation is correct, confirm and continue below.</span></div><button onclick="'+(source==='scantron'?'revalidateScantron()':'updateQMPreview()')+'" class="btn-dl-secondary">Re-validate</button></div>'
       : '<div class="recon-action" style="background:#edf8ed;border:1px solid #b9deb9;color:#1a5c1a"><div><strong>Ready to confirm.</strong><br><span style="font-size:11px">All required checks passed. Review the summary, then confirm and continue below.</span></div></div>';
 
-  return '<section id="analysis-reconciliation" role="region" aria-labelledby="analysis-reconciliation-title" style="padding:14px 16px;border-bottom:1px solid var(--c-border);background:#fbfcfd">'+
+  return '<section id="analysis-reconciliation" class="analysis-reconciliation" role="region" aria-labelledby="analysis-reconciliation-title" style="padding:14px 16px;border-bottom:1px solid var(--c-border);background:#fbfcfd">'+
     '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px">'+
       '<div><div id="analysis-reconciliation-title" style="font-size:14px;font-weight:700;color:var(--c-primary)">Analysis reconciliation</div>'+
       '<div style="font-size:11px;color:var(--c-muted);margin-top:2px">Confirm how AQP interpreted the uploaded exam before analysis.</div></div>'+
@@ -4932,7 +4979,7 @@ function renderQMPreview(el) {
       '' +
     '</div>' +
     // Raw data notice
-    '<div style="padding:7px 16px;background:#f0f4ff;border-bottom:0.5px solid var(--c-border);font-size:11px;color:var(--c-secondary)">ℹ This preview reflects the raw files only — Question Exceptions and alternate keys have not been applied yet.</div>' +
+    '<div class="upload-preview-notice" style="padding:7px 16px;background:#f0f4ff;border-bottom:0.5px solid var(--c-border);font-size:11px;color:var(--c-secondary)">ℹ This preview reflects the raw files only — Question Exceptions and alternate keys have not been applied yet.</div>' +
     renderAnalysisReconciliation('qm') +
     // Mismatch warning (if any)
     mismatchWarning +
@@ -5461,7 +5508,7 @@ function renderScantronPreview(students, keyLetters, nQ, badRows) {
       '' +
     '</div>' +
     // Raw data notice
-    '<div style="padding:7px 16px;background:#f0f4ff;border-bottom:0.5px solid var(--c-border);font-size:11px;color:var(--c-secondary)">' +
+    '<div class="upload-preview-notice" style="padding:7px 16px;background:#f0f4ff;border-bottom:0.5px solid var(--c-border);font-size:11px;color:var(--c-secondary)">' +
       'ℹ This preview reflects the raw file only — Question Exceptions and alternate keys have not been applied yet.' +
     '</div>' +
     renderAnalysisReconciliation('scantron') +
@@ -5550,7 +5597,7 @@ function confirmParsePreview(source) {
       ? '<div style="font-size:11px;color:var(--c-muted);margin-top:3px">\u2193 Upload your feedback file below to continue.</div>'
       : '';
     el.innerHTML =
-      '<div style="padding:10px 14px;background:#fff;border:2px solid var(--s-ok);border-radius:8px;margin-top:6px;display:flex;align-items:flex-start;gap:10px">' +
+      '<div class="upload-confirmed-state" style="padding:10px 14px;background:#fff;border:2px solid var(--s-ok);border-radius:8px;margin-top:6px;display:flex;align-items:flex-start;gap:10px">' +
       '<svg width="18" height="18" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;margin-top:1px">' +
       '<circle cx="8" cy="8" r="7" stroke="var(--s-ok)" stroke-width="1.5"/>' +
       '<path d="M5 8l2 2 4-4" stroke="var(--s-ok)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>' +
@@ -9403,7 +9450,7 @@ function renderPreflightPanel() {
       ? 'DIF on · ' + (eCode||'E') + '/' + (fCode||'F')
       : 'DIF off';
     panel.innerHTML =
-      '<div style="display:flex;align-items:center;gap:8px;padding:6px 12px;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:7px;margin-bottom:4px;font-size:11.5px;color:#1b5e20;flex-wrap:wrap">' +
+      '<div class="fb-preflight-state fb-preflight-ready" style="display:flex;align-items:center;gap:8px;padding:6px 12px;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:7px;margin-bottom:4px;font-size:11.5px;color:#1b5e20;flex-wrap:wrap">' +
       '<span style="font-weight:700">✓ Ready to analyze</span>' +
       '<span style="color:#4caf50;opacity:.5">|</span>' +
       '<span>' + src + ' · ' + G.students.length + ' students · ' + G.nQ + ' questions</span>' +
@@ -9560,7 +9607,7 @@ function renderFbPreflightPanel() {
 
     panel.innerHTML =
       '<div style="border:1px solid rgba(232,168,0,.4);border-radius:7px;overflow:hidden;margin-bottom:4px">' +
-        '<div class="pf-toggle" data-target="' + pfFbId + '" ' +
+        '<div class="pf-toggle fb-preflight-warning" data-target="' + pfFbId + '" ' +
           'style="display:flex;align-items:center;gap:8px;padding:7px 12px;background:#fff8e6;cursor:pointer;user-select:none;font-size:11.5px;color:#7a4700;font-weight:600">' +
           '<span>⚠</span>' +
           '<span style="flex:1">' + flags.length + ' item' + (flags.length===1?'':'s') + ' to review before parsing</span>' +
@@ -11205,6 +11252,14 @@ var RELEASE_NOTES = [
   {
     version: '0.8',
     builds: [
+      {
+        build: '20261004-02',
+        date:  'October 4, 2026',
+        notes: [
+          'Completed Dark Mode treatment across the setup wizard: saved-draft recovery, fixed and sticky action bars, QuestionMark and Scantron upload fields, inline file-status messages, upload-validation previews, reconciliation states, and standalone or combined feedback confirmation now use theme-aware surfaces and semantic status colours.',
+          'Verified the setup treatment against both uOttawa and Elentra branding without changing upload parsing, validation rules, analysis calculations, navigation, or report output.'
+        ]
+      },
       {
         build: '20261004-01',
         date:  'October 4, 2026',
@@ -14115,7 +14170,7 @@ function applyAndConfirmFeedback() {
   if (resolverEl) resolverEl.style.display = 'none';
   var pf = document.getElementById('combined-fb-preflight');
   if (pf) pf.innerHTML =
-    '<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#fff;border:2px solid var(--s-ok);border-radius:7px;font-size:12px;color:#1b5e20;margin-top:8px">' +
+    '<div class="upload-confirmed-state" style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#fff;border:2px solid var(--s-ok);border-radius:7px;font-size:12px;color:#1b5e20;margin-top:8px">' +
     '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0">' +
     '<circle cx="8" cy="8" r="7" stroke="var(--s-ok)" stroke-width="1.5"/>' +
     '<path d="M5 8l2 2 4-4" stroke="var(--s-ok)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>' +
@@ -14510,7 +14565,7 @@ function finaliseFeedback() {
       var hp = document.getElementById('home-panel'); if (hp) hp.style.display = 'none';
       // Show confirmation in combined preflight
       var pf = document.getElementById('combined-fb-preflight');
-      if (pf) pf.innerHTML = '<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#fff;border:2px solid var(--s-ok);border-radius:7px;font-size:12px;color:#1b5e20;margin-top:8px"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--s-ok)" stroke-width="1.5"/><path d="M5 8l2 2 4-4" stroke="var(--s-ok)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Feedback validated — ' + fbAllQs().length + ' questions with comments. Ready to run combined analysis.</span></div>';
+      if (pf) pf.innerHTML = '<div class="upload-confirmed-state" style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#fff;border:2px solid var(--s-ok);border-radius:7px;font-size:12px;color:#1b5e20;margin-top:8px"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--s-ok)" stroke-width="1.5"/><path d="M5 8l2 2 4-4" stroke="var(--s-ok)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Feedback validated — ' + fbAllQs().length + ' questions with comments. Ready to run combined analysis.</span></div>';
       checkRunReady();
       var _ca=document.getElementById('contentArea');if(_ca)_ca.scrollTop=0;
     }
