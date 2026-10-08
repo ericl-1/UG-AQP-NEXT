@@ -248,7 +248,7 @@ try {
       return { uottawa, elentra };
     })(),
   }));
-  assert.equal(initial.build, "20261004-02");
+  assert.equal(initial.build, "20261007-01");
   assert.equal(initial.title, "AQP Synthetic Demonstration Exam");
   assert.equal(initial.bannerVisible, true);
   assert.equal(initial.isDemo, true);
@@ -293,7 +293,7 @@ try {
   assert.equal(initial.difKpiInToolbar, true, "DIF KPI tiles must share the toolbar row with the CSV action");
   assert.equal(initial.readiness.ready, false, "unreviewed demo flags should produce advisory readiness");
   assert.equal(initial.audit.demonstration, true);
-  assert.equal(initial.audit.application.build, "20261004-02");
+  assert.equal(initial.audit.application.build, "20261007-01");
   assert.equal(initial.audit.sourceFiles.demonstration.name, "Built-in synthetic dataset");
   assert.ok(initial.audit.inputInterpretation.reconciliation);
   assert.ok(initial.audit.events.some(event => event.type === "demonstration_loaded"));
@@ -559,7 +559,7 @@ try {
   assert.match(path.basename(jsonPath), /_analysis-record\.json$/);
   assert.equal(json.recordType, "aqp-analysis-record");
   assert.equal(json.schemaVersion, "1.0");
-  assert.equal(json.meta.build, "20261004-02");
+  assert.equal(json.meta.build, "20261007-01");
   assert.deepEqual(json.summary, recordUi.canonical.summary);
   assert.deepEqual(json.thresholds, recordUi.canonical.thresholds);
   assert.deepEqual(json.questions, recordUi.canonical.questions);
