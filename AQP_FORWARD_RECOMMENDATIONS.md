@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document records recommended future work for the Assessment Quality Platform after the QA, remediation, design-system consolidation, automated accessibility pass, analysis-record consolidation, identity/icon refresh, Student Feedback navigation restructure, Dark Mode/Assessment Pulse refresh, Feedback Overview workflow, Distractor Analysis live-review enhancement, and setup-wizard Dark Mode completion delivered through version 0.8, build `20261004-02`.
+This document records recommended future work for the Assessment Quality Platform after the QA, remediation, design-system consolidation, automated accessibility pass, analysis-record consolidation, identity/icon refresh, Student Feedback navigation restructure, Dark Mode/Assessment Pulse refresh, Feedback Overview workflow, Distractor Analysis live-review enhancement, setup-wizard Dark Mode completion, and first feedback-parser strengthening pass delivered through version 0.8, build `20261007-01`.
 
 These are forward-looking improvements rather than defects remaining from the two QA passes. Completed corrections are documented separately in `AQP_CHANGE_SUMMARY_2026-09-23.md`.
 
@@ -99,7 +99,11 @@ The importer should:
 - Still recommended: explicit migrations when a future schema version makes migration necessary.
 - Continue to ensure imported text is rendered as text and never evaluated as code or markup.
 
-#### 6. Strengthen upload validation
+#### 6. Complete the remaining upload-validation edge cases
+
+The principal validation framework is now in place: malformed uploads, duplicate and missing identifiers, duplicate question numbers, invalid responses and keys, results/key mismatches, mixed scored/Unscored outcomes, stream warnings, and stale-data clearing are covered by the validation interface and retained browser tests.
+
+Review the remaining edge cases below against representative operational exports. Implement only gaps that are not already detected and explained clearly:
 
 Before analysis, detect and explain:
 
@@ -362,23 +366,57 @@ Revisit a report only after operational use identifies a durable audience, decis
 
 Any future output must distinguish observed response data from automated signals, document original and accepted alternate keys, retain the Beta/methodology limitations, and receive methodology and report-audience review before implementation.
 
+#### 25. Review and strengthen the feedback parser (first strengthening pass completed in build `20261007-01`)
+
+Conduct a focused assessment of the current deterministic feedback parser before adding new categories or automation. The goal is to improve attribution accuracy, resilience to QuestionMark format variations, and the clarity of cases requiring coordinator review without changing the underlying privacy model.
+
+The review should cover:
+
+- How question references are recognized in English and French comments
+- Ambiguous, multiple, malformed, and out-of-range question references
+- General comments versus question-specific comments
+- Duplicate comments, blank rows, unexpected columns, and workbook layout variations
+- Category assignment rules, precedence, and false-positive/false-negative examples
+- Confidence or reason codes that can be explained to coordinators
+- Safe fallback to Unmapped Comments whenever attribution is uncertain
+- A synthetic parser corpus with expected mappings and categories
+- Regression tests for every accepted improvement
+
+Keep final categorisation and routing editable by the coordinator. Any future AI-assisted parsing remains governed by item 20 and is not part of this deterministic parser review.
+
+Build `20261007-01` added bilingual multi-question formats, embedded-reference handling, additional quantity safeguards, flexible worksheet/comment-column detection, a documented decision map, and a dedicated browser regression suite. Continue expanding the synthetic corpus whenever a new operational format or misclassification is observed; do not broaden heuristic attribution without a retained example and expected outcome.
+
+#### 26. Revisit the combined MCQ+DIF report design only if a business need is confirmed
+
+Three simulated redesigns were produced for comparison, including two 80-question versions. The decision is to retain the current production report for now. The prototypes are preserved under `Report Prototypes-drafts/` for possible future consolidation; none is an approved template or application requirement.
+
+If this work resumes:
+
+- Begin with the existing report's trusted content and committee workflow
+- Keep the complete MCQ analysis table
+- Remove repetitive summary tables and unnecessary narrative
+- Optimize for readers with limited review time
+- Avoid form fields or spaces intended for data entry
+- Validate the final length using a representative 80-question exam
+- Treat the prototypes as design references, not specifications to merge wholesale
+
 ## Suggested delivery sequence
 
 ### Near term
 
-1. Automated regression suite
-2. Independent statistical validation
-3. Versioned synthetic test-data package
-4. Stronger upload validation
-5. Analysis reconciliation screen
+1. Review any remaining upload-validation edge cases against operational exports
+2. Extend the versioned test-data package with missing-response, single-language, and small-sample cases
+3. Continue the feedback-parser corpus as new operational examples are encountered
+4. Human assistive-technology validation on supported university devices
+5. Institutional privacy review
 
 ### Medium term
 
-1. Session schema and JSON import
-2. Report approval metadata
-3. Anonymized diagnostics export
+1. Report approval metadata, if the committee workflow requires it
+2. Anonymized diagnostics export
+3. Additional independent statistical validation datasets
 4. Modular development source and build process
-5. Dependency/offline deployment decision
+5. Dependency/offline deployment decision with institutional IT
 
 ### Longer term
 
@@ -388,6 +426,13 @@ Any future output must distinguish observed response data from automated signals
 4. Longitudinal exam and item history
 5. Institutional retention and centralized audit logging
 
+### Deferred pending demonstrated need
+
+1. Distractor Analysis report or export
+2. Combined MCQ+DIF report redesign
+3. Narrative analysis summaries
+4. AI-assisted features
+
 ## Recommended immediate next task
 
-Complete human VoiceOver/NVDA validation and institutional privacy review next. The statistical, upload, audit, demonstration, report-readiness, and automated accessibility foundations are now covered by retained regression tests; the next highest-value evidence requires the supported university hardware, browsers, and assistive technologies.
+Audit the remaining upload-validation edge cases against representative operational exports. Many listed conditions are already covered, so the first step is a gap analysis rather than adding duplicate warnings. Any confirmed gap should receive a focused fixture and browser regression case before its validation message is changed.

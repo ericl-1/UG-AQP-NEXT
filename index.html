@@ -102,7 +102,7 @@
 </style>
 <style>
 /* ═══════════════════════════════════════════════════════════════════════════
-   AQP design system · Calm clinical intelligence · build 20261004-02
+   AQP design system · Calm clinical intelligence · build 20261007-01
    Centralized visual rules for colour, type, spacing, surfaces, controls,
    tables, status communication, motion, and theme parity.
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -2395,10 +2395,10 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 
 // ── App version — single source of truth ─────────────────────────────────
 var APP_VERSION     = '0.8';
-var APP_BUILD       = '20261004-02';
+var APP_BUILD       = '20261007-01';
 var APP_FAQ_VERSION = '0.8';           // Keep aligned with the app version; date records FAQ revisions
-var APP_FAQ_DATE    = 'October 4, 2026'; // Update when FAQ content changes
-var APP_RN_DATE     = 'October 4, 2026'; // Update each version close
+var APP_FAQ_DATE    = 'October 7, 2026'; // Update when FAQ content changes
+var APP_RN_DATE     = 'October 7, 2026'; // Update each version close
 var SESSION_BACKUP_FILE_TYPE = 'aqp-portable-session';
 var SESSION_BACKUP_SCHEMA_VERSION = 1;
 
@@ -11253,6 +11253,19 @@ var RELEASE_NOTES = [
     version: '0.8',
     builds: [
       {
+        build: '20261007-01',
+        date:  'October 7, 2026',
+        notes: [
+          'Strengthened deterministic feedback attribution for explicitly labelled multi-question comments using commas, ampersands, slashes, semicolons, and English or French connectors such as “and”, “or”, “et”, and “ou”.',
+          'Reduced false question matches for ordinary quantities including student counts, answer-option counts, exam-question counts, fractions, percentages, patient ages, and out-of-range references; uncertain comments continue to require coordinator review.',
+          'Feedback uploads no longer assume that comments are on the first worksheet in column B. AQP locates recognized QuestionMark comment headers across worksheets and columns and now supports the headerless two-column format found in Unit I Part A.',
+          'Added operational reference formats such as “6=”, “Question 79;”, and “for 59 of 84”, with safeguards for CURB-65, hyphenated ages, and answer-choice numbers inside comments.',
+          'Tightened category rules: definition questions default to Content unless an explicit language/version issue is stated, while narrow technical or logistical comments remain Other even when linked to a question.',
+          'Added a dedicated browser regression suite covering bilingual references, embedded question references, quantity safeguards, category precedence, headerless uploads, and variable workbook layouts. All six automated suites pass.',
+          'Scoring, MCQ statistics, DIF calculations, exception handling, reporting, and coordinator-editable feedback decisions are unchanged.'
+        ]
+      },
+      {
         build: '20261004-02',
         date:  'October 4, 2026',
         notes: [
@@ -13100,7 +13113,7 @@ function isBareRef(text, qNum) {
   if (/^[Qq]?\s*$/.test(t)) return true;
   if (/^[Qq]uestion\s*$/i.test(t)) return true;
   // Strip Q# reference from front
-  var stripped = t.replace(new RegExp('^(?:#|[Qq](?:uestion)?\\s*\\.?\\s*#?\\s*)?' + qNum + '\\s*(?:\\\\?[:\\-\\)\\.\\,]+)?\\s*'), '').trim();
+  var stripped = t.replace(new RegExp('^(?:#|[Qq](?:uestion)?\\s*\\.?\\s*#?\\s*)?' + qNum + '\\s*(?:\\\\?[:;=\\-\\)\\.\\,]+)?\\s*', 'i'), '').trim();
   stripped = stripped.replace(/^[Qq]\s*$/, '').trim();
   if (stripped.length < 3) return true;
   // Ends with dangling preposition/conjunction (incomplete sentence)
@@ -13132,7 +13145,7 @@ function isBareRef(text, qNum) {
   // Only 1 meaningful word remains and nothing else — treat as bare
   if (longWords.length <= 1) return true;
   // Strip all Q# refs — if nothing meaningful remains
-  var withoutRef = t.replace(new RegExp('(?:#|[Qq](?:uestion)?\\s*\\.?\\s*#?\\s*)?' + qNum + '\\b\\s*(?:\\\\?[:\\-\\)\\.\\,]+)?', 'g'), ' ');
+  var withoutRef = t.replace(new RegExp('(?:#|[Qq](?:uestion)?\\s*\\.?\\s*#?\\s*)?' + qNum + '\\b\\s*(?:\\\\?[:;=\\-\\)\\.\\,]+)?', 'gi'), ' ');
   withoutRef = withoutRef.replace(/[,&\s]+/g, ' ').trim();
   if (withoutRef.length < 6) return true;
   return false;
@@ -13188,7 +13201,11 @@ function isQuantityContext(text, pos, qNum) {
   var after = text.slice(pos + numStr.length).replace(/^\s+/, '');
   var before = text.slice(0, pos);
   // Unit words immediately after the number (existing list + bare y for years, g, mmol, mcg, min, mo, wk, h, drink)
-  if (/^(?:pack\s*year|yr\s*old|y\s*old|yo\b|y\b|year|mg|mcg|mmol|mm|cm|ml|kg|lb|g\b|%|hour|hr\b|h\b|day|week|wk\b|month|mo\b|min\b|drink)/i.test(after)) return true;
+  if (/^(?:pack\s*year|yr\s*old|y\s*old|yo\b|y\b|year|ans?\b|mg|mcg|mmol|mm|cm|ml|kg|lb|g\b|%|hour|hr\b|h\b|day|week|wk\b|month|mo\b|min\b|drink)/i.test(after)) return true;
+  // Hyphenated ages such as "3-year-old" and "4-month-old".
+  if (/^[-\u2013\u2014]\s*(?:year|yr|month|week|day)s?\s*[-\u2013\u2014]?\s*old\b/i.test(after)) return true;
+  // Named clinical scores that contain a number, most notably CURB-65.
+  if (/\bcurb\s*[-\u2013\u2014]?\s*$/i.test(before)) return true;
   // Denominator / ratio / BP pattern: number is the second half of NN/NN (e.g. 130/80, 140/90),
   // OR the number is immediately followed by a slash then more digits (first half, e.g. 130/80).
   if (/\/\s*$/.test(before)) return true;          // "130/" + 80  -> 80 is a denominator
@@ -13196,6 +13213,11 @@ function isQuantityContext(text, pos, qNum) {
   // Range pattern "N - N unit": a number followed by dash + another number + a unit word
   // (e.g. "6 - 6 DAYS", "24 - 48 h"). The leading number here is part of a quantity range.
   if (/^[-\u2013\u2014]\s*\d{1,3}\s*(?:day|week|wk|month|mo\b|hour|hr|year|yr|y\b|min|h\b|g\b|mg|ml|kg|%)/i.test(after)) return true;
+  // Counts that commonly occur in narrative feedback are not question labels.
+  // Examples: "12 students commented", "2 options seem correct", "80 questions".
+  if (/^(?:students?|learners?|candidates?|respondents?|people|responses?|answers?|options?|choices?|items?|questions?|comments?)\b/i.test(after)) return true;
+  // Fractions/counts such as "5 of 10 students" and "3 out of 8 options".
+  if (/^(?:of|out\s+of)\s+\d{1,3}\b/i.test(after)) return true;
   // "NN of MM" count pattern: this number directly follows "of" which is itself directly
   // preceded by another number (e.g. "59 of 84", "question 75 of 84", "1 of 5"). Here MM is a
   // total/count, not a Q#. This requires the NUMBER-of-NUMBER fraction shape specifically —
@@ -13258,30 +13280,54 @@ function splitLine(line) {
     return [[null, line]];
   }
 
-  // 1. Multi-Q run-on
-  var ro = splitRunon(line);
+  // Question position written as "for 59 of 84" (or the French-labelled
+  // equivalent) means question 59 in an 84-question exam, not a numeric
+  // fraction. This form appears in operational QuestionMark feedback.
+  var positionalRef = /^\s*(?:for|pour(?:\s+la)?(?:\s+question)?|question)\s+(?:q\s*)?(\d{1,3})\s+of\s+\d{1,3}\b/i.exec(line);
+  if (positionalRef) {
+    var positionalQ = parseInt(positionalRef[1], 10);
+    if (positionalQ >= 1 && positionalQ <= effectiveMaxQ()) return [[positionalQ, line]];
+  }
+
+  // 1. Multi-Q run-on. Explicit Q/Question labels are handled by the safer
+  // marker parser below; skipping the loose run-on detector here prevents
+  // answer-option numbers in text such as "Question 6: options 2 and 3" from
+  // being mistaken for additional question references.
+  var startsWithExplicitQuestion = /^\s*(?:#|q(?:uestions?)?|number)\s*\.?\s*#?\s*\d{1,3}\b/i.test(line);
+  var ro = startsWithExplicitQuestion ? null : splitRunon(line);
   if (ro) return ro;
 
   // 2. Single-Q run-on
   var srq = singleRunon(line);
   if (srq !== null) return [[srq, line]];
 
+  // 2b. Explicit multi-question list. Requiring a Q/Question prefix lets us
+  // safely support natural English/French connectors and slash/semicolon lists
+  // without mistaking measurements or ordinary number lists for question IDs.
+  // Examples: "Questions 5 and 6", "Q7 / Q8", "Questions 9 et 10".
+  var explicitList = /^(?:[Qq](?:uestions?)?)\s*\.?\s*#?\s*(\d{1,3})((?:\s*(?:,|;|\/|&|\band\b|\bet\b|\bou\b|\bor\b)\s*(?:[Qq](?:uestions?)?\s*\.?\s*#?\s*)?\d{1,3})+)/i.exec(line);
+  if (explicitList) {
+    var explicitNums = [parseInt(explicitList[1],10)].concat((explicitList[2].match(/\d{1,3}/g)||[]).map(Number));
+    explicitNums = explicitNums.filter(function(n, i, arr){ return n >= 1 && n <= effectiveMaxQ() && arr.indexOf(n) === i; });
+    if (explicitNums.length) return explicitNums.map(function(n){ return [n, line]; });
+  }
+
   // 3. Comma/amp list with dash: "7,38 - text"
-  var cld = /^(?:#|[Qq](?:uestion)?\s*\.?\s*#?\s*)?(\d{1,3})((?:\s*[,&]\s*\d{1,3})+)\s*[-\u2013\u2014]\s+/.exec(line);
+  var cld = /^(?:#|[Qq](?:uestions?)?\s*\.?\s*#?\s*)?(\d{1,3})((?:\s*[,&]\s*\d{1,3})+)\s*[-\u2013\u2014]\s+/.exec(line);
   if (cld) {
     var nums = [parseInt(cld[1],10)].concat((cld[2].match(/\d{1,3}/g)||[]).map(Number)).filter(function(n){return n>=1&&n<=effectiveMaxQ();});
     return nums.map(function(n){return [n, line];});
   }
 
   // 4. Standard comma/amp list — FIX 1: DON'T add rest as second fragment (creates duplicates)
-  var cl = /^(?:#|[Qq](?:uestion)?\s*\.?\s*#?\s*)?(\d{1,3})((?:\s*[,&]\s*(?:#|[Qq](?:uestion)?\s*\.?\s*#?\s*)?\d{1,3})+)(?=\s*(?:\\?[:\-\)\.]|\s+[a-zA-Z\u00C0-\u00FF]|$))/.exec(line);
+  var cl = /^(?:#|[Qq](?:uestions?)?\s*\.?\s*#?\s*)?(\d{1,3})((?:\s*[,&]\s*(?:#|[Qq](?:uestions?)?\s*\.?\s*#?\s*)?\d{1,3})+)(?=\s*(?:\\?[:\-\)\.]|\s+[a-zA-Z\u00C0-\u00FF]|$))/.exec(line);
   if (cl) {
     var nums2 = [parseInt(cl[1],10)].concat((cl[2].match(/\d{1,3}/g)||[]).map(Number)).filter(function(n){return n>=1&&n<=effectiveMaxQ();});
     return nums2.map(function(n){return [n, line];});
   }
 
   // 5. Leading marker pattern — FIX 3: skip quantity contexts, FIX 4: skip arrow labels
-  var mkRe = /(?:^|(?<=[\s\n]))(?:(?:#|[Qq](?:uestion)?\s*\.?\s*#?\s*|[Nn]umber\s+)(\d{1,3})\b\s*(?:\\?[:\-\)\.,]|\s|$)|(\d{1,3})\s*(?:(?:\\?[:\)\.])(?=\s|[a-zA-Z\u00C0-\u00FF])|[-\\](?=\s))|(\d{1,3})\s*[-\u2013\u2014]\s+(?=[a-zA-Z\u00C0-\u00FF'"])|(\d{1,3})\s*$|^(\d{1,3})\s+(?=[a-zA-Z]))/g;
+  var mkRe = /(?:^|(?<=[\s\n]))(?:(?:#|q(?:uestion)?\s*\.?\s*#?\s*|number\s+)(\d{1,3})\b\s*(?:\\?[:;=\-\)\.,]|\s|$)|(\d{1,3})\s*(?:(?:\\?[:;=\)\.])(?=\s|[a-zA-Z\u00C0-\u00FF])|[-\\](?=\s))|(\d{1,3})\s*[-\u2013\u2014]\s+(?=[a-zA-Z\u00C0-\u00FF'"])|(\d{1,3})\s*$|^(\d{1,3})\s+(?=[a-zA-Z]))/gi;
   var markers = [], seen = {}, m2;
   while ((m2 = mkRe.exec(line)) !== null) {
     var q3 = parseInt([m2[1],m2[2],m2[3],m2[4],m2[5]].filter(Boolean)[0], 10);
@@ -13293,14 +13339,22 @@ function splitLine(line) {
   if (markers.length > 1) {
     var frags2 = [];
     var pre2 = line.slice(0, markers[0][0]).trim();
-    if (pre2.length > 3) frags2.push([null, pre2]);
+    // A short clause ending in a connector belongs to the first explicit Q#,
+    // e.g. "The wording in Q17 does not match Q18." It is not a separate
+    // unmapped comment. A complete leading sentence remains independent.
+    var attachPre2 = pre2.length > 3 && /\b(?:in|for|on|about|regarding|between|with|and|or|to|de|des|pour|sur|entre|avec|et|ou)\s*$/i.test(pre2);
+    if (pre2.length > 3 && !attachPre2) frags2.push([null, pre2]);
     for (var i = 0; i < markers.length; i++) {
       var end2 = i+1 < markers.length ? markers[i+1][0] : line.length;
       var frag2 = line.slice(markers[i][0], end2).trim();
       if (frag2) {
+        if (i === 0 && attachPre2) {
+          frags2.push([markers[i][1], pre2 + ' ' + frag2]);
+          continue;
+        }
         // Strip the leading Q# marker from the stored text
         var frag2q = markers[i][1];
-        var frag2stripped = frag2.replace(new RegExp('^(?:#|[Qq](?:uestion)?\\s*\.?\\s*#?\\s*)?' + frag2q + '\\b\\s*(?:\\\\?[:\\-\\)\\.\\,]+)?'), '').trim();
+        var frag2stripped = frag2.replace(new RegExp('^(?:#|[Qq](?:uestion)?\\s*\.?\\s*#?\\s*)?' + frag2q + '\\b\\s*(?:\\\\?[:;=\\-\\)\\.\\,]+)?', 'i'), '').trim();
         frags2.push([frag2q, frag2stripped.length >= 4 ? frag2stripped : frag2]);
       }
     }
@@ -13311,7 +13365,7 @@ function splitLine(line) {
     var pos = markers[0][0], q4 = markers[0][1];
     var pre3 = line.slice(0, pos).trim();
     var frag3 = line.slice(pos).trim();
-    var stripped2 = frag3.replace(new RegExp('^(?:#|[Qq](?:uestion)?\\s*\\.?\\s*#?\\s*)?' + q4 + '\\b\\s*(?:\\\\?[:\\-\\)\\.\\,]+)?'), '').trim();
+    var stripped2 = frag3.replace(new RegExp('^(?:#|[Qq](?:uestion)?\\s*\\.?\\s*#?\\s*)?' + q4 + '\\b\\s*(?:\\\\?[:;=\\-\\)\\.\\,]+)?', 'i'), '').trim();
     if (pre3.split(/\s+/).length >= 3 && stripped2.length >= 4) return [[q4, line]];
     if (stripped2.length < 4 && pre3.length > 3) return [[q4, line]];
     var result = [];
@@ -13322,16 +13376,15 @@ function splitLine(line) {
   }
 
   // 6. Embedded Q# in prose — FIX 4: skip arrow labels
-  var embRe = /(?<![a-zA-Z\d])(?:[qQ](?:uestion)?\s*\.?\s*#?\s*|[Nn]umber\s+|#)(\d{1,3})\b/g;
-  var em, firstQ = null;
+  var embRe = /(?<![a-zA-Z\d])(?:q(?:uestions?)?\s*\.?\s*#?\s*|number\s+|#)(\d{1,3})\b/gi;
+  var em, embeddedQs = [];
   while ((em = embRe.exec(line)) !== null) {
     var qe = parseInt(em[1], 10);
     if (qe >= 1 && qe <= effectiveMaxQ() && !isArrowLabel(line, em.index)) {
-      firstQ = qe;
-      break;
+      if (embeddedQs.indexOf(qe) === -1) embeddedQs.push(qe);
     }
   }
-  if (firstQ !== null) return [[firstQ, line]];
+  if (embeddedQs.length) return embeddedQs.map(function(q){ return [q, line]; });
 
   return [[null, line]];
 }
@@ -13715,6 +13768,72 @@ function handleFeedbackDrop(event) {
   } catch(e) {}
   handleFeedbackUpload(input);
 }
+
+// Locate the feedback table without assuming that it is on the first sheet or
+// that the comment text is always in column B. QuestionMark exports seen to date
+// use labels such as "Comments Ss", "Comments", or "Student comments".
+function findFeedbackWorkbookLayout(wb) {
+  var best = null;
+  (wb.SheetNames || []).forEach(function(sheetName, sheetIndex) {
+    var ws = wb.Sheets[sheetName];
+    if (!ws) return;
+    var rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:''});
+    var scanRows = Math.min(12, rows.length);
+    for (var r = 0; r < scanRows; r++) {
+      var row = rows[r] || [];
+      var scanCols = Math.min(40, row.length);
+      for (var c = 0; c < scanCols; c++) {
+        var raw = String(row[c] == null ? '' : row[c]).replace(/^\uFEFF/, '').trim();
+        var label = raw.toLowerCase().replace(/[_\-]+/g, ' ').replace(/\s+/g, ' ');
+        var score = 0;
+        if (/^comments?(?:\s+ss)?$/.test(label)) score = 6;
+        else if (/^(?:student|learner)\s+(?:feedback|comments?)$/.test(label)) score = 5;
+        else if (/^(?:feedback|student)\s+comments?$/.test(label)) score = 5;
+        else if (label.indexOf('comment') !== -1 && raw.length < 60 && !/^\d/.test(raw)) score = 3;
+        var dataCount = 0;
+        if (score) {
+          for (var sr = r + 1; sr < Math.min(rows.length, r + 26); sr++) {
+            if (String((rows[sr] || [])[c] || '').trim()) dataCount++;
+          }
+        }
+        if (score && (!best || score > best.score || (score === best.score && dataCount > best.dataCount) || (score === best.score && dataCount === best.dataCount && sheetIndex < best.sheetIndex))) {
+          best = {sheetName:sheetName, sheetIndex:sheetIndex, rows:rows, dataStart:r+1, commentCol:c, score:score, dataCount:dataCount};
+        }
+      }
+      // Compatibility fallback for older QM exports whose first header is
+      // Assessment and whose adjacent column contains the comments.
+      var first = String(row[0] == null ? '' : row[0]).trim().toLowerCase();
+      if (first.indexOf('assessment') !== -1 && row.length > 1 && (!best || best.score < 2)) {
+        best = {sheetName:sheetName, sheetIndex:sheetIndex, rows:rows, dataStart:r+1, commentCol:1, score:2, dataCount:0};
+      }
+    }
+
+    // Some QuestionMark exports contain no header row: column A repeats the
+    // assessment name and column B contains responses from the very first row.
+    // Accept that layout only when the identifier is strongly repeated and
+    // several adjacent cells contain substantive comments. Explicit headers
+    // above always retain priority.
+    if (!best || best.score < 2) {
+      var candidates = [];
+      for (var hr = 0; hr < Math.min(rows.length, 30); hr++) {
+        var idVal = String((rows[hr] || [])[0] || '').trim();
+        var commentVal = String((rows[hr] || [])[1] || '').trim();
+        if (idVal && commentVal.length >= 3) candidates.push({id:idVal, comment:commentVal});
+      }
+      if (candidates.length >= 3) {
+        var idCounts = {};
+        candidates.forEach(function(candidate){ idCounts[candidate.id] = (idCounts[candidate.id] || 0) + 1; });
+        var dominantCount = Object.keys(idCounts).reduce(function(max, id){ return Math.max(max, idCounts[id]); }, 0);
+        if (dominantCount / candidates.length >= 0.6) {
+          var headerless = {sheetName:sheetName, sheetIndex:sheetIndex, rows:rows, dataStart:0, commentCol:1, score:1, dataCount:candidates.length, headerless:true};
+          if (!best || best.score < headerless.score || (best.score === headerless.score && headerless.dataCount > best.dataCount)) best = headerless;
+        }
+      }
+    }
+  });
+  return best;
+}
+
 function handleFeedbackUpload(input) {
   var file = input.files[0];
   if (!file) return;
@@ -13724,33 +13843,14 @@ function handleFeedbackUpload(input) {
     try {
       var data = new Uint8Array(e.target.result);
       var wb   = XLSX.read(data, {type:'array'});
-      var ws   = wb.Sheets[wb.SheetNames[0]];
-      var rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:''});
-      // Find data rows: scan the first 8 rows for a recognisable header.
-      // Two patterns:
-      //   (a) col A contains "assessment" — the older QM export format
-      //   (b) col B contains "comment" and is short with no leading digit
-      //       — the current QM format (e.g. "Comments Ss", "Comments")
-      // If neither fires, default to dataStart=1 (skip only row 1) rather
-      // than the old fallback of dataStart=i which swallowed real data rows.
-      var dataStart = 1;
-      for (var i = 0; i < Math.min(8, rows.length); i++) {
-        var colA = rows[i] ? String(rows[i][0] || '').toLowerCase() : '';
-        var colB = rows[i] ? String(rows[i][1] || '').trim() : '';
-        var colBLower = colB.toLowerCase();
-        if (colA.includes('assessment')) {
-          dataStart = i + 1; break;
-        }
-        if (colBLower.indexOf('comment') !== -1) {
-          if (colB.length < 40 && !/^\d/.test(colB)) {
-            dataStart = i + 1; break;
-          }
-        }
-      }
-      // Column B (index 1) is the comment column
+      var layout = findFeedbackWorkbookLayout(wb);
+      if (!layout) throw new Error('A recognizable feedback-comment column was not found.');
+      var rows = layout.rows;
+      var dataStart = layout.dataStart;
+      var commentCol = layout.commentCol;
       var rawComments = [];
       for (var r = dataStart; r < rows.length; r++) {
-        var val = rows[r] ? String(rows[r][1] || '').trim() : '';
+        var val = rows[r] ? String(rows[r][commentCol] || '').trim() : '';
         // Skip filter/status footer rows
         if (['any status','filter','status',''].indexOf(val.toLowerCase()) !== -1) continue;
         if (val.length > 0) rawComments.push(val);
@@ -14257,15 +14357,10 @@ var FB_CATEG_KEYWORDS = {
     'better in english', 'better in french',
     'clearer in english', 'clearer in french',
     'poorly worded in',
-    // Definitional confusion — asking the meaning of a word (moved from Content)
-    // Rule: "what does X mean?" is always Translation regardless of whether X is clinical
-    'what does', 'what is meant by', 'unsure of what', 'unsure what this means',
     // Grammar and language quality (moved from Content — these are language concerns)
     'erreur de grammaire', 'erreurs de grammaire', 'grammar error', 'grammatical error',
     // New patterns identified from 4-exam sample analysis
     'dans la grammaire',       // catches "des erreurs dans la grammaire"
-    "qu'est-ce qu'une",        // student asking definition of a French word from the question
-    'what normal person uses', // student questioning unusual vocabulary choice
   ],
   content: [
     // Two / multiple correct answers
@@ -14330,8 +14425,10 @@ var FB_CATEG_KEYWORDS = {
     'not complete', 'is not complete', 'incomplete answer', 'incomplete option',
     "doesn't say", 'doesnt say', 'ne dit pas',
     'needs to be more clear', 'needs to be clearer', 'be more clear', 'need to be clearer',
-    // NOTE: 'what does', 'what is meant by', 'unsure of what', 'unsure what this means'
-    // moved to Translation — definitional confusion is always a language concern
+    // Definition or terminology confusion defaults to Content unless the
+    // comment explicitly identifies a bilingual/version/language problem.
+    'what does', 'what is meant by', 'unsure of what', 'unsure what this means',
+    "qu'est-ce qu'une", 'what normal person uses',
     'unfair', 'not fair',
     'more info', 'used more info', 'could use more', 'more context',
     'do not remember learning', 'doesnt specify', 'does not specify serum',
@@ -14416,9 +14513,8 @@ var FB_CATEG_KEYWORDS = {
     'image', 'figure', 'photo', 'picture', 'graph', 'table',
     'not in curriculum', 'au-delà', 'beyond'
   ],
-  // Other: applied to General Feedback comments only.
+  // Other: strong technical, logistical, structural, or social signals.
   // Covers exam experience, logistics, technical issues, and off-topic social content.
-  // Never applied to attributed comments (Q#) — those are always Content if not Translation.
   other: [
     // Technical / access issues
     'screen stopped sharing', 'stopped sharing my screen',
@@ -14438,10 +14534,6 @@ function autoCategorizeFb() {
   if (!FB.parsed || !FB.parsed.length) return;
   var kw = FB_CATEG_KEYWORDS;
 
-  // Regex for definitional confusion: "not sure what X means" — Translation
-  // Narrower than 'not sure what' alone (avoids catching "not sure what the X is")
-  var rNotSureWhatMeans = /not sure what\b.{1,50}\bmeans?\b/i;
-
   FB.parsed.forEach(function(p) {
     // Never overwrite a manual classification
     if (p._classif) return;
@@ -14452,19 +14544,16 @@ function autoCategorizeFb() {
     var isGeneral = (p.status === 'general' || (p.qNums && p.qNums.length === 0));
 
     // ── 1. Translation (highest priority) ──────────────────────────────────
-    // Covers: EN↔FR issues, vocabulary/terminology confusion, grammar errors,
-    // spelling, word choice, and definitional questions ("what does X mean?")
-    var isTranslation = kw.translation.some(function(k){ return t.indexOf(k) !== -1; })
-                     || rNotSureWhatMeans.test(p.text);
+    // Covers explicit EN↔FR, translation, version, or grammar signals.
+    // Definition questions remain Content unless a language issue is stated.
+    var isTranslation = kw.translation.some(function(k){ return t.indexOf(k) !== -1; });
     if (isTranslation) { p._classif = 'translation'; return; }
 
-    // ── 2. Other (General Feedback only) ───────────────────────────────────
-    // Covers: technical/access issues, exam format/structure feedback,
-    // off-topic social messages. Never auto-applied to attributed comments.
-    if (isGeneral) {
-      var isOther = kw.other.some(function(k){ return t.indexOf(k) !== -1; });
-      if (isOther) { p._classif = 'other'; return; }
-    }
+    // ── 2. Other ───────────────────────────────────────────────────────────
+    // Narrow technical/logistical signals remain Other even when the student
+    // supplied a question number (for example, a timeout on Q78).
+    var isOther = kw.other.some(function(k){ return t.indexOf(k) !== -1; });
+    if (isOther) { p._classif = 'other'; return; }
 
     // ── 3. Content keyword fast-exit ────────────────────────────────────────
     var isContent = kw.content.some(function(k){ return t.indexOf(k) !== -1; });
@@ -18246,7 +18335,7 @@ function updateTopbarExam() {
               <span class="faq-icon">+</span>
             </div>
             <div class="faq-a">
-              You need the <strong>QuestionMark feedback export</strong> (.xlsx) — the same raw export you receive from QuestionMark for the notes/feedback question. Upload it in the <strong>Feedback</strong> tab under the Student Feedback section. No preparation is needed before uploading.
+              You need the <strong>QuestionMark feedback export</strong> (.xlsx) — the same raw export you receive from QuestionMark for the notes/feedback question. Upload it in the <strong>Feedback</strong> tab under the Student Feedback section. No preparation is needed before uploading. AQP supports both labelled exports and the headerless two-column QuestionMark format in which the assessment name repeats beside each response.
             </div>
           </div>
 
@@ -18267,7 +18356,7 @@ function updateTopbarExam() {
               <span class="faq-icon">+</span>
             </div>
             <div class="faq-a">
-              The tool parses every student comment and attributes each one to one or more question numbers based on the text. Comments that could not be attributed to a specific question are routed to a <strong>pending review</strong> screen where you can manually assign them to a question number, mark them as General, or discard them.<br><br>
+              The tool parses every student comment and attributes each one to one or more question numbers based on explicit references in the text. It recognizes common English and French forms, including multi-question lists and formats such as <strong>6=</strong>, <strong>Question 79;</strong>, and <strong>for 59 of 84</strong>. It screens ordinary quantities such as percentages, student counts, answer-option counts, patient ages, and clinical score names such as CURB-65. Comments that are ambiguous, outside the exam's question range, or cannot be attributed confidently are routed to a <strong>pending review</strong> screen where you can manually assign them to a question number, mark them as General, or discard them.<br><br>
               Once you have reviewed the pending items, click <strong>Apply &amp; Generate Report</strong>. In standalone feedback mode, the tool takes you to the <strong>Feedback</strong> tab showing results by frequency. In combined analysis mode, validating feedback returns you to the setup screen and unlocks the <strong>Run combined analysis</strong> button — clicking it runs both MCQ and feedback together and lands you on the Item Analysis tab with all results populated.
             </div>
           </div>

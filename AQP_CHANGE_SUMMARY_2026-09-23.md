@@ -3,11 +3,22 @@
 ## Build identity
 
 - Starting point: AQP 0.8, build `20260923-01` (`Downloads/index.html`)
-- Current development build: AQP 0.8, build `20261004-02`
+- Current development build: AQP 0.8, build `20261007-01`
 - Working branch: `feature/distractor-dif-review`
 - Working file: `index.html` in the isolated development worktree
 - The Downloads baseline was not modified.
-- Builds through `20261003-01` have been retained in GitHub. Build `20261004-02` is being developed in the isolated worktree and is not live until its pull request is approved and merged.
+- Builds through `20261004-02` have been retained in GitHub. Build `20261007-01` is being developed in the isolated worktree and is not live until its pull request is approved and merged.
+
+## Build 20261007-01 — Feedback parser strengthening
+
+- Expanded deterministic attribution for explicitly labelled multi-question comments using commas, ampersands, slashes, semicolons, and English or French connectors.
+- Added quantity safeguards for student counts, response and answer-option counts, exam-question totals, numeric fractions, percentages, and patient ages.
+- Added support for recognized feedback-comment columns located outside column B or on a later worksheet, while retaining the older QuestionMark layout.
+- Validated the parser against four operational feedback workbooks and added support for the headerless two-column export used by Unit I Part A, including parsing from its first response row.
+- Added `6=` and `Question 79;` reference formats and safeguards for CURB-65, hyphenated ages, and answer-option numbers inside an explicitly labelled question comment.
+- Tightened categorisation so definition/terminology questions default to Content unless an explicit bilingual issue is stated, while narrow technical/logistical comments remain Other even when attributed to a question.
+- Added a dedicated browser regression suite and parser decision-map documentation under `validation/FEEDBACK_PARSER_VALIDATION.md`.
+- Updated the Student Feedback FAQ and release notes. MCQ scoring, DIF, reports, and coordinator-editable feedback decisions are unchanged.
 
 ## Build 20261004-02 — Setup wizard Dark Mode completion
 
