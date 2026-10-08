@@ -281,9 +281,11 @@ try {
       raw: [], grouped: {}, bareRefs: {}, general: [], ready: true,
       parsed: [
         { text: "Synthetic pending comment", qNums: [], status: "pending", rawIdx: 0, _staged: [12] },
-        { text: "Synthetic resolved comment", qNums: [4], mappedQs: [4], status: "mapped", rawIdx: 1 }
+        { text: "Synthetic resolved comment", qNums: [4], mappedQs: [4], status: "mapped", rawIdx: 1 },
+        { text: "Synthetic general comment", qNums: [], status: "general", rawIdx: 2 },
+        { text: "Synthetic discarded comment", qNums: [], status: "discard", rawIdx: 3 }
       ],
-      pending: [0, 1]
+      pending: [0, 1, 2, 3]
     };
     renderMappingScreen();
     const style = selector => {
@@ -294,15 +296,24 @@ try {
     const result = {
       input: style(".fb-map-input"),
       staged: style('[style*="background:#e8f0fd"]'),
-      resolved: style(".fb-map-row.resolved"),
+      resolved: style(".fb-map-row.resolved-mapped"),
+      general: style(".fb-map-row.resolved-general"),
+      discarded: style(".fb-map-row.resolved-discard"),
+      columns: getComputedStyle(document.querySelector(".fb-map-columns")).gridTemplateColumns,
+      rowColumns: getComputedStyle(document.querySelector(".fb-map-main")).gridTemplateColumns,
+      controls: getComputedStyle(document.querySelector(".fb-map-controls")).gridTemplateColumns,
     };
     FB = saved;
     return result;
   });
-  assert.ok(feedbackDarkMode.input && feedbackDarkMode.staged && feedbackDarkMode.resolved, "feedback mapping Dark Mode fixtures must render");
+  assert.ok(feedbackDarkMode.input && feedbackDarkMode.staged && feedbackDarkMode.resolved && feedbackDarkMode.general && feedbackDarkMode.discarded, "feedback mapping Dark Mode fixtures must render");
   assert.doesNotMatch(feedbackDarkMode.input.background, /rgba?\(255, 255, 255/, "manual assignment inputs must not retain a light fill");
   assert.doesNotMatch(feedbackDarkMode.staged.background, /rgb\(232, 240, 253\)/, "staged question badges must use a Dark Mode surface");
   assert.doesNotMatch(feedbackDarkMode.resolved.background, /rgb\(240, 253, 244\)/, "resolved feedback rows must use a Dark Mode surface");
+  assert.notEqual(feedbackDarkMode.general.background, feedbackDarkMode.discarded.background, "General and Discarded comments need distinct resolved states");
+  assert.notEqual(feedbackDarkMode.resolved.background, feedbackDarkMode.discarded.background, "Discarded comments must not retain the mapped green state");
+  assert.equal(feedbackDarkMode.columns, feedbackDarkMode.rowColumns, "Unmapped headers and rows must share the same column grid");
+  assert.match(feedbackDarkMode.controls, /164px 28px 60px 58px/, "Unmapped controls must use the Feedback Review alignment rhythm");
   await page.evaluate(() => switchRoom("reports"));
   const previewTrigger = page.locator("#rp-card-mcq button, #rp-card-mcq").first();
   await previewTrigger.focus();

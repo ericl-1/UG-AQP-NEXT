@@ -361,6 +361,40 @@ try {
     await page.close();
   }
 
+  // Ambiguous feedback layouts require an explicit choice, exact headers outrank
+  // loose "comment" matches, and excessive workbook dimensions are rejected.
+  {
+    const page = await newPage();
+    const layoutAudit = await page.evaluate(() => {
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([["Assessment", "Comments Ss"], ["A", "First comment"], ["A", "Second comment"]]), "English");
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([["Assessment", "Comments Ss"], ["A", "Premier commentaire"], ["A", "Deuxième commentaire"]]), "French");
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([["Internal comments"], ["Not student feedback"]]), "Metadata");
+      const candidates = feedbackWorkbookLayoutCandidates(wb);
+      const originalPrompt = window.prompt;
+      let promptText = "";
+      window.prompt = message => { promptText = message; return "2"; };
+      const selected = selectFeedbackWorkbookLayout(candidates);
+      window.prompt = originalPrompt;
+      let oversizeError = "";
+      const oversized = { SheetNames: ["Huge"], Sheets: { Huge: { "!ref": "A1:A50001" } } };
+      try { validateFeedbackWorkbookBounds({ size: 100 }, oversized); } catch (error) { oversizeError = error.message; }
+      return {
+        topNames: candidates.slice(0, 3).map(item => item.sheetName),
+        topScores: candidates.slice(0, 3).map(item => item.score),
+        selected: selected.sheetName,
+        promptText,
+        oversizeError,
+      };
+    });
+    assert.deepEqual(layoutAudit.topNames.slice(0, 2), ["English", "French"]);
+    assert.deepEqual(layoutAudit.topScores.slice(0, 2), [6, 6]);
+    assert.equal(layoutAudit.selected, "French");
+    assert.match(layoutAudit.promptText, /multiple equally likely feedback columns/i);
+    assert.match(layoutAudit.oversizeError, /50,000-row limit/i);
+    await page.close();
+  }
+
   assert.deepEqual(browserErrors, []);
   console.log("PASS: malformed QuestionMark, Scantron, and feedback uploads block, warn, accept, and clear stale state as designed.");
 } finally {
