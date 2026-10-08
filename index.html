@@ -603,6 +603,21 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 :root[data-appearance="dark"] #setup-panel [style*="color:#b71c1c"]{color:var(--s-hard)!important}
 :root[data-appearance="dark"] #setup-panel [style*="color:#555"]{color:var(--c-secondary)!important}
 
+/* Feedback review dark-mode parity: mapping, reassignment, bookmarks, and category controls. */
+:root[data-appearance="dark"] #section-feedback .fb-map-row.resolved{background:var(--s-ok-bg)!important}
+:root[data-appearance="dark"] #section-feedback .fc-drop{background:var(--c-surface)!important;border-color:var(--c-border-2)!important;box-shadow:0 10px 28px rgba(0,0,0,.42)!important}
+:root[data-appearance="dark"] #section-feedback [style*="background:#e8f0fd"],
+:root[data-appearance="dark"] #section-feedback [style*="background:#e3f2fd"]{background:var(--s-easy-bg)!important;color:var(--s-easy-text)!important}
+:root[data-appearance="dark"] #section-feedback [style*="background:#e0f5f5"]{background:var(--c-fb-bg)!important;color:var(--c-fb)!important}
+:root[data-appearance="dark"] #section-feedback [style*="background:#e8f5eb"],
+:root[data-appearance="dark"] #section-feedback [style*="background:#f0fdf4"]{background:var(--s-ok-bg)!important;color:var(--s-ok)!important}
+:root[data-appearance="dark"] #section-feedback [style*="background:#fff8e6"],
+:root[data-appearance="dark"] #section-feedback [style*="background:#fffbf0"],
+:root[data-appearance="dark"] #section-feedback [style*="background:#fff3e0"]{background:var(--s-warn-bg)!important;color:var(--s-warn-text)!important}
+:root[data-appearance="dark"] #section-feedback [style*="background:#fff0f0"]{background:var(--s-hard-bg)!important;color:var(--s-hard)!important}
+:root[data-appearance="dark"] #section-feedback [style*="background:#e8f4fd"]{background:var(--s-easy-bg)!important;color:var(--s-easy-text)!important}
+:root[data-appearance="dark"] #section-feedback [style*="background:#f3f4f6"]{background:var(--c-surface)!important;color:var(--c-secondary)!important}
+
 /* Dark-mode completion pass: shared chrome, state chips, and modal content. */
 .app-version-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(0,0,0,.08);box-shadow:0 1px 3px rgba(0,0,0,.05);border-radius:20px;padding:4px 12px 4px 8px;transition:background .15s,border-color .15s}
 .session-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
@@ -1110,7 +1125,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
     </button>
   </div>
   <!-- ── Data Source & DIF ── -->
-  <div class="section-card">
+  <div class="section-card" id="mcq-config-card">
     <div class="section-hdr">
       <span class="section-hdr-title">Data Source &amp; DIF</span>
     </div>
@@ -1165,11 +1180,40 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
     </div>
   </div>
 
+  <!-- Feedback-only configuration mirrors the Configure step used by MCQ and combined analysis. -->
+  <div class="section-card" id="fb-config-card" style="display:none">
+    <div class="section-hdr">
+      <span class="section-hdr-title">Feedback Settings</span>
+    </div>
+    <div class="section-body">
+      <div class="wz-guidance">
+        <span class="wz-guidance-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
+        <div>Set the exam question count before uploading feedback. AQP uses it to reject out-of-range references while keeping uncertain comments available for coordinator review.</div>
+      </div>
+      <div id="fb-qcount-editable">
+        <label for="fb-max-q" class="field-label" data-tip="Used to validate question numbers while parsing feedback comments. Optional — a default of 150 is used if left blank.">Number of questions in this exam</label>
+        <input type="number" id="fb-max-q" class="field-input" style="max-width:120px" min="1" placeholder="e.g. 83" oninput="fbSetManualMaxQ(this.value)">
+        <p style="font-size:12px;color:var(--c-muted);margin:8px 0 0">Optional — used to catch out-of-range question numbers while parsing. A default of 150 is used if left blank.</p>
+        <div id="fb-qcount-stale-warning" style="display:none;margin-top:8px" class="fb-info-box fb-info-amber">
+          <span>⚠</span><div id="fb-qcount-stale-text"></div>
+        </div>
+      </div>
+      <div id="fb-qcount-locked" style="display:none">
+        <label class="field-label">Number of questions in this exam</label>
+        <div style="display:flex;align-items:center;gap:8px;background:var(--c-bg);border-radius:8px;padding:9px 12px;width:fit-content">
+          <span style="font-size:14px">&#128274;</span>
+          <span id="fb-qcount-locked-text" style="font-size:13px;color:var(--c-secondary)">Using question count from MCQ analysis</span>
+        </div>
+        <p style="font-size:12px;color:var(--c-muted);margin:8px 0 0">To change this, update the MCQ analysis.</p>
+      </div>
+    </div>
+  </div>
+
   <div id="setup-configure-footer" style="position:fixed;bottom:0;left:0;right:0;padding:0 16px 16px 16px;background:#fff;border-top:1px solid rgba(0,0,0,.08);box-shadow:0 -4px 16px rgba(0,0,0,.06);z-index:100">
     <div style="padding:12px 4px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
       <div class="wz-next-up" style="border-top:none;margin:0;padding:0">
         <svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <span>Next up: Upload your files and run analysis</span>
+        <span id="configure-next-label">Next up: Upload your files and run analysis</span>
       </div>
       <button onclick="wizardGoTo(4)" style="display:inline-flex;align-items:center;gap:6px;padding:10px 22px;border-radius:10px;background:var(--c-accent);color:#fff;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .2s">
         Continue to upload
@@ -1340,23 +1384,14 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
   <!-- Step 3 contextual title — shared element, also populated by selectAnalysisType() for feedback mode -->
   <div id="setup-step3-title-fb" style="display:none;font-size:18px;font-weight:700;color:var(--c-primary);margin-bottom:18px;padding-bottom:12px;border-bottom:2px solid var(--c-accent);letter-spacing:-.2px"></div>
 
-    <div class="fb-info-box fb-info-blue">
-      <span style="font-size:16px;flex-shrink:0">💬</span>
-      <div>
-        <strong>Feedback analysis runs independently</strong> — no MCQ analysis required. Upload a QM feedback export, parse comments by question number, and generate a standalone Feedback Report.<br>
-        <span style="margin-top:3px;display:block;font-size:12px">If an MCQ analysis is also loaded in this session, flagged questions will be cross-referenced automatically in the report.</span>
-      </div>
-    </div>
-
-    <!-- Pre-upload guidance -->
     <div class="wz-guidance" style="margin-bottom:14px">
-      <span class="wz-guidance-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
-      <div>Upload your QuestionMark feedback export (.xlsx). The app will parse student comments and match them to question numbers automatically. Any comments that couldn't be matched will be shown in the <strong>Unmapped Comments</strong> room after analysis for your review.</div>
+      <span class="wz-guidance-icon"><svg class="fui-icon fui-icon-md" aria-hidden="true"><use href="#fui-folder-open"/></svg></span>
+      <div>Upload the QuestionMark feedback export (.xlsx). No MCQ file is required for feedback-only analysis. AQP will parse comments using the question count from Configure, and route uncertain comments to <strong>Unmapped Comments</strong> for review.</div>
     </div>
     <!-- Upload -->
     <div class="section-card" style="margin-bottom:14px">
       <div class="section-hdr">
-        <span class="section-hdr-title">Upload QM Feedback Export</span>
+        <span class="section-hdr-title">Feedback Data</span>
       </div>
       <div class="section-body" style="padding:14px 16px">
         <div id="fb-upload-zone" class="upload-row-item" role="button" tabindex="0" aria-label="Upload student feedback file" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('fb-file-input').click()}" onclick="document.getElementById('fb-file-input').click()"
@@ -1372,31 +1407,6 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
         </div>
         <input type="file" id="fb-file-input" aria-label="Student feedback file upload" accept=".xlsx,.xls" style="display:none" onchange="handleFeedbackUpload(this)">
         <div id="fb-parse-info" style="display:none;margin-top:10px"></div>
-      </div>
-    </div>
-
-    <!-- Question count -->
-    <div class="section-card" style="margin-bottom:14px">
-      <div class="section-hdr">
-        <span class="section-hdr-title">Question Count</span>
-      </div>
-      <div class="section-body" style="padding:14px 16px">
-        <div id="fb-qcount-editable">
-          <label for="fb-max-q" class="field-label" data-tip="Used to validate question numbers while parsing feedback comments. Optional — a default of 150 is used if left blank.">Number of questions in this exam</label>
-          <input type="number" id="fb-max-q" class="field-input" style="max-width:120px" min="1" placeholder="e.g. 83" oninput="fbSetManualMaxQ(this.value)">
-          <p style="font-size:12px;color:var(--c-muted);margin:8px 0 0">Optional — used to catch out-of-range question numbers while parsing. A default of 150 is used if left blank.</p>
-          <div id="fb-qcount-stale-warning" style="display:none;margin-top:8px" class="fb-info-box fb-info-amber">
-            <span>⚠</span><div id="fb-qcount-stale-text"></div>
-          </div>
-        </div>
-        <div id="fb-qcount-locked" style="display:none">
-          <label class="field-label">Number of questions in this exam</label>
-          <div style="display:flex;align-items:center;gap:8px;background:var(--c-bg);border-radius:8px;padding:9px 12px;width:fit-content">
-            <span style="font-size:14px">&#128274;</span>
-            <span id="fb-qcount-locked-text" style="font-size:13px;color:var(--c-secondary)">Using question count from MCQ analysis</span>
-          </div>
-          <p style="font-size:12px;color:var(--c-muted);margin:8px 0 0">To change this, update it on the MCQ Item Analysis tab.</p>
-        </div>
       </div>
     </div>
 
@@ -9880,6 +9890,40 @@ function emptyStateHtml(icon, heading, body) {
     '</div>';
 }
 
+function isFeedbackOnlyAnalysis() {
+  return !!(ExamSession && ExamSession.hasFeedback && !ExamSession.hasMcq);
+}
+
+function setFeedbackOnlyRoomState(container, active, roomName, body) {
+  if (!container) return false;
+  var state = container.querySelector(':scope > .feedback-only-room-state');
+  if (active) {
+    Array.prototype.forEach.call(container.children, function(child) {
+      if (child === state || child.classList.contains('room-page-hdr')) return;
+      if (!child.hasAttribute('data-fb-only-was-hidden')) child.setAttribute('data-fb-only-was-hidden', child.hidden ? '1' : '0');
+      child.hidden = true;
+    });
+    if (!state) {
+      state = document.createElement('div');
+      state.className = 'feedback-only-room-state';
+      container.appendChild(state);
+    }
+    state.innerHTML = '<div class="room-empty-state"><div class="room-empty-icon" aria-hidden="true">&#8212;</div>' +
+      '<div class="room-empty-title">Not used in feedback-only analysis</div>' +
+      '<div class="room-empty-sub">' + roomName + ' uses MCQ response data. ' + body + '</div></div>';
+    state.hidden = false;
+    return true;
+  }
+  Array.prototype.forEach.call(container.children, function(child) {
+    if (child.hasAttribute('data-fb-only-was-hidden')) {
+      child.hidden = child.getAttribute('data-fb-only-was-hidden') === '1';
+      child.removeAttribute('data-fb-only-was-hidden');
+    }
+  });
+  if (state) state.hidden = true;
+  return false;
+}
+
 // ── Post-analysis Summary Toast ────────────────────────────────────────────
 function showAnalysisSummary(n, nQ, nFlagged, nEasy, nDIF, hasDif) {
   var toast = document.getElementById('analysis-summary-toast');
@@ -13536,8 +13580,6 @@ function wizardGoTo(step) {
 
 function wizardBackTo(step) {
   if (step >= G_WIZARD_STEP) return; // only navigate backward
-  // Feedback-only skips configure — back from step 4 goes to step 2
-  if (step === 3 && G_ANALYSIS_TYPE === 'fb') step = 2;
   // Reset rail indicators for steps beyond target
   if (step < 5) {
     var d5 = document.getElementById('setup-step-dot-5');
@@ -13698,8 +13740,17 @@ function selectAnalysisType(type) {
   // Update step 4 label to reflect what uploads there
   var lbl4 = document.getElementById('setup-step-lbl-4');
   if (lbl4) lbl4.textContent = type === 'fb' ? 'Feedback upload' : 'MCQ upload';
-  // Configure step for MCQ/combined; feedback-only skips configure
-  wizardGoTo(type === 'fb' ? 4 : 3);
+  // Keep the same Configure → Upload progression for every analysis type.
+  var mcqConfig = document.getElementById('mcq-config-card');
+  var fbConfig = document.getElementById('fb-config-card');
+  var nextLabel = document.getElementById('configure-next-label');
+  if (mcqConfig) mcqConfig.style.display = type === 'fb' ? 'none' : '';
+  if (fbConfig) fbConfig.style.display = type === 'fb' ? '' : 'none';
+  if (nextLabel) nextLabel.textContent = type === 'fb'
+    ? 'Next up: Upload the feedback export and review attribution readiness'
+    : 'Next up: Upload your files and run analysis';
+  if (type === 'fb') fbRefreshQCountField();
+  wizardGoTo(3);
 }
 
 function onContinueToFeedback() {
@@ -16584,6 +16635,7 @@ function switchRoom(room) {
     var rphS = document.getElementById('rph-analysis-sub');
     if (rphT) rphT.textContent = 'MCQ Items';
     if (rphS) rphS.textContent = 'Question difficulty, discrimination, and flag review';
+    setFeedbackOnlyRoomState(document.getElementById('main-section-analysis'), isFeedbackOnlyAnalysis(), 'MCQ Items', 'Upload and run an MCQ response file to use this room.');
   } else if (room === 'dif') {
     var tabAn2 = document.getElementById('tab-analysis');
     switchMainTab('analysis', tabAn2);
@@ -16592,15 +16644,18 @@ function switchRoom(room) {
     var rphS2 = document.getElementById('rph-analysis-sub');
     if (rphT2) rphT2.textContent = 'DIF Analysis';
     if (rphS2) rphS2.textContent = 'English vs French student performance compared question by question';
+    var feedbackOnlyDif = setFeedbackOnlyRoomState(document.getElementById('main-section-analysis'), isFeedbackOnlyAnalysis(), 'DIF Analysis', 'Upload and run MCQ response data with DIF enabled to use this room.');
     // Show either the table or the not-enabled state
     var difEnabled = (typeof G_DIF_ENABLED !== 'undefined' && G_DIF_ENABLED);
     var difMsg  = document.getElementById('dif-not-enabled-msg');
     var difData = document.getElementById('dif-table-content');
     var difGuid = document.getElementById('dif-guidance');
-    if (difMsg)  difMsg.style.display  = difEnabled ? 'none' : 'block';
-    if (difData) difData.style.display = difEnabled ? '' : 'none';
-    if (difGuid) difGuid.style.display = difEnabled ? 'flex' : 'none';
-    renderDIFKpiStrip();
+    if (!feedbackOnlyDif) {
+      if (difMsg)  difMsg.style.display  = difEnabled ? 'none' : 'block';
+      if (difData) difData.style.display = difEnabled ? '' : 'none';
+      if (difGuid) difGuid.style.display = difEnabled ? 'flex' : 'none';
+      renderDIFKpiStrip();
+    }
   } else if (room === 'exceptions') {
     // Hide main sections
     ['analysis','review','reports','feedback'].forEach(function(s){
@@ -16609,7 +16664,9 @@ function switchRoom(room) {
     // Show exceptions room and render rows
     var roomExcl=document.getElementById('room-exceptions');
     if(roomExcl) roomExcl.style.display='block';
-    openExclusionsModal(); // renders rows into #excl-rows (no modal shown)
+    if (!setFeedbackOnlyRoomState(roomExcl, isFeedbackOnlyAnalysis(), 'Question Exceptions', 'This room becomes available when an MCQ analysis is loaded.')) {
+      openExclusionsModal(); // renders rows into #excl-rows (no modal shown)
+    }
   } else if (room === 'feedback-overview') {
     switchMainTab('feedback', document.getElementById('tab-feedback-main'));
     var rphFbOverviewTitle = document.getElementById('rph-fb-title');
@@ -16642,7 +16699,7 @@ function switchRoom(room) {
     if (fbGuid) fbGuid.style.display = 'none';
   } else if (room === 'queue') {
     switchMainTab('review', document.getElementById('tab-review'));
-    renderReviewQueue();
+    if (!setFeedbackOnlyRoomState(document.getElementById('main-section-review'), isFeedbackOnlyAnalysis(), 'Review Queue', 'MCQ questions that need coordinator review will appear here after an MCQ analysis.')) renderReviewQueue();
   } else if (room === 'reports') {
     switchMainTab('reports', document.getElementById('tab-reports'));
     updateReportCards();
@@ -16993,7 +17050,9 @@ function renderDistractorRoom() {
   if (!el) return;
 
   if (!G.mcq || !G.mcq.length) {
-    el.innerHTML = '<div class="room-empty-state"><div class="room-empty-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="12" width="4" height="9" rx=".5"/><rect x="10" y="6" width="4" height="15" rx=".5"/><rect x="17" y="9" width="4" height="12" rx=".5"/></svg></div><div class="room-empty-title">No analysis yet</div><div class="room-empty-sub">Run an MCQ analysis first to view distractor performance.</div></div>';
+    el.innerHTML = isFeedbackOnlyAnalysis()
+      ? '<div class="room-empty-state"><div class="room-empty-icon" aria-hidden="true">&#8212;</div><div class="room-empty-title">Not used in feedback-only analysis</div><div class="room-empty-sub">Distractor Analysis uses MCQ response data. Upload and run an MCQ response file to use this room.</div></div>'
+      : '<div class="room-empty-state"><div class="room-empty-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="12" width="4" height="9" rx=".5"/><rect x="10" y="6" width="4" height="15" rx=".5"/><rect x="17" y="9" width="4" height="12" rx=".5"/></svg></div><div class="room-empty-title">No analysis yet</div><div class="room-empty-sub">Run an MCQ analysis first to view distractor performance.</div></div>';
     return;
   }
   if (!G._quartileData) computeQuartileData();
@@ -17337,7 +17396,9 @@ function renderNearThresholdRoom() {
   if (!el) return;
 
   if (!G.mcq || !G.mcq.length) {
-    el.innerHTML = '<div class="room-empty-state"><div class="room-empty-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="room-empty-title">No analysis yet</div><div class="room-empty-sub">Run an MCQ analysis to detect near-threshold items.</div></div>';
+    el.innerHTML = isFeedbackOnlyAnalysis()
+      ? '<div class="room-empty-state"><div class="room-empty-icon" aria-hidden="true">&#8212;</div><div class="room-empty-title">Not used in feedback-only analysis</div><div class="room-empty-sub">Near Threshold uses MCQ item statistics. Upload and run an MCQ response file to use this room.</div></div>'
+      : '<div class="room-empty-state"><div class="room-empty-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="room-empty-title">No analysis yet</div><div class="room-empty-sub">Run an MCQ analysis to detect near-threshold items.</div></div>';
     return;
   }
 

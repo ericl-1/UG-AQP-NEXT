@@ -42,6 +42,9 @@ assert.match(applicationHtml, /function buildDifKpiCanvas\(/, "DIF Word exports 
 assert.match(applicationHtml, /rImgDifKpiFull/, "the combined Word report must include the DIF KPI overview");
 assert.match(applicationHtml, /unresolvedCount: unresolvedCount, attributedRows: attributedRows/, "Feedback previews need current routing metrics");
 assert.match(applicationHtml, /1250000[\s\S]*320000/, "the Word-report AQP wordmark must retain its corrected aspect ratio");
+assert.match(applicationHtml, /id="fb-config-card"/, "feedback-only analysis must use the shared Configure step");
+assert.match(applicationHtml, /Feedback review dark-mode parity/, "feedback assignment controls need an explicit Dark Mode parity layer");
+assert.match(applicationHtml, /Not used in feedback-only analysis/, "MCQ-only rooms need an explicit feedback-only state");
 
 let browser;
 try {
@@ -179,6 +182,71 @@ try {
   });
   assert.deepEqual(switchStates, { sourceOn: "true", sourceOff: "false", before: "true", after: "false" });
 
+  await page.evaluate(() => {
+    document.getElementById("home-panel").style.display = "none";
+    document.getElementById("setup-panel").style.display = "block";
+    document.getElementById("exam-title").value = "Synthetic feedback workflow";
+    selectAnalysisType("fb");
+  });
+  await page.waitForTimeout(450);
+  const feedbackConfigure = await page.evaluate(() => ({
+    step: G_WIZARD_STEP,
+    feedbackCard: getComputedStyle(document.getElementById("fb-config-card")).display,
+    mcqCard: getComputedStyle(document.getElementById("mcq-config-card")).display,
+    questionCountInConfigure: !!document.querySelector("#fb-config-card #fb-max-q"),
+    nextLabel: document.getElementById("configure-next-label").textContent,
+  }));
+  assert.equal(feedbackConfigure.step, 3, "feedback-only analysis must visit Configure before Upload");
+  assert.notEqual(feedbackConfigure.feedbackCard, "none");
+  assert.equal(feedbackConfigure.mcqCard, "none");
+  assert.equal(feedbackConfigure.questionCountInConfigure, true);
+  assert.match(feedbackConfigure.nextLabel, /feedback export/i);
+  await page.evaluate(() => wizardGoTo(4));
+  await page.waitForTimeout(450);
+  const feedbackUpload = await page.evaluate(() => ({
+    step: G_WIZARD_STEP,
+    uploadVisible: getComputedStyle(document.getElementById("setup-tab-fb")).display,
+    questionCountInUpload: !!document.querySelector("#setup-tab-fb #fb-max-q"),
+    heading: document.querySelector("#setup-tab-fb .section-hdr-title")?.textContent,
+  }));
+  assert.equal(feedbackUpload.step, 4);
+  assert.notEqual(feedbackUpload.uploadVisible, "none");
+  assert.equal(feedbackUpload.questionCountInUpload, false, "question count belongs in Configure, not the upload screen");
+  assert.equal(feedbackUpload.heading, "Feedback Data");
+  await page.evaluate(() => wizardBackTo(3));
+  await page.waitForTimeout(450);
+  assert.equal(await page.evaluate(() => G_WIZARD_STEP), 3, "feedback-only Back must return to Configure");
+
+  const feedbackOnlyRooms = await page.evaluate(() => {
+    ExamSession.hasFeedback = true;
+    ExamSession.hasMcq = false;
+    const targets = {
+      mcq: "#main-section-analysis",
+      dif: "#main-section-analysis",
+      distractor: "#room-distractor",
+      exceptions: "#room-exceptions",
+      nearthreshold: "#room-nearthreshold",
+      queue: "#main-section-review",
+    };
+    const states = {};
+    Object.entries(targets).forEach(([room, selector]) => {
+      switchRoom(room);
+      const container = document.querySelector(selector);
+      states[room] = {
+        title: container.querySelector(".feedback-only-room-state:not([hidden]) .room-empty-title, #da-content .room-empty-title, #nt-content .room-empty-title")?.textContent.trim(),
+        body: container.querySelector(".feedback-only-room-state:not([hidden]) .room-empty-sub, #da-content .room-empty-sub, #nt-content .room-empty-sub")?.textContent.trim(),
+      };
+    });
+    switchRoom("reports");
+    states.reports = { feedbackOnlyState: !!document.querySelector("#main-section-reports .feedback-only-room-state:not([hidden])") };
+    return states;
+  });
+  for (const room of ["mcq", "dif", "distractor", "exceptions", "nearthreshold", "queue"]) {
+    assert.equal(feedbackOnlyRooms[room].title, "Not used in feedback-only analysis", `${room} needs the shared feedback-only state`);
+    assert.match(feedbackOnlyRooms[room].body, /MCQ/i, `${room} needs to explain its MCQ dependency`);
+  }
+  assert.equal(feedbackOnlyRooms.reports.feedbackOnlyState, false, "feedback Reports must remain available");
+
   await page.evaluate(() => loadDemonstrationSession(true));
   await page.waitForFunction(() => G._lastN === 40 && G.mcq?.length === 12);
   await page.evaluate(() => applyAppearance("dark"));
@@ -207,6 +275,34 @@ try {
   assert.doesNotMatch(darkMode.profileBadge, /rgba?\(232, 245, 233/, "modal badges must follow Dark Mode");
   assert.doesNotMatch(darkMode.sessionPill, /rgba?\(255, 255, 255/, "session pills must follow Dark Mode");
   assert.notEqual(darkMode.modalHeader, darkMode.modalShell, "modal headers need a distinct brand-colour surface");
+  const feedbackDarkMode = await page.evaluate(() => {
+    const saved = FB;
+    FB = {
+      raw: [], grouped: {}, bareRefs: {}, general: [], ready: true,
+      parsed: [
+        { text: "Synthetic pending comment", qNums: [], status: "pending", rawIdx: 0, _staged: [12] },
+        { text: "Synthetic resolved comment", qNums: [4], mappedQs: [4], status: "mapped", rawIdx: 1 }
+      ],
+      pending: [0, 1]
+    };
+    renderMappingScreen();
+    const style = selector => {
+      const el = document.querySelector(selector);
+      const css = el ? getComputedStyle(el) : null;
+      return css ? { background: css.backgroundColor, color: css.color } : null;
+    };
+    const result = {
+      input: style(".fb-map-input"),
+      staged: style('[style*="background:#e8f0fd"]'),
+      resolved: style(".fb-map-row.resolved"),
+    };
+    FB = saved;
+    return result;
+  });
+  assert.ok(feedbackDarkMode.input && feedbackDarkMode.staged && feedbackDarkMode.resolved, "feedback mapping Dark Mode fixtures must render");
+  assert.doesNotMatch(feedbackDarkMode.input.background, /rgba?\(255, 255, 255/, "manual assignment inputs must not retain a light fill");
+  assert.doesNotMatch(feedbackDarkMode.staged.background, /rgb\(232, 240, 253\)/, "staged question badges must use a Dark Mode surface");
+  assert.doesNotMatch(feedbackDarkMode.resolved.background, /rgb\(240, 253, 244\)/, "resolved feedback rows must use a Dark Mode surface");
   await page.evaluate(() => switchRoom("reports"));
   const previewTrigger = page.locator("#rp-card-mcq button, #rp-card-mcq").first();
   await previewTrigger.focus();
