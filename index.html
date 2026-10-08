@@ -3522,6 +3522,7 @@ function captureNewChartHiRes() {
 var G = { students:[], key:[], nQ:0, qLabels:[], qStatus:[], mcq:[], dif:[], exclusions:{}, _initial:null,
   _sourceFiles:{}, _auditEvents:[], _reviewedAt:{}, _isDemo:false,
   _uploadValidation:{resultsBlockers:[],resultsWarnings:[],keyBlockers:[],keyWarnings:[]},
+  _scantronValidation:{blockers:[],warnings:[]},
   _reconciliation:{resultsDetected:0,disclosureExcluded:0,resultsUnscored:[],keyDetected:0,keyUnscored:0} };
 // Also reset exception view on every G reset
 G_EXCL_VIEW = 'clean';
@@ -3684,6 +3685,7 @@ document.getElementById('fi-main').addEventListener('change', function(e) {
     G._reconciliationConfirmation=null;
     G.students=[]; G.nQ=0; G.qLabels=[]; G.qStatus=[]; G.elentraIds=[]; G._qmResultsMeta=null;
     qmResetUploadValidation('results');
+    scantronResetUploadValidation();
     checkRunReady();
     readFile(e.target.files[0], function(err, rows, text, isCsv) {
     if (err) { showFeedback('feedback-main','err',[err]); return; }
@@ -3828,6 +3830,20 @@ function qmUploadWarnings() {
   var v=qmEnsureUploadValidation();
   return v.resultsWarnings.concat(v.keyWarnings);
 }
+function scantronEnsureUploadValidation() {
+  if (!G._scantronValidation) G._scantronValidation={blockers:[],warnings:[]};
+  return G._scantronValidation;
+}
+function scantronResetUploadValidation() {
+  G._scantronValidation={blockers:[],warnings:[]};
+}
+function scantronAddUploadIssue(severity, message) {
+  var v=scantronEnsureUploadValidation();
+  var list=severity==='blocker'?v.blockers:v.warnings;
+  if (list.indexOf(message)<0) list.push(message);
+}
+function scantronUploadBlockers() { return scantronEnsureUploadValidation().blockers.slice(); }
+function scantronUploadWarnings() { return scantronEnsureUploadValidation().warnings.slice(); }
 function qmCleanItemWording(value) {
   return String(value||'')
     .replace(/<[^>]*>/g,' ')
@@ -4469,6 +4485,7 @@ function parseKey(text, xlsxRows, isCsv) {
 // Blank or * = unanswered = score 0
 // ══════════════════════════════════════════════════════════════════════════
 function parseScantronResults(text) {
+  scantronResetUploadValidation();
   if (!text || !text.trim()) {
     showFeedback('feedback-main','err',[
       'The Scantron file appears to be empty.',
@@ -4499,6 +4516,9 @@ function parseScantronResults(text) {
 
   // Row 0 = MASTER key — answers start at col 4, stop at last non-empty
   var masterRow  = dataRows[0];
+  if (!masterRow.slice(0,4).some(function(value){ return /^master$/i.test(String(value||'').trim()); })) {
+    scantronAddUploadIssue('blocker','The first data row is not identified as the MASTER answer-key row.');
+  }
   var keyRaw     = masterRow.slice(4);
   // Trim trailing empty columns — Scantron pads to fixed width
   while (keyRaw.length > 0 && !keyRaw[keyRaw.length-1].replace(/\*/g,'').trim()) {
@@ -4513,19 +4533,36 @@ function parseScantronResults(text) {
       'Check that the file is the correct Scantron export.'
     ],''); return;
   }
+  var invalidKeyQuestions=[];
+  keyRaw.forEach(function(value, idx){
+    if (!numToLetter(String(value||'').replace(/\*/g,'').trim())) invalidKeyQuestions.push(idx+1);
+  });
+  if (invalidKeyQuestions.length) {
+    scantronAddUploadIssue('blocker','Missing or unsupported MASTER answer-key value at question'+(invalidKeyQuestions.length===1?' ':'s ')+invalidKeyQuestions.join(', ')+'. Expected values 1–5.');
+  }
 
   var enCode = ((document.getElementById('scantron-en-code')||{value:''}).value || '').trim();
   var frCode = ((document.getElementById('scantron-fr-code')||{value:''}).value || '').trim();
   var students  = [];
   var unmatched = [];
+  var shortRows=[];
+  var excessResponseRows=[];
+  var blankIdRows=[];
+  var invalidResponseRows=[];
 
   for (var r = 1; r < dataRows.length; r++) {
     var row     = dataRows[r];
-    if (row.length < 5) continue;
+    if (row.length < 5) {
+      shortRows.push(r+1);
+      continue;
+    }
     var courseCode = row[0];
     var studentId  = row[1];
     var name       = row[2];
     var answers    = row.slice(4, 4 + nQ);
+    if (!studentId) blankIdRows.push(r+1);
+    if (row.length < 4+nQ) shortRows.push(r+1);
+    if (row.slice(4+nQ).some(function(value){return String(value||'').replace(/\*/g,'').trim()!=='';})) excessResponseRows.push(r+1);
 
     var itemScores  = [];
     var itemAnswers = []; // raw letter answers for distractor analysis
@@ -4536,6 +4573,7 @@ function parseScantronResults(text) {
         itemAnswers.push('');
       } else {
         var letter = numToLetter(raw);
+        if (!letter) invalidResponseRows.push('row '+(r+1)+', Q'+(q+1));
         itemScores.push(letter === keyLetters[q] ? 1 : 0);
         itemAnswers.push(letter.toLowerCase());
       }
@@ -4554,6 +4592,17 @@ function parseScantronResults(text) {
       'Check that the file format is correct.'
     ],''); return;
   }
+  var idCounts={};
+  students.forEach(function(student){
+    var id=String(student.id||'').trim();
+    if (id) idCounts[id]=(idCounts[id]||0)+1;
+  });
+  var duplicateIds=Object.keys(idCounts).filter(function(id){return idCounts[id]>1;});
+  if (blankIdRows.length) scantronAddUploadIssue('blocker','Blank student ID found on row'+(blankIdRows.length===1?' ':'s ')+blankIdRows.join(', ')+'.');
+  if (duplicateIds.length) scantronAddUploadIssue('blocker','Duplicate student ID'+(duplicateIds.length===1?' ':'s ')+duplicateIds.slice(0,10).join(', ')+(duplicateIds.length>10?'…':'')+'.');
+  if (shortRows.length) scantronAddUploadIssue('blocker','Student row'+(shortRows.length===1?' ':'s ')+shortRows.join(', ')+' did not contain all '+nQ+' response columns.');
+  if (excessResponseRows.length) scantronAddUploadIssue('blocker','Student row'+(excessResponseRows.length===1?' ':'s ')+excessResponseRows.join(', ')+' contained responses beyond the end of the MASTER answer key. Check for a blank trailing key value.');
+  if (invalidResponseRows.length) scantronAddUploadIssue('blocker','Unsupported response value found at '+invalidResponseRows.slice(0,10).join('; ')+(invalidResponseRows.length>10?'…':'')+'. Expected values 1–5 or blank.');
 
   // Store into G — same structure as QM path
   G.key      = keyLetters.map(function(l){ return l.toLowerCase(); });
@@ -4720,12 +4769,12 @@ function analysisReconciliationSnapshot(source) {
     });
   }
 
-  var validation=source==='qm'?qmEnsureUploadValidation():null;
-  var blockers=validation?validation.resultsBlockers.concat(validation.keyBlockers):[];
-  var warnings=validation?validation.resultsWarnings.concat(validation.keyWarnings):[];
+  var validation=source==='qm'?qmEnsureUploadValidation():source==='scantron'?scantronEnsureUploadValidation():null;
+  var blockers=source==='scantron'&&validation?validation.blockers.slice():validation?validation.resultsBlockers.concat(validation.keyBlockers):[];
+  var warnings=source==='scantron'&&validation?validation.warnings.slice():validation?validation.resultsWarnings.concat(validation.keyWarnings):[];
   var excludedUnscored=Math.max((rec.resultsUnscored||[]).length,rec.keyUnscored||0);
   var detected=rec.resultsDetected||((G.nQ||0)+(rec.disclosureExcluded||0)+excludedUnscored);
-  var crossFileBlocked=validation&&(
+  var crossFileBlocked=source==='qm'&&validation&&(
     validation.keyBlockers.length>0||
     validation.resultsBlockers.some(function(message){return /between (?:the )?results(?: file)? and (?:the )?(?:answer )?key|differs between results and key/i.test(message);})
   );
@@ -5522,6 +5571,7 @@ function renderScantronPreview(students, keyLetters, nQ, badRows) {
       'ℹ This preview reflects the raw file only — Question Exceptions and alternate keys have not been applied yet.' +
     '</div>' +
     renderAnalysisReconciliation('scantron') +
+    (scantronUploadBlockers().length?'<div id="scantron-validation-blockers" role="alert" style="padding:10px 14px;background:#fff0f0;border-bottom:0.5px solid #f0c0c0;color:#7a1010;font-size:11px"><strong>Analysis blocked until corrected:</strong><ul style="margin:5px 0 0 18px;padding:0">'+scantronUploadBlockers().map(function(message){return '<li>'+escHtml(message)+'</li>';}).join('')+'</ul></div>':'')+
     // KPI row
     '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-bottom:0.5px solid var(--c-border)">' +
       _previewKPI('Students', students.length, 'rows detected') +
@@ -5560,8 +5610,8 @@ function renderScantronPreview(students, keyLetters, nQ, badRows) {
         '<button onclick="revalidateScantron()" ' +
           'style="font-size:12px;font-weight:500;padding:5px 14px;border-radius:6px;border:0.5px solid var(--c-border);background:#fff;color:var(--c-secondary);cursor:pointer">Re-validate</button>' +
         '<button id="sc-return-upload" onclick="returnToUploadFiles(\'scantron\')" style="font-size:12px;font-weight:500;padding:5px 14px;border-radius:6px;border:0.5px solid var(--c-border);background:#fff;color:var(--c-secondary);cursor:pointer">Return to upload</button>' +
-        '<button id="sc-confirm-data" onclick="confirmParsePreview(\'scantron\')" ' +
-          'style="font-size:12px;font-weight:700;padding:6px 16px;border-radius:6px;border:none;background:var(--s-ok);color:#fff;cursor:pointer">✓ Confirm and continue</button>' +
+        '<button id="sc-confirm-data" onclick="confirmParsePreview(\'scantron\')" '+(scantronUploadBlockers().length?'disabled aria-disabled="true"':'')+' ' +
+          'style="font-size:12px;font-weight:700;padding:6px 16px;border-radius:6px;border:none;background:var(--s-ok);color:#fff;cursor:'+(scantronUploadBlockers().length?'not-allowed':'pointer')+';opacity:'+(scantronUploadBlockers().length?'.4':'1')+'">✓ Confirm and continue</button>' +
       '</div>' +
     '</div>' +
     '</div>';
@@ -5574,9 +5624,14 @@ function renderScantronPreview(students, keyLetters, nQ, badRows) {
 
 // ── Parse preview confirmation helpers ───────────────────────────────────────
 function confirmParsePreview(source) {
-  if (source==='qm' && (qmUploadBlockers().length||!analysisReconciliationSnapshot('qm').keyMatched)) {
+  var sourceBlocked = source==='qm'
+    ? (qmUploadBlockers().length||!analysisReconciliationSnapshot('qm').keyMatched)
+    : source==='scantron'
+      ? (scantronUploadBlockers().length||!analysisReconciliationSnapshot('scantron').keyMatched)
+      : false;
+  if (sourceBlocked) {
     G_MCQ_CONFIRMED=false;
-    updateQMPreview();
+    if (source==='qm') updateQMPreview(); else revalidateScantron();
     checkRunReady();
     srAnnounce('Data cannot be confirmed until the upload errors are corrected.');
     return false;
@@ -5789,6 +5844,10 @@ function _runAnalysis() {
   if (!students||!students.length||!key.length) { alert('Analysis cannot run yet.\n\nWhat happened: One or more required files are not loaded.\nWhat to do: Upload both the results file and the answer key, then try again.'); return; }
   if (G_SOURCE==='qm' && qmUploadBlockers().length) {
     alert('Analysis cannot run because the uploaded files failed validation.\n\nCorrect the issues shown in Upload validation, re-upload the affected file, and confirm the data again.');
+    return;
+  }
+  if (G_SOURCE==='scantron' && scantronUploadBlockers().length) {
+    alert('Analysis cannot run because the Scantron file failed validation.\n\nCorrect the issues shown in Upload validation, re-upload the file, and confirm the data again.');
     return;
   }
   if (G_SOURCE==='qm' && key.length!==nQ) {
@@ -10069,8 +10128,8 @@ function checkRunReady() {
   var isCombined = (typeof G_ANALYSIS_TYPE !== 'undefined' && G_ANALYSIS_TYPE === 'both');
   var hasAnalysisRun = !!(G.mcq && G.mcq.length > 0);
 
-  var uploadValid = isScantron || qmUploadBlockers().length===0;
-  var mcqDataPresent = isScantron ? (G.nQ > 0 && G.students && G.students.length > 0) : (G.nQ > 0 && G.students && G.students.length > 0 && G.key.length > 0 && uploadValid);
+  var uploadValid = isScantron ? scantronUploadBlockers().length===0 : qmUploadBlockers().length===0;
+  var mcqDataPresent = G.nQ > 0 && G.students && G.students.length > 0 && G.key.length > 0 && uploadValid;
   var mcqReady = mcqDataPresent && (G_MCQ_CONFIRMED || hasAnalysisRun);
 
   var fbValidated = !isCombined
@@ -13885,9 +13944,44 @@ function findFeedbackWorkbookLayout(wb) {
   return best;
 }
 
+function resetFeedbackUploadState() {
+  FB.raw=[];
+  FB.parsed=[];
+  FB.pending=[];
+  FB.grouped={};
+  FB.bareRefs={};
+  FB.general=[];
+  FB.ready=false;
+  FB.maxQUsed=null;
+  FB.maxQSource=null;
+  [
+    ['fb-upload-zone','fb-upload-label','fb-upload-hint','fb-upload-valid','Drop file here or click to browse','QuestionMark feedback export (.xlsx) — one row per student','+ Add'],
+    ['combined-fb-upload-zone','combined-fb-upload-label',null,'combined-fb-upload-pill','Drop file here or click to browse',null,'+ Add']
+  ].forEach(function(ids){
+    var zone=document.getElementById(ids[0]);
+    var label=document.getElementById(ids[1]);
+    var hint=ids[2]?document.getElementById(ids[2]):null;
+    var pill=document.getElementById(ids[3]);
+    if(zone) zone.classList.remove('ur-loaded');
+    if(label) label.textContent=ids[4];
+    if(hint&&ids[5]) hint.textContent=ids[5];
+    if(pill) { pill.textContent=ids[6]; pill.style.borderStyle=''; pill.style.borderColor=''; pill.style.color=''; pill.style.background=''; }
+  });
+  var info=document.getElementById('fb-parse-info');
+  var combinedInfo=document.getElementById('combined-fb-parse-info');
+  if(info) { info.style.display='none'; info.innerHTML=''; }
+  if(combinedInfo) { combinedInfo.style.display='none'; combinedInfo.innerHTML=''; }
+  var btn=document.getElementById('btn-fb-run');
+  if(btn) { btn.disabled=true; btn.style.opacity=''; btn.style.cursor=''; }
+  fbCheckQCountStale();
+  renderFbPreflightPanel();
+  checkRunReady();
+}
+
 function handleFeedbackUpload(input) {
   var file = input.files[0];
   if (!file) return;
+  resetFeedbackUploadState();
   captureSourceFileMetadata('feedback', file);
   var reader = new FileReader();
   reader.onload = function(e) {
@@ -13906,13 +14000,14 @@ function handleFeedbackUpload(input) {
         if (['any status','filter','status',''].indexOf(val.toLowerCase()) !== -1) continue;
         if (val.length > 0) rawComments.push(val);
       }
+      var total = rawComments.filter(function(comment){ return comment && comment.trim().length >= 3; }).length;
+      if (total === 0) throw new Error('No substantive feedback comments were found in the detected comment column.');
       FB.raw = rawComments;
       fbMaxQSnapshot();
       fbCheckQCountStale();
       FB.parsed = parseComments(rawComments);
       FB.ready = false;
       // Use filtered count — substantive comments only (length >= 3)
-      var total = rawComments.filter(function(r){ return r && r.trim().length >= 3; }).length;
       var autoCount = FB.parsed.filter(function(p){ return p.status === 'auto'; }).length;
       var pendCount = FB.parsed.filter(function(p){ return p.status === 'pending'; }).length;
       // Update upload zone UI
@@ -13946,6 +14041,9 @@ function handleFeedbackUpload(input) {
     } catch(err) {
       alert('Could not read the feedback file.\n\nWhat happened: ' + err.message + '\n\nWhat to do: Make sure the file is a QuestionMark feedback export (.xlsx) and has not been modified. Re-export from QuestionMark and try again.');
     }
+  };
+  reader.onerror = function() {
+    alert('Could not read the feedback file.\n\nWhat happened: The browser could not read the selected file.\n\nWhat to do: Select the original QuestionMark feedback export and try again.');
   };
   reader.readAsArrayBuffer(file);
 }
