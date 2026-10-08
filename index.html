@@ -618,6 +618,21 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 :root[data-appearance="dark"] #section-feedback [style*="background:#e8f4fd"]{background:var(--s-easy-bg)!important;color:var(--s-easy-text)!important}
 :root[data-appearance="dark"] #section-feedback [style*="background:#f3f4f6"]{background:var(--c-surface)!important;color:var(--c-secondary)!important}
 
+/* Unmapped Comments uses the same fixed control rhythm as Feedback Review. */
+.fb-map-main,.fb-map-columns{display:grid!important;grid-template-columns:minmax(0,1fr) 322px;gap:12px!important;align-items:center!important}
+.fb-map-controls{display:grid;grid-template-columns:164px 28px 60px 58px;gap:4px;align-items:center}
+.fb-map-control-head{display:grid;grid-template-columns:196px 122px;gap:4px;text-align:center}
+.fb-map-resolved-controls{display:grid;grid-template-columns:260px 58px;gap:4px;align-items:center}
+.fb-map-main .fb-map-comment{min-width:0}
+.fb-map-main .fb-map-input{width:100%;box-sizing:border-box}
+.fb-map-row.resolved-mapped{background:var(--s-ok-bg)}
+.fb-map-row.resolved-general{background:var(--c-fb-bg)}
+.fb-map-row.resolved-discard{background:var(--s-hard-bg)}
+:root[data-appearance="dark"] #section-feedback .fb-map-row.resolved-mapped{background:var(--s-ok-bg)!important}
+:root[data-appearance="dark"] #section-feedback .fb-map-row.resolved-general{background:var(--c-fb-bg)!important}
+:root[data-appearance="dark"] #section-feedback .fb-map-row.resolved-discard{background:var(--s-hard-bg)!important}
+@media(max-width:900px){.fb-map-main,.fb-map-columns{grid-template-columns:1fr}.fb-map-columns>span:first-child{display:none}.fb-map-control-head,.fb-map-controls,.fb-map-resolved-controls{justify-self:start}}
+
 /* Dark-mode completion pass: shared chrome, state chips, and modal content. */
 .app-version-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(0,0,0,.08);box-shadow:0 1px 3px rgba(0,0,0,.05);border-radius:20px;padding:4px 12px 4px 8px;transition:background .15s,border-color .15s}
 .session-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
@@ -3522,6 +3537,7 @@ function captureNewChartHiRes() {
 var G = { students:[], key:[], nQ:0, qLabels:[], qStatus:[], mcq:[], dif:[], exclusions:{}, _initial:null,
   _sourceFiles:{}, _auditEvents:[], _reviewedAt:{}, _isDemo:false,
   _uploadValidation:{resultsBlockers:[],resultsWarnings:[],keyBlockers:[],keyWarnings:[]},
+  _scantronValidation:{blockers:[],warnings:[]},
   _reconciliation:{resultsDetected:0,disclosureExcluded:0,resultsUnscored:[],keyDetected:0,keyUnscored:0} };
 // Also reset exception view on every G reset
 G_EXCL_VIEW = 'clean';
@@ -3684,6 +3700,7 @@ document.getElementById('fi-main').addEventListener('change', function(e) {
     G._reconciliationConfirmation=null;
     G.students=[]; G.nQ=0; G.qLabels=[]; G.qStatus=[]; G.elentraIds=[]; G._qmResultsMeta=null;
     qmResetUploadValidation('results');
+    scantronResetUploadValidation();
     checkRunReady();
     readFile(e.target.files[0], function(err, rows, text, isCsv) {
     if (err) { showFeedback('feedback-main','err',[err]); return; }
@@ -3828,6 +3845,20 @@ function qmUploadWarnings() {
   var v=qmEnsureUploadValidation();
   return v.resultsWarnings.concat(v.keyWarnings);
 }
+function scantronEnsureUploadValidation() {
+  if (!G._scantronValidation) G._scantronValidation={blockers:[],warnings:[]};
+  return G._scantronValidation;
+}
+function scantronResetUploadValidation() {
+  G._scantronValidation={blockers:[],warnings:[]};
+}
+function scantronAddUploadIssue(severity, message) {
+  var v=scantronEnsureUploadValidation();
+  var list=severity==='blocker'?v.blockers:v.warnings;
+  if (list.indexOf(message)<0) list.push(message);
+}
+function scantronUploadBlockers() { return scantronEnsureUploadValidation().blockers.slice(); }
+function scantronUploadWarnings() { return scantronEnsureUploadValidation().warnings.slice(); }
 function qmCleanItemWording(value) {
   return String(value||'')
     .replace(/<[^>]*>/g,' ')
@@ -4469,6 +4500,7 @@ function parseKey(text, xlsxRows, isCsv) {
 // Blank or * = unanswered = score 0
 // ══════════════════════════════════════════════════════════════════════════
 function parseScantronResults(text) {
+  scantronResetUploadValidation();
   if (!text || !text.trim()) {
     showFeedback('feedback-main','err',[
       'The Scantron file appears to be empty.',
@@ -4499,6 +4531,9 @@ function parseScantronResults(text) {
 
   // Row 0 = MASTER key — answers start at col 4, stop at last non-empty
   var masterRow  = dataRows[0];
+  if (!masterRow.slice(0,4).some(function(value){ return /^master$/i.test(String(value||'').trim()); })) {
+    scantronAddUploadIssue('blocker','The first data row is not identified as the MASTER answer-key row.');
+  }
   var keyRaw     = masterRow.slice(4);
   // Trim trailing empty columns — Scantron pads to fixed width
   while (keyRaw.length > 0 && !keyRaw[keyRaw.length-1].replace(/\*/g,'').trim()) {
@@ -4513,19 +4548,36 @@ function parseScantronResults(text) {
       'Check that the file is the correct Scantron export.'
     ],''); return;
   }
+  var invalidKeyQuestions=[];
+  keyRaw.forEach(function(value, idx){
+    if (!numToLetter(String(value||'').replace(/\*/g,'').trim())) invalidKeyQuestions.push(idx+1);
+  });
+  if (invalidKeyQuestions.length) {
+    scantronAddUploadIssue('blocker','Missing or unsupported MASTER answer-key value at question'+(invalidKeyQuestions.length===1?' ':'s ')+invalidKeyQuestions.join(', ')+'. Expected values 1–5.');
+  }
 
   var enCode = ((document.getElementById('scantron-en-code')||{value:''}).value || '').trim();
   var frCode = ((document.getElementById('scantron-fr-code')||{value:''}).value || '').trim();
   var students  = [];
   var unmatched = [];
+  var shortRows=[];
+  var excessResponseRows=[];
+  var blankIdRows=[];
+  var invalidResponseRows=[];
 
   for (var r = 1; r < dataRows.length; r++) {
     var row     = dataRows[r];
-    if (row.length < 5) continue;
+    if (row.length < 5) {
+      shortRows.push(r+1);
+      continue;
+    }
     var courseCode = row[0];
     var studentId  = row[1];
     var name       = row[2];
     var answers    = row.slice(4, 4 + nQ);
+    if (!studentId) blankIdRows.push(r+1);
+    if (row.length < 4+nQ) shortRows.push(r+1);
+    if (row.slice(4+nQ).some(function(value){return String(value||'').replace(/\*/g,'').trim()!=='';})) excessResponseRows.push(r+1);
 
     var itemScores  = [];
     var itemAnswers = []; // raw letter answers for distractor analysis
@@ -4536,6 +4588,7 @@ function parseScantronResults(text) {
         itemAnswers.push('');
       } else {
         var letter = numToLetter(raw);
+        if (!letter) invalidResponseRows.push('row '+(r+1)+', Q'+(q+1));
         itemScores.push(letter === keyLetters[q] ? 1 : 0);
         itemAnswers.push(letter.toLowerCase());
       }
@@ -4554,6 +4607,17 @@ function parseScantronResults(text) {
       'Check that the file format is correct.'
     ],''); return;
   }
+  var idCounts={};
+  students.forEach(function(student){
+    var id=String(student.id||'').trim();
+    if (id) idCounts[id]=(idCounts[id]||0)+1;
+  });
+  var duplicateIds=Object.keys(idCounts).filter(function(id){return idCounts[id]>1;});
+  if (blankIdRows.length) scantronAddUploadIssue('blocker','Blank student ID found on row'+(blankIdRows.length===1?' ':'s ')+blankIdRows.join(', ')+'.');
+  if (duplicateIds.length) scantronAddUploadIssue('blocker','Duplicate student ID'+(duplicateIds.length===1?' ':'s ')+duplicateIds.slice(0,10).join(', ')+(duplicateIds.length>10?'…':'')+'.');
+  if (shortRows.length) scantronAddUploadIssue('blocker','Student row'+(shortRows.length===1?' ':'s ')+shortRows.join(', ')+' did not contain all '+nQ+' response columns.');
+  if (excessResponseRows.length) scantronAddUploadIssue('blocker','Student row'+(excessResponseRows.length===1?' ':'s ')+excessResponseRows.join(', ')+' contained responses beyond the end of the MASTER answer key. Check for a blank trailing key value.');
+  if (invalidResponseRows.length) scantronAddUploadIssue('blocker','Unsupported response value found at '+invalidResponseRows.slice(0,10).join('; ')+(invalidResponseRows.length>10?'…':'')+'. Expected values 1–5 or blank.');
 
   // Store into G — same structure as QM path
   G.key      = keyLetters.map(function(l){ return l.toLowerCase(); });
@@ -4720,12 +4784,12 @@ function analysisReconciliationSnapshot(source) {
     });
   }
 
-  var validation=source==='qm'?qmEnsureUploadValidation():null;
-  var blockers=validation?validation.resultsBlockers.concat(validation.keyBlockers):[];
-  var warnings=validation?validation.resultsWarnings.concat(validation.keyWarnings):[];
+  var validation=source==='qm'?qmEnsureUploadValidation():source==='scantron'?scantronEnsureUploadValidation():null;
+  var blockers=source==='scantron'&&validation?validation.blockers.slice():validation?validation.resultsBlockers.concat(validation.keyBlockers):[];
+  var warnings=source==='scantron'&&validation?validation.warnings.slice():validation?validation.resultsWarnings.concat(validation.keyWarnings):[];
   var excludedUnscored=Math.max((rec.resultsUnscored||[]).length,rec.keyUnscored||0);
   var detected=rec.resultsDetected||((G.nQ||0)+(rec.disclosureExcluded||0)+excludedUnscored);
-  var crossFileBlocked=validation&&(
+  var crossFileBlocked=source==='qm'&&validation&&(
     validation.keyBlockers.length>0||
     validation.resultsBlockers.some(function(message){return /between (?:the )?results(?: file)? and (?:the )?(?:answer )?key|differs between results and key/i.test(message);})
   );
@@ -5522,6 +5586,7 @@ function renderScantronPreview(students, keyLetters, nQ, badRows) {
       'ℹ This preview reflects the raw file only — Question Exceptions and alternate keys have not been applied yet.' +
     '</div>' +
     renderAnalysisReconciliation('scantron') +
+    (scantronUploadBlockers().length?'<div id="scantron-validation-blockers" role="alert" style="padding:10px 14px;background:#fff0f0;border-bottom:0.5px solid #f0c0c0;color:#7a1010;font-size:11px"><strong>Analysis blocked until corrected:</strong><ul style="margin:5px 0 0 18px;padding:0">'+scantronUploadBlockers().map(function(message){return '<li>'+escHtml(message)+'</li>';}).join('')+'</ul></div>':'')+
     // KPI row
     '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-bottom:0.5px solid var(--c-border)">' +
       _previewKPI('Students', students.length, 'rows detected') +
@@ -5560,8 +5625,8 @@ function renderScantronPreview(students, keyLetters, nQ, badRows) {
         '<button onclick="revalidateScantron()" ' +
           'style="font-size:12px;font-weight:500;padding:5px 14px;border-radius:6px;border:0.5px solid var(--c-border);background:#fff;color:var(--c-secondary);cursor:pointer">Re-validate</button>' +
         '<button id="sc-return-upload" onclick="returnToUploadFiles(\'scantron\')" style="font-size:12px;font-weight:500;padding:5px 14px;border-radius:6px;border:0.5px solid var(--c-border);background:#fff;color:var(--c-secondary);cursor:pointer">Return to upload</button>' +
-        '<button id="sc-confirm-data" onclick="confirmParsePreview(\'scantron\')" ' +
-          'style="font-size:12px;font-weight:700;padding:6px 16px;border-radius:6px;border:none;background:var(--s-ok);color:#fff;cursor:pointer">✓ Confirm and continue</button>' +
+        '<button id="sc-confirm-data" onclick="confirmParsePreview(\'scantron\')" '+(scantronUploadBlockers().length?'disabled aria-disabled="true"':'')+' ' +
+          'style="font-size:12px;font-weight:700;padding:6px 16px;border-radius:6px;border:none;background:var(--s-ok);color:#fff;cursor:'+(scantronUploadBlockers().length?'not-allowed':'pointer')+';opacity:'+(scantronUploadBlockers().length?'.4':'1')+'">✓ Confirm and continue</button>' +
       '</div>' +
     '</div>' +
     '</div>';
@@ -5574,9 +5639,14 @@ function renderScantronPreview(students, keyLetters, nQ, badRows) {
 
 // ── Parse preview confirmation helpers ───────────────────────────────────────
 function confirmParsePreview(source) {
-  if (source==='qm' && (qmUploadBlockers().length||!analysisReconciliationSnapshot('qm').keyMatched)) {
+  var sourceBlocked = source==='qm'
+    ? (qmUploadBlockers().length||!analysisReconciliationSnapshot('qm').keyMatched)
+    : source==='scantron'
+      ? (scantronUploadBlockers().length||!analysisReconciliationSnapshot('scantron').keyMatched)
+      : false;
+  if (sourceBlocked) {
     G_MCQ_CONFIRMED=false;
-    updateQMPreview();
+    if (source==='qm') updateQMPreview(); else revalidateScantron();
     checkRunReady();
     srAnnounce('Data cannot be confirmed until the upload errors are corrected.');
     return false;
@@ -5789,6 +5859,10 @@ function _runAnalysis() {
   if (!students||!students.length||!key.length) { alert('Analysis cannot run yet.\n\nWhat happened: One or more required files are not loaded.\nWhat to do: Upload both the results file and the answer key, then try again.'); return; }
   if (G_SOURCE==='qm' && qmUploadBlockers().length) {
     alert('Analysis cannot run because the uploaded files failed validation.\n\nCorrect the issues shown in Upload validation, re-upload the affected file, and confirm the data again.');
+    return;
+  }
+  if (G_SOURCE==='scantron' && scantronUploadBlockers().length) {
+    alert('Analysis cannot run because the Scantron file failed validation.\n\nCorrect the issues shown in Upload validation, re-upload the file, and confirm the data again.');
     return;
   }
   if (G_SOURCE==='qm' && key.length!==nQ) {
@@ -10069,8 +10143,8 @@ function checkRunReady() {
   var isCombined = (typeof G_ANALYSIS_TYPE !== 'undefined' && G_ANALYSIS_TYPE === 'both');
   var hasAnalysisRun = !!(G.mcq && G.mcq.length > 0);
 
-  var uploadValid = isScantron || qmUploadBlockers().length===0;
-  var mcqDataPresent = isScantron ? (G.nQ > 0 && G.students && G.students.length > 0) : (G.nQ > 0 && G.students && G.students.length > 0 && G.key.length > 0 && uploadValid);
+  var uploadValid = isScantron ? scantronUploadBlockers().length===0 : qmUploadBlockers().length===0;
+  var mcqDataPresent = G.nQ > 0 && G.students && G.students.length > 0 && G.key.length > 0 && uploadValid;
   var mcqReady = mcqDataPresent && (G_MCQ_CONFIRMED || hasAnalysisRun);
 
   var fbValidated = !isCombined
@@ -13823,8 +13897,37 @@ function handleFeedbackDrop(event) {
 // Locate the feedback table without assuming that it is on the first sheet or
 // that the comment text is always in column B. QuestionMark exports seen to date
 // use labels such as "Comments Ss", "Comments", or "Student comments".
-function findFeedbackWorkbookLayout(wb) {
-  var best = null;
+var FEEDBACK_FILE_MAX_BYTES = 25 * 1024 * 1024;
+var FEEDBACK_MAX_SHEETS = 25;
+var FEEDBACK_MAX_ROWS_PER_SHEET = 50000;
+var FEEDBACK_MAX_COLS_PER_SHEET = 200;
+var FEEDBACK_MAX_USED_CELLS = 2000000;
+
+function validateFeedbackWorkbookBounds(file, wb) {
+  if (file && file.size > FEEDBACK_FILE_MAX_BYTES) throw new Error('The feedback workbook is larger than the supported 25 MB limit.');
+  if (!wb || !Array.isArray(wb.SheetNames) || wb.SheetNames.length === 0) throw new Error('The workbook does not contain any worksheets.');
+  if (wb.SheetNames.length > FEEDBACK_MAX_SHEETS) throw new Error('The workbook contains '+wb.SheetNames.length+' worksheets; the supported limit is '+FEEDBACK_MAX_SHEETS+'.');
+  var totalCells=0;
+  wb.SheetNames.forEach(function(sheetName){
+    var ws=wb.Sheets[sheetName];
+    if (!ws || !ws['!ref']) return;
+    var range=XLSX.utils.decode_range(ws['!ref']);
+    var rows=range.e.r-range.s.r+1;
+    var cols=range.e.c-range.s.c+1;
+    if (rows>FEEDBACK_MAX_ROWS_PER_SHEET) throw new Error('Worksheet "'+sheetName+'" exceeds the supported '+FEEDBACK_MAX_ROWS_PER_SHEET.toLocaleString()+'-row limit.');
+    if (cols>FEEDBACK_MAX_COLS_PER_SHEET) throw new Error('Worksheet "'+sheetName+'" exceeds the supported '+FEEDBACK_MAX_COLS_PER_SHEET+'-column limit.');
+    totalCells+=rows*cols;
+  });
+  if (totalCells>FEEDBACK_MAX_USED_CELLS) throw new Error('The workbook contains too many used cells to process safely. Reduce it to the feedback export before uploading.');
+}
+
+function feedbackWorkbookLayoutCandidates(wb) {
+  var found = [];
+  function addCandidate(candidate) {
+    var existing=found.find(function(item){return item.sheetIndex===candidate.sheetIndex&&item.dataStart===candidate.dataStart&&item.commentCol===candidate.commentCol;});
+    if (!existing) found.push(candidate);
+    else if (candidate.score>existing.score || (candidate.score===existing.score&&candidate.dataCount>existing.dataCount)) Object.assign(existing,candidate);
+  }
   (wb.SheetNames || []).forEach(function(sheetName, sheetIndex) {
     var ws = wb.Sheets[sheetName];
     if (!ws) return;
@@ -13847,16 +13950,12 @@ function findFeedbackWorkbookLayout(wb) {
             if (String((rows[sr] || [])[c] || '').trim()) dataCount++;
           }
         }
-        if (score && (!best || score > best.score || (score === best.score && dataCount > best.dataCount) || (score === best.score && dataCount === best.dataCount && sheetIndex < best.sheetIndex))) {
-          best = {sheetName:sheetName, sheetIndex:sheetIndex, rows:rows, dataStart:r+1, commentCol:c, score:score, dataCount:dataCount};
-        }
+        if (score) addCandidate({sheetName:sheetName, sheetIndex:sheetIndex, rows:rows, dataStart:r+1, commentCol:c, score:score, dataCount:dataCount, headerLabel:raw});
       }
       // Compatibility fallback for older QM exports whose first header is
       // Assessment and whose adjacent column contains the comments.
       var first = String(row[0] == null ? '' : row[0]).trim().toLowerCase();
-      if (first.indexOf('assessment') !== -1 && row.length > 1 && (!best || best.score < 2)) {
-        best = {sheetName:sheetName, sheetIndex:sheetIndex, rows:rows, dataStart:r+1, commentCol:1, score:2, dataCount:0};
-      }
+      if (first.indexOf('assessment') !== -1 && row.length > 1) addCandidate({sheetName:sheetName, sheetIndex:sheetIndex, rows:rows, dataStart:r+1, commentCol:1, score:2, dataCount:0, headerLabel:String(row[1]||'')});
     }
 
     // Some QuestionMark exports contain no header row: column A repeats the
@@ -13864,7 +13963,7 @@ function findFeedbackWorkbookLayout(wb) {
     // Accept that layout only when the identifier is strongly repeated and
     // several adjacent cells contain substantive comments. Explicit headers
     // above always retain priority.
-    if (!best || best.score < 2) {
+    if (!found.some(function(candidate){return candidate.sheetIndex===sheetIndex&&candidate.score>=2;})) {
       var candidates = [];
       for (var hr = 0; hr < Math.min(rows.length, 30); hr++) {
         var idVal = String((rows[hr] || [])[0] || '').trim();
@@ -13876,25 +13975,90 @@ function findFeedbackWorkbookLayout(wb) {
         candidates.forEach(function(candidate){ idCounts[candidate.id] = (idCounts[candidate.id] || 0) + 1; });
         var dominantCount = Object.keys(idCounts).reduce(function(max, id){ return Math.max(max, idCounts[id]); }, 0);
         if (dominantCount / candidates.length >= 0.6) {
-          var headerless = {sheetName:sheetName, sheetIndex:sheetIndex, rows:rows, dataStart:0, commentCol:1, score:1, dataCount:candidates.length, headerless:true};
-          if (!best || best.score < headerless.score || (best.score === headerless.score && headerless.dataCount > best.dataCount)) best = headerless;
+          addCandidate({sheetName:sheetName, sheetIndex:sheetIndex, rows:rows, dataStart:0, commentCol:1, score:1, dataCount:candidates.length, headerless:true, headerLabel:'Headerless feedback'});
         }
       }
     }
   });
-  return best;
+  found.sort(function(a,b){return b.score-a.score || b.dataCount-a.dataCount || a.sheetIndex-b.sheetIndex || a.commentCol-b.commentCol;});
+  return found;
+}
+
+function findFeedbackWorkbookLayout(wb) {
+  return feedbackWorkbookLayoutCandidates(wb)[0] || null;
+}
+
+function feedbackColumnLabel(index) {
+  var label='';
+  for (var n=index+1;n>0;n=Math.floor((n-1)/26)) label=String.fromCharCode(65+(n-1)%26)+label;
+  return label;
+}
+
+function selectFeedbackWorkbookLayout(candidates) {
+  if (!candidates.length) return null;
+  var top=candidates[0];
+  var credible=candidates.filter(function(candidate){return candidate.score===top.score && candidate.dataCount>0;});
+  if (credible.length<2) return top;
+  var options=credible.slice(0,8).map(function(candidate,index){
+    return (index+1)+'. "'+candidate.sheetName+'", column '+feedbackColumnLabel(candidate.commentCol)+' — '+candidate.dataCount+' populated row'+(candidate.dataCount===1?'':'s');
+  });
+  var answer=window.prompt('AQP found multiple equally likely feedback columns. Enter the number of the column to use:\n\n'+options.join('\n'),'1');
+  if (answer===null) throw new Error('Feedback column selection was cancelled.');
+  var selected=parseInt(answer,10);
+  if (!Number.isInteger(selected)||selected<1||selected>options.length) throw new Error('The feedback column selection was not valid. Upload the file again and choose one of the listed options.');
+  return credible[selected-1];
+}
+
+function resetFeedbackUploadState() {
+  FB.raw=[];
+  FB.parsed=[];
+  FB.pending=[];
+  FB.grouped={};
+  FB.bareRefs={};
+  FB.general=[];
+  FB.ready=false;
+  FB.maxQUsed=null;
+  FB.maxQSource=null;
+  [
+    ['fb-upload-zone','fb-upload-label','fb-upload-hint','fb-upload-valid','Drop file here or click to browse','QuestionMark feedback export (.xlsx) — one row per student','+ Add'],
+    ['combined-fb-upload-zone','combined-fb-upload-label',null,'combined-fb-upload-pill','Drop file here or click to browse',null,'+ Add']
+  ].forEach(function(ids){
+    var zone=document.getElementById(ids[0]);
+    var label=document.getElementById(ids[1]);
+    var hint=ids[2]?document.getElementById(ids[2]):null;
+    var pill=document.getElementById(ids[3]);
+    if(zone) zone.classList.remove('ur-loaded');
+    if(label) label.textContent=ids[4];
+    if(hint&&ids[5]) hint.textContent=ids[5];
+    if(pill) { pill.textContent=ids[6]; pill.style.borderStyle=''; pill.style.borderColor=''; pill.style.color=''; pill.style.background=''; }
+  });
+  var info=document.getElementById('fb-parse-info');
+  var combinedInfo=document.getElementById('combined-fb-parse-info');
+  if(info) { info.style.display='none'; info.innerHTML=''; }
+  if(combinedInfo) { combinedInfo.style.display='none'; combinedInfo.innerHTML=''; }
+  var btn=document.getElementById('btn-fb-run');
+  if(btn) { btn.disabled=true; btn.style.opacity=''; btn.style.cursor=''; }
+  fbCheckQCountStale();
+  renderFbPreflightPanel();
+  checkRunReady();
 }
 
 function handleFeedbackUpload(input) {
   var file = input.files[0];
   if (!file) return;
+  resetFeedbackUploadState();
+  if (file.size > FEEDBACK_FILE_MAX_BYTES) {
+    alert('Could not read the feedback file.\n\nWhat happened: The feedback workbook is larger than the supported 25 MB limit.\n\nWhat to do: Export only the QuestionMark feedback results and try again.');
+    return;
+  }
   captureSourceFileMetadata('feedback', file);
   var reader = new FileReader();
   reader.onload = function(e) {
     try {
       var data = new Uint8Array(e.target.result);
       var wb   = XLSX.read(data, {type:'array'});
-      var layout = findFeedbackWorkbookLayout(wb);
+      validateFeedbackWorkbookBounds(file, wb);
+      var layout = selectFeedbackWorkbookLayout(feedbackWorkbookLayoutCandidates(wb));
       if (!layout) throw new Error('A recognizable feedback-comment column was not found.');
       var rows = layout.rows;
       var dataStart = layout.dataStart;
@@ -13906,13 +14070,14 @@ function handleFeedbackUpload(input) {
         if (['any status','filter','status',''].indexOf(val.toLowerCase()) !== -1) continue;
         if (val.length > 0) rawComments.push(val);
       }
+      var total = rawComments.filter(function(comment){ return comment && comment.trim().length >= 3; }).length;
+      if (total === 0) throw new Error('No substantive feedback comments were found in the detected comment column.');
       FB.raw = rawComments;
       fbMaxQSnapshot();
       fbCheckQCountStale();
       FB.parsed = parseComments(rawComments);
       FB.ready = false;
       // Use filtered count — substantive comments only (length >= 3)
-      var total = rawComments.filter(function(r){ return r && r.trim().length >= 3; }).length;
       var autoCount = FB.parsed.filter(function(p){ return p.status === 'auto'; }).length;
       var pendCount = FB.parsed.filter(function(p){ return p.status === 'pending'; }).length;
       // Update upload zone UI
@@ -13923,7 +14088,7 @@ function handleFeedbackUpload(input) {
       var info = document.getElementById('fb-parse-info');
       if (zone) zone.classList.add('ur-loaded');
       if (lbl)  lbl.textContent = file.name;
-      if (hint) hint.textContent = total + ' substantive comments detected';
+      if (hint) hint.textContent = total + ' substantive comments · "' + layout.sheetName + '", column ' + feedbackColumnLabel(layout.commentCol);
       if (valid) valid.textContent = '✓ Loaded';
       // Hide the green info box — pre-flight panel carries this information
       if (info) info.style.display = 'none';
@@ -13946,6 +14111,9 @@ function handleFeedbackUpload(input) {
     } catch(err) {
       alert('Could not read the feedback file.\n\nWhat happened: ' + err.message + '\n\nWhat to do: Make sure the file is a QuestionMark feedback export (.xlsx) and has not been modified. Re-export from QuestionMark and try again.');
     }
+  };
+  reader.onerror = function() {
+    alert('Could not read the feedback file.\n\nWhat happened: The browser could not read the selected file.\n\nWhat to do: Select the original QuestionMark feedback export and try again.');
   };
   reader.readAsArrayBuffer(file);
 }
@@ -14198,7 +14366,7 @@ function renderInlineResolver() {
       var statusLabel = p.status === 'general'
         ? '<span style="font-size:10px;font-weight:700;color:#0d7a7a;background:#e0f5f5;padding:2px 7px;border-radius:4px">\u2713 General</span>'
         : p.status === 'discard'
-          ? '<span style="font-size:10px;font-weight:700;color:var(--c-muted);background:var(--c-surface);padding:2px 7px;border-radius:4px">\u2713 Discarded</span>'
+          ? '<span style="font-size:10px;font-weight:700;color:var(--s-hard);background:var(--s-hard-bg);padding:2px 7px;border-radius:4px">\u2713 Discarded</span>'
           : '<span style="font-size:10px;font-weight:700;color:var(--s-ok);background:#e8f5eb;padding:2px 7px;border-radius:4px">\u2713 ' + qList + '</span>';
       rowsHtml += '<div style="min-width:90px;text-align:center">' + statusLabel + '</div>';
       rowsHtml += '<button onclick="fbInlineResetToPending(' + idx + ')" ' +
@@ -14756,32 +14924,32 @@ function renderMappingScreen() {
     html += '<div style="flex:1;background:var(--c-border);height:5px;border-radius:3px;margin:0 8px"><div style="width:' + pct + '%;height:5px;border-radius:3px;background:var(--s-easy-text);transition:width .3s"></div></div>';
     html += '<span style="font-size:11px;color:var(--s-easy-text);font-weight:700">' + pct + '%</span></div>';
     // Column headers
-    html += '<div style="display:flex;align-items:center;gap:8px;padding:7px 14px;background:#e8f0fd;border-bottom:0.5px solid var(--c-border);font-size:11px;font-weight:700;color:var(--c-secondary)">';
-    html += '<span style="flex:1">Comment</span><span style="width:64px;text-align:center">Q#</span><span style="width:150px;text-align:center">Action</span></div>';
+    html += '<div class="fb-map-columns" style="padding:7px 14px;background:#e8f0fd;border-bottom:0.5px solid var(--c-border);font-size:11px;font-weight:700;color:var(--c-secondary)">';
+    html += '<span>Comment</span><div class="fb-map-control-head"><span>Question assignment</span><span>Route</span></div></div>';
     // Rows
     FB.pending.forEach(function(idx, pos) {
       var p = FB.parsed[idx];
       var isResolved = p.status !== 'pending';
-      var rowClass = isResolved ? 'fb-map-row resolved' : 'fb-map-row';
+      var rowClass = isResolved ? 'fb-map-row resolved resolved-' + (p.status === 'mapped' ? 'mapped' : p.status) : 'fb-map-row';
       html += '<div class="' + rowClass + '" id="fb-map-row-' + idx + '" style="display:flex;flex-direction:column;align-items:stretch;padding:0">';
-      html += '<div style="display:flex;align-items:center;gap:8px;padding:9px 14px">';
+      html += '<div class="fb-map-main" style="padding:9px 14px">';
       html += '<div class="fb-map-comment">' + escHtml(p.text) + '</div>';
       if (isResolved) {
         var qList = (p.mappedQs || (p.mappedQ != null ? [p.mappedQ] : [])).map(function(n){ return 'Q' + n; }).join(', ');
         var statusLabel = p.status === 'general' ? '<span style="font-size:10px;font-weight:700;color:#0d7a7a;background:#e0f5f5;padding:2px 7px;border-radius:4px">✓ General</span>'
-          : p.status === 'discard' ? '<span style="font-size:10px;font-weight:700;color:var(--c-muted);background:var(--c-surface);padding:2px 7px;border-radius:4px">✓ Discarded</span>'
+          : p.status === 'discard' ? '<span style="font-size:10px;font-weight:700;color:var(--s-hard);background:var(--s-hard-bg);padding:2px 7px;border-radius:4px">✓ Discarded</span>'
           : '<span style="font-size:10px;font-weight:700;color:var(--s-ok);background:#e8f5eb;padding:2px 7px;border-radius:4px">✓ ' + qList + '</span>';
-        html += '<div style="width:80px;text-align:center">' + statusLabel + '</div>';
-        html += '<div style="width:150px"></div>';
+        html += '<div class="fb-map-resolved-controls"><div style="text-align:center">' + statusLabel + '</div>';
+        html += '<button class="btn-fb-disc" onclick="fbResetToPending(' + idx + ')">Change</button></div>';
       } else {
-        html += '<div style="width:128px;display:flex;justify-content:center">';
+        html += '<div class="fb-map-controls">';
+        html += '<div style="display:flex;align-items:center">';
         html += '<input class="fb-map-input" id="fb-qinput-' + idx + '" type="text" placeholder="Q# or 12, 45, 29" ' +
           'oninput="FB.parsed[' + idx + ']._typed=this.value.replace(/[^0-9,;\\s]/g,\'\')" ' +
           'onkeydown="if(event.key===\'Enter\'){event.preventDefault();fbAssignQ(' + idx + ');}" ' +
           'value="' + (FB.parsed[idx]._typed || '') + '">';
         html += '</div>';
-        html += '<div style="width:150px;display:flex;gap:4px;justify-content:center">';
-        html += '<button class="btn-fb-gen" onclick="fbStageAdd(' + idx + ')" title="Add another question to this comment" style="padding:4px 8px">+</button>';
+        html += '<button class="btn-fb-gen" onclick="fbStageAdd(' + idx + ')" title="Add another question to this comment" style="padding:4px 8px;width:28px">+</button>';
         html += '<button class="btn-fb-gen" onclick="fbSetGeneral(' + idx + ')">General</button>';
         html += '<button class="btn-fb-disc" onclick="fbDiscard(' + idx + ')">Discard</button>';
         html += '</div>';
@@ -14854,6 +15022,17 @@ function fbDiscard(idx) {
     FB.parsed[idx]._prevQNums  = (FB.parsed[idx].mappedQs || FB.parsed[idx].qNums || []).slice();
   }
   FB.parsed[idx].status = 'discard';
+  delete FB.parsed[idx]._typed;
+  delete FB.parsed[idx]._staged;
+  delete FB.parsed[idx]._addErr;
+  saveSession();
+  if (window._refreshMapScreen) window._refreshMapScreen();
+}
+
+function fbResetToPending(idx) {
+  FB.parsed[idx].status = 'pending';
+  delete FB.parsed[idx].mappedQs;
+  delete FB.parsed[idx].mappedQ;
   delete FB.parsed[idx]._typed;
   delete FB.parsed[idx]._staged;
   delete FB.parsed[idx]._addErr;

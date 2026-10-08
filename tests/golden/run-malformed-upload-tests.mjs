@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import http from "node:http";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
@@ -10,6 +11,8 @@ const goldenDir = path.join(projectRoot, "outputs", "aqp-golden-suite");
 const malformedDir = path.join(projectRoot, "outputs", "aqp-malformed-suite");
 const baseResults = path.join(goldenDir, "golden_qm_results.xlsx");
 const baseKey = path.join(goldenDir, "golden_answer_key.xlsx");
+const baseFeedback = path.join(goldenDir, "golden_feedback.xlsx");
+const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "aqp-upload-validation-"));
 
 const mime = { ".html": "text/html", ".js": "text/javascript", ".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" };
 const server = http.createServer(async (req, res) => {
@@ -273,9 +276,129 @@ try {
     await page.close();
   }
 
+  // Scantron receives the same blocking integrity gate as QuestionMark.
+  {
+    const validScantron = [
+      "E\tMASTER\tAnswer Key\t\t1\t2\t3",
+      "E\tS001\tStudent One\t\t1\t2\t3",
+      "F\tS002\tStudent Two\t\t2\t2\t3",
+    ].join("\n");
+    const cases = [
+      ["valid", validScantron, null],
+      ["missing MASTER marker", validScantron.replace("MASTER", "KEY"), /MASTER answer-key row/i],
+      ["invalid embedded key", validScantron.replace("\t1\t2\t3\n", "\t1\t6\t3\n"), /MASTER answer-key value/i],
+      ["blank trailing embedded key", validScantron.replace("\t1\t2\t3\n", "\t1\t2\t\n"), /responses beyond the end of the MASTER answer key/i],
+      ["blank student ID", validScantron.replace("\tS001\t", "\t\t"), /Blank student ID/i],
+      ["duplicate student ID", validScantron.replace("\tS002\t", "\tS001\t"), /Duplicate student ID/i],
+      ["truncated response row", validScantron.replace("\t1\t2\t3\nF", "\t1\t2\nF"), /did not contain all 3 response columns/i],
+      ["unsupported response", validScantron.replace("\t1\t2\t3\nF", "\t1\t9\t3\nF"), /Unsupported response value/i],
+    ];
+    for (const [name, text, blockerPattern] of cases) {
+      const page = await newPage();
+      const actual = await page.evaluate(scantronText => {
+        G_SOURCE = "scantron";
+        G_DIF_ENABLED = false;
+        parseScantronResults(scantronText);
+        const beforeConfirm = {
+          blockers: scantronUploadBlockers(),
+          confirmDisabled: !!document.getElementById("sc-confirm-data")?.disabled,
+          runDisabled: !!document.getElementById("btn-run")?.disabled,
+          preview: document.getElementById("scantron-preview")?.innerText || "",
+        };
+        confirmParsePreview("scantron");
+        return { ...beforeConfirm, confirmed: G_MCQ_CONFIRMED };
+      }, text);
+      if (!blockerPattern) {
+        assert.deepEqual(actual.blockers, [], name);
+        assert.equal(actual.confirmDisabled, false, name);
+        assert.equal(actual.confirmed, true, name);
+      } else {
+        assert.ok(actual.blockers.some(message => blockerPattern.test(message)), `${name}: ${actual.blockers.join(" | ")}`);
+        assert.equal(actual.confirmDisabled, true, name);
+        assert.equal(actual.runDisabled, true, name);
+        assert.equal(actual.confirmed, false, name);
+        assert.match(actual.preview, /Must fix before analysis/i, name);
+      }
+      await page.close();
+    }
+  }
+
+  // A failed feedback replacement must clear the previously valid parse, and a
+  // detected comment column with no substantive comments must not become runnable.
+  {
+    const builderPage = await newPage();
+    const emptyWorkbookBytes = await builderPage.evaluate(() => {
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.aoa_to_sheet([["Assessment", "Comments Ss"], ["Synthetic", ""], ["Synthetic", "ok"]]);
+      XLSX.utils.book_append_sheet(wb, ws, "Feedback");
+      return Array.from(new Uint8Array(XLSX.write(wb, { type: "array", bookType: "xlsx" })));
+    });
+    await builderPage.close();
+    const emptyFeedback = path.join(tempDir, "feedback_no_substantive_comments.xlsx");
+    await fs.writeFile(emptyFeedback, Buffer.from(emptyWorkbookBytes));
+
+    const page = await newPage();
+    const alerts = [];
+    page.on("dialog", async dialog => { alerts.push(dialog.message()); await dialog.dismiss(); });
+    await page.evaluate(() => { G_ANALYSIS_TYPE = "fb"; });
+    await upload(page, "#fb-file-input", baseFeedback);
+    assert.ok(await page.evaluate(() => FB.parsed.length > 0), "valid feedback fixture must establish prior parsed state");
+    await upload(page, "#fb-file-input", emptyFeedback);
+    await page.waitForTimeout(100);
+    const feedbackState = await page.evaluate(() => ({
+      raw: FB.raw.length,
+      parsed: FB.parsed.length,
+      ready: FB.ready,
+      runDisabled: document.getElementById("btn-fb-run").disabled,
+      loaded: document.getElementById("fb-upload-zone").classList.contains("ur-loaded"),
+      label: document.getElementById("fb-upload-label").textContent,
+    }));
+    assert.deepEqual(feedbackState, {
+      raw: 0, parsed: 0, ready: false, runDisabled: true, loaded: false,
+      label: "Drop file here or click to browse",
+    });
+    assert.ok(alerts.some(message => /No substantive feedback comments/i.test(message)), alerts.join(" | "));
+    await page.close();
+  }
+
+  // Ambiguous feedback layouts require an explicit choice, exact headers outrank
+  // loose "comment" matches, and excessive workbook dimensions are rejected.
+  {
+    const page = await newPage();
+    const layoutAudit = await page.evaluate(() => {
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([["Assessment", "Comments Ss"], ["A", "First comment"], ["A", "Second comment"]]), "English");
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([["Assessment", "Comments Ss"], ["A", "Premier commentaire"], ["A", "Deuxième commentaire"]]), "French");
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([["Internal comments"], ["Not student feedback"]]), "Metadata");
+      const candidates = feedbackWorkbookLayoutCandidates(wb);
+      const originalPrompt = window.prompt;
+      let promptText = "";
+      window.prompt = message => { promptText = message; return "2"; };
+      const selected = selectFeedbackWorkbookLayout(candidates);
+      window.prompt = originalPrompt;
+      let oversizeError = "";
+      const oversized = { SheetNames: ["Huge"], Sheets: { Huge: { "!ref": "A1:A50001" } } };
+      try { validateFeedbackWorkbookBounds({ size: 100 }, oversized); } catch (error) { oversizeError = error.message; }
+      return {
+        topNames: candidates.slice(0, 3).map(item => item.sheetName),
+        topScores: candidates.slice(0, 3).map(item => item.score),
+        selected: selected.sheetName,
+        promptText,
+        oversizeError,
+      };
+    });
+    assert.deepEqual(layoutAudit.topNames.slice(0, 2), ["English", "French"]);
+    assert.deepEqual(layoutAudit.topScores.slice(0, 2), [6, 6]);
+    assert.equal(layoutAudit.selected, "French");
+    assert.match(layoutAudit.promptText, /multiple equally likely feedback columns/i);
+    assert.match(layoutAudit.oversizeError, /50,000-row limit/i);
+    await page.close();
+  }
+
   assert.deepEqual(browserErrors, []);
-  console.log("PASS: 15 malformed-upload scenarios block, warn, accept, and clear stale state as designed.");
+  console.log("PASS: malformed QuestionMark, Scantron, and feedback uploads block, warn, accept, and clear stale state as designed.");
 } finally {
   if (browser) await browser.close();
   await new Promise(resolve => server.close(resolve));
+  await fs.rm(tempDir, { recursive: true, force: true });
 }
