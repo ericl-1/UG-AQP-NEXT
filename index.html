@@ -3733,20 +3733,45 @@ document.getElementById('fi-key').addEventListener('change', function(e) {
 
 // ── File reader ───────────────────────────────────────────────────────────
 function parseCSVToRows(text) {
-  var lines = text.split(/\r?\n/);
-  var rows = [];
-  for (var i = 0; i < lines.length; i++) {
-    if (!lines[i].trim()) continue;
-    var row = [], cur = '', inQ = false;
-    for (var c = 0; c < lines[i].length; c++) {
-      var ch = lines[i][c];
-      if (ch === '"') { inQ = !inQ; }
-      else if (ch === ',' && !inQ) { row.push(cur.trim()); cur = ''; }
-      else { cur += ch; }
+  text=String(text==null?'':text).replace(/^\uFEFF/,'');
+  var rows=[],row=[],field='',inQuotes=false,quoted=false,closedQuote=false,line=1;
+  function pushField(){row.push(quoted?field:field.trim());field='';quoted=false;closedQuote=false;}
+  function pushRow(){pushField();if(row.some(function(value){return String(value).trim()!=='';}))rows.push(row);row=[];}
+  for(var i=0;i<text.length;i++){
+    var ch=text[i];
+    if(inQuotes){
+      if(ch==='"'){
+        if(text[i+1]==='"'){field+='"';i++;}
+        else{inQuotes=false;closedQuote=true;}
+      }else if(ch==='\r'){
+        if(text[i+1]==='\n')i++;
+        field+='\n';line++;
+      }else if(ch==='\n'){field+='\n';line++;}
+      else field+=ch;
+      continue;
     }
-    row.push(cur.trim());
-    rows.push(row);
+    if(closedQuote){
+      if(ch===','){pushField();continue;}
+      if(ch==='\r'||ch==='\n'){
+        if(ch==='\r'&&text[i+1]==='\n')i++;
+        pushRow();line++;continue;
+      }
+      if(/\s/.test(ch))continue;
+      throw new Error('Unexpected character after a closing quote on line '+line+'.');
+    }
+    if(ch==='"'){
+      if(field.trim()!=='')throw new Error('Unexpected quote in an unquoted field on line '+line+'.');
+      field='';quoted=true;inQuotes=true;continue;
+    }
+    if(ch===','){pushField();continue;}
+    if(ch==='\r'||ch==='\n'){
+      if(ch==='\r'&&text[i+1]==='\n')i++;
+      pushRow();line++;continue;
+    }
+    field+=ch;
   }
+  if(inQuotes)throw new Error('Unclosed quoted field beginning before line '+line+'.');
+  if(field!==''||row.length>0||quoted||closedQuote)pushRow();
   return rows;
 }
 
