@@ -81,6 +81,37 @@ try {
     keyUrl: `http://127.0.0.1:${port}/outputs/aqp-golden-suite/golden_answer_key.xlsx`,
   });
 
+  const csvParity = await page.evaluate(async ({ resultsUrl, keyUrl }) => {
+    async function formats(url) {
+      const bytes = new Uint8Array(await (await fetch(url)).arrayBuffer());
+      const wb = XLSX.read(bytes, { type: "array" });
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      return {
+        workbook: XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" }),
+        csv: parseCSVToRows(XLSX.utils.sheet_to_csv(ws)),
+      };
+    }
+    const results = await formats(resultsUrl);
+    const key = await formats(keyUrl);
+    const resultSnapshot = () => JSON.stringify({
+      nQ: G.nQ,
+      students: G.students.map(student => ({ id: student.id, outcomes: student.outcomes, scores: student.qmScores })),
+    });
+    parseResults(null, results.workbook, false);
+    const workbookResults = resultSnapshot();
+    parseKey(null, key.workbook, false);
+    const workbookKey = JSON.stringify(G.key);
+    parseResults(null, results.csv, true);
+    const csvResults = resultSnapshot();
+    parseKey(null, key.csv, true);
+    const csvKey = JSON.stringify(G.key);
+    return { results: csvResults === workbookResults, key: csvKey === workbookKey };
+  }, {
+    resultsUrl: `http://127.0.0.1:${port}/outputs/aqp-golden-suite/golden_qm_results.xlsx`,
+    keyUrl: `http://127.0.0.1:${port}/outputs/aqp-golden-suite/golden_answer_key.xlsx`,
+  });
+  assert.deepEqual(csvParity, { results: true, key: true }, "CSV and workbook rows must parse identically for the golden fixtures");
+
   await page.evaluate(() => {
     runFeedbackAnalysis();
     _runAnalysis();
