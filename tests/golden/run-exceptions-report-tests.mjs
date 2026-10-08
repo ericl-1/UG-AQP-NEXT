@@ -346,15 +346,30 @@ try {
 
   const validationErrors = await page.evaluate(payload => {
     const message = value => { try { validatePortableSession(value); return ""; } catch (error) { return error.message; } };
+    const mutate = fn => { const copy = structuredClone(payload); fn(copy.session); return message(copy); };
     return {
       aggregate: message({ meta: {}, summary: {} }),
       future: message({ ...payload, schemaVersion: 999 }),
       malformed: message({ ...payload, session: { ...payload.session, G: { ...payload.session.G, key: [] } } }),
+      invalidKey: mutate(session => { session.G.key[0] = "z"; }),
+      invalidResponse: mutate(session => { session.G.students[0].outcomes[0] = "z"; }),
+      invalidScore: mutate(session => { session.G.students[0].qmScores[0] = 2; }),
+      invalidException: mutate(session => { session.G.exclusions[999] = { disposition: "delete" }; }),
+      invalidFeedbackStatus: mutate(session => { session.FB.parsed[0].status = "unknown"; }),
+      invalidFeedbackQuestion: mutate(session => { session.FB.parsed[0].qNums = [999]; }),
+      invalidReviewQuestion: mutate(session => { session.reviewState[999] = true; }),
     };
   }, backup);
   assert.match(validationErrors.aggregate, /report-only Analysis record/);
   assert.match(validationErrors.future, /newer AQP format/);
   assert.match(validationErrors.malformed, /answer key does not match/);
+  assert.match(validationErrors.invalidKey, /unsupported answer-key value/);
+  assert.match(validationErrors.invalidResponse, /unsupported answer value/);
+  assert.match(validationErrors.invalidScore, /other than 0 or 1/);
+  assert.match(validationErrors.invalidException, /invalid question exception/);
+  assert.match(validationErrors.invalidFeedbackStatus, /Feedback record 1 is invalid/);
+  assert.match(validationErrors.invalidFeedbackQuestion, /outside the session range/);
+  assert.match(validationErrors.invalidReviewQuestion, /invalid review question reference/);
 
   const workflowUi = await page.evaluate(payload => {
     const older = { ...payload, app: { ...payload.app, build: "20260927-03" } };

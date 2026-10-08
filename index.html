@@ -10485,15 +10485,39 @@ function validatePortableSession(data) {
   if (hasMcq) {
     if (g.nQ > 1000 || g.students.length > 10000) throw new Error('The backup exceeds AQP\'s supported session size.');
     if (!Array.isArray(g.key) || g.key.length !== g.nQ) throw new Error('The backup answer key does not match its question count.');
+    if (g.key.some(function(value){return !/^[a-e]$/i.test(String(value||''));})) throw new Error('The backup contains an unsupported answer-key value.');
     g.students.forEach(function(s, idx) {
       if (!s || typeof s !== 'object') throw new Error('The backup contains an invalid student response row.');
       var responses = Array.isArray(s.outcomes) ? s.outcomes : [];
       var scores = Array.isArray(s.scores) ? s.scores : [];
-      if (responses.length !== g.nQ && scores.length !== g.nQ) {
-        throw new Error('Student response row ' + (idx + 1) + ' does not match the question count.');
-      }
+      if (responses.length !== g.nQ) throw new Error('Student response row ' + (idx + 1) + ' does not match the question count.');
+      if (responses.some(function(value){return value!==''&&!/^[a-e]$/i.test(String(value));})) throw new Error('Student response row ' + (idx + 1) + ' contains an unsupported answer value.');
+      [scores,Array.isArray(s.qmScores)?s.qmScores:[]].forEach(function(values){
+        if (values.length&&values.length!==g.nQ) throw new Error('Student score row ' + (idx + 1) + ' does not match the question count.');
+        if (values.some(function(value){return value!==0&&value!==1;})) throw new Error('Student score row ' + (idx + 1) + ' contains a value other than 0 or 1.');
+      });
+    });
+    Object.keys(g.exclusions||{}).forEach(function(key){
+      var qIndex=Number(key),entry=g.exclusions[key];
+      if (!Number.isInteger(qIndex)||qIndex<0||qIndex>=g.nQ||!entry||['include','credit','delete'].indexOf(entry.disposition)<0) throw new Error('The backup contains an invalid question exception.');
+      if ((entry.altKeys||[]).some(function(value){return !/^[a-e]$/i.test(String(value));})) throw new Error('The backup contains an unsupported alternate answer key.');
     });
   }
+  if (hasFeedback) {
+    if (d.FB.parsed.length>100000) throw new Error('The backup exceeds AQP\'s supported feedback size.');
+    var ceiling=hasMcq?g.nQ:Number(d.FB.maxQUsed||d.FB.manualMaxQ||150);
+    var allowedStatuses=['auto','pending','general','mapped','discard'];
+    d.FB.parsed.forEach(function(item,idx){
+      if (!item||typeof item.text!=='string'||allowedStatuses.indexOf(item.status)<0) throw new Error('Feedback record '+(idx+1)+' is invalid.');
+      var refs=[];
+      ['qNums','mappedQs'].forEach(function(field){if(Array.isArray(item[field]))refs=refs.concat(item[field]);});
+      if (item.mappedQ!=null) refs.push(item.mappedQ);
+      if (refs.some(function(value){return !Number.isInteger(value)||value<1||value>ceiling;})) throw new Error('Feedback record '+(idx+1)+' references a question outside the session range.');
+    });
+  }
+  ['reviewState','ntIncluded'].forEach(function(field){
+    Object.keys(d[field]||{}).forEach(function(key){var q=Number(key);if(!hasMcq||!Number.isInteger(q)||q<1||q>g.nQ)throw new Error('The backup contains an invalid '+(field==='reviewState'?'review':'Near Threshold')+' question reference.');});
+  });
   var allowedThresholds = ['difficult','easy','disc','checkp','checkr','dif','gapamber','gapred'];
   var thresholds = (d.fields && d.fields.thresholds) || {};
   allowedThresholds.forEach(function(id) {
@@ -10534,8 +10558,14 @@ function validatePortableSession(data) {
 
 function importPortableSessionObject(data) {
   var draft = validatePortableSession(data);
-  localStorage.setItem(_DRAFT_KEY, JSON.stringify(draft));
-  resumeSession();
+  var previous=localStorage.getItem(_DRAFT_KEY);
+  try {
+    localStorage.setItem(_DRAFT_KEY, JSON.stringify(draft));
+    resumeSession();
+  } catch(e) {
+    if(previous===null)localStorage.removeItem(_DRAFT_KEY);else localStorage.setItem(_DRAFT_KEY,previous);
+    throw e;
+  }
   return true;
 }
 
