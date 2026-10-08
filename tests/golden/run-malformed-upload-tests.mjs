@@ -395,6 +395,34 @@ try {
     await page.close();
   }
 
+  // CSV parsing preserves RFC-style quoted content and rejects malformed quoting.
+  {
+    const page = await newPage();
+    const csvAudit = await page.evaluate(() => {
+      const valid = '\uFEFFName,Comment,Quote\r\n"Student, One","First line\r\nSecond line","She said ""review"""\r\n\r\nStudent Two, Plain value ,Done';
+      const rows = parseCSVToRows(valid);
+      const errors = [];
+      [
+        'A,B\n"unclosed,value',
+        'A,B\nplain"quote,value',
+        'A,B\n"closed"junk,value',
+      ].forEach(value => {
+        try { parseCSVToRows(value); errors.push(""); }
+        catch (error) { errors.push(error.message); }
+      });
+      return { rows, errors };
+    });
+    assert.deepEqual(csvAudit.rows, [
+      ["Name", "Comment", "Quote"],
+      ["Student, One", "First line\nSecond line", 'She said "review"'],
+      ["Student Two", "Plain value", "Done"],
+    ]);
+    assert.match(csvAudit.errors[0], /Unclosed quoted field/i);
+    assert.match(csvAudit.errors[1], /Unexpected quote/i);
+    assert.match(csvAudit.errors[2], /Unexpected character after a closing quote/i);
+    await page.close();
+  }
+
   assert.deepEqual(browserErrors, []);
   console.log("PASS: malformed QuestionMark, Scantron, and feedback uploads block, warn, accept, and clear stale state as designed.");
 } finally {
