@@ -31,6 +31,7 @@ This suite protects the highest-risk AQP calculations and parsers with fictional
 - Reproducibility/audit metadata in CSV, JSON, and portable-session recovery
 - Design-system invariants: base typography, white application and navigation surfaces, minimum primary-action sizing, tabular table numerals, shared component geometry, and stable semantic colours across uOttawa and Elentra themes
 - Precise DIF non-estimation reasons in the interface, structured exports, and Word reports
+- Versioned missing-response, single-language, and small-sample workbooks, including conservative small-sample DIF suppression
 
 The synthetic exam intentionally contains healthy items and known edge cases. Its reliability coefficient is therefore not intended to resemble a well-constructed operational exam; the exact value is useful as a regression target.
 
@@ -48,15 +49,18 @@ Then, from the project folder:
 npm test
 ```
 
-A successful run prints four `PASS` lines and exits with status 0. They cover the frozen baseline analysis; exceptions, Near Threshold persistence, previews, and exports; malformed-upload validation; and the demonstration, audit, readiness, and DIF-suppression workflows. Any changed result produces a structured assertion diff and exits non-zero.
+A successful run prints seven `PASS` lines and exits with status 0. They cover the frozen baseline analysis; synthetic edge cases; feedback parsing; exceptions, persistence, previews, and exports; malformed-upload validation; demonstration, audit, readiness, and DIF suppression; and accessibility. Any changed result produces a structured assertion diff and exits non-zero.
 
-The four cases can also be run separately:
+The seven suites can also be run separately:
 
 ```bash
 npm run test:golden
+npm run test:edge-fixtures
+npm run test:feedback-parser
 npm run test:exceptions-reports
 npm run test:malformed-uploads
 npm run test:audit-demo-readiness
+npm run test:accessibility
 ```
 
 The runner uses the installed Google Chrome application, starts a temporary localhost server, and closes both when finished. It does not upload fixture data. `xlsx.full.min.js` is a local copy of SheetJS 0.18.5, matching the version loaded by AQP, so file parsing does not depend on internet access after setup.
@@ -67,6 +71,7 @@ The runner uses the installed Google Chrome application, starts a temporary loca
 - `outputs/aqp-golden-suite/golden_answer_key.xlsx`: matching perfect-score key export
 - `outputs/aqp-golden-suite/golden_feedback.xlsx`: fictional feedback edge cases
 - `outputs/aqp-malformed-suite/*.xlsx`: fourteen privacy-safe invalid or borderline upload fixtures
+- `outputs/aqp-edge-suite/*.xlsx`: three privacy-safe edge scenarios, each with matching results and answer-key workbooks
 - `expected.json`: frozen application outputs
 - `run-golden-tests.mjs`: end-to-end runner
 - `run-exceptions-report-tests.mjs`: exception, persistence, preview, and export runner
@@ -74,6 +79,7 @@ The runner uses the installed Google Chrome application, starts a temporary loca
 - `run-audit-demo-readiness-tests.mjs`: demonstration, audit, readiness, DIF suppression, export, and recovery scenarios
 - `build-fixtures.mjs`: deterministic workbook generator
 - `build-malformed-fixtures.mjs`: deterministic malformed-workbook generator
+- `build-edge-fixtures.mjs`: deterministic missing-response, single-language, and small-sample workbook generator
 - `jszip.min.js`: local JSZip copy used to inspect generated Word packages without a network dependency
 
 ## Updating the golden result

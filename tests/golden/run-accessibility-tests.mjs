@@ -30,6 +30,8 @@ assert.match(applicationHtml, /AQP analytical Q icon|Analytical-Q identity/, "th
 assert.match(applicationHtml, /aqp-mark aqp-lockup-mark/, "primary headers must use the analytical-Q lockup");
 assert.match(applicationHtml, /class="sp-grid"/, "the Assessment Pulse splash must retain its ECG-style grid");
 assert.match(applicationHtml, /From responses to confident review/, "the approved splash slogan must be present");
+assert.match(applicationHtml, /Institutional sign-in/, "the splash must include the institutional authentication placeholder");
+assert.match(applicationHtml, /No credentials are requested or stored/, "the authentication placeholder must explain its privacy boundary");
 assert.doesNotMatch(applicationHtml, /id="sp-pct"|id="sp-fill"/, "the splash must not imply artificial loading progress");
 assert.match(applicationHtml, /APP_BUILD\s*=\s*'20261007-01'/, "the feedback-parser strengthening build must be stamped");
 assert.match(applicationHtml, /class="btn-dl-secondary da-method-btn"[^>]+aria-expanded="false"[^>]+aria-controls="da-methodology-panel"/, "Distractor methodology must use an accessible disclosure control");
@@ -77,6 +79,12 @@ try {
   assert.ok(await page.locator("#theme-select").count(), "Settings must expose an independent brand control");
   assert.ok(await page.locator("#appearance-select").count(), "Settings must expose an independent appearance control");
 
+  await page.waitForFunction(() => document.getElementById("splash-screen")?.classList.contains("sp-auth-ready"));
+  assert.equal(await page.locator("#sp-auth-card").getAttribute("aria-hidden"), "false", "the sign-in preview must become available after startup");
+  assert.equal(await page.evaluate(() => document.activeElement?.id), "sp-auth-continue", "the sign-in preview must receive focus when it appears");
+  await page.locator("#sp-auth-continue").click();
+  await page.waitForFunction(() => getComputedStyle(document.getElementById("splash-screen")).display === "none");
+
   const contrast = await page.evaluate(() => {
     function rgb(value) {
       const hex = value.trim().replace("#", "");
@@ -102,7 +110,7 @@ try {
   });
   Object.entries(contrast).forEach(([name, ratio]) => assert.ok(ratio >= 4.5, `${name} text contrast is ${ratio.toFixed(2)}:1; expected at least 4.5:1`));
 
-  await page.evaluate(() => { document.getElementById("splash-screen").style.display = "none"; openFAQ(); });
+  await page.evaluate(() => openFAQ());
   const unnamedVisibleButtons = await page.evaluate(() => Array.from(document.querySelectorAll("button")).filter(el => el.getClientRects().length).filter(el => !(el.innerText.trim() || el.getAttribute("aria-label") || el.getAttribute("title"))).map(el => el.id || el.outerHTML.slice(0, 100)));
   assert.deepEqual(unnamedVisibleButtons, [], "visible buttons need accessible names");
   const firstFaq = page.locator("#faq-overlay .faq-q").first();

@@ -2,14 +2,16 @@
   "name": "aqp-next",
   "private": true,
   "scripts": {
-    "test": "node tests/golden/run-golden-tests.mjs && node tests/golden/run-feedback-parser-tests.mjs && node tests/golden/run-exceptions-report-tests.mjs && node tests/golden/run-malformed-upload-tests.mjs && node tests/golden/run-audit-demo-readiness-tests.mjs && node tests/golden/run-accessibility-tests.mjs",
+    "test": "node tests/golden/run-golden-tests.mjs && node tests/golden/run-edge-fixture-tests.mjs && node tests/golden/run-feedback-parser-tests.mjs && node tests/golden/run-exceptions-report-tests.mjs && node tests/golden/run-malformed-upload-tests.mjs && node tests/golden/run-audit-demo-readiness-tests.mjs && node tests/golden/run-accessibility-tests.mjs",
     "test:golden": "node tests/golden/run-golden-tests.mjs",
+    "test:edge-fixtures": "node tests/golden/run-edge-fixture-tests.mjs",
     "test:feedback-parser": "node tests/golden/run-feedback-parser-tests.mjs",
     "test:exceptions-reports": "node tests/golden/run-exceptions-report-tests.mjs",
     "test:malformed-uploads": "node tests/golden/run-malformed-upload-tests.mjs",
     "test:audit-demo-readiness": "node tests/golden/run-audit-demo-readiness-tests.mjs",
     "test:accessibility": "node tests/golden/run-accessibility-tests.mjs",
-    "build:malformed-fixtures": "node tests/golden/build-malformed-fixtures.mjs"
+    "build:malformed-fixtures": "node tests/golden/build-malformed-fixtures.mjs",
+    "build:edge-fixtures": "node tests/golden/build-edge-fixtures.mjs"
   },
   "devDependencies": {
     "playwright": "1.62.1"
