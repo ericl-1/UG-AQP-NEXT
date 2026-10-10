@@ -346,15 +346,85 @@ try {
 
   const validationErrors = await page.evaluate(payload => {
     const message = value => { try { validatePortableSession(value); return ""; } catch (error) { return error.message; } };
+    const mutate = fn => { const copy = structuredClone(payload); fn(copy.session); return message(copy); };
     return {
       aggregate: message({ meta: {}, summary: {} }),
       future: message({ ...payload, schemaVersion: 999 }),
       malformed: message({ ...payload, session: { ...payload.session, G: { ...payload.session.G, key: [] } } }),
+      invalidKey: mutate(session => { session.G.key[0] = "z"; }),
+      invalidResponse: mutate(session => { session.G.students[0].outcomes[0] = "z"; }),
+      invalidScore: mutate(session => { session.G.students[0].qmScores[0] = 2; }),
+      invalidException: mutate(session => { session.G.exclusions[999] = { disposition: "delete" }; }),
+      invalidFeedbackStatus: mutate(session => { session.FB.parsed[0].status = "unknown"; }),
+      invalidFeedbackQuestion: mutate(session => { session.FB.parsed[0].qNums = [999]; }),
+      invalidReviewQuestion: mutate(session => { session.reviewState[999] = true; }),
     };
   }, backup);
   assert.match(validationErrors.aggregate, /report-only Analysis record/);
   assert.match(validationErrors.future, /newer AQP format/);
   assert.match(validationErrors.malformed, /answer key does not match/);
+  assert.match(validationErrors.invalidKey, /unsupported answer-key value/);
+  assert.match(validationErrors.invalidResponse, /unsupported answer value/);
+  assert.match(validationErrors.invalidScore, /other than 0 or 1/);
+  assert.match(validationErrors.invalidException, /invalid question exception/);
+  assert.match(validationErrors.invalidFeedbackStatus, /Feedback record 1 is invalid/);
+  assert.match(validationErrors.invalidFeedbackQuestion, /outside the session range/);
+  assert.match(validationErrors.invalidReviewQuestion, /invalid review question reference/);
+
+  const failedImportSafety = await page.evaluate(payload => {
+    const stableDraft = raw => {
+      const draft = JSON.parse(raw);
+      return {
+        fields: draft.fields,
+        flags: draft.flags,
+        key: draft.G.key,
+        nQ: draft.G.nQ,
+        students: draft.G.students.map(student => ({
+          stream: student.stream,
+          courseCode: student.courseCode,
+          outcomes: student.outcomes,
+          qmScores: student.qmScores,
+          scores: student.scores
+        })),
+        exclusions: draft.G.exclusions,
+        feedback: draft.FB,
+        nearThresholdIncluded: draft.ntIncluded,
+        reviewState: draft.reviewState
+      };
+    };
+    const previous = localStorage.getItem(_DRAFT_KEY);
+    const corrupt = structuredClone(payload);
+    corrupt.session.G.key[0] = "z";
+    let validationMessage = "";
+    try { importPortableSessionObject(corrupt); } catch (error) { validationMessage = error.message; }
+    const afterValidationFailure = localStorage.getItem(_DRAFT_KEY);
+    const originalResume = resumeSession;
+    let attempts = 0;
+    resumeSession = function() { attempts++; if (attempts === 1) throw new Error("synthetic apply failure"); return originalResume(); };
+    let applyMessage = "";
+    try {
+      importPortableSessionObject(payload);
+    } catch (error) {
+      applyMessage = error.message;
+    } finally {
+      resumeSession = originalResume;
+    }
+    const afterApplyFailure = localStorage.getItem(_DRAFT_KEY);
+    return {
+      validationMessage,
+      applyMessage,
+      previous,
+      afterValidationFailure,
+      previousStable: stableDraft(previous),
+      afterApplyFailureStable: stableDraft(afterApplyFailure),
+      attempts
+    };
+  }, backup);
+  assert.match(failedImportSafety.validationMessage, /unsupported answer-key value/);
+  assert.match(failedImportSafety.applyMessage, /synthetic apply failure/);
+  assert.equal(failedImportSafety.afterValidationFailure, failedImportSafety.previous, "validation failure must preserve the current draft");
+  assert.deepEqual(failedImportSafety.afterApplyFailureStable, failedImportSafety.previousStable, "apply failure must restore the current draft contents");
+  assert.equal(failedImportSafety.attempts, 2, "apply failure must attempt to reload the previous session");
 
   const workflowUi = await page.evaluate(payload => {
     const older = { ...payload, app: { ...payload.app, build: "20260927-03" } };
