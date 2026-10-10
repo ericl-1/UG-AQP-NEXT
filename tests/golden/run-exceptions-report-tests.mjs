@@ -371,6 +371,61 @@ try {
   assert.match(validationErrors.invalidFeedbackQuestion, /outside the session range/);
   assert.match(validationErrors.invalidReviewQuestion, /invalid review question reference/);
 
+  const failedImportSafety = await page.evaluate(payload => {
+    const stableDraft = raw => {
+      const draft = JSON.parse(raw);
+      return {
+        fields: draft.fields,
+        flags: draft.flags,
+        key: draft.G.key,
+        nQ: draft.G.nQ,
+        students: draft.G.students.map(student => ({
+          stream: student.stream,
+          courseCode: student.courseCode,
+          outcomes: student.outcomes,
+          qmScores: student.qmScores,
+          scores: student.scores
+        })),
+        exclusions: draft.G.exclusions,
+        feedback: draft.FB,
+        nearThresholdIncluded: draft.ntIncluded,
+        reviewState: draft.reviewState
+      };
+    };
+    const previous = localStorage.getItem(_DRAFT_KEY);
+    const corrupt = structuredClone(payload);
+    corrupt.session.G.key[0] = "z";
+    let validationMessage = "";
+    try { importPortableSessionObject(corrupt); } catch (error) { validationMessage = error.message; }
+    const afterValidationFailure = localStorage.getItem(_DRAFT_KEY);
+    const originalResume = resumeSession;
+    let attempts = 0;
+    resumeSession = function() { attempts++; if (attempts === 1) throw new Error("synthetic apply failure"); return originalResume(); };
+    let applyMessage = "";
+    try {
+      importPortableSessionObject(payload);
+    } catch (error) {
+      applyMessage = error.message;
+    } finally {
+      resumeSession = originalResume;
+    }
+    const afterApplyFailure = localStorage.getItem(_DRAFT_KEY);
+    return {
+      validationMessage,
+      applyMessage,
+      previous,
+      afterValidationFailure,
+      previousStable: stableDraft(previous),
+      afterApplyFailureStable: stableDraft(afterApplyFailure),
+      attempts
+    };
+  }, backup);
+  assert.match(failedImportSafety.validationMessage, /unsupported answer-key value/);
+  assert.match(failedImportSafety.applyMessage, /synthetic apply failure/);
+  assert.equal(failedImportSafety.afterValidationFailure, failedImportSafety.previous, "validation failure must preserve the current draft");
+  assert.deepEqual(failedImportSafety.afterApplyFailureStable, failedImportSafety.previousStable, "apply failure must restore the current draft contents");
+  assert.equal(failedImportSafety.attempts, 2, "apply failure must attempt to reload the previous session");
+
   const workflowUi = await page.evaluate(payload => {
     const older = { ...payload, app: { ...payload.app, build: "20260927-03" } };
     openSessionImportPreview(older, null);

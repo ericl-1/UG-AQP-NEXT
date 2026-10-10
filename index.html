@@ -10564,6 +10564,9 @@ function importPortableSessionObject(data) {
     resumeSession();
   } catch(e) {
     if(previous===null)localStorage.removeItem(_DRAFT_KEY);else localStorage.setItem(_DRAFT_KEY,previous);
+    if(previous!==null) {
+      try { resumeSession(); } catch(restoreError) { console.error('Could not restore the previous session after an import failure.',restoreError); }
+    }
     throw e;
   }
   return true;
