@@ -33,6 +33,8 @@ assert.match(applicationHtml, /From responses to confident review/, "the approve
 assert.match(applicationHtml, /Institutional sign-in/, "the splash must include the institutional authentication placeholder");
 assert.match(applicationHtml, /No credentials are requested or stored/, "the authentication placeholder must explain its privacy boundary");
 assert.match(applicationHtml, /window\.addEventListener\('load',startSplashSequence/, "the sign-in preview timer must start after the application finishes loading");
+assert.match(applicationHtml, /spPulseReveal 1\.8s/, "the ECG draw must remain visibly staged before the identity appears");
+assert.match(applicationHtml, /sp-identity-shifted/, "the identity shift must be a separate stage before sign-in appears");
 assert.doesNotMatch(applicationHtml, /id="sp-pct"|id="sp-fill"/, "the splash must not imply artificial loading progress");
 assert.match(applicationHtml, /APP_BUILD\s*=\s*'20261007-01'/, "the feedback-parser strengthening build must be stamped");
 assert.match(applicationHtml, /class="btn-dl-secondary da-method-btn"[^>]+aria-expanded="false"[^>]+aria-controls="da-methodology-panel"/, "Distractor methodology must use an accessible disclosure control");
@@ -80,11 +82,23 @@ try {
   assert.ok(await page.locator("#theme-select").count(), "Settings must expose an independent brand control");
   assert.ok(await page.locator("#appearance-select").count(), "Settings must expose an independent appearance control");
 
+  await page.waitForFunction(() => document.getElementById("splash-screen")?.classList.contains("sp-identity-shifted"));
+  assert.equal(await page.locator("#splash-screen").evaluate(el => el.classList.contains("sp-auth-ready")), false, "the identity must move before sign-in rises into view");
   await page.waitForFunction(() => document.getElementById("splash-screen")?.classList.contains("sp-auth-ready"));
   assert.equal(await page.locator("#sp-auth-card").getAttribute("aria-hidden"), "false", "the sign-in preview must become available after startup");
   assert.equal(await page.evaluate(() => document.activeElement?.id), "sp-auth-continue", "the sign-in preview must receive focus when it appears");
+  await page.setViewportSize({ width: 716, height: 806 });
+  await page.waitForTimeout(700);
+  const inAppSplashLayout = await page.evaluate(() => {
+    const identity = document.querySelector(".sp-lockup").getBoundingClientRect();
+    const card = document.querySelector(".sp-auth-card").getBoundingClientRect();
+    return { identityRight: identity.right, cardLeft: card.left, cardRight: card.right, viewport: innerWidth };
+  });
+  assert.ok(inAppSplashLayout.cardLeft > inAppSplashLayout.identityRight, `the in-app-browser splash must place sign-in beside the identity: ${JSON.stringify(inAppSplashLayout)}`);
+  assert.ok(inAppSplashLayout.cardRight <= inAppSplashLayout.viewport, `the in-app-browser sign-in card must remain on screen: ${JSON.stringify(inAppSplashLayout)}`);
   await page.locator("#sp-auth-continue").click();
   await page.waitForFunction(() => getComputedStyle(document.getElementById("splash-screen")).display === "none");
+  await page.setViewportSize({ width: 1280, height: 900 });
 
   const contrast = await page.evaluate(() => {
     function rgb(value) {
