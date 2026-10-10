@@ -32,6 +32,7 @@ assert.match(applicationHtml, /class="sp-grid"/, "the Assessment Pulse splash mu
 assert.match(applicationHtml, /From responses to confident review/, "the approved splash slogan must be present");
 assert.match(applicationHtml, /Institutional sign-in/, "the splash must include the institutional authentication placeholder");
 assert.match(applicationHtml, /No credentials are requested or stored/, "the authentication placeholder must explain its privacy boundary");
+assert.match(applicationHtml, /window\.addEventListener\('load',startSplashSequence/, "the sign-in preview timer must start after the application finishes loading");
 assert.doesNotMatch(applicationHtml, /id="sp-pct"|id="sp-fill"/, "the splash must not imply artificial loading progress");
 assert.match(applicationHtml, /APP_BUILD\s*=\s*'20261007-01'/, "the feedback-parser strengthening build must be stamped");
 assert.match(applicationHtml, /class="btn-dl-secondary da-method-btn"[^>]+aria-expanded="false"[^>]+aria-controls="da-methodology-panel"/, "Distractor methodology must use an accessible disclosure control");

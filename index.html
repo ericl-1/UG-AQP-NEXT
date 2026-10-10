@@ -707,9 +707,9 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 .sp-grid{position:absolute;inset:0;opacity:.62;background-image:linear-gradient(var(--c-border) 1px,transparent 1px),linear-gradient(90deg,var(--c-border) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(circle at center,#000 0,rgba(0,0,0,.88) 48%,transparent 88%)}
 .sp-pulse{position:absolute;left:4%;right:4%;top:calc(50% - 64px);height:180px;transform:translateY(-50%);z-index:1}
 .sp-pulse svg{width:100%;height:100%;overflow:visible}
-.sp-pulse-path{fill:none;stroke:var(--c-accent);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1300;stroke-dashoffset:1300;filter:drop-shadow(0 0 8px color-mix(in srgb,var(--c-accent) 40%,transparent));animation:spPulseDraw 1.18s ease forwards}
+.sp-pulse-path{fill:none;stroke:var(--c-accent);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1300;stroke-dashoffset:1300;filter:drop-shadow(0 0 8px color-mix(in srgb,var(--c-accent) 40%,transparent));animation:spPulseDraw 1.18s ease forwards;animation-play-state:paused}
 .sp-stage{position:relative;z-index:2;width:min(940px,calc(100vw - 48px));height:390px;display:grid;place-items:center}
-.sp-lockup{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;opacity:0;transform:scale(.92);animation:spLockupIn .58s cubic-bezier(.2,.9,.25,1) .72s forwards;transition:transform .62s cubic-bezier(.2,.9,.25,1)}
+.sp-lockup{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;opacity:0;transform:scale(.92);animation:spLockupIn .58s cubic-bezier(.2,.9,.25,1) .72s forwards;animation-play-state:paused;transition:transform .62s cubic-bezier(.2,.9,.25,1)}
 .sp-auth-card{position:absolute;top:50%;left:50%;z-index:3;width:min(340px,calc(100vw - 40px));padding:24px;border:1px solid var(--c-border-2);border-radius:16px;background:color-mix(in srgb,var(--c-bg) 94%,transparent);box-shadow:0 24px 60px rgba(24,34,43,.16);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);opacity:0;transform:translate(90px,-50%);pointer-events:none;transition:opacity .42s ease .16s,transform .62s cubic-bezier(.2,.9,.25,1)}
 .sp-auth-eyebrow{font:700 10px/1.2 var(--font);text-transform:uppercase;letter-spacing:.12em;color:var(--c-accent);margin-bottom:8px}
 .sp-auth-title{font:700 22px/1.2 var(--font);color:var(--c-primary);margin-bottom:8px}
@@ -728,7 +728,8 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 .sp-slogan{font:500 15px/1.4 var(--font);color:var(--c-secondary)}
 .sp-status{display:flex;align-items:center;gap:9px;margin-top:5px;font:650 11px/1 var(--font);text-transform:uppercase;letter-spacing:.13em;color:var(--c-muted)}
 .sp-status::before{content:"";width:25px;height:2px;border-radius:2px;background:var(--c-accent)}
-.sp-version{position:absolute;bottom:24px;z-index:3;font:500 11px/1.2 var(--font);letter-spacing:.03em;color:var(--c-faint);opacity:0;animation:spCopyIn .4s ease 1s forwards}
+.sp-version{position:absolute;bottom:24px;z-index:3;font:500 11px/1.2 var(--font);letter-spacing:.03em;color:var(--c-faint);opacity:0;animation:spCopyIn .4s ease 1s forwards;animation-play-state:paused}
+#splash-screen.sp-sequence-started .sp-pulse-path,#splash-screen.sp-sequence-started .sp-lockup,#splash-screen.sp-sequence-started .sp-version{animation-play-state:running}
 @keyframes spPulseDraw{0%{stroke-dashoffset:1300;opacity:.2}78%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:0;opacity:.22}}
 @keyframes spLockupIn{to{opacity:1;transform:scale(1)}}
 @keyframes spCopyIn{to{opacity:1}}
@@ -865,20 +866,32 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
   setTimeout(setSplashVersion, 0);
 
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var readyTimer=setTimeout(function() {
-    var screen = document.getElementById('splash-screen');
-    if (!screen) return;
-    var card=document.getElementById('sp-auth-card');
-    var status=document.getElementById('sp-status');
-    screen.classList.add('sp-auth-ready');
-    if(status)status.textContent='Workspace ready';
-    if(card){card.removeAttribute('inert');card.setAttribute('aria-hidden','false');}
-    var button=document.getElementById('sp-auth-continue');
-    if(button)button.focus({preventScroll:true});
-  }, reduced ? 650 : 2300);
+  var readyTimer=null;
+  function startSplashSequence() {
+    // This file is intentionally self-contained and large. Start the visible
+    // timeline only after parsing and the first paint; otherwise the timer can
+    // expire while the browser is still building the page and skip the intro.
+    var splash=document.getElementById('splash-screen');
+    if(splash)splash.classList.add('sp-sequence-started');
+    requestAnimationFrame(function(){requestAnimationFrame(function(){
+      readyTimer=setTimeout(function() {
+        var screen = document.getElementById('splash-screen');
+        if (!screen) return;
+        var card=document.getElementById('sp-auth-card');
+        var status=document.getElementById('sp-status');
+        screen.classList.add('sp-auth-ready');
+        if(status)status.textContent='Workspace ready';
+        if(card){card.removeAttribute('inert');card.setAttribute('aria-hidden','false');}
+        var button=document.getElementById('sp-auth-continue');
+        if(button)button.focus({preventScroll:true});
+      }, reduced ? 650 : 2300);
+    });});
+  }
+  if(document.readyState==='complete')startSplashSequence();
+  else window.addEventListener('load',startSplashSequence,{once:true});
 
   window.continueAqpSplash=function() {
-    clearTimeout(readyTimer);
+    if(readyTimer!==null)clearTimeout(readyTimer);
     var screen = document.getElementById('splash-screen');
     if (!screen || screen.style.display==='none') return;
     screen.style.opacity = '0';
