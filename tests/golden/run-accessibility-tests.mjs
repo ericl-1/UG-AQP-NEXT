@@ -40,6 +40,7 @@ assert.match(applicationHtml, /#splash-screen>\.sp-grid,#splash-screen>\.sp-puls
 assert.match(applicationHtml, /left:87\.5%/, "wide splash layouts must reserve the right side for sign-in");
 assert.doesNotMatch(applicationHtml, /id="sp-pct"|id="sp-fill"/, "the splash must not imply artificial loading progress");
 assert.match(applicationHtml, /APP_BUILD\s*=\s*'20261010-01'/, "the current splash and edge-fixture build must be stamped");
+assert.match(applicationHtml, /function plainReleaseNote\(note\)/, "release notes must include a plain-language presentation pass");
 assert.match(applicationHtml, /class="btn-dl-secondary da-method-btn"[^>]+aria-expanded="false"[^>]+aria-controls="da-methodology-panel"/, "Distractor methodology must use an accessible disclosure control");
 assert.match(applicationHtml, /class="app-version-pill"/, "the footer version must use the theme-aware pill");
 assert.match(applicationHtml, /id="btn-appearance-topbar"/, "the top bar must expose the approved quick Appearance control");

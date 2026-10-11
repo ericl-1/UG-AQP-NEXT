@@ -11493,13 +11493,14 @@ var RELEASE_NOTES = [
         build: '20261010-01',
         date:  'October 10, 2026',
         notes: [
-          'Added deterministic edge-case workbooks and regression coverage for missing responses, single-language cohorts, and small samples. Each retained results fixture has a matching answer key and expected analysis outcome.',
+          'Added repeatable tests for exams with missing responses, one language group, or a small class. Each test includes matching results and answer-key files with an expected outcome.',
           'Added an institutional sign-in preview after the existing Assessment Pulse introduction. The ECG sequence completes and pauses before the identity moves left and the sign-in card rises into the available right-side region.',
           'Restored the full ECG grid, preserved the ECG behind the fully opaque identity, and kept the line visible and responsive after the layout splits without running behind the sign-in card.',
           'Clarified that authentication is a preview and does not currently require credentials. Continue to AQP opens the existing home workspace; real authentication remains reserved for institutional deployment.',
           'Confirmed that first access uses the uOttawa brand with System appearance. Brand and appearance choices continue to be stored only in the current browser and restored before the next splash renders.',
           'Expanded browser regression coverage for splash timing, narrow and wide layouts, responsive ECG sizing, theme-aware transparency, keyboard focus, and the sign-in transition. Analysis calculations and report output are unchanged.',
-          'Normalized the pre-launch version history into one chronological 0.x development sequence leading to 1.0. Existing build numbers and dates remain unchanged; this build is now identified as 1.0.0-beta.1 without creating a new build.'
+          'Normalized the pre-launch version history into one chronological 0.x development sequence leading to 1.0. Existing build numbers and dates remain unchanged; this build is now identified as 1.0.0-beta.1 without creating a new build.',
+          'Reworded technical terms throughout the in-app release history so coordinators and other non-technical readers can understand what changed and what stayed the same.'
         ]
       },
       {
@@ -12685,6 +12686,51 @@ var RELEASE_NOTES = [
   }
 ];
 
+function plainReleaseNote(note) {
+  var replacements = [
+    [/deterministic feedback attribution/gi, 'consistent matching of feedback to questions'],
+    [/deterministic attribution/gi, 'consistent matching'],
+    [/deterministic edge-case workbooks/gi, 'repeatable sample workbooks for uncommon situations'],
+    [/regression suite/gi, 'automated test suite'],
+    [/regression coverage/gi, 'automated checks'],
+    [/browser regression coverage/gi, 'automated browser checks'],
+    [/canonical privacy-minimized data model/gi, 'same privacy-conscious set of analysis data'],
+    [/canonical data model/gi, 'shared set of analysis data'],
+    [/schema version/gi, 'file-format version'],
+    [/schema/gi, 'file format'],
+    [/theme-aware surfaces/gi, 'colours and backgrounds that adapt to the selected appearance'],
+    [/theme-aware presentation/gi, 'presentation that adapts to Light and Dark modes'],
+    [/semantic status colours/gi, 'consistent status colours'],
+    [/semantic table highlights/gi, 'meaningful table highlights'],
+    [/surface tokens/gi, 'shared interface colours'],
+    [/estimation suppressions/gi, 'questions where DIF could not be calculated'],
+    [/model-estimation notes/gi, 'technical reasons why DIF could not be calculated'],
+    [/DIF regression/gi, 'DIF calculations'],
+    [/feedback categorisation/gi, 'feedback grouping'],
+    [/categorisation/gi, 'grouping'],
+    [/question attribution/gi, 'matching comments to questions'],
+    [/parser/gi, 'file reader'],
+    [/fixtures/gi, 'sample files'],
+    [/fixture/gi, 'sample file'],
+    [/responsive/gi, 'adaptable to narrower screens'],
+    [/\bUAT\b/gi, 'user testing'],
+    [/KPI/gi, 'summary'],
+    [/methodological reasons/gi, 'full reasons'],
+    [/retained project documentation/gi, 'project documentation'],
+    [/operational reference formats/gi, 'question-reference formats seen in real files'],
+    [/quantity safeguards/gi, 'checks that prevent ordinary numbers from being mistaken for question references'],
+    [/single-file deployment model/gi, 'single-file application format'],
+    [/serialization/gi, 'saving and reopening'],
+    [/reconciliation/gi, 'comparison and confirmation'],
+    [/disposition/gi, 'decision'],
+    [/authoritative state/gi, 'final saved analysis'],
+    [/instrumentation/gi, 'diagnostic information']
+  ];
+  return replacements.reduce(function(text, replacement){
+    return text.replace(replacement[0], replacement[1]);
+  }, note);
+}
+
 function renderReleaseNotes() {
   var sel    = document.getElementById('rn-version-select');
   var detail = document.getElementById('rn-detail');
@@ -12703,7 +12749,7 @@ function renderReleaseNotes() {
         + 'Build ' + b.build + (b.date ? ' &nbsp;·&nbsp; <span style="font-weight:500;color:var(--c-muted)">' + b.date + '</span>' : '') + '</div>'
       : (b.date ? '<div style="font-size:12px;color:var(--c-muted);margin-bottom:6px">' + b.date + '</div>' : '');
     var bullets = '<ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:3px;font-size:12.5px;color:var(--c-secondary);line-height:1.6">'
-      + b.notes.map(function(n){ return '<li>' + n + '</li>'; }).join('')
+      + b.notes.map(function(n){ return '<li>' + plainReleaseNote(n) + '</li>'; }).join('')
       + '</ul>';
     return header + bullets;
   }).join('');
