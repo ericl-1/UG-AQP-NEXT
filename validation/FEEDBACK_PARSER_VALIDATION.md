@@ -2,7 +2,7 @@
 
 ## Scope
 
-This document describes AQP's deterministic feedback-attribution and categorisation pipeline as of version 0.8, build `20261007-01`. The parser assists coordinator review; it does not make academic decisions, and every routed comment remains editable.
+This document describes AQP's deterministic feedback-attribution and categorisation pipeline as of normalized version `1.0.0-beta.1`, build `20261007-01` (originally labelled version 0.8). The parser assists coordinator review; it does not make academic decisions, and every routed comment remains editable.
 
 ## Workbook detection
 
