@@ -3,11 +3,20 @@
 ## Build identity
 
 - Starting point: AQP 0.8, build `20260923-01` (`Downloads/index.html`)
-- Current development build: AQP 0.8, build `20261007-01`
-- Working branch: `feature/distractor-dif-review`
+- Current development build: AQP 0.8, build `20261010-01`
+- Working branch: `feature/synthetic-edge-fixtures`
 - Working file: `index.html` in the isolated development worktree
 - The Downloads baseline was not modified.
-- Builds through `20261004-02` have been retained in GitHub. Build `20261007-01` is being developed in the isolated worktree and is not live until its pull request is approved and merged.
+- Builds through `20261007-01` have been retained in GitHub. Build `20261010-01` is being developed in the isolated worktree and is not live until its pull request is approved and merged.
+
+## Build 20261010-01 — Synthetic edge fixtures and sign-in preview
+
+- Added paired results and answer-key fixtures for missing responses, single-language cohorts, and small samples, with deterministic expected-outcome regression coverage.
+- Added a preview-only institutional sign-in stage after the existing Assessment Pulse sequence; no credentials are currently required or stored.
+- Preserved the original ECG introduction and grid, then moves the completed identity left before raising the sign-in card into the right-side region.
+- Kept the ECG behind the fully opaque identity and responsive to the split layout so it remains visible without extending behind the sign-in card.
+- Documented first-use uOttawa/System appearance defaults and browser-local preference persistence in the FAQ and release notes.
+- Analysis calculations, report output, and the existing home workflow are unchanged.
 
 ## Build 20261007-01 — Feedback parser strengthening
 

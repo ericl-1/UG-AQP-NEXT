@@ -102,7 +102,7 @@
 </style>
 <style>
 /* ═══════════════════════════════════════════════════════════════════════════
-   AQP design system · Calm clinical intelligence · build 20261007-01
+   AQP design system · Calm clinical intelligence · build 20261010-01
    Centralized visual rules for colour, type, spacing, surfaces, controls,
    tables, status communication, motion, and theme parity.
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -664,7 +664,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 :root[data-appearance="dark"] .fb-flag-med{background:var(--s-warn-bg);color:var(--s-warn-text);border:1px solid color-mix(in srgb,var(--s-warn) 34%,transparent)}
 :root[data-appearance="dark"] .b-deleted{background:var(--s-hard-bg);color:var(--s-hard)}
 :root[data-appearance="dark"] .nav-badge-amber{background:var(--s-warn-bg);color:var(--s-warn-text);border-color:color-mix(in srgb,var(--s-warn) 42%,transparent)}
-:root[data-appearance="dark"] [role="dialog"]:not(#report-preview-modal)>div{background:var(--c-bg)!important;color:var(--c-primary)}
+:root[data-appearance="dark"] [role="dialog"]:not(#report-preview-modal):not(#splash-screen)>div{background:var(--c-bg)!important;color:var(--c-primary)}
 :root[data-appearance="dark"] [role="dialog"]:not(#report-preview-modal) [style*="background:#f7f8f9"],
 :root[data-appearance="dark"] [role="dialog"]:not(#report-preview-modal) [style*="background:#eeeff1"],
 :root[data-appearance="dark"] [role="dialog"]:not(#report-preview-modal) [style*="background:#f0f4ff"],
@@ -705,21 +705,21 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 /* Assessment Pulse splash. */
 #splash-screen{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;overflow:hidden;pointer-events:all;background:var(--c-canvas);color:var(--c-primary);transition:opacity .42s ease}
 .sp-grid{position:absolute;inset:0;opacity:.62;background-image:linear-gradient(var(--c-border) 1px,transparent 1px),linear-gradient(90deg,var(--c-border) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(circle at center,#000 0,rgba(0,0,0,.88) 48%,transparent 88%)}
-.sp-pulse{position:absolute;left:4%;right:4%;top:calc(50% - 64px);height:180px;transform:translateY(-50%);z-index:3;pointer-events:none;clip-path:inset(0 100% 0 0);animation:spPulseReveal 1.8s cubic-bezier(.35,0,.2,1) forwards;animation-play-state:paused;transition:opacity .35s ease}
+.sp-pulse{position:absolute;left:4%;right:4%;top:calc(50% - 64px);height:180px;transform:translateY(-50%);z-index:3;pointer-events:none;clip-path:inset(0 100% 0 0);animation:spPulseReveal 1.8s cubic-bezier(.35,0,.2,1) forwards;animation-play-state:paused;transition:right .62s cubic-bezier(.2,.9,.25,1)}
 .sp-pulse svg{width:100%;height:100%;overflow:visible}
-.sp-pulse-path{fill:none;stroke:var(--c-accent);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:.72;filter:drop-shadow(0 0 8px color-mix(in srgb,var(--c-accent) 40%,transparent))}
-.sp-stage{position:relative;z-index:2;width:min(940px,calc(100vw - 48px));height:390px;display:grid;place-items:center}
+.sp-pulse-path{fill:none;stroke:var(--c-accent);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:1;filter:drop-shadow(0 0 8px color-mix(in srgb,var(--c-accent) 40%,transparent))}
+.sp-stage{position:relative;z-index:4;width:calc(100vw - 48px);height:390px;display:grid;place-items:center}
+#splash-screen>.sp-grid,#splash-screen>.sp-pulse,#splash-screen>.sp-stage{background-color:transparent!important}
 .sp-lockup{position:relative;z-index:4;display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;opacity:0;transform:scale(.92);animation:spLockupIn .68s cubic-bezier(.2,.9,.25,1) 1.65s forwards;animation-play-state:paused;transition:transform .62s cubic-bezier(.2,.9,.25,1)}
-.sp-auth-card{box-sizing:border-box;position:absolute;top:50%;left:50%;z-index:5;width:min(340px,calc(100vw - 40px));padding:24px;border:1px solid var(--c-border-2);border-radius:16px;background:color-mix(in srgb,var(--c-bg) 94%,transparent);box-shadow:0 24px 60px rgba(24,34,43,.16);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);opacity:0;transform:translate(70px,calc(-50% + 72px));pointer-events:none;transition:opacity .42s ease .16s,transform .62s cubic-bezier(.2,.9,.25,1)}
-.sp-auth-eyebrow{font:700 10px/1.2 var(--font);text-transform:uppercase;letter-spacing:.12em;color:var(--c-accent);margin-bottom:8px}
-.sp-auth-title{font:700 22px/1.2 var(--font);color:var(--c-primary);margin-bottom:8px}
+.sp-auth-card{box-sizing:border-box;position:absolute;top:50%;left:50%;z-index:5;width:min(340px,calc(100vw - 40px));padding:24px;border:1px solid var(--c-border-2);border-radius:16px;background:color-mix(in srgb,var(--c-bg) 94%,transparent);box-shadow:0 24px 60px rgba(24,34,43,.16);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);opacity:0;transform:translate(70px,calc(-50% + 110px));pointer-events:none;transition:opacity .48s ease .1s,transform .9s cubic-bezier(.2,.9,.25,1)}
+.sp-auth-title{font:700 22px/1.2 var(--font);color:var(--c-accent);margin-bottom:7px}
 .sp-auth-copy{font:400 12.5px/1.55 var(--font);color:var(--c-secondary);margin-bottom:18px}
 .sp-auth-btn{width:100%;min-height:42px;border:1px solid var(--c-accent);border-radius:9px;background:var(--c-accent);color:#fff;font:700 13px/1 var(--font);cursor:pointer;box-shadow:0 7px 18px color-mix(in srgb,var(--c-accent) 24%,transparent)}
 .sp-auth-btn:hover{filter:brightness(.94)}.sp-auth-btn:focus-visible{outline:3px solid color-mix(in srgb,var(--c-accent) 32%,transparent);outline-offset:3px}
-.sp-auth-note{display:flex;align-items:flex-start;gap:6px;margin-top:12px;font:500 10.5px/1.45 var(--font);color:var(--c-muted)}
+.sp-auth-note{display:flex;align-items:flex-start;gap:6px;margin-bottom:14px;font:500 10.5px/1.45 var(--font);color:var(--c-muted)}
 .sp-auth-note::before{content:"";width:7px;height:7px;margin-top:4px;border-radius:50%;background:var(--s-ok);flex:0 0 auto}
 #splash-screen.sp-identity-shifted .sp-lockup{animation:none;opacity:1;transform:translateX(-235px)}
-#splash-screen.sp-identity-shifted .sp-pulse{animation:none;clip-path:inset(0);opacity:0}
+#splash-screen.sp-identity-shifted .sp-pulse{animation:none;clip-path:inset(0);opacity:1;right:48%}
 #splash-screen.sp-identity-shifted .sp-status{color:var(--s-ok)}
 #splash-screen.sp-identity-shifted .sp-status::before{background:var(--s-ok)}
 #splash-screen.sp-auth-ready .sp-auth-card{opacity:1;transform:translate(70px,-50%);pointer-events:auto}
@@ -731,11 +731,12 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 .sp-status::before{content:"";width:25px;height:2px;border-radius:2px;background:var(--c-accent)}
 .sp-version{position:absolute;bottom:24px;z-index:3;font:500 11px/1.2 var(--font);letter-spacing:.03em;color:var(--c-faint);opacity:0;animation:spCopyIn .4s ease 1.9s forwards;animation-play-state:paused}
 #splash-screen.sp-sequence-started .sp-pulse,#splash-screen.sp-sequence-started .sp-lockup,#splash-screen.sp-sequence-started .sp-version{animation-play-state:running}
-@keyframes spPulseReveal{0%{clip-path:inset(0 100% 0 0);opacity:.3}82%{clip-path:inset(0);opacity:1}100%{clip-path:inset(0);opacity:.48}}
+@keyframes spPulseReveal{0%{clip-path:inset(0 100% 0 0)}82%,100%{clip-path:inset(0)}}
 @keyframes spLockupIn{to{opacity:1;transform:scale(1)}}
 @keyframes spCopyIn{to{opacity:1}}
+@media(min-width:1400px){#splash-screen.sp-identity-shifted .sp-lockup{transform:translateX(-12.5vw)}#splash-screen.sp-identity-shifted .sp-pulse{right:27%}.sp-auth-card{left:87.5%;transform:translate(-50%,calc(-50% + 110px))}#splash-screen.sp-auth-ready .sp-auth-card{transform:translate(-50%,-50%)}}
 @media(min-width:561px) and (max-width:900px){.sp-stage{width:calc(100vw - 24px)}.sp-mark{width:112px;height:112px}.sp-title{max-width:350px;font-size:28px;line-height:1.12}.sp-slogan{font-size:13px}.sp-auth-card{width:300px;padding:20px;transform:translate(32px,calc(-50% + 72px))}#splash-screen.sp-identity-shifted .sp-lockup{transform:translateX(-175px)}#splash-screen.sp-auth-ready .sp-auth-card{transform:translate(32px,-50%)}}
-@media(max-width:560px){.sp-stage{height:min(650px,calc(100vh - 70px))}.sp-mark{width:104px;height:104px}.sp-title{font-size:29px}.sp-pulse{left:-20%;right:-20%;top:calc(50% - 100px)}.sp-grid{background-size:38px 38px}.sp-auth-card{top:50%;transform:translate(-50%,110px)}#splash-screen.sp-identity-shifted .sp-lockup{transform:translateY(-145px)}#splash-screen.sp-auth-ready .sp-auth-card{transform:translate(-50%,45px)}}
+@media(max-width:560px){.sp-stage{height:min(650px,calc(100vh - 70px))}.sp-mark{width:104px;height:104px}.sp-title{font-size:29px}.sp-pulse{left:-20%;right:-20%;top:calc(50% - 100px)}.sp-grid{background-size:38px 38px}.sp-auth-card{top:50%;transform:translate(-50%,110px)}#splash-screen.sp-identity-shifted .sp-lockup{transform:translateY(-145px)}#splash-screen.sp-identity-shifted .sp-pulse{right:-20%}#splash-screen.sp-auth-ready .sp-auth-card{transform:translate(-50%,45px)}}
 @media(max-width:420px){.sp-stage{width:calc(100vw - 24px)}.sp-title{font-size:25px}.sp-slogan{font-size:13px}.sp-auth-card{padding:19px}.sp-version{bottom:12px}}
 @media(prefers-reduced-motion:reduce){.sp-pulse{animation:none;clip-path:inset(0);opacity:.48}.sp-lockup,.sp-version{animation:none;opacity:1}.sp-lockup,.sp-auth-card{transition:none}}
 @media print{
@@ -826,11 +827,10 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
       <div class="sp-status" id="sp-status" aria-live="polite">Preparing your workspace</div>
     </div>
     <section class="sp-auth-card" id="sp-auth-card" aria-labelledby="sp-auth-title" aria-hidden="true" inert>
-      <div class="sp-auth-eyebrow">Access preview</div>
       <h2 class="sp-auth-title" id="sp-auth-title">Institutional sign-in</h2>
+      <div class="sp-auth-note">Preview only · No credentials required at this time.</div>
       <p class="sp-auth-copy">Authentication will be connected during institutional deployment.</p>
       <button type="button" class="sp-auth-btn" id="sp-auth-continue">Continue to AQP</button>
-      <div class="sp-auth-note">Preview only · No credentials are requested or stored</div>
     </section>
   </div>
   <div id="sp-ver" class="sp-version"></div>
@@ -2481,10 +2481,10 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 
 // ── App version — single source of truth ─────────────────────────────────
 var APP_VERSION     = '0.8';
-var APP_BUILD       = '20261007-01';
+var APP_BUILD       = '20261010-01';
 var APP_FAQ_VERSION = '0.8';           // Keep aligned with the app version; date records FAQ revisions
-var APP_FAQ_DATE    = 'October 7, 2026'; // Update when FAQ content changes
-var APP_RN_DATE     = 'October 7, 2026'; // Update each version close
+var APP_FAQ_DATE    = 'October 10, 2026'; // Update when FAQ content changes
+var APP_RN_DATE     = 'October 10, 2026'; // Update each version close
 var SESSION_BACKUP_FILE_TYPE = 'aqp-portable-session';
 var SESSION_BACKUP_SCHEMA_VERSION = 1;
 
@@ -11490,6 +11490,18 @@ var RELEASE_NOTES = [
     version: '0.8',
     builds: [
       {
+        build: '20261010-01',
+        date:  'October 10, 2026',
+        notes: [
+          'Added deterministic edge-case workbooks and regression coverage for missing responses, single-language cohorts, and small samples. Each retained results fixture has a matching answer key and expected analysis outcome.',
+          'Added an institutional sign-in preview after the existing Assessment Pulse introduction. The ECG sequence completes and pauses before the identity moves left and the sign-in card rises into the available right-side region.',
+          'Restored the full ECG grid, preserved the ECG behind the fully opaque identity, and kept the line visible and responsive after the layout splits without running behind the sign-in card.',
+          'Clarified that authentication is a preview and does not currently require credentials. Continue to AQP opens the existing home workspace; real authentication remains reserved for institutional deployment.',
+          'Confirmed that first access uses the uOttawa brand with System appearance. Brand and appearance choices continue to be stored only in the current browser and restored before the next splash renders.',
+          'Expanded browser regression coverage for splash timing, narrow and wide layouts, responsive ECG sizing, theme-aware transparency, keyboard focus, and the sign-in transition. Analysis calculations and report output are unchanged.'
+        ]
+      },
+      {
         build: '20261007-01',
         date:  'October 7, 2026',
         notes: [
@@ -18219,7 +18231,17 @@ function updateTopbarExam() {
               <span class="faq-icon">+</span>
             </div>
             <div class="faq-a" style="display:none">
-              Yes. Use the <strong>Appearance</strong> button in the top-right bar for quick access, or open <strong>Settings</strong> from More Options. <strong>Brand</strong> selects the uOttawa or Elentra colour identity, while <strong>Mode</strong> selects Light, Dark, or System. System follows your device preference and changes automatically when the device preference changes. These choices are saved only in this browser and restored the next time you open AQP.
+              Yes. First access uses the <strong>uOttawa</strong> brand with <strong>System</strong> appearance, which follows your device’s Light or Dark preference. After entering the workspace, use the <strong>Appearance</strong> button in the top-right bar for quick access, or open <strong>Settings</strong> from More Options. <strong>Brand</strong> selects the uOttawa or Elentra colour identity, while <strong>Mode</strong> selects Light, Dark, or System. These choices are saved only in this browser and restored before the splash appears the next time you open AQP.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFAQ(this)">
+              <span>Is institutional sign-in active?</span>
+              <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-a" style="display:none">
+              Not yet. The sign-in card is a deployment preview and no credentials are required at this time. Select <strong>Continue to AQP</strong> to enter the local workspace. Institutional authentication can be connected later without changing the analysis workflow.
             </div>
           </div>
 
