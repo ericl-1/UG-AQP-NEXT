@@ -2,8 +2,8 @@
 
 ## Build identity
 
-- Starting point: AQP 0.8, build `20260923-01` (`Downloads/index.html`)
-- Current development build: AQP 0.8, build `20261010-01`
+- Starting point: AQP `1.0.0-beta.1`, build `20260923-01` (`Downloads/index.html`; originally labelled 0.8)
+- Current development build: AQP `1.0.0-beta.1`, build `20261010-01`
 - Working branch: `feature/synthetic-edge-fixtures`
 - Working file: `index.html` in the isolated development worktree
 - The Downloads baseline was not modified.
@@ -17,6 +17,7 @@
 - Kept the ECG behind the fully opaque identity and responsive to the split layout so it remains visible without extending behind the sign-in card.
 - Documented first-use uOttawa/System appearance defaults and browser-local preference persistence in the FAQ and release notes.
 - Analysis calculations, report output, and the existing home workflow are unchanged.
+- Normalized the retained pre-launch release history into a continuous `0.1.0` through `0.9.0` development sequence followed by `1.0.0-beta.1`. Original build numbers and dates remain unchanged, and no new build was created for this catch-up action.
 
 ## Build 20261007-01 — Feedback parser strengthening
 
@@ -366,10 +367,10 @@ The existing upload preview was enhanced into a formal pre-analysis checkpoint r
 
 ## Build close completed September 27, 2026
 
-- Closed the verified work as AQP 0.8, build `20260927-01`.
+- Closed the verified work as AQP `1.0.0-beta.1`, build `20260927-01` (originally labelled 0.8).
 - Added the build to the in-app Release Notes with the completed statistical validation, exception/report regression coverage, malformed-upload safeguards, state-safety changes, question-count authority correction, and report fixes.
 - Updated the in-app FAQ to distinguish blocking upload errors from correctable warnings and to document results/key matching, replacement-upload behaviour, supported formats, language-stream handling, draft privacy/expiry, exception persistence, and Review Queue persistence.
-- Kept the FAQ version aligned with application version 0.8 and set both FAQ and Release Notes dates to September 27, 2026; the date records the FAQ revision without implying a new application version.
+- Kept the FAQ version aligned with the application version and set both FAQ and Release Notes dates to September 27, 2026; the date records the FAQ revision without implying a new build.
 
 ## Remaining architectural limitations
 
@@ -380,7 +381,7 @@ The existing upload preview was enhanced into a formal pre-analysis checkpoint r
 
 ## Enhancement build completed September 28, 2026
 
-- Prepared AQP 0.8 build `20260928-01` with four coordinator-facing enhancements.
+- Prepared AQP `1.0.0-beta.1` build `20260928-01` with four coordinator-facing enhancements (originally labelled 0.8).
 - Added precise DIF non-estimation classifications for sparse cells, singular model matrices, complete and quasi-complete separation, maximum-iteration non-convergence, and invalid statistics. “Not estimated” remains distinct from “No DIF detected” in the interface and is carried into CSV, JSON, HTML, and Word outputs.
 - Added a reproducibility record to structured exports: application and schema versions, source filenames and SHA-256 fingerprints, analysis/reconciliation timestamps, thresholds, stream settings, validation and score-comparison results, exceptions, Near Threshold inclusions, Review Queue sign-offs, DIF suppressions, and an event history.
 - Added a clearly labelled, deterministic demonstration session containing only synthetic bilingual MCQ, DIF, and feedback data. It is available from the home screen and remains visibly marked throughout the session.

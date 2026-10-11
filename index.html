@@ -2480,9 +2480,9 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 "use strict";
 
 // ── App version — single source of truth ─────────────────────────────────
-var APP_VERSION     = '0.8';
+var APP_VERSION     = '1.0.0-beta.1';
 var APP_BUILD       = '20261010-01';
-var APP_FAQ_VERSION = '0.8';           // Keep aligned with the app version; date records FAQ revisions
+var APP_FAQ_VERSION = '1.0.0-beta.1';  // Keep aligned with the app version; date records FAQ revisions
 var APP_FAQ_DATE    = 'October 10, 2026'; // Update when FAQ content changes
 var APP_RN_DATE     = 'October 10, 2026'; // Update each version close
 var SESSION_BACKUP_FILE_TYPE = 'aqp-portable-session';
@@ -11487,7 +11487,7 @@ document.addEventListener('keydown', function(e) {
 var RELEASE_NOTES = [
 
   {
-    version: '0.8',
+    version: '1.0.0-beta.1',
     builds: [
       {
         build: '20261010-01',
@@ -11498,7 +11498,8 @@ var RELEASE_NOTES = [
           'Restored the full ECG grid, preserved the ECG behind the fully opaque identity, and kept the line visible and responsive after the layout splits without running behind the sign-in card.',
           'Clarified that authentication is a preview and does not currently require credentials. Continue to AQP opens the existing home workspace; real authentication remains reserved for institutional deployment.',
           'Confirmed that first access uses the uOttawa brand with System appearance. Brand and appearance choices continue to be stored only in the current browser and restored before the next splash renders.',
-          'Expanded browser regression coverage for splash timing, narrow and wide layouts, responsive ECG sizing, theme-aware transparency, keyboard focus, and the sign-in transition. Analysis calculations and report output are unchanged.'
+          'Expanded browser regression coverage for splash timing, narrow and wide layouts, responsive ECG sizing, theme-aware transparency, keyboard focus, and the sign-in transition. Analysis calculations and report output are unchanged.',
+          'Normalized the pre-launch version history into one chronological 0.x development sequence leading to 1.0. Existing build numbers and dates remain unchanged; this build is now identified as 1.0.0-beta.1 without creating a new build.'
         ]
       },
       {
@@ -11707,7 +11708,7 @@ var RELEASE_NOTES = [
   },
 
   {
-    version: '0.7',
+    version: '0.9.0',
     builds: [
       {
         build: '20260922-01',
@@ -11721,7 +11722,7 @@ var RELEASE_NOTES = [
     ]
   },
   {
-    version: '0.6',
+    version: '0.8.0',
     builds: [
       {
         build: '20260913-03',
@@ -11740,7 +11741,7 @@ var RELEASE_NOTES = [
     ]
   },
   {
-    version: '0.5',
+    version: '0.7.0',
     builds: [
       {
         build: '20260913-02',
@@ -11762,7 +11763,7 @@ var RELEASE_NOTES = [
     ]
   },
   {
-    version: '0.4',
+    version: '0.6.0',
     builds: [
       {
         build: '20260913-01',
@@ -11779,7 +11780,7 @@ var RELEASE_NOTES = [
     ]
   },
   {
-    version: '0.3',
+    version: '0.5.0',
     builds: [
       {
         build: '20260910-01',
@@ -11797,7 +11798,7 @@ var RELEASE_NOTES = [
     ]
   },
   {
-    version: '0.2',
+    version: '0.4.0',
     builds: [
       {
         build: '20260901-01',
@@ -11824,7 +11825,7 @@ var RELEASE_NOTES = [
     ]
   },
   {
-    version: '3.0',
+    version: '0.3.0',
     builds: [
       {
         build: '20260820-04',
@@ -12084,7 +12085,7 @@ var RELEASE_NOTES = [
     ]
   },
   {
-    version: '2.9',
+    version: '0.2.9',
     builds: [
       {
         build: '20260714-05',
@@ -12109,7 +12110,7 @@ var RELEASE_NOTES = [
     ]
   },
   {
-    version: '2.8',
+    version: '0.2.8',
     builds: [
       {
         build: '20260714-03',
@@ -12129,7 +12130,7 @@ var RELEASE_NOTES = [
     ]
   },
   {
-    version: '2.7',
+    version: '0.2.7',
     builds: [
       {
         build: '20260714-02',
@@ -12143,7 +12144,7 @@ var RELEASE_NOTES = [
     ]
   },
   {
-    version: '2.6',
+    version: '0.2.6',
     builds: [
       {
         build: '20260714-01',
@@ -12162,7 +12163,7 @@ var RELEASE_NOTES = [
     ]
   },
   {
-    version: '2.5',
+    version: '0.2.5',
     builds: [
       {
         build: '20260713-1',
@@ -12175,7 +12176,7 @@ var RELEASE_NOTES = [
     ]
   },
   {
-    version: '2.4',
+    version: '0.2.4',
     builds: [
       {
         build: '20260712-11',
@@ -12190,7 +12191,7 @@ var RELEASE_NOTES = [
     ]
   },
   {
-    version: '2.3',
+    version: '0.2.3',
     builds: [
       {
         build: '20260712-10',
@@ -12207,7 +12208,7 @@ var RELEASE_NOTES = [
     ]
   },
   {
-    version: '2.2',
+    version: '0.2.2',
     builds: [
       {
         build: '20260712-01',
@@ -12255,7 +12256,7 @@ var RELEASE_NOTES = [
     ]
   },
   {
-    version: '2.1',
+    version: '0.2.1',
     builds: [
       {
         build: '20260711-06',
@@ -12267,7 +12268,7 @@ var RELEASE_NOTES = [
     ]
   },
   {
-    version: '2.1-dev',
+    version: '0.2.1-alpha.1',
     builds: [
       {
         build: '20260711-06',
@@ -12337,7 +12338,7 @@ var RELEASE_NOTES = [
     ]
   },
   {
-    version: '2.0',
+    version: '0.2.0',
     builds: [
       {
         build: '20260708-01',
@@ -12449,7 +12450,7 @@ var RELEASE_NOTES = [
     ]
   },
   {
-    version: '1.9',
+    version: '0.1.9',
     builds: [
       {
         build: '20260623-03',
@@ -12484,7 +12485,7 @@ var RELEASE_NOTES = [
     ]
   },
   {
-    version: '1.8',
+    version: '0.1.8',
     builds: [
       {
         build: '20260622-02',
@@ -12505,7 +12506,7 @@ var RELEASE_NOTES = [
     ]
   },
   {
-    version: '1.7',
+    version: '0.1.7',
     builds: [
       {
         build: '20260620-01',
@@ -12524,7 +12525,7 @@ var RELEASE_NOTES = [
     ]
   },
   {
-    version: '1.6',
+    version: '0.1.6',
     builds: [
       {
         build: '20260619-01',
@@ -12556,7 +12557,7 @@ var RELEASE_NOTES = [
     ]
   },
   {
-    version: '1.5',
+    version: '0.1.5',
     builds: [
       {
         build: '20260618-02',
@@ -12580,7 +12581,7 @@ var RELEASE_NOTES = [
     ]
   },
   {
-    version: '1.4',
+    version: '0.1.4',
     builds: [
       {
         build: '20260617-03',
@@ -12601,7 +12602,7 @@ var RELEASE_NOTES = [
     ]
   },
   {
-    version: '1.3',
+    version: '0.1.3',
     builds: [
       {
         build: '20260617-01',
@@ -12617,7 +12618,7 @@ var RELEASE_NOTES = [
     ]
   },
   {
-    version: '1.2',
+    version: '0.1.2',
     builds: [
       {
         build: '20260616-02',
@@ -12643,7 +12644,7 @@ var RELEASE_NOTES = [
     ]
   },
   {
-    version: '1.1',
+    version: '0.1.1',
     builds: [
       {
         build: '20260615-02',
@@ -12673,7 +12674,7 @@ var RELEASE_NOTES = [
     ]
   },
   {
-    version: '1.0',
+    version: '0.1.0',
     builds: [
       {
         build: '',
@@ -18242,6 +18243,16 @@ function updateTopbarExam() {
             </div>
             <div class="faq-a" style="display:none">
               Not yet. The sign-in card is a deployment preview and no credentials are required at this time. Select <strong>Continue to AQP</strong> to enter the local workspace. Institutional authentication can be connected later without changing the analysis workflow.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFAQ(this)">
+              <span>Why did the AQP version numbers change?</span>
+              <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-a" style="display:none">
+              Before institutional launch, AQP used separate version sequences across two development efforts. The retained release history was normalized into one chronological <strong>0.x</strong> development sequence leading to <strong>1.0</strong>. Existing build numbers and dates did not change, so historical builds, reports, and backups remain traceable. The current version is <strong>1.0.0-beta.1</strong>; version <strong>1.0.0</strong> is reserved for institutional launch.
             </div>
           </div>
 
