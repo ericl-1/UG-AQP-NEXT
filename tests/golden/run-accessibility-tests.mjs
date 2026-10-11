@@ -30,8 +30,16 @@ assert.match(applicationHtml, /AQP analytical Q icon|Analytical-Q identity/, "th
 assert.match(applicationHtml, /aqp-mark aqp-lockup-mark/, "primary headers must use the analytical-Q lockup");
 assert.match(applicationHtml, /class="sp-grid"/, "the Assessment Pulse splash must retain its ECG-style grid");
 assert.match(applicationHtml, /From responses to confident review/, "the approved splash slogan must be present");
+assert.match(applicationHtml, /Institutional sign-in/, "the splash must include the institutional authentication placeholder");
+assert.match(applicationHtml, /No credentials required at this time\./, "the authentication placeholder must explain its preview boundary");
+assert.doesNotMatch(applicationHtml, /Access preview/, "the authentication card must not retain the redundant access-preview eyebrow");
+assert.match(applicationHtml, /window\.addEventListener\('load',startSplashSequence/, "the sign-in preview timer must start after the application finishes loading");
+assert.match(applicationHtml, /spPulseReveal 1\.8s/, "the ECG draw must remain visibly staged before the identity appears");
+assert.match(applicationHtml, /sp-identity-shifted/, "the identity shift must be a separate stage before sign-in appears");
+assert.match(applicationHtml, /#splash-screen>\.sp-grid,#splash-screen>\.sp-pulse,#splash-screen>\.sp-stage\{background-color:transparent!important\}/, "splash layers must not hide the ECG grid with inherited dialog fills");
+assert.match(applicationHtml, /left:87\.5%/, "wide splash layouts must reserve the right side for sign-in");
 assert.doesNotMatch(applicationHtml, /id="sp-pct"|id="sp-fill"/, "the splash must not imply artificial loading progress");
-assert.match(applicationHtml, /APP_BUILD\s*=\s*'20261007-01'/, "the feedback-parser strengthening build must be stamped");
+assert.match(applicationHtml, /APP_BUILD\s*=\s*'20261010-01'/, "the current splash and edge-fixture build must be stamped");
 assert.match(applicationHtml, /class="btn-dl-secondary da-method-btn"[^>]+aria-expanded="false"[^>]+aria-controls="da-methodology-panel"/, "Distractor methodology must use an accessible disclosure control");
 assert.match(applicationHtml, /class="app-version-pill"/, "the footer version must use the theme-aware pill");
 assert.match(applicationHtml, /id="btn-appearance-topbar"/, "the top bar must expose the approved quick Appearance control");
@@ -77,6 +85,39 @@ try {
   assert.ok(await page.locator("#theme-select").count(), "Settings must expose an independent brand control");
   assert.ok(await page.locator("#appearance-select").count(), "Settings must expose an independent appearance control");
 
+  await page.waitForFunction(() => document.getElementById("splash-screen")?.classList.contains("sp-identity-shifted"));
+  assert.equal(await page.locator("#splash-screen").evaluate(el => el.classList.contains("sp-auth-ready")), false, "the identity must move before sign-in rises into view");
+  await page.waitForFunction(() => document.getElementById("splash-screen")?.classList.contains("sp-auth-ready"));
+  assert.equal(await page.locator("#sp-auth-card").getAttribute("aria-hidden"), "false", "the sign-in preview must become available after startup");
+  assert.equal(await page.evaluate(() => document.activeElement?.id), "sp-auth-continue", "the sign-in preview must receive focus when it appears");
+  await page.setViewportSize({ width: 1600, height: 900 });
+  await page.waitForTimeout(950);
+  const wideSplashLayout = await page.evaluate(() => {
+    const identity = document.querySelector(".sp-lockup").getBoundingClientRect();
+    const card = document.querySelector(".sp-auth-card").getBoundingClientRect();
+    const backgrounds = [".sp-grid", ".sp-pulse", ".sp-stage"].map(selector => getComputedStyle(document.querySelector(selector)).backgroundColor);
+    const pulse = document.querySelector(".sp-pulse").getBoundingClientRect();
+    const pulseOpacity = getComputedStyle(document.querySelector(".sp-pulse-path")).opacity;
+    return { identityCenter: identity.left + identity.width / 2, cardCenter: card.left + card.width / 2, pulseRight: pulse.right, backgrounds, pulseOpacity, viewport: innerWidth };
+  });
+  assert.ok(Math.abs(wideSplashLayout.identityCenter / wideSplashLayout.viewport - .375) < .04, `wide splash identity must settle in the left region: ${JSON.stringify(wideSplashLayout)}`);
+  assert.ok(Math.abs(wideSplashLayout.cardCenter / wideSplashLayout.viewport - .875) < .04, `wide splash sign-in must settle in the right region: ${JSON.stringify(wideSplashLayout)}`);
+  assert.ok(wideSplashLayout.pulseRight / wideSplashLayout.viewport < .75, `the ECG line must resize with the left region instead of running behind sign-in: ${JSON.stringify(wideSplashLayout)}`);
+  assert.ok(wideSplashLayout.backgrounds.every(value => value === "rgba(0, 0, 0, 0)"), `splash layers must stay transparent over the ECG grid: ${JSON.stringify(wideSplashLayout)}`);
+  assert.equal(wideSplashLayout.pulseOpacity, "1", "the ECG line itself must remain fully opaque");
+  await page.setViewportSize({ width: 716, height: 806 });
+  await page.waitForTimeout(700);
+  const inAppSplashLayout = await page.evaluate(() => {
+    const identity = document.querySelector(".sp-lockup").getBoundingClientRect();
+    const card = document.querySelector(".sp-auth-card").getBoundingClientRect();
+    return { identityRight: identity.right, cardLeft: card.left, cardRight: card.right, viewport: innerWidth };
+  });
+  assert.ok(inAppSplashLayout.cardLeft > inAppSplashLayout.identityRight, `the in-app-browser splash must place sign-in beside the identity: ${JSON.stringify(inAppSplashLayout)}`);
+  assert.ok(inAppSplashLayout.cardRight <= inAppSplashLayout.viewport, `the in-app-browser sign-in card must remain on screen: ${JSON.stringify(inAppSplashLayout)}`);
+  await page.locator("#sp-auth-continue").click();
+  await page.waitForFunction(() => getComputedStyle(document.getElementById("splash-screen")).display === "none");
+  await page.setViewportSize({ width: 1280, height: 900 });
+
   const contrast = await page.evaluate(() => {
     function rgb(value) {
       const hex = value.trim().replace("#", "");
@@ -102,7 +143,7 @@ try {
   });
   Object.entries(contrast).forEach(([name, ratio]) => assert.ok(ratio >= 4.5, `${name} text contrast is ${ratio.toFixed(2)}:1; expected at least 4.5:1`));
 
-  await page.evaluate(() => { document.getElementById("splash-screen").style.display = "none"; openFAQ(); });
+  await page.evaluate(() => openFAQ());
   const unnamedVisibleButtons = await page.evaluate(() => Array.from(document.querySelectorAll("button")).filter(el => el.getClientRects().length).filter(el => !(el.innerText.trim() || el.getAttribute("aria-label") || el.getAttribute("title"))).map(el => el.id || el.outerHTML.slice(0, 100)));
   assert.deepEqual(unnamedVisibleButtons, [], "visible buttons need accessible names");
   const firstFaq = page.locator("#faq-overlay .faq-q").first();

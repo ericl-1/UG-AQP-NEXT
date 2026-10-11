@@ -95,10 +95,10 @@ try {
       latestReleaseDate: RELEASE_NOTES[0].builds[0].date,
       faqText: document.getElementById("faq-overlay").innerText,
     }));
-    assert.equal(buildMetadata.build, "20261007-01");
+    assert.equal(buildMetadata.build, "20261010-01");
     assert.equal(buildMetadata.faqVersion, "0.8");
-    assert.equal(buildMetadata.faqDate, "October 7, 2026");
-    assert.equal(buildMetadata.releaseDate, "October 7, 2026");
+    assert.equal(buildMetadata.faqDate, "October 10, 2026");
+    assert.equal(buildMetadata.releaseDate, "October 10, 2026");
     assert.equal(buildMetadata.latestReleaseBuild, buildMetadata.build);
     assert.equal(buildMetadata.latestReleaseDate, buildMetadata.releaseDate);
     assert.match(buildMetadata.faqText, /Blocking errors/i);
