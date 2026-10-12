@@ -102,7 +102,7 @@
 </style>
 <style>
 /* ═══════════════════════════════════════════════════════════════════════════
-   AQP design system · Calm clinical intelligence · build 20261010-01
+   AQP design system · Calm clinical intelligence · build 20261011-01
    Centralized visual rules for colour, type, spacing, surfaces, controls,
    tables, status communication, motion, and theme parity.
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -171,6 +171,17 @@ h3,.section-hdr-title{font-size:15px;line-height:1.35;font-weight:650;color:var(
 .logo-text{font-size:14px;font-weight:650;color:var(--c-primary)}
 .topbar-div{height:24px;background:var(--c-border)}
 #topbar-exam-name,.tsz-name{font-size:13.5px;font-weight:600}
+/* Keep the complete exam summary available on narrow screens. It pans only
+   when its measured width exceeds the space between navigation and actions. */
+.topbar-session-zone{overflow:visible}
+.tsz-viewport{flex:1;min-width:0;overflow:hidden;white-space:nowrap;mask-image:linear-gradient(to right,transparent 0,#000 10px,#000 calc(100% - 10px),transparent 100%);-webkit-mask-image:linear-gradient(to right,transparent 0,#000 10px,#000 calc(100% - 10px),transparent 100%)}
+.tsz-track{display:inline-flex;align-items:center;width:max-content;will-change:transform}
+.tsz-track .tsz-name{max-width:none;overflow:visible;text-overflow:clip}
+.tsz-track .tsz-date,.tsz-track .tsz-meta,.tsz-track .tsz-sep{display:inline!important}
+.topbar-session-zone.tsz-overflow .tsz-track{animation:tsz-pan 12s ease-in-out infinite}
+.topbar-session-zone.tsz-overflow .tsz-viewport:hover .tsz-track{animation-play-state:paused}
+@keyframes tsz-pan{0%,15%{transform:translateX(0)}85%,100%{transform:translateX(var(--tsz-shift,0px))}}
+@media(prefers-reduced-motion:reduce){.topbar-session-zone.tsz-overflow .tsz-track{animation:none}.tsz-viewport{mask-image:none;-webkit-mask-image:none;text-overflow:ellipsis}}
 .tsz-date,.tsz-meta{font-size:12px}
 .topbar .btn-icon,.topbar-nav-btn{
   min-height:36px;border:1px solid var(--c-border-2);border-radius:var(--radius-sm);
@@ -2481,10 +2492,10 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 
 // ── App version — single source of truth ─────────────────────────────────
 var APP_VERSION     = '1.0.0-beta.1';
-var APP_BUILD       = '20261010-01';
+var APP_BUILD       = '20261011-01';
 var APP_FAQ_VERSION = '1.0.0-beta.1';  // Keep aligned with the app version; date records FAQ revisions
-var APP_FAQ_DATE    = 'October 10, 2026'; // Update when FAQ content changes
-var APP_RN_DATE     = 'October 10, 2026'; // Update each version close
+var APP_FAQ_DATE    = 'October 11, 2026'; // Update when FAQ content changes
+var APP_RN_DATE     = 'October 11, 2026'; // Update each version close
 var SESSION_BACKUP_FILE_TYPE = 'aqp-portable-session';
 var SESSION_BACKUP_SCHEMA_VERSION = 1;
 
@@ -10889,43 +10900,77 @@ function loadDemonstrationSession(skipConfirm) {
   if(date)date.value='2026-09-28';
   if(coord)coord.value='Demonstration Coordinator';
   var en=document.getElementById('eng-code'), fr=document.getElementById('fre-code'); if(en)en.value='EN'; if(fr)fr.value='FR';
-  var key=['a','b','c','d','a','b','c','d','a','b','c','d'];
-  var labels=[], ids=[]; for(var q=0;q<key.length;q++){labels.push('Synthetic demonstration question '+(q+1));ids.push(String(910001+q)+'/1');}
+  var key=[], labels=[], ids=[];
+  for(var q=0;q<70;q++){
+    key.push(['a','b','c','d'][q%4]);
+    labels.push('Synthetic demonstration question '+(q+1));
+    ids.push(String(910001+q)+'/1');
+  }
+  // A fixed generator keeps the demonstration repeatable. The cohort mirrors a
+  // typical operational exam without containing or imitating real student data.
+  var demoSeed=20261011;
+  function demoRandom(){demoSeed=(demoSeed*1664525+1013904223)>>>0;return demoSeed/4294967296;}
+  function demoLogistic(value){return 1/(1+Math.exp(-value));}
   var students=[];
-  for(var i=0;i<40;i++){
-    var isFr=i>=20, rank=i%20, correct=[];
+  for(var i=0;i<180;i++){
+    var isFr=i>=130, groupIndex=isFr?i-130:i;
+    var groupSize=isFr?50:130;
+    var ability=-2.15+4.3*((groupIndex+0.5)/groupSize)+(demoRandom()-.5)*.35;
+    var correct=[];
     for(var j=0;j<key.length;j++){
-      var ok=false;
-      if(j===0)ok=true;
-      else if(j===1)ok=rank>=16;
-      else if(j===2)ok=rank<8;
-      else if(j===3)ok=isFr?rank>=13:rank>=3;
-      else if(j===4)ok=isFr?rank>=2:true;
-      else if(j===5)ok=rank>=5;
-      else if(j===6)ok=rank>=8;
-      else if(j===7)ok=rank>=10;
-      else if(j===8)ok=rank>=12;
-      else if(j===9)ok=rank>=14;
-      else if(j===10)ok=((rank+(isFr?1:0))%3)!==0;
-      else ok=rank>=6||(rank%5===0);
+      var questionNumber=j+1, ok=false;
+      if(questionNumber===1)ok=true; // intentionally sparse: demonstrates the safeguard
+      else if(questionNumber===70)ok=demoRandom()<.015; // second intentional safeguard example
+      else {
+        var difficulty=-1.25+(j%10)*.25;
+        var discrimination=.9+(j%5)*.13;
+        var languageEffect=0;
+        // Clear uniform DIF examples in each direction.
+        if(questionNumber===12||questionNumber===36||questionNumber===58)languageEffect=isFr?-1.25:0;
+        if(questionNumber===24||questionNumber===47)languageEffect=isFr?1.1:0;
+        // Two interaction-shaped examples: the language gap changes with ability.
+        if(questionNumber===31)languageEffect=isFr?(-.25-1.05*ability):0;
+        if(questionNumber===63)languageEffect=isFr?(.2+.95*ability):0;
+        var probability=demoLogistic(discrimination*ability-difficulty+languageEffect);
+        ok=demoRandom()<probability;
+      }
       correct.push(ok);
     }
-    students.push({stream:isFr?'FR':'EN',courseCode:isFr?'FR':'EN',outcomes:correct.map(function(ok,j){return ok?key[j]:String.fromCharCode(97+((key[j].charCodeAt(0)-96)%4));}),qmScores:correct.map(function(ok){return ok?1:0;}),scores:[],total:correct.filter(Boolean).length,pct:correct.filter(Boolean).length/key.length*100});
+    students.push({stream:isFr?'FR':'EN',courseCode:isFr?'FR':'EN',outcomes:correct.map(function(ok,j){return ok?key[j]:String.fromCharCode(97+((key[j].charCodeAt(0)-96+(i+j)%3)%4));}),qmScores:correct.map(function(ok){return ok?1:0;}),scores:[],total:correct.filter(Boolean).length,pct:correct.filter(Boolean).length/key.length*100});
   }
   G.students=students; G.key=key; G.nQ=key.length; G.qLabels=labels; G.qStatus=key.map(function(){return 'Scored';}); G.elentraIds=ids; G.exclusions={}; G._hasStream=true;
   G._uploadValidation={resultsBlockers:[],resultsWarnings:[],keyBlockers:[],keyWarnings:[]};
   G._reconciliation={resultsDetected:key.length,disclosureExcluded:0,resultsUnscored:[],keyDetected:key.length,keyUnscored:0};
-  G._reconciliationConfirmation={confirmedAt:new Date().toISOString(),source:'demonstration',snapshot:{studentsIncluded:40,resultsDetected:key.length,scoredRetained:key.length,keyMatched:true,effectiveDenominator:key.length,missingResponses:0}};
+  G._reconciliationConfirmation={confirmedAt:new Date().toISOString(),source:'demonstration',snapshot:{studentsIncluded:180,resultsDetected:key.length,scoredRetained:key.length,keyMatched:true,effectiveDenominator:key.length,missingResponses:0}};
   G._sourceFiles={demonstration:{role:'demonstration',name:'Built-in synthetic dataset',sizeBytes:0,lastModified:null,sha256:null,hashStatus:'generated'}};
   G._auditEvents=[]; G._reviewedAt={}; G._isDemo=true;
   FB={raw:[],parsed:[
     {rawIdx:0,text:'Q2 felt unusually difficult and the wording could be clearer.',status:'auto',qNums:[2]},
-    {rawIdx:1,text:'Q4: Please verify that the English and French wording are equivalent.',status:'auto',qNums:[4]},
-    {rawIdx:2,text:'Q7 had two plausible answer options.',status:'auto',qNums:[7]},
-    {rawIdx:3,text:'The exam length and pacing were reasonable.',status:'general',qNums:[]},
-    {rawIdx:4,text:'Question 10 referred to material that was not emphasized.',status:'auto',qNums:[10]}
+    {rawIdx:1,text:'Question 7 had two plausible answer options.',status:'auto',qNums:[7]},
+    {rawIdx:2,text:'Q12: Please verify that the English and French wording are equivalent.',status:'auto',qNums:[12]},
+    {rawIdx:3,text:'Question 12 seemed much clearer in English than in French.',status:'auto',qNums:[12]},
+    {rawIdx:4,text:'Questions 18 and 19 tested very similar concepts.',status:'auto',qNums:[18,19]},
+    {rawIdx:5,text:'Q24 may need a bilingual terminology review.',status:'auto',qNums:[24]},
+    {rawIdx:6,text:'Question 27 referred to material that was not emphasized.',status:'auto',qNums:[27]},
+    {rawIdx:7,text:'Q31 was hard to interpret in the French version.',status:'auto',qNums:[31]},
+    {rawIdx:8,text:'Question 36: the stem felt longer in French.',status:'auto',qNums:[36]},
+    {rawIdx:9,text:'For Q42, option C looked like another defensible answer.',status:'auto',qNums:[42]},
+    {rawIdx:10,text:'Question 47 used terminology differently across the two versions.',status:'auto',qNums:[47]},
+    {rawIdx:11,text:'Q58 should be checked for translation consistency.',status:'auto',qNums:[58]},
+    {rawIdx:12,text:'Question 63 was confusing even after rereading it.',status:'auto',qNums:[63]},
+    {rawIdx:13,text:'The final question did not appear to have a workable answer.',status:'auto',qNums:[70]},
+    {rawIdx:14,text:'The exam length and pacing were reasonable.',status:'general',qNums:[]},
+    {rawIdx:15,text:'The instructions at the beginning were clear.',status:'general',qNums:[]},
+    {rawIdx:16,text:'More time would have helped with the longer clinical stems.',status:'general',qNums:[]},
+    {rawIdx:17,text:'I appreciated the mix of straightforward and applied questions.',status:'general',qNums:[]},
+    {rawIdx:18,text:'The question about the medication dose was unclear.',status:'pending',qNums:[]},
+    {rawIdx:19,text:'The diagram question should identify what the arrows represent.',status:'pending',qNums:[]},
+    {rawIdx:20,text:'The second question on the last page repeated an earlier idea.',status:'pending',qNums:[]},
+    {rawIdx:21,text:'No comment.',status:'discard',qNums:[]},
+    {rawIdx:22,text:'N/A',status:'discard',qNums:[]},
+    {rawIdx:23,text:'Thank you.',status:'discard',qNums:[]}
   ],pending:[],grouped:{},bareRefs:{},general:[],examTitle:'AQP Synthetic Demonstration Exam',examDate:'2026-09-28',manualMaxQ:null,maxQUsed:key.length,maxQSource:'mcq',ready:false};
-  recordAuditEvent('demonstration_loaded',{students:40,questions:key.length,feedbackComments:FB.parsed.length});
+  recordAuditEvent('demonstration_loaded',{students:180,englishStudents:130,frenchStudents:50,questions:key.length,feedbackComments:FB.parsed.length});
   runFeedbackAnalysis();
   _runAnalysis();
   var banner=document.getElementById('demo-session-banner'); if(banner)banner.style.display='flex';
@@ -11489,6 +11534,17 @@ var RELEASE_NOTES = [
   {
     version: '1.0.0-beta.1',
     builds: [
+      {
+        build: '20261011-01',
+        date:  'October 11, 2026',
+        notes: [
+          'Expanded the built-in demonstration to resemble a typical faculty exam: 180 fictional students, including 130 in the English stream and 50 in the French stream, across 70 fictional questions.',
+          'Added several repeatable DIF examples in both language directions and across different ability levels. Most questions can now be assessed for DIF, while two deliberately extreme questions continue to demonstrate why AQP sometimes reports Unable to assess.',
+          'Expanded the synthetic feedback to 24 varied comments: question-specific and multi-question feedback, general exam comments, bilingual wording concerns, comments needing manual assignment, and clearly non-actionable comments marked for discard.',
+          'Made the exam summary in the results header pan gently when a smaller screen cannot display the full exam name, date, student count, and question count. It remains still when there is enough room, keeps Edit fixed, and respects reduced-motion preferences.',
+          'Strengthened the end-to-end demonstration checks so they protect cohort size, language balance, DIF coverage, intentional safeguards, feedback routing, item-review displays, reports, exports, and reopenable backups.'
+        ]
+      },
       {
         build: '20261010-01',
         date:  'October 10, 2026',
@@ -17988,13 +18044,26 @@ function renderTopbarSession() {
     try { dateStr = new Date(dateVal+'T12:00:00').toLocaleDateString('en-CA',{year:'numeric',month:'short',day:'numeric'}); } catch(e) { dateStr = dateVal; }
   }
   var meta = hasMcq ? (G._lastN + ' students · ' + G.nQ + ' Q') : '';
-  var html = '<span class="tsz-name">' + escHtml(title) + '</span>';
+  var summaryLabel = [title,dateStr,meta].filter(Boolean).join(' · ');
+  var html = '<div class="tsz-viewport" title="' + escHtml(summaryLabel) + '" aria-label="' + escHtml(summaryLabel) + '"><div class="tsz-track"><span class="tsz-name">' + escHtml(title) + '</span>';
   if (dateStr) html += '<span class="tsz-sep sep-date">·</span><span class="tsz-date">' + escHtml(dateStr) + '</span>';
   if (meta)    html += '<span class="tsz-sep">·</span><span class="tsz-meta">' + meta + '</span>';
-  html += '<button class="tsz-edit" onclick="startTopbarEdit()">edit</button>';
+  html += '</div></div><button class="tsz-edit" onclick="startTopbarEdit()">edit</button>';
   zone.innerHTML = html;
   zone.style.display = 'flex';
+  requestAnimationFrame(syncTopbarSessionOverflow);
 }
+
+function syncTopbarSessionOverflow() {
+  var zone=document.getElementById('topbar-session-zone');
+  var viewport=zone&&zone.querySelector('.tsz-viewport');
+  var track=zone&&zone.querySelector('.tsz-track');
+  if(!zone||!viewport||!track)return;
+  var overflow=Math.max(0,track.scrollWidth-viewport.clientWidth);
+  zone.classList.toggle('tsz-overflow',overflow>2);
+  zone.style.setProperty('--tsz-shift',(-overflow)+'px');
+}
+window.addEventListener('resize',function(){requestAnimationFrame(syncTopbarSessionOverflow);});
 
 function startTopbarEdit() {
   var bc = document.getElementById('banner-card');
@@ -18217,7 +18286,7 @@ function updateTopbarExam() {
               <span class="faq-icon">+</span>
             </div>
             <div class="faq-a">
-              Yes. Choose <strong>Explore a demonstration</strong> on the home screen. AQP loads a deterministic synthetic bilingual exam with 40 fictional students, 12 fictional questions, DIF examples, flags, and synthetic feedback. A banner remains visible throughout the session so it cannot be mistaken for an operational exam. Starting the demonstration replaces the current working session only after confirmation; export or retain any real session you still need first.
+              Yes. Choose <strong>Explore a demonstration</strong> on the home screen. AQP loads a deterministic synthetic bilingual exam shaped like a typical faculty exam: 180 fictional students (130 English and 50 French), 70 fictional questions, several DIF examples, item-review flags, a small number of intentional DIF safeguards, and synthetic feedback. A banner remains visible throughout the session so it cannot be mistaken for an operational exam. Starting the demonstration replaces the current working session only after confirmation; export or retain any real session you still need first.
             </div>
           </div>
 

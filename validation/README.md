@@ -2,6 +2,8 @@
 
 This package recalculates the synthetic golden exam without executing or reusing AQP's JavaScript statistics. It uses direct NumPy formulas for scoring, difficulty, point-biserial discrimination, and Cronbach's alpha. It uses statsmodels for logistic-regression DIF models and SciPy for chi-square probabilities.
 
+`validate_realistic_demo.py` separately recreates the 180-student, 70-question built-in demonstration design and confirms its DIF coverage and intended signals with statsmodels and SciPy. Its readable result is retained in `REALISTIC_DEMO_VALIDATION.md`.
+
 Run from the project folder:
 
 ```bash
@@ -11,7 +13,8 @@ sh validation/run_validation.sh
 The first run creates an isolated `.validation-venv` and installs the exact library versions in `requirements.txt`. Later runs reuse that environment. The command writes:
 
 - `validation/reference_results.json`: machine-readable calculations and every comparison.
-- `validation/INDEPENDENT_STATISTICAL_VALIDATION.md`: human-readable validation report.
+- `validation/INDEPENDENT_STATISTICAL_VALIDATION.md`: human-readable golden-exam validation report.
+- `validation/REALISTIC_DEMO_VALIDATION.md`: human-readable validation of the 180-student demonstration design.
 
 The script exits with a non-zero status if any checked result differs beyond its stated tolerance. The `.validation-venv` folder is machine-specific and should not be committed to GitHub.
 

@@ -3,11 +3,19 @@
 ## Build identity
 
 - Starting point: AQP `1.0.0-beta.1`, build `20260923-01` (`Downloads/index.html`; originally labelled 0.8)
-- Current development build: AQP `1.0.0-beta.1`, build `20261010-01`
+- Current development build: AQP `1.0.0-beta.1`, build `20261011-01`
 - Working branch: `feature/synthetic-edge-fixtures`
 - Working file: `index.html` in the isolated development worktree
 - The Downloads baseline was not modified.
-- Builds through `20261007-01` have been retained in GitHub. Build `20261010-01` is being developed in the isolated worktree and is not live until its pull request is approved and merged.
+- Builds through `20261010-01` have been retained in GitHub. Build `20261011-01` is being developed in the isolated worktree and is not live until its pull request is approved and merged.
+
+## Build 20261011-01 — Realistic bilingual demonstration
+
+- Expanded the built-in demonstration from 40 students and 12 questions to a deterministic, entirely fictional 180-student, 70-question exam with 130 English-stream and 50 French-stream students.
+- Added repeatable uniform and ability-dependent DIF patterns in both language directions. At least 65 questions must remain estimable in the automated test, with several formal review examples and two intentional sparse-cell safeguards.
+- Expanded demonstration feedback to 24 comments covering question-specific, multi-question, general, bilingual wording, unmapped, and discarded examples.
+- Added overflow-aware horizontal panning for the results-header exam summary on smaller screens while keeping the Edit action fixed and respecting reduced-motion preferences.
+- Strengthened the browser regression coverage for cohort shape, DIF estimation coverage, feedback routing, item-review evidence, audit records, reports, exports, and portable-session recovery.
 
 ## Build 20261010-01 — Synthetic edge fixtures and sign-in preview
 

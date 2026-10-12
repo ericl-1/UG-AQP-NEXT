@@ -10,3 +10,4 @@ if [ ! -x "$VALIDATION_ENV/bin/python" ]; then
 fi
 
 "$VALIDATION_ENV/bin/python" "$PROJECT_DIR/validation/reference_validation.py"
+"$VALIDATION_ENV/bin/python" "$PROJECT_DIR/validation/validate_realistic_demo.py"

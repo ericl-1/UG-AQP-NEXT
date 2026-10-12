@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document records recommended future work for the Assessment Quality Platform after the QA, remediation, design-system consolidation, automated accessibility pass, analysis-record consolidation, identity/icon refresh, Student Feedback navigation restructure, Dark Mode/Assessment Pulse refresh, Feedback Overview workflow, Distractor Analysis live-review enhancement, setup-wizard Dark Mode completion, feedback-parser strengthening, synthetic edge-fixture coverage, and institutional sign-in preview delivered through version `1.0.0-beta.1`, build `20261010-01`.
+This document records recommended future work for the Assessment Quality Platform after the QA, remediation, design-system consolidation, automated accessibility pass, analysis-record consolidation, identity/icon refresh, Student Feedback navigation restructure, Dark Mode/Assessment Pulse refresh, Feedback Overview workflow, Distractor Analysis live-review enhancement, setup-wizard Dark Mode completion, feedback-parser strengthening, synthetic edge-fixture coverage, institutional sign-in preview, and realistic bilingual demonstration delivered through version `1.0.0-beta.1`, build `20261011-01`.
 
 These are forward-looking improvements rather than defects remaining from the two QA passes. Completed corrections are documented separately in `AQP_CHANGE_SUMMARY_2026-09-23.md`.
 
@@ -15,6 +15,8 @@ These are forward-looking improvements rather than defects remaining from the tw
 A synthetic end-to-end golden case now exists under `tests/golden/`. It exercises the production HTML in Chrome and freezes expected MCQ, DIF, and feedback results. Run it before every release with `npm test`.
 
 The first case verifies student/question counts, disclosure and trailing-unscored exclusions, answer-key reconstruction, score reconciliation, difficulty, discrimination, Cronbach's alpha, DIF flagging, sparse-cell suppression, feedback attribution, and feedback categories.
+
+The built-in demonstration now provides a second realistic presentation-scale scenario: 180 fictional students (130 English and 50 French), 70 fictional questions, broadly estimable DIF results, several known DIF patterns, two intentional safeguard examples, and 24 comments spanning all feedback-routing states. Its end-to-end checks prevent the demonstration from drifting back to a small or mostly non-estimable sample.
 
 The second case now verifies:
 

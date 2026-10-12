@@ -10,9 +10,9 @@ This is computationally independent validation, not an external statistician's i
 
 ## Software
 
-- python: 3.12.14
-- numpy: 2.5.3
-- scipy: 1.16.2
+- python: 3.9.6
+- numpy: 2.0.2
+- scipy: 1.13.1
 - statsmodels: 0.14.5
 - openpyxl: 3.1.5
 

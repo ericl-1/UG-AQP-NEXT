@@ -39,7 +39,7 @@ assert.match(applicationHtml, /sp-identity-shifted/, "the identity shift must be
 assert.match(applicationHtml, /#splash-screen>\.sp-grid,#splash-screen>\.sp-pulse,#splash-screen>\.sp-stage\{background-color:transparent!important\}/, "splash layers must not hide the ECG grid with inherited dialog fills");
 assert.match(applicationHtml, /left:87\.5%/, "wide splash layouts must reserve the right side for sign-in");
 assert.doesNotMatch(applicationHtml, /id="sp-pct"|id="sp-fill"/, "the splash must not imply artificial loading progress");
-assert.match(applicationHtml, /APP_BUILD\s*=\s*'20261010-01'/, "the current splash and edge-fixture build must be stamped");
+assert.match(applicationHtml, /APP_BUILD\s*=\s*'20261011-01'/, "the current splash and realistic-demonstration build must be stamped");
 assert.match(applicationHtml, /function plainReleaseNote\(note\)/, "release notes must include a plain-language presentation pass");
 assert.match(applicationHtml, /class="btn-dl-secondary da-method-btn"[^>]+aria-expanded="false"[^>]+aria-controls="da-methodology-panel"/, "Distractor methodology must use an accessible disclosure control");
 assert.match(applicationHtml, /class="app-version-pill"/, "the footer version must use the theme-aware pill");
@@ -290,7 +290,7 @@ try {
   assert.equal(feedbackOnlyRooms.reports.feedbackOnlyState, false, "feedback Reports must remain available");
 
   await page.evaluate(() => loadDemonstrationSession(true));
-  await page.waitForFunction(() => G._lastN === 40 && G.mcq?.length === 12);
+  await page.waitForFunction(() => G._lastN === 180 && G.mcq?.length === 70);
   await page.evaluate(() => applyAppearance("dark"));
   await page.waitForTimeout(250);
   const darkMode = await page.evaluate(() => {
