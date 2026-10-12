@@ -60,7 +60,7 @@ try {
     await page.addScriptTag({ path: path.join(projectRoot, "tests", "golden", "jszip.min.js") });
   }
   await page.evaluate(() => { localStorage.clear(); loadDemonstrationSession(true); });
-  await page.waitForFunction(() => G._lastN === 40 && G.mcq?.length === 12 && FB.ready === true);
+  await page.waitForFunction(() => G._lastN === 180 && G.mcq?.length === 70 && FB.ready === true);
 
   const initial = await page.evaluate(() => ({
     build: APP_BUILD,
@@ -71,6 +71,9 @@ try {
     questions: G.nQ,
     feedback: FB.parsed.length,
     difLength: G.dif.length,
+    estimatedDif: G.dif.filter(d => !d.suppressionCode).length,
+    flaggedDif: G.dif.filter(d => d.imp).map(d => d.num),
+    streams: { english: G.students.filter(s => s.stream === "EN").length, french: G.students.filter(s => s.stream === "FR").length },
     hasStream: G._hasStream,
     enabled: G_DIF_ENABLED,
     suppressions: G.dif.filter(d => d.suppressionCode).map(d => ({ number: d.num, code: d.suppressionCode, reason: d.suppressionReason })),
@@ -248,13 +251,36 @@ try {
       return { uottawa, elentra };
     })(),
   }));
-  assert.equal(initial.build, "20261010-01");
+  const originalViewport = page.viewportSize();
+  await page.setViewportSize({ width: 760, height: 900 });
+  await page.waitForFunction(() => document.getElementById("topbar-session-zone")?.classList.contains("tsz-overflow"));
+  const narrowHeader = await page.evaluate(() => {
+    const zone = document.getElementById("topbar-session-zone");
+    const viewport = zone.querySelector(".tsz-viewport");
+    const track = zone.querySelector(".tsz-track");
+    const edit = zone.querySelector(".tsz-edit");
+    return {
+      label: viewport.getAttribute("aria-label"),
+      overflow: track.scrollWidth > viewport.clientWidth,
+      animation: getComputedStyle(track).animationName,
+      editVisible: edit.offsetWidth > 0,
+    };
+  });
+  await page.setViewportSize(originalViewport);
+  assert.equal(initial.build, "20261011-01");
   assert.equal(initial.title, "AQP Synthetic Demonstration Exam");
   assert.equal(initial.bannerVisible, true);
   assert.equal(initial.isDemo, true);
-  assert.equal(initial.students, 40);
-  assert.equal(initial.questions, 12);
-  assert.equal(initial.feedback, 5);
+  assert.equal(initial.students, 180);
+  assert.equal(initial.questions, 70);
+  assert.deepEqual(initial.streams, { english: 130, french: 50 });
+  assert.equal(initial.feedback, 24);
+  assert.match(narrowHeader.label, /AQP Synthetic Demonstration Exam · Sep 28, 2026 · 180 students · 70 Q/);
+  assert.equal(narrowHeader.overflow, true, "the narrow header fixture must genuinely overflow");
+  assert.equal(narrowHeader.animation, "tsz-pan", "only an overflowing exam summary should pan horizontally");
+  assert.equal(narrowHeader.editVisible, true, "the edit action must remain fixed and visible while the summary pans");
+  assert.ok(initial.estimatedDif >= 65, `at least 65 of 70 demonstration items should produce DIF estimates; received ${initial.estimatedDif}`);
+  assert.ok(initial.flaggedDif.length >= 3, `the demonstration should contain several reviewable DIF examples; received ${initial.flaggedDif}`);
   assert.ok(initial.suppressions.length > 0, `demo must exercise DIF suppression; enabled=${initial.enabled}, hasStream=${initial.hasStream}, difLength=${initial.difLength}, table=${initial.difText}`);
   assert.ok(initial.suppressions.every(s => s.code && s.reason), "every suppression needs a code and explanation");
   assert.match(initial.difText, /Unable to assess/i);
@@ -268,21 +294,16 @@ try {
   assert.match(initial.difView.unableDetails.text, /What this means:/i);
   assert.match(initial.difView.unableDetails.text, /Technical details:/i);
   assert.doesNotMatch(initial.distractorQ2, /Option (A|D|E).*possible defensible answer/i, "unselected options must not be labelled key competitors");
-  assert.match(initial.distractorQ2, /Quartile 3: 100% chose option C vs 0% for keyed option B/i, "real key competition must identify both percentages and the keyed option");
-  assert.deepEqual(initial.distractorQ3.qN, [10, 10, 10, 10], "demo Q3 must retain four equal performance groups");
-  assert.deepEqual(initial.distractorQ3.c, [10, 6, 0, 0], "demo Q3 keyed-option counts must run from lowest to highest performance group");
-  assert.deepEqual(initial.distractorQ3.d, [0, 4, 10, 10], "demo Q3 distractor counts must run from lowest to highest performance group");
-  assert.equal(initial.distractorQ3.globalC, 16);
-  assert.equal(initial.distractorQ3.globalD, 24);
-  assert.equal(initial.distractorQ3.distributionWidths.C, "40%", "global answer bars must use the actual percentage");
-  assert.equal(initial.distractorQ3.distributionWidths.D, "60%", "global answer bars must not stretch the most popular option to 100%");
-  assert.match(initial.distractorQ3.html, /Quartile 3: 100% chose option D vs 0% for keyed option C/i);
-  assert.match(initial.distractorQ3.html, /Quartile 4: 100% chose option D vs 0% for keyed option C/i);
-  assert.match(initial.distractorQ3.html, /within-quartile percentages, not the overall answer distribution/i);
-  assert.match(initial.distractorQ3.evidence, /Quartile 3: 100% chose option D vs 0% for keyed option C/i, "observed evidence must be presented separately before interpretation");
+  assert.match(initial.distractorQ2, /Selection of keyed option B rises across all four quartiles/i, "healthy demonstration items should explain their observed quartile pattern");
+  assert.deepEqual(initial.distractorQ3.qN, [45, 45, 45, 45], "the realistic demo cohort must split into four equal performance groups");
+  assert.equal(initial.distractorQ3.qN.reduce((sum, count) => sum + count, 0), 180);
+  assert.ok(initial.distractorQ3.globalC > 0 && initial.distractorQ3.globalD > 0, "Q3 should exercise both its key and a functioning distractor");
+  assert.match(initial.distractorQ3.distributionWidths.C, /%$/, "global answer bars must use percentages");
+  assert.match(initial.distractorQ3.distributionWidths.D, /%$/, "global answer bars must use percentages");
+  assert.ok(initial.distractorQ3.evidence, "observed distractor evidence must be presented separately before interpretation");
   assert.deepEqual(initial.distractorQ3.relatedLabels, ["Student feedback", "DIF analysis", "Exception"], "related evidence must exclude Review Queue state");
   assert.ok(initial.distractorQ3.optionRoles.includes("✓ key"), "keyed options must be labelled directly in charts");
-  assert.deepEqual(initial.distractorQ3.quartileSizes, ["N=10", "N=10", "N=10", "N=10"], "quartile headers must disclose their group sizes");
+  assert.deepEqual(initial.distractorQ3.quartileSizes, ["N=45", "N=45", "N=45", "N=45"], "quartile headers must disclose their group sizes");
   assert.equal(initial.distractorMethodology.expanded, "true");
   assert.equal(initial.distractorMethodology.hidden, false);
   assert.match(initial.distractorMethodology.text, /evidence prompts, not automated decisions/i);
@@ -293,7 +314,7 @@ try {
   assert.equal(initial.difKpiInToolbar, true, "DIF KPI tiles must share the toolbar row with the CSV action");
   assert.equal(initial.readiness.ready, false, "unreviewed demo flags should produce advisory readiness");
   assert.equal(initial.audit.demonstration, true);
-  assert.equal(initial.audit.application.build, "20261010-01");
+  assert.equal(initial.audit.application.build, "20261011-01");
   assert.equal(initial.audit.sourceFiles.demonstration.name, "Built-in synthetic dataset");
   assert.ok(initial.audit.inputInterpretation.reconciliation);
   assert.ok(initial.audit.events.some(event => event.type === "demonstration_loaded"));
@@ -341,12 +362,12 @@ try {
       topQuestionLabels: [...document.querySelectorAll(".fb-top-question")].map(el => el.getAttribute("aria-label")),
     };
   });
-  assert.match(feedbackOverview.title, /ready for coordinator review/i);
+  assert.match(feedbackOverview.title, /3 comments still need routing/i);
   assert.deepEqual(feedbackOverview.routing, [
-    { value: "5", label: "Responses received" },
-    { value: "4", label: "Question-attributed" },
-    { value: "1", label: "General feedback" },
-    { value: "0", label: "Unmapped" },
+    { value: "24", label: "Responses received" },
+    { value: "14", label: "Question-attributed" },
+    { value: "4", label: "General feedback" },
+    { value: "3", label: "Unmapped · 3 discarded" },
   ]);
   assert.equal(feedbackOverview.reviewAction, true, "Feedback Overview must provide a direct path to detailed review");
   assert.ok(feedbackOverview.topQuestionCount > 0, "Feedback Overview must surface the most-commented questions");
@@ -500,11 +521,13 @@ try {
   assert.equal(feedbackNavigation.unmapped.title, "Unmapped Comments");
   assert.equal(feedbackNavigation.unmapped.kpiVisible, false);
   assert.equal(feedbackNavigation.unmapped.activeNav, "nav-mapping");
-  assert.match(feedbackNavigation.unmapped.contentText, /No unmapped comments/);
+  assert.match(feedbackNavigation.unmapped.contentText, /3 comments need your review/);
   assert.doesNotMatch(feedbackNavigation.unmapped.contentText, /NaN%/);
 
   const ready = await page.evaluate(() => {
     const now = new Date().toISOString();
+    (FB.pending || []).forEach(idx => { if (FB.parsed[idx]?.status === "pending") FB.parsed[idx].status = "general"; });
+    groupComments();
     getReviewQueueQuestions().forEach(q => { _reviewState[q] = true; G._reviewedAt[q] = now; });
     renderReviewQueue(); renderReportReadiness(); saveSession();
     return { state: getReportReadiness(), audit: buildAuditSnapshot(), panel: document.getElementById("report-readiness").innerText };
@@ -559,7 +582,7 @@ try {
   assert.match(path.basename(jsonPath), /_analysis-record\.json$/);
   assert.equal(json.recordType, "aqp-analysis-record");
   assert.equal(json.schemaVersion, "1.0");
-  assert.equal(json.meta.build, "20261010-01");
+  assert.equal(json.meta.build, "20261011-01");
   assert.deepEqual(json.summary, recordUi.canonical.summary);
   assert.deepEqual(json.thresholds, recordUi.canonical.thresholds);
   assert.deepEqual(json.questions, recordUi.canonical.questions);
@@ -580,7 +603,7 @@ try {
   assert.equal(backup.fileType, "aqp-portable-session");
   assert.equal(backup.session.G.isDemo, true);
   await page.evaluate(data => { resetAll(); importPortableSessionObject(data); }, backup);
-  await page.waitForFunction(() => G._lastN === 40 && G._isDemo === true);
+  await page.waitForFunction(() => G._lastN === 180 && G._isDemo === true);
   const restored = await page.evaluate(() => ({
     sourceFiles: G._sourceFiles,
     auditEvents: G._auditEvents,
