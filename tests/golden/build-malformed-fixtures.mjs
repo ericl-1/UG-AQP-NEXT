@@ -91,6 +91,18 @@ await variant(resultsPath, "results_invalid_outcome.xlsx", async sheet => {
   sheet.getRange("K4").values = [["Banana"]];
 }, "H1:Q7");
 
+await variant(resultsPath, "results_invalid_numbered_outcome.xlsx", async sheet => {
+  sheet.getRange("K4").values = [["6_0 Unsupported option"]];
+}, "H1:Q7");
+
+await variant(resultsPath, "results_missing_outcome_header.xlsx", async sheet => {
+  sheet.getRange("M3").values = [["Response"]];
+}, "H1:Q7");
+
+await variant(resultsPath, "results_multiple_disclosures.xlsx", async sheet => {
+  sheet.getRange("L2").values = [["Academic integrity agreement"]];
+}, "H1:Q7");
+
 await variant(resultsPath, "results_unknown_stream.xlsx", async sheet => {
   sheet.getRange("A4").values = [["X"]];
 }, "A1:Q6");
@@ -114,8 +126,12 @@ await variant(keyPath, "key_invalid_answer.xlsx", async sheet => {
   sheet.getRange("K4").values = [["6_0 Unsupported option"]];
 }, "H1:Q5");
 
+await variant(keyPath, "key_missing_outcome_header.xlsx", async sheet => {
+  sheet.getRange("M3").values = [["Response"]];
+}, "H1:Q5");
+
 await variant(keyPath, "key_crossfile_mismatch.xlsx", async sheet => {
   sheet.getRange("J2").values = [["<font color=\"white\">Question ID: 999999/4</font> Different wording from the results workbook."]];
 }, "H1:Q5");
 
-console.log(`Created 14 malformed-upload fixture workbooks in ${outputDir}`);
+console.log(`Created 18 malformed-upload fixture workbooks in ${outputDir}`);
