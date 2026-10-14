@@ -30,7 +30,7 @@ The third suite uses fourteen synthetic workbooks and fifteen scenarios to verif
 
 The second suite now also performs a portable-session export/import round trip, verifies restored statistics and coordinator state, checks privacy fields, and rejects report-only, malformed, and future-schema files. The next additions should concentrate on missing-response and single-language cases, older supported session-schema migration, and exact report approval/audit metadata.
 
-#### 2. Expand independent statistical validation (synthetic and first operational validation completed September 25, 2026)
+#### 2. Expand independent statistical validation (additional edge-case validation completed October 14, 2026)
 
 A separate Python reference implementation now validates the first synthetic golden exam using NumPy, statsmodels, and SciPy. All 112 reliable comparisons passed within tolerance. The retained package is under `validation/`.
 
@@ -46,6 +46,8 @@ Continue the independent validation across additional datasets. Validate at mini
 - Additional formal and suggestive DIF patterns
 
 Retain the comparison scripts, expected outputs, tolerances, and sign-off as a formal validation package.
+
+The October 14 follow-up added an independent Python pass over the retained missing-response, single-language, and small-sample workbooks. It verifies cohort composition, scored-question selection, missing-response counts, reconstructed scores, classical-test summaries, and conservative DIF prerequisites without executing AQP's JavaScript. All three edge datasets passed. Additional operational datasets and formal external sign-off remain future work.
 
 #### 3. Maintain a versioned test-data package
 
@@ -101,7 +103,7 @@ The importer should:
 - Still recommended: explicit migrations when a future schema version makes migration necessary.
 - Continue to ensure imported text is rendered as text and never evaluated as code or markup.
 
-#### 6. Complete the remaining upload-validation edge cases
+#### 6. Complete the remaining upload-validation edge cases (gap audit completed October 14, 2026)
 
 The principal validation framework is now in place: malformed uploads, duplicate and missing identifiers, duplicate question numbers, invalid responses and keys, results/key mismatches, mixed scored/Unscored outcomes, stream warnings, and stale-data clearing are covered by the validation interface and retained browser tests.
 
@@ -122,6 +124,8 @@ Before analysis, detect and explain:
 - Substantial disagreement between reconstructed and QuestionMark scores
 
 Errors should distinguish between conditions that block analysis and warnings that require coordinator review.
+
+The October 14 audit confirmed that most listed conditions were already implemented and protected by retained browser tests. It closed three remaining gaps: numbered QuestionMark responses outside 1–5 now block; unmatched Score/Outcome headers now block; and multiple strongly labelled disclosure or consent items now produce a review warning while only a confirmed Question 1 is excluded automatically. Continue adding anonymized operational fixtures when a new export variation is encountered.
 
 #### 7. Add an analysis validation screen (completed in build `20260927-02`)
 
@@ -486,4 +490,4 @@ The implementation:
 
 ## Recommended immediate next task
 
-Audit the remaining upload-validation edge cases against representative operational exports. Many listed conditions are already covered, so the first step is a gap analysis rather than adding duplicate warnings. Any confirmed gap should receive a focused fixture and browser regression case before its validation message is changed.
+Begin the protected modular-source work described in `AQP_MODULARIZATION_ROLLBACK_PLAN.md`, or complete the remaining institutional/manual validation activities. The upload-validation gap audit and retained edge-case statistical validation are complete; future additions should be driven by new anonymized operational formats or datasets.

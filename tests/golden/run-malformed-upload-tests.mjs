@@ -196,6 +196,8 @@ try {
     ["results_duplicate_question_number.xlsx", /Duplicate question number/i],
     ["results_mixed_unscored.xlsx", /mixes scored and Unscored/i],
     ["results_invalid_outcome.xlsx", /Unrecognised response value/i],
+    ["results_invalid_numbered_outcome.xlsx", /Unrecognised response value/i],
+    ["results_missing_outcome_header.xlsx", /missing its matching Score or Outcome header/i],
     ["results_invalid_question_version.xlsx", /version must be a positive number/i],
   ];
   for (const [file, pattern] of blockedResults) {
@@ -208,6 +210,17 @@ try {
     await page.evaluate(() => confirmParsePreview("qm"));
     actual = await state(page);
     assert.equal(actual.confirmed, false, file);
+    await page.close();
+  }
+
+  // Multiple strongly labelled disclosure/consent items require review rather
+  // than silently excluding anything beyond the confirmed first question.
+  {
+    const page = await loadPair(path.join(malformedDir, "results_multiple_disclosures.xlsx"), null);
+    const actual = await state(page);
+    assert.deepEqual(actual.blockers, []);
+    assert.ok(actual.warnings.some(message => /Multiple possible Disclosure or consent items/i.test(message)));
+    assert.equal(actual.confirmDisabled, false);
     await page.close();
   }
 
@@ -233,6 +246,7 @@ try {
     ["key_count_mismatch.xlsx", /Question count mismatch/i],
     ["key_blank_answer.xlsx", /Missing or unsupported answer key value/i],
     ["key_invalid_answer.xlsx", /Missing or unsupported answer key value/i],
+    ["key_missing_outcome_header.xlsx", /missing its matching Score or Outcome header/i],
     ["key_crossfile_mismatch.xlsx", /Question ID\/version differs|Question wording differs/i],
   ];
   for (const [file, pattern] of blockedKeys) {

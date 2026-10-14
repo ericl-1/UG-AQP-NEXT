@@ -11,3 +11,4 @@ fi
 
 "$VALIDATION_ENV/bin/python" "$PROJECT_DIR/validation/reference_validation.py"
 "$VALIDATION_ENV/bin/python" "$PROJECT_DIR/validation/validate_realistic_demo.py"
+"$VALIDATION_ENV/bin/python" "$PROJECT_DIR/validation/validate_edge_cases.py"

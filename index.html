@@ -3922,7 +3922,7 @@ function parseOutcome(v) {
   var m = s.match(/^(\d+)_/);
   if (m) {
     var n = parseInt(m[1]);
-    return n >= 1 ? String.fromCharCode(96 + n) : '';
+    return n >= 1 && n <= 5 ? String.fromCharCode(96 + n) : '';
   }
   // Bare letter
   if (/^[a-eA-E]$/.test(s)) return s.toLowerCase();
@@ -4063,9 +4063,14 @@ function parseResults(text, xlsxRows, isCsv) {
   // Find Score/Outcome pairs — scan header row for 'score'/'outcome' pattern
   // Each question spans 2 cols: Score at col N, Outcome at col N+1
   var qPairs = []; // [{scoreCol, outcomeCol}]
+  var malformedQuestionHeaders = [];
   for (var i = 0; i < h.length - 1; i++) {
     if (h[i] === 'score' && h[i+1] === 'outcome') {
       qPairs.push({scoreCol: i, outcomeCol: i+1});
+    } else if (h[i] === 'score') {
+      malformedQuestionHeaders.push(i+1);
+    } else if (h[i] === 'outcome' && (i===0 || h[i-1] !== 'score')) {
+      malformedQuestionHeaders.push(i+1);
     }
   }
 
@@ -4077,6 +4082,9 @@ function parseResults(text, xlsxRows, isCsv) {
     ], 'Headers found: ' + h.slice(0,10).join(', ')); return;
   }
   G._reconciliation.resultsDetected=qPairs.length;
+  if (malformedQuestionHeaders.length) {
+    qmAddUploadIssue('results','blocker','A question column is missing its matching Score or Outcome header. Check column'+(malformedQuestionHeaders.length!==1?'s ':' ')+malformedQuestionHeaders.join(', ')+'.');
+  }
 
   // Get question labels from rows[0] (SheetJS puts merged Q labels here)
   // Map: scoreCol → question number
@@ -4101,6 +4109,7 @@ function parseResults(text, xlsxRows, isCsv) {
   // (pass rate > 95%, or outcome text contains 'yes'/'agree')
   var questions = [];
   var disclosureDetected = false;
+  var possibleDisclosureQuestions = [];
 
   // First pass: check if Q1 is a real Disclosure
   for (var qi = 0; qi < qPairs.length; qi++) {
@@ -4124,6 +4133,21 @@ function parseResults(text, xlsxRows, isCsv) {
     var isDisc = passRate > 0.95 || sampleOut.indexOf('yes') >= 0 || sampleOut.indexOf('agree') >= 0 || sampleOut.indexOf('1_0') === 0;
     if (isDisc) { G._hasDisclosure = true; disclosureDetected = true; }
     break;
+  }
+
+  // Flag additional strongly labelled disclosure/consent items for coordinator
+  // review. Only Q1 is ever excluded automatically.
+  for (var disclosureIdx=0; disclosureIdx<qPairs.length; disclosureIdx++) {
+    var disclosurePair=qPairs[disclosureIdx];
+    var disclosureQNum=qNumMap[disclosurePair.scoreCol]||qNumMap[disclosurePair.scoreCol-1]||qNumMap[disclosurePair.scoreCol+1]||(disclosureIdx+1);
+    var disclosureWording=String((rows[1]||[])[disclosurePair.scoreCol]||(rows[1]||[])[disclosurePair.scoreCol-1]||(rows[1]||[])[disclosurePair.scoreCol+1]||'');
+    if (/\b(?:non[- ]?disclosure|disclosure agreement|academic integrity (?:agreement|declaration|disclosure)|consent (?:statement|agreement))\b/i.test(disclosureWording)) {
+      possibleDisclosureQuestions.push(disclosureQNum);
+    }
+  }
+  possibleDisclosureQuestions=possibleDisclosureQuestions.filter(function(value,index,list){return list.indexOf(value)===index;});
+  if (possibleDisclosureQuestions.length>1) {
+    qmAddUploadIssue('results','warning','Multiple possible Disclosure or consent items were found at questions '+possibleDisclosureQuestions.join(', ')+'. Only a confirmed Question 1 is excluded automatically; review the remaining item(s).');
   }
 
   // Second pass: build question list
@@ -4417,9 +4441,14 @@ function parseKey(text, xlsxRows, isCsv) {
 
   // Find Score/Outcome pairs
   var qPairs = [];
+  var malformedKeyHeaders = [];
   for (var i = 0; i < h.length - 1; i++) {
     if (h[i] === 'score' && h[i+1] === 'outcome') {
       qPairs.push({scoreCol: i, outcomeCol: i+1});
+    } else if (h[i] === 'score') {
+      malformedKeyHeaders.push(i+1);
+    } else if (h[i] === 'outcome' && (i===0 || h[i-1] !== 'score')) {
+      malformedKeyHeaders.push(i+1);
     }
   }
 
@@ -4432,6 +4461,9 @@ function parseKey(text, xlsxRows, isCsv) {
   }
   if (!G._reconciliation) G._reconciliation={resultsDetected:G.nQ,disclosureExcluded:G._hasDisclosure?1:0,resultsUnscored:[],keyDetected:0,keyUnscored:0};
   G._reconciliation.keyDetected=qPairs.length;
+  if (malformedKeyHeaders.length) {
+    qmAddUploadIssue('key','blocker','An answer-key question is missing its matching Score or Outcome header. Check column'+(malformedKeyHeaders.length!==1?'s ':' ')+malformedKeyHeaders.join(', ')+'.');
+  }
 
   // Get question labels from rows[0]
   var qNumMap = {};
