@@ -64,6 +64,8 @@ try {
 
   const initial = await page.evaluate(() => ({
     build: APP_BUILD,
+    initialRoom: _currentRoom,
+    initialNav: document.querySelector("#main-sidebar .nav-item[aria-current='page']")?.id || "",
     title: document.getElementById("exam-title").value,
     bannerVisible: getComputedStyle(document.getElementById("demo-session-banner")).display !== "none",
     isDemo: G._isDemo,
@@ -133,6 +135,44 @@ try {
       display: getComputedStyle(el).display,
     })),
     overviewSections: document.querySelectorAll("#landing-mcq-summary .landing-summary-section").length,
+    overviewOrder: [...document.querySelectorAll("#landing-mcq-summary .landing-summary-hdr")].map(el => el.textContent.trim()),
+    overviewPresentation: (() => {
+      const summary = document.getElementById("landing-mcq-summary");
+      const section = summary?.querySelector(".landing-summary-section");
+      const title = section?.querySelector(".landing-summary-hdr");
+      const sections = [...(summary?.querySelectorAll(".landing-summary-section") || [])];
+      const easyTable = summary?.querySelector(".landing-easy-table");
+      const comparisonTable = summary?.querySelector(".landing-summary-dif .landing-sum-tbl");
+      return summary && section && title ? {
+        gap: parseFloat(getComputedStyle(summary).rowGap),
+        measuredGaps: sections.slice(1).map((item, index) => item.getBoundingClientRect().top - sections[index].getBoundingClientRect().bottom),
+        border: getComputedStyle(section).borderTopWidth,
+        titleSize: parseFloat(getComputedStyle(title).fontSize),
+        titleWeight: parseInt(getComputedStyle(title).fontWeight, 10),
+        titleBackground: getComputedStyle(title).backgroundColor,
+        easyHasHeader: !!easyTable?.querySelector("thead th"),
+        easyHasSingleRow: easyTable?.querySelectorAll("tbody tr").length,
+        easyHeaderFill: easyTable ? getComputedStyle(easyTable.querySelector("th")).backgroundColor : "",
+        comparisonHeaderFill: comparisonTable ? getComputedStyle(comparisonTable.querySelector("th")).backgroundColor : "",
+        easyRowFill: easyTable ? getComputedStyle(easyTable.querySelector("td")).backgroundColor : "",
+        comparisonRowFill: comparisonTable ? getComputedStyle(comparisonTable.querySelector("td")).backgroundColor : "",
+      } : null;
+    })(),
+    flaggedOverviewStyle: (() => {
+      const row = document.querySelector("#landing-mcq-summary .landing-row-flagged");
+      const cell = row?.querySelector("td");
+      const probe = document.createElement("span");
+      probe.style.color = "var(--s-warn)";
+      document.body.appendChild(probe);
+      const warningColour = getComputedStyle(probe).color;
+      probe.remove();
+      return row && cell ? {
+        background: getComputedStyle(cell).backgroundColor,
+        canvas: getComputedStyle(document.documentElement).getPropertyValue("--c-bg").trim(),
+        rail: getComputedStyle(cell).boxShadow,
+        warningColour,
+      } : null;
+    })(),
     difKpiInToolbar: document.getElementById("dif-kpi-strip")?.parentElement?.classList.contains("mcq-toolbar"),
     audit: buildAuditSnapshot(),
     design: (() => {
@@ -268,6 +308,8 @@ try {
   });
   await page.setViewportSize(originalViewport);
   assert.equal(initial.build, "20261011-01");
+  assert.equal(initial.initialRoom, "landing", "MCQ-containing demonstrations must open on Item Analysis Overview");
+  assert.equal(initial.initialNav, "nav-landing", "MCQ-containing demonstrations must activate the Item Analysis Overview navigation item");
   assert.equal(initial.title, "AQP Synthetic Demonstration Exam");
   assert.equal(initial.bannerVisible, true);
   assert.equal(initial.isDemo, true);
@@ -311,6 +353,18 @@ try {
   assert.equal(initial.betaRooms.length, 2, "Distractor Analysis and Near Threshold must both carry Beta badges");
   assert.ok(initial.betaRooms.every(badge => badge.text === "Beta" && ["flex", "inline-flex"].includes(badge.display)));
   assert.ok(initial.overviewSections >= 2, "overview result groups must be visually separated into sections");
+  assert.deepEqual(initial.overviewOrder, ["Flagged Questions", "Too Easy Questions", "DIF-Flagged Questions"], "overview tables must follow the report order");
+  assert.ok(initial.overviewPresentation?.gap >= 36, "overview result cards must have clear space between them");
+  assert.ok(initial.overviewPresentation?.measuredGaps.every(gap => gap >= 36), `the rendered overview cards must retain their visible separation (${initial.overviewPresentation?.measuredGaps.join(", ")}px)`);
+  assert.equal(initial.overviewPresentation?.border, "1px", "overview result cards need a visible boundary");
+  assert.ok(initial.overviewPresentation?.titleSize >= 16 && initial.overviewPresentation?.titleWeight >= 700, "overview card titles must carry clear visual emphasis");
+  assert.equal(initial.overviewPresentation?.easyHasHeader, true, "Too Easy Questions must use the shared table-header treatment");
+  assert.equal(initial.overviewPresentation?.easyHasSingleRow, 1, "Too Easy Questions must remain a compact single-row table");
+  assert.equal(initial.overviewPresentation?.easyHeaderFill, initial.overviewPresentation?.comparisonHeaderFill, "Too Easy Questions must use the same header fill as the other overview tables");
+  assert.equal(initial.overviewPresentation?.easyRowFill, initial.overviewPresentation?.comparisonRowFill, "Too Easy Questions must use the same row fill as the other overview tables");
+  assert.ok(initial.flaggedOverviewStyle, "the overview must render flagged rows");
+  assert.match(initial.flaggedOverviewStyle.rail, new RegExp(initial.flaggedOverviewStyle.warningColour.replace(/[()]/g, "\\$&")), "flagged overview rows must retain an amber status rail");
+  assert.doesNotMatch(initial.flaggedOverviewStyle.background, /255, 250, 244|255, 248, 230/, "flagged overview rows must not retain the amber row fill");
   assert.equal(initial.difKpiInToolbar, true, "DIF KPI tiles must share the toolbar row with the CSV action");
   assert.equal(initial.readiness.ready, false, "unreviewed demo flags should produce advisory readiness");
   assert.equal(initial.audit.demonstration, true);
