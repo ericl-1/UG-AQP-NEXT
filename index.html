@@ -175,13 +175,16 @@ h3,.section-hdr-title{font-size:15px;line-height:1.35;font-weight:650;color:var(
    when its measured width exceeds the space between navigation and actions. */
 .topbar-session-zone{overflow:visible}
 .tsz-viewport{flex:1;min-width:0;overflow:hidden;white-space:nowrap;mask-image:linear-gradient(to right,transparent 0,#000 10px,#000 calc(100% - 10px),transparent 100%);-webkit-mask-image:linear-gradient(to right,transparent 0,#000 10px,#000 calc(100% - 10px),transparent 100%)}
-.tsz-track{display:inline-flex;align-items:center;width:max-content;will-change:transform}
+.tsz-track{display:inline-flex;align-items:center;width:max-content;gap:40px;will-change:transform}
+.tsz-copy{display:inline-flex;align-items:center;flex-shrink:0}
+.tsz-copy-clone{display:none}
 .tsz-track .tsz-name{max-width:none;overflow:visible;text-overflow:clip}
 .tsz-track .tsz-date,.tsz-track .tsz-meta,.tsz-track .tsz-sep{display:inline!important}
-.topbar-session-zone.tsz-overflow .tsz-track{animation:tsz-pan 12s ease-in-out infinite}
+.topbar-session-zone.tsz-overflow .tsz-copy-clone{display:inline-flex}
+.topbar-session-zone.tsz-overflow .tsz-track{animation:tsz-pan var(--tsz-duration,14s) linear infinite}
 .topbar-session-zone.tsz-overflow .tsz-viewport:hover .tsz-track{animation-play-state:paused}
-@keyframes tsz-pan{0%,15%{transform:translateX(0)}85%,100%{transform:translateX(var(--tsz-shift,0px))}}
-@media(prefers-reduced-motion:reduce){.topbar-session-zone.tsz-overflow .tsz-track{animation:none}.tsz-viewport{mask-image:none;-webkit-mask-image:none;text-overflow:ellipsis}}
+@keyframes tsz-pan{from{transform:translateX(0)}to{transform:translateX(var(--tsz-cycle,0px))}}
+@media(prefers-reduced-motion:reduce){.topbar-session-zone.tsz-overflow .tsz-track{animation:none}.topbar-session-zone.tsz-overflow .tsz-copy-clone{display:none}.tsz-viewport{mask-image:none;-webkit-mask-image:none;text-overflow:ellipsis}}
 .tsz-date,.tsz-meta{font-size:12px}
 .topbar .btn-icon,.topbar-nav-btn{
   min-height:36px;border:1px solid var(--c-border-2);border-radius:var(--radius-sm);
@@ -371,15 +374,22 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 .demo-banner{padding:9px var(--space-6);background:var(--c-accent-tint);border-bottom-color:var(--c-border-2);color:var(--c-accent-dark)}
 
 /* Overview result groups: soft surfaces separate related tables without heavy dividers. */
-.landing-summary{display:grid;gap:18px}
-.landing-summary-section{padding:16px 16px 14px;border-radius:12px;background:linear-gradient(180deg,var(--c-bg) 0%,var(--c-surface) 150%);box-shadow:0 5px 18px rgba(24,34,43,.07)}
-.landing-summary-section .landing-summary-hdr{margin-top:0}
+.landing-summary{display:grid;row-gap:38px}
+.landing-summary-section{padding:16px 16px 14px;border:1px solid var(--c-border);border-radius:12px;background:linear-gradient(180deg,var(--c-bg) 0%,var(--c-surface) 150%);box-shadow:0 2px 8px rgba(24,34,43,.06)}
+.landing-summary-section .landing-summary-hdr{margin-top:0;padding:8px 12px;border-left-width:4px;border-radius:8px;background:var(--c-surface);font-size:17px;font-weight:750;letter-spacing:-.015em}
 .landing-summary-section .landing-sum-tbl{border-radius:8px;overflow:hidden}
 .landing-summary-flagged .landing-summary-hdr{border-left-color:var(--s-warn)}
-.landing-summary-flagged .landing-sum-tbl tbody td:first-child{box-shadow:inset 4px 0 0 var(--s-warn)}
+.landing-summary-flagged .landing-sum-tbl tbody td:first-child{box-shadow:inset 4px 0 0 var(--s-warn)!important}
+.landing-summary-flagged .landing-row-flagged td{background:var(--c-bg);color:var(--c-primary)}
+.landing-summary-flagged .landing-row-flagged:hover td{background:var(--c-surface)}
 .landing-summary-easy .landing-summary-hdr{border-left-color:var(--s-easy)}
 .landing-summary-dif .landing-summary-hdr{border-left-color:var(--s-dif)}
 .landing-summary-dif .landing-sum-tbl tbody td:first-child{box-shadow:inset 4px 0 0 var(--s-dif)}
+
+/* Collapsed navigation keeps count badges clear of the icon, including two digits. */
+.sidebar.collapsed{width:64px}
+.sidebar.collapsed .nav-item{min-height:44px;padding:8px;position:relative;justify-content:center!important}
+.sidebar.collapsed .nav-badge{position:absolute;top:2px;right:2px;z-index:2;box-sizing:border-box;min-width:18px;height:18px;padding:0 4px;margin-left:0;border-radius:9px;font-size:9px}
 
 /* Exceptions editor: shared columns, legible inputs, and a persistent action bar. */
 .excl-grid{display:grid;grid-template-columns:60px 60px 130px minmax(220px,1fr) 110px;padding-left:12px;padding-right:12px;align-items:center}
@@ -544,7 +554,9 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 :root[data-appearance="dark"] tr.row-easy:hover td{background:#1d3547}
 :root[data-appearance="dark"] tr.row-dif td{background:#20243c}
 :root[data-appearance="dark"] tr.row-dif:hover td{background:#292e4c}
-:root[data-appearance="dark"] .landing-summary-section{background:linear-gradient(180deg,var(--c-bg),var(--c-surface) 150%);box-shadow:0 7px 22px rgba(0,0,0,.22)}
+:root[data-appearance="dark"] .landing-summary-section{background:linear-gradient(180deg,var(--c-bg),var(--c-surface) 150%);box-shadow:0 2px 8px rgba(0,0,0,.20)}
+:root[data-appearance="dark"] .landing-summary-flagged .landing-row-flagged td{background:var(--c-bg);color:var(--c-primary)}
+:root[data-appearance="dark"] .landing-summary-flagged .landing-row-flagged:hover td{background:#202932}
 :root[data-appearance="dark"] .excl-save-bar{background:rgba(21,27,33,.96);box-shadow:0 -10px 24px rgba(0,0,0,.25)}
 :root[data-appearance="dark"] .fb-info-green,
 :root[data-appearance="dark"] .da-clean{color:var(--s-ok)}
@@ -969,7 +981,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
   <div id="main-sidebar" class="sidebar" style="display:none" aria-label="Analysis navigation">
     <div class="sidebar-inner">
       <div class="sidebar-top">
-        <button class="collapse-btn" id="collapseBtn" onclick="toggleSidebar()" title="Collapse sidebar" aria-label="Collapse sidebar">
+        <button class="collapse-btn" id="collapseBtn" onclick="toggleSidebar()" title="Collapse sidebar" aria-label="Collapse sidebar" aria-expanded="true">
           <svg id="collapseIcon" class="fui-icon fui-icon-sm" aria-hidden="true"><use href="#fui-chevron-left"/></svg>
         </button>
       </div>
@@ -15020,7 +15032,7 @@ function autoCategorizeFb() {
   });
 }
 
-function finaliseFeedback() {
+function finaliseFeedback(returnToFeedbackReview) {
   // Commit any Q# values typed/staged but not yet applied in the mapping screen
   if (FB.pending && FB.pending.length) {
     FB.pending.forEach(function(idx) {
@@ -15097,8 +15109,10 @@ function finaliseFeedback() {
   // In combined mode — two sub-cases:
   if (typeof G_ANALYSIS_TYPE !== 'undefined' && G_ANALYSIS_TYPE === 'both') {
     if (G._lastN) {
-      // MCQ already ran (sequencer path) — stay on Item Analysis, just render feedback
-      renderFeedbackTab('byq');
+      // Restored/new combined sessions remain on the Item Analysis Overview.
+      // Only the explicit mapping-completion action continues to Feedback Review.
+      if (returnToFeedbackReview) switchRoom('feedback');
+      else renderFeedbackTab('byq');
       var _ca=document.getElementById('contentArea');if(_ca)_ca.scrollTop=0;
     } else {
       // Mapping/validation step — return to setup, unlock the run button
@@ -15113,9 +15127,10 @@ function finaliseFeedback() {
     }
     return;
   }
-  // Standalone feedback — begin with the feedback-specific overview.
+  // Feedback-only sessions begin on Feedback Overview. Mapping completion is
+  // the explicit exception and continues into detailed Feedback Review.
   updateReportCards();
-  switchRoom('feedback-overview');
+  switchRoom(returnToFeedbackReview ? 'feedback' : 'feedback-overview');
   var _ca=document.getElementById('contentArea');if(_ca)_ca.scrollTop=0;
 }
 
@@ -15215,7 +15230,7 @@ function renderMappingScreen() {
     html += '<button class="btn" onclick="fbRouteAllGeneral()">Route all remaining → General</button>';
     html += '<button class="btn" onclick="fbDiscardAll()">Discard all remaining</button>';
     html += '</div>';
-    html += '<button class="btn-dl-primary" onclick="finaliseFeedback()">Apply &amp; confirm →</button>';
+    html += '<button class="btn-dl-primary" onclick="finaliseFeedback(true)">Apply mappings &amp; review →</button>';
     html += '</div>';
     html += '</div>';
     return html;
@@ -15333,17 +15348,16 @@ function toggleFbOverview() {
 }
 
 function openFeedbackQuestion(q) {
-  switchRoom('feedback');
   _fbView = 'byq';
   _fbSearch = '';
-  renderFeedbackTabKeep('byq');
-  setTimeout(function() {
-    var target = document.getElementById('fb-question-' + q);
-    if (!target) return;
-    target.scrollIntoView({behavior:'smooth', block:'start'});
-    target.setAttribute('tabindex', '-1');
-    target.focus({preventScroll:true});
-  }, 30);
+  // Set the destination view before routing so Feedback Review renders once.
+  // Rendering twice could replace the focus target during the delayed focus.
+  switchRoom('feedback');
+  var target = document.getElementById('fb-question-' + q);
+  if (!target) return;
+  target.setAttribute('tabindex', '-1');
+  target.focus({preventScroll:true});
+  target.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 // ── Shared category counter — identical logic to the BY CATEGORY filter buttons ──
@@ -17257,7 +17271,7 @@ function updateLandingStatus() {
         if (r.flag.indexOf('Difficult') >= 0) { comment = r.pct + '% answered correctly'; }
         else if (r.rpbis < 0) { comment = r.pct ? r.pct + '% answered correctly / Negative discrimination' : 'Negative discrimination'; }
         var bw = (r.topWrong && r.p < 0.5) ? '<strong>' + r.topWrong + '</strong>' : '';
-        _html += '<tr class="row-flagged">';
+        _html += '<tr class="landing-row-flagged">';
         _html += '<td style="text-align:center;font-weight:700">' + r.num + '</td>';
         _html += '<td style="color:' + flagColor + ';font-style:italic">' + (r.flag || '') + '</td>';
         _html += '<td>' + comment + '</td>';
@@ -17266,6 +17280,18 @@ function updateLandingStatus() {
         _html += '</tr>';
       });
       _html += '</tbody></table>';
+      _html += '</section>';
+    }
+
+    // Too Easy Questions
+    if (_easy.length > 0) {
+      _html += '<section class="landing-summary-section landing-summary-easy">';
+      _html += '<div class="landing-summary-hdr">Too Easy Questions</div>';
+      _html += '<div class="landing-summary-sub">Questions answered correctly by ' + (typeof getThresh === 'function' ? Math.round(getThresh('easy')*100) : 96) + '% or more of students. Please revise before using again.</div>';
+      _html += '<table class="landing-sum-tbl landing-easy-table"><thead><tr><th>Question Number</th></tr></thead><tbody><tr>';
+      _html += '<td><div class="landing-easy-bar"><div class="landing-easy-stripe"></div>';
+      _html += '<div class="landing-easy-nums">' + _easy.map(function(e){ return e.num; }).join(', ') + '</div></div></td>';
+      _html += '</tr></tbody></table>';
       _html += '</section>';
     }
 
@@ -17292,24 +17318,9 @@ function updateLandingStatus() {
       _html += '</section>';
     }
 
-    // Too Easy Questions
-    if (_easy.length > 0) {
-      _html += '<section class="landing-summary-section landing-summary-easy">';
-      _html += '<div class="landing-summary-hdr">Too Easy Questions</div>';
-      _html += '<div class="landing-summary-sub">Questions answered correctly by ' + (typeof getThresh === 'function' ? Math.round(getThresh('easy')*100) : 96) + '% or more of students. Please revise before using again.</div>';
-      _html += '<div class="landing-easy-bar">';
-      _html += '<div style="font-size:10px;font-weight:700;color:var(--c-muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px;width:100%">Question Number</div>';
-      _html += '</div>';
-      _html += '<div class="landing-easy-bar">';
-      _html += '<div class="landing-easy-stripe"></div>';
-      _html += '<div class="landing-easy-nums">' + _easy.map(function(e){ return e.num; }).join(', ') + '</div>';
-      _html += '</div>';
-      _html += '</section>';
-    }
-
     if (_html) {
       _sumDiv.innerHTML = _html;
-      _sumDiv.style.display = 'block';
+      _sumDiv.style.display = 'grid';
     } else {
       _sumDiv.style.display = 'none';
     }
@@ -17340,9 +17351,17 @@ function toggleSidebar() {
   if (sb) sb.classList.toggle('collapsed', _sidebarCollapsed);
   var icon = document.getElementById('collapseIcon');
   if (icon) {
-    // Swap chevron direction: right when collapsed (expand), left when expanded (collapse)
-    var path = icon.querySelector('path');
-    if (path) path.setAttribute('d', _sidebarCollapsed ? 'M5 2l5 5-5 5' : 'M9 2L4 7L9 12');
+    // This icon references the shared Fluent symbol through <use>; update the
+    // reference rather than looking for a path that is not present here.
+    var use = icon.querySelector('use');
+    if (use) use.setAttribute('href', _sidebarCollapsed ? '#fui-chevron-right' : '#fui-chevron-left');
+  }
+  var btn = document.getElementById('collapseBtn');
+  if (btn) {
+    var action = _sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar';
+    btn.setAttribute('title', action);
+    btn.setAttribute('aria-label', action);
+    btn.setAttribute('aria-expanded', _sidebarCollapsed ? 'false' : 'true');
   }
 }
 
@@ -18045,10 +18064,13 @@ function renderTopbarSession() {
   }
   var meta = hasMcq ? (G._lastN + ' students · ' + G.nQ + ' Q') : '';
   var summaryLabel = [title,dateStr,meta].filter(Boolean).join(' · ');
-  var html = '<div class="tsz-viewport" title="' + escHtml(summaryLabel) + '" aria-label="' + escHtml(summaryLabel) + '"><div class="tsz-track"><span class="tsz-name">' + escHtml(title) + '</span>';
-  if (dateStr) html += '<span class="tsz-sep sep-date">·</span><span class="tsz-date">' + escHtml(dateStr) + '</span>';
-  if (meta)    html += '<span class="tsz-sep">·</span><span class="tsz-meta">' + meta + '</span>';
-  html += '</div></div><button class="tsz-edit" onclick="startTopbarEdit()">edit</button>';
+  var summaryHtml = '<span class="tsz-name">' + escHtml(title) + '</span>';
+  if (dateStr) summaryHtml += '<span class="tsz-sep sep-date">·</span><span class="tsz-date">' + escHtml(dateStr) + '</span>';
+  if (meta)    summaryHtml += '<span class="tsz-sep">·</span><span class="tsz-meta">' + meta + '</span>';
+  var html = '<div class="tsz-viewport" title="' + escHtml(summaryLabel) + '" aria-label="' + escHtml(summaryLabel) + '">' +
+    '<div class="tsz-track"><span class="tsz-copy tsz-copy-primary">' + summaryHtml + '</span>' +
+    '<span class="tsz-copy tsz-copy-clone" aria-hidden="true">' + summaryHtml + '</span></div></div>' +
+    '<button class="tsz-edit" onclick="startTopbarEdit()">edit</button>';
   zone.innerHTML = html;
   zone.style.display = 'flex';
   requestAnimationFrame(syncTopbarSessionOverflow);
@@ -18058,10 +18080,16 @@ function syncTopbarSessionOverflow() {
   var zone=document.getElementById('topbar-session-zone');
   var viewport=zone&&zone.querySelector('.tsz-viewport');
   var track=zone&&zone.querySelector('.tsz-track');
-  if(!zone||!viewport||!track)return;
-  var overflow=Math.max(0,track.scrollWidth-viewport.clientWidth);
+  var primary=zone&&zone.querySelector('.tsz-copy-primary');
+  if(!zone||!viewport||!track||!primary)return;
+  var summaryWidth=primary.scrollWidth;
+  var overflow=Math.max(0,summaryWidth-viewport.clientWidth);
   zone.classList.toggle('tsz-overflow',overflow>2);
-  zone.style.setProperty('--tsz-shift',(-overflow)+'px');
+  // The 40px track gap provides a readable break before the duplicate begins.
+  // Travelling one complete copy plus that gap creates a seamless full loop.
+  var cycle=summaryWidth+40;
+  zone.style.setProperty('--tsz-cycle',(-cycle)+'px');
+  zone.style.setProperty('--tsz-duration',Math.max(12,cycle/34)+'s');
 }
 window.addEventListener('resize',function(){requestAnimationFrame(syncTopbarSessionOverflow);});
 
@@ -18864,7 +18892,7 @@ function updateTopbarExam() {
             </div>
             <div class="faq-a">
               The tool parses every student comment and attributes each one to one or more question numbers based on explicit references in the text. It recognizes common English and French forms, including multi-question lists and formats such as <strong>6=</strong>, <strong>Question 79;</strong>, and <strong>for 59 of 84</strong>. It screens ordinary quantities such as percentages, student counts, answer-option counts, patient ages, and clinical score names such as CURB-65. Comments that are ambiguous, outside the exam's question range, or cannot be attributed confidently are routed to a <strong>pending review</strong> screen where you can manually assign them to a question number, mark them as General, or discard them.<br><br>
-              Once you have reviewed the pending items, click <strong>Apply &amp; Generate Report</strong>. In standalone feedback mode, the tool takes you to the <strong>Feedback</strong> tab showing results by frequency. In combined analysis mode, validating feedback returns you to the setup screen and unlocks the <strong>Run combined analysis</strong> button — clicking it runs both MCQ and feedback together and lands you on the Item Analysis tab with all results populated.
+              Once you have reviewed the pending items, click <strong>Apply mappings &amp; review</strong>. If the analysis has already run, the tool takes you directly to <strong>Feedback Review</strong> so you can verify the newly assigned comments in context. During the initial combined-analysis setup, validating feedback returns you to the setup screen and unlocks the <strong>Run combined analysis</strong> button.
             </div>
           </div>
 

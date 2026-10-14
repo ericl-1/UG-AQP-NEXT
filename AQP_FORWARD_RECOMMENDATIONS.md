@@ -402,6 +402,55 @@ If this work resumes:
 - Validate the final length using a representative 80-question exam
 - Treat the prototypes as design references, not specifications to merge wholesale
 
+### Newly observed interface follow-ups — October 11, 2026
+
+#### 27. Improve Flagged Questions table readability and consistency (implemented October 13, 2026; pending release)
+
+On the Item Analysis Overview, the Flagged Questions table applied an amber highlight across all columns. This reduced text readability, particularly in dark mode, and was visually inconsistent with the Easy Questions and DIF tables on the same screen.
+
+The implementation:
+
+- Removed the full-row amber fill and retained a restrained amber status rail
+- Preserved the flagged distinction without reducing contrast across the remaining columns
+- Matched the report sequence: Flagged Questions, Too Easy Questions, then DIF-Flagged Questions
+- Added clearer separation, boundaries, and consistently stronger headings across all three overview result cards
+- Verified the result in dark mode and through the automated interface suite
+
+#### 28. Return completed comment mapping to Feedback Review (implemented October 13, 2026; pending release)
+
+After comments were resolved in Unmapped Comments, the completion action returned the coordinator to the Item Analysis Overview. The expected destination is Feedback Review, where the newly mapped comments can be reviewed in context.
+
+The implementation:
+
+- Changed the successful post-analysis destination from Item Analysis Overview to Feedback Review
+- Renamed the action to **Apply mappings & review**
+- Preserved the initial combined-analysis setup path, which must still return to setup before the analysis has run
+- Updated the related FAQ wording and retained focus/navigation regression coverage
+
+#### 29. Refine the collapsed left navigation (implemented October 13, 2026; pending release)
+
+The left-navigation collapse control continued to show a left-pointing arrow after the panel collapsed. It now switches to a right-pointing arrow so that the control indicates the action that will reopen the navigation.
+
+The count badges for Unmapped Comments and Review Queue also sat over the centre of their buttons in the icon-only layout. The implementation:
+
+- Switched the collapse-control arrow according to the current navigation state: left when expanded and right when collapsed
+- Positioned count badges at the top-right of their icon buttons without obscuring the icons
+- Increased the collapsed-navigation width and button spacing so that two-digit badges fit cleanly
+- Updated the control's accessible name and expanded state along with its visual direction
+- Verified the collapsed layout in the browser and through the automated accessibility suite
+
+#### 30. Complete and loop the responsive header-summary scroll (implemented October 13, 2026; pending release)
+
+The exam summary in the top bar scrolled when the available width was too narrow, but the movement ended before the full text passed through the visible area.
+
+The implementation:
+
+- Added a complete continuous pass using a duplicated, accessibility-hidden summary and a readable gap between loops
+- Kept the summary stationary whenever it fits within the available width
+- Retained a non-animated presentation when reduced motion is requested
+- Kept the adjacent Edit action fixed and available while the summary moves
+- Verified narrow-header animation and accessibility behaviour through the automated suite
+
 ## Suggested delivery sequence
 
 ### Near term
