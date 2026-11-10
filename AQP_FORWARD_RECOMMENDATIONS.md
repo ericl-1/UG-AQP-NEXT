@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document records recommended future work for the Assessment Quality Platform after the QA, remediation, design-system consolidation, automated accessibility pass, analysis-record consolidation, identity/icon refresh, Student Feedback navigation restructure, Dark Mode/Assessment Pulse refresh, Feedback Overview workflow, Distractor Analysis live-review enhancement, setup-wizard Dark Mode completion, feedback-parser strengthening, synthetic edge-fixture coverage, institutional sign-in preview, and realistic bilingual demonstration delivered through version `1.0.0-beta.1`, build `20261011-01`.
+This document records recommended future work for the Assessment Quality Platform after the QA, remediation, design-system consolidation, automated accessibility pass, analysis-record consolidation, identity/icon refresh, Student Feedback navigation restructure, Dark Mode/Assessment Pulse refresh, Feedback Overview workflow, Distractor Analysis live-review enhancement, setup-wizard Dark Mode completion, feedback-parser strengthening, synthetic edge-fixture coverage, institutional sign-in preview, realistic bilingual demonstration, and flagged-question report guidance delivered through version `1.0.0-beta.1`, build `20261109-01`.
 
 These are forward-looking improvements rather than defects remaining from the two QA passes. Completed corrections are documented separately in `AQP_CHANGE_SUMMARY_2026-09-23.md`.
 
@@ -392,6 +392,8 @@ Keep final categorisation and routing editable by the coordinator. Any future AI
 
 Build `20261007-01` added bilingual multi-question formats, embedded-reference handling, additional quantity safeguards, flexible worksheet/comment-column detection, a documented decision map, and a dedicated browser regression suite. Continue expanding the synthetic corpus whenever a new operational format or misclassification is observed; do not broaden heuristic attribution without a retained example and expected outcome.
 
+Subsequent user feedback remains mixed: the overall workflow can be fast and straightforward, but one exploratory user described the feedback parser as only moderately useful and found that some automated handling created follow-up work. During the next parser review, collect the original anonymized comments, the parser's result, the user's expected result, and the correction they had to make. Use those examples to distinguish accuracy problems from unclear presentation, unsupported formats, and cases where human judgment is genuinely required.
+
 #### 26. Revisit the combined MCQ+DIF report design only if a business need is confirmed
 
 Three simulated redesigns were produced for comparison, including two 80-question versions. The decision is to retain the current production report for now. The prototypes are preserved under `Report Prototypes-drafts/` for possible future consolidation; none is an approved template or application requirement.
@@ -455,15 +457,118 @@ The implementation:
 - Kept the adjacent Edit action fixed and available while the summary moves
 - Verified narrow-header animation and accessibility behaviour through the automated suite
 
+### Newly observed report follow-up — October 26, 2026
+
+#### 31. Review Word-export KPI usefulness and readability (logged; awaiting consolidated user feedback)
+
+Early user feedback suggests that the KPI sections in the Word exports may need to be more useful and easier to read. No defect or redesign requirement is confirmed yet, and no implementation should begin until the fuller feedback list is available.
+
+When this review proceeds, assess the relevant Word exports together for:
+
+- Whether each KPI supports a clear coordinator, director, or committee decision
+- Plain-language labels, visual hierarchy, spacing, density, contrast, and scanability
+- Consistency across MCQ, DIF, combined, and feedback reports
+- Sufficient context and denominators for interpreting each value
+- Redundant or low-value KPIs that could be combined or removed
+- Alignment between the on-screen preview and the generated Word output
+- Readability in representative long-exam documents and when printed or converted to PDF
+- Accessibility, without changing KPI calculations unless separately reviewed and approved
+
+Status: logged for the next consolidated user-feedback pass. No application, report, version, or build change is authorized by this note.
+
+#### 32. Make upload-validation findings locatable and clearly classified (logged; awaiting review)
+
+User feedback indicates that the validation screen can identify a problem, such as a missing response, without showing the user where the affected value is located. In a results file containing hundreds of records, this forces the user to inspect the validation data manually to find the problem.
+
+Before redesigning the screen, inventory every validation result that it can currently produce for both answer/results files and answer-key files. For each result, document:
+
+- What condition triggers it
+- Which source file, worksheet, row, student or record, question, and field are available for identifying its location
+- Whether it prevents analysis, may affect interpretation, or is informational only
+- What corrective action, if any, the user should take
+- Whether one message represents a single occurrence or a group of similar occurrences
+
+The subsequent design should:
+
+- Show a precise, human-readable location for every actionable occurrence wherever the source data permits it
+- Visually highlight the affected cell, field, row, or record in the validation preview
+- Provide a direct way to move from the finding to the affected data instead of requiring manual searching
+- Group repeated findings without hiding the individual affected locations
+- Clearly distinguish **Errors** that must be corrected, **Warnings** that need review, and **Information** that is useful context but does not imply a problem
+- Use plain language and explain the practical consequence and next step
+- Work consistently for both uploaded results/answers and answer-key validation
+- Remain usable with large exams and hundreds of student records
+
+Also review whether terms such as “missing response” refer to a truly missing required value, an unanswered question that may be valid, or another data condition. The label and severity must reflect the actual condition rather than alarming the user unnecessarily.
+
+Status: logged for investigation and design review during the consolidated user-feedback pass. No validation behaviour, display, version, or build change is authorized by this note.
+
+#### 33. Review effort shifted or created by exploratory use (logged; awaiting consolidated user feedback)
+
+Early feedback from two users shows materially different experiences:
+
+- One user found the application very easy, reported that it saved substantial time, and completed the workflow smoothly.
+- A more exploratory user examined functionality beyond the minimum required workflow. That user still reported time savings in some areas, but identified other areas where the application created additional review or correction work.
+
+This should not be treated as evidence that either experience is universally representative. The next user-feedback review should map both experiences against the tasks each person actually performed and identify:
+
+- Which core tasks reliably save time
+- Which optional or advanced paths introduce additional work
+- Whether that work is caused by a defect, unclear guidance, excessive detail, weak defaults, parser accuracy, or a legitimate review responsibility
+- Where the interface could progressively disclose advanced options without burdening routine users
+- Whether the application sets accurate expectations about what it automates and what still requires professional judgment
+- The amount and type of manual correction required after feedback parsing
+
+Preserve the straightforward core workflow while improving advanced paths. Do not remove useful review controls solely because a routine user may not need them, and do not dismiss exploratory feedback solely because it goes beyond the minimum workflow.
+
+Status: logged as a user-research and workflow-effort review. Await the fuller feedback list and concrete anonymized examples before proposing changes.
+
+#### 34. Create a centralized in-app analysis and methodology guide (high priority)
+
+The application currently explains many measurements through Settings, tooltips, contextual panels, the FAQ, methodology panels, and technical exports. This is sufficient for many routine coordinator tasks, but the information is distributed across the interface and is not yet a complete, internally consistent reference for users who need to understand, explain, or defend the analysis.
+
+Create a centralized **Understanding the Analysis** guide with two layers:
+
+- A plain-language layer explaining what each measurement means, why it matters, how to interpret it, and what action—if any—the user should take
+- A technical layer documenting formulas, thresholds, denominators, exclusions, sample requirements, suppression rules, limitations, and the exact effect of credited, deleted, alternate-key, missing-response, and unmatched-stream records
+
+The guide should cover MCQ difficulty, point-biserial discrimination, Check Key and Best Students Chose, reliability, distractor analysis and quartiles, Near Threshold rules, DIF methodology and suppression, feedback parsing, exceptions, and all report KPIs. It should also identify which results are evidence prompts rather than automated academic decisions.
+
+Build `20261109-01` reconciled these known user-facing inconsistencies ahead of the full guide:
+
+- **Best Students Chose:** aligned the FAQ's former “top quartile” wording with the implemented top 27% calculation
+- **Low discrimination:** aligned the FAQ with the standard 0.10 flag threshold and distinguished the separate 0.15 Verify answer key sub-threshold
+- **Poor discrimination:** aligned the contextual explanation with the implemented negative-discrimination rule
+- **Check Key:** corrected Settings text that called it a flag even though it is a recommendation layered onto the primary flag reason
+
+The full guide audit must still verify every displayed definition against the calculation, including the explanation of whether unmatched language-stream students remain included in the exam average when DIF is enabled.
+
+Keep short explanations available in context and link them to the centralized guide rather than forcing routine users through technical material. The technical layer should be suitable for Assessment leadership, committee members, institutional IT, and future methodological review.
+
+Status: high-priority documentation and consistency work. Complete the terminology/calculation audit before changing explanatory text so that every in-app location and report uses the same definitions.
+
+#### 35. Explain “Best Students Chose” in MCQ Word reports (implemented November 9, 2026; pending release)
+
+Add a concise explanation immediately beneath the Flagged Questions heading in the MCQ report preview and every applicable Word export. The explanation should state that the column appears when the item falls below both Check Key thresholds, identifies the most frequently selected incorrect answer among the highest-performing 27% of students who missed the item, and is a prompt to verify the answer key and wording rather than proof of an incorrect key.
+
+Recommended wording under the standard threshold profile:
+
+> **How to read “Best students chose”:** When fewer than 25% of students answer a question correctly and its discrimination is below 0.15, this column shows the most frequently selected incorrect answer among the highest-performing 27% of students who missed the question. It is a prompt to verify the answer key and question wording—not proof that the keyed answer is incorrect.
+
+Generate the displayed difficulty and discrimination values from the thresholds actually used for the analysis so that the explanation remains accurate under custom settings. Keep the wording and placement consistent across the on-screen preview, MCQ Word report, and combined MCQ+DIF Word report.
+
+Status: implemented in build `20261109-01` across MCQ and combined previews and Word exports. Empty cells display an em dash, and related Settings, tooltip, contextual-panel, and FAQ terminology was aligned without changing analysis calculations.
+
 ## Suggested delivery sequence
 
 ### Near term
 
-1. Review any remaining upload-validation edge cases against operational exports
-2. Extend the versioned test-data package with missing-response, single-language, and small-sample cases
-3. Continue the feedback-parser corpus as new operational examples are encountered
-4. Human assistive-technology validation on supported university devices
-5. Institutional privacy review
+1. Create the centralized in-app analysis and methodology guide and reconcile conflicting definitions
+2. Review any remaining upload-validation edge cases against operational exports
+3. Extend the versioned test-data package with missing-response, single-language, and small-sample cases
+4. Continue the feedback-parser corpus as new operational examples are encountered
+5. Human assistive-technology validation on supported university devices
+6. Institutional privacy review
 
 ### Medium term
 

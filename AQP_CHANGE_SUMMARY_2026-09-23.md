@@ -3,11 +3,21 @@
 ## Build identity
 
 - Starting point: AQP `1.0.0-beta.1`, build `20260923-01` (`Downloads/index.html`; originally labelled 0.8)
-- Current development build: AQP `1.0.0-beta.1`, build `20261011-01`
-- Working branch: `feature/synthetic-edge-fixtures`
+- Current development build: AQP `1.0.0-beta.1`, build `20261109-01`
+- Working branch: `feature/report-explanation-20261109`
 - Working file: `index.html` in the isolated development worktree
 - The Downloads baseline was not modified.
-- Builds through `20261010-01` have been retained in GitHub. Build `20261011-01` is being developed in the isolated worktree and is not live until its pull request is approved and merged.
+- Builds through `20261011-01` have been retained in GitHub. Build `20261109-01` is being developed in the isolated worktree and is not live until its pull request is approved and merged.
+
+## Build 20261109-01 — Flagged-question report guidance
+
+- Added a concise, audience-appropriate explanation of **Best students chose** to MCQ and combined report previews and Word exports.
+- Made the explanation use the active Check Key thresholds while accurately describing the highest-performing 27% group and the students within that group who missed the item.
+- Clarified that the result is evidence prompting review of the answer key and wording, not proof that the keyed answer is incorrect.
+- Replaced intentionally empty cells in this report column with an em dash so they are not mistaken for missing report data.
+- Reconciled related Settings, tooltip, contextual-panel, and FAQ terminology, including the distinction between Poor discrimination, Low discrimination, and the Verify answer key recommendation.
+- Added retained browser checks covering the explanation and empty-state treatment in previews and generated Word documents.
+- MCQ calculations, scoring, thresholds, DIF, feedback parsing, and recommendations are unchanged.
 
 ## Build 20261011-01 — Realistic bilingual demonstration
 
