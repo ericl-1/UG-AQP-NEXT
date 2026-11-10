@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document records recommended future work for the Assessment Quality Platform after the QA, remediation, design-system consolidation, automated accessibility pass, analysis-record consolidation, identity/icon refresh, Student Feedback navigation restructure, Dark Mode/Assessment Pulse refresh, Feedback Overview workflow, Distractor Analysis live-review enhancement, setup-wizard Dark Mode completion, feedback-parser strengthening, synthetic edge-fixture coverage, institutional sign-in preview, realistic bilingual demonstration, and flagged-question report guidance delivered through version `1.0.0-beta.1`, build `20261109-01`.
+This document records recommended future work for the Assessment Quality Platform after the QA, remediation, design-system consolidation, automated accessibility pass, analysis-record consolidation, identity/icon refresh, Student Feedback navigation restructure, Dark Mode/Assessment Pulse refresh, Feedback Overview workflow, Distractor Analysis live-review enhancement, setup-wizard Dark Mode completion, feedback-parser strengthening, synthetic edge-fixture coverage, institutional sign-in preview, realistic bilingual demonstration, flagged-question report guidance, and locatable upload validation delivered through version `1.0.0-beta.1`, build `20261109-02`.
 
 These are forward-looking improvements rather than defects remaining from the two QA passes. Completed corrections are documented separately in `AQP_CHANGE_SUMMARY_2026-09-23.md`.
 
@@ -476,7 +476,7 @@ When this review proceeds, assess the relevant Word exports together for:
 
 Status: logged for the next consolidated user-feedback pass. No application, report, version, or build change is authorized by this note.
 
-#### 32. Make upload-validation findings locatable and clearly classified (logged; awaiting review)
+#### 32. Make upload-validation findings locatable and clearly classified (completed in build `20261109-02`)
 
 User feedback indicates that the validation screen can identify a problem, such as a missing response, without showing the user where the affected value is located. In a results file containing hundreds of records, this forces the user to inspect the validation data manually to find the problem.
 
@@ -501,7 +501,7 @@ The subsequent design should:
 
 Also review whether terms such as “missing response” refer to a truly missing required value, an unanswered question that may be valid, or another data condition. The label and severity must reflect the actual condition rather than alarming the user unnecessarily.
 
-Status: logged for investigation and design review during the consolidated user-feedback pass. No validation behaviour, display, version, or build change is authorized by this note.
+Status: completed in build `20261109-02` for QuestionMark results, answer keys, and Scantron uploads. Validation findings are classified as **Must correct**, **Review**, or **Information**. When the source data supports it, findings retain the file row, student ID, question, and field; location buttons open the complete preview and highlight the affected response, Student ID, or key entry. Blank responses are described as unanswered items that receive no point and list their exact locations. The first eight locations are shown for a repeated finding, with the remaining count reported to keep large exams readable. Retained browser coverage verifies location capture, bounded lists, preview expansion, and exact-value highlighting. Analysis calculations and report output are unchanged.
 
 #### 33. Review effort shifted or created by exploratory use (logged; awaiting consolidated user feedback)
 

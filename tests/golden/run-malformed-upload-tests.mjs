@@ -97,7 +97,7 @@ try {
       faqText: document.getElementById("faq-overlay").innerText,
     }));
     assert.equal(buildMetadata.appVersion, "1.0.0-beta.1");
-    assert.equal(buildMetadata.build, "20261109-01");
+    assert.equal(buildMetadata.build, "20261109-02");
     assert.equal(buildMetadata.faqVersion, "1.0.0-beta.1");
     assert.equal(buildMetadata.faqDate, "November 9, 2026");
     assert.equal(buildMetadata.releaseDate, "November 9, 2026");

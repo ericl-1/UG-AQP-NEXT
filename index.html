@@ -102,7 +102,7 @@
 </style>
 <style>
 /* ═══════════════════════════════════════════════════════════════════════════
-   AQP design system · Calm clinical intelligence · build 20261109-01
+   AQP design system · Calm clinical intelligence · build 20261109-02
    Centralized visual rules for colour, type, spacing, surfaces, controls,
    tables, status communication, motion, and theme parity.
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -613,6 +613,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 :root[data-appearance="dark"] #setup-panel [style*="background:#f0f4ff"]{background:var(--c-accent-tint)!important;color:var(--c-secondary)!important;border-color:var(--c-border)!important}
 :root[data-appearance="dark"] #setup-panel .analysis-reconciliation{background:var(--c-surface)!important;border-color:var(--c-border)!important}
 :root[data-appearance="dark"] #setup-panel .recon-cell{background:var(--c-bg)!important;border-color:var(--c-border-2)!important}
+:root[data-appearance="dark"] #setup-panel .upload-location-link{background:var(--c-bg)!important;border-color:var(--c-border-2)!important}
 :root[data-appearance="dark"] #setup-panel [style*="color:#1a5c1a"],
 :root[data-appearance="dark"] #setup-panel [style*="color:#1b5e20"],
 :root[data-appearance="dark"] #setup-panel [style*="color:#4caf50"]{color:var(--s-ok)!important}
@@ -2504,7 +2505,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 
 // ── App version — single source of truth ─────────────────────────────────
 var APP_VERSION     = '1.0.0-beta.1';
-var APP_BUILD       = '20261109-01';
+var APP_BUILD       = '20261109-02';
 var APP_FAQ_VERSION = '1.0.0-beta.1';  // Keep aligned with the app version; date records FAQ revisions
 var APP_FAQ_DATE    = 'November 9, 2026'; // Update when FAQ content changes
 var APP_RN_DATE     = 'November 9, 2026'; // Update each version close
@@ -3933,18 +3934,23 @@ function parseOutcome(v) {
 }
 
 function qmEnsureUploadValidation() {
-  if (!G._uploadValidation) G._uploadValidation={resultsBlockers:[],resultsWarnings:[],keyBlockers:[],keyWarnings:[]};
+  if (!G._uploadValidation) G._uploadValidation={resultsBlockers:[],resultsWarnings:[],keyBlockers:[],keyWarnings:[],details:[]};
+  if (!G._uploadValidation.details) G._uploadValidation.details=[];
   return G._uploadValidation;
 }
 function qmResetUploadValidation(part) {
   var v=qmEnsureUploadValidation();
   if (part==='results') { v.resultsBlockers=[]; v.resultsWarnings=[]; }
   if (part==='key') { v.keyBlockers=[]; v.keyWarnings=[]; }
+  v.details=v.details.filter(function(issue){return issue.part!==part;});
 }
-function qmAddUploadIssue(part, severity, message) {
+function qmAddUploadIssue(part, severity, message, locations) {
   var v=qmEnsureUploadValidation();
   var key=part+(severity==='blocker'?'Blockers':'Warnings');
-  if (v[key].indexOf(message)<0) v[key].push(message);
+  if (v[key].indexOf(message)<0) {
+    v[key].push(message);
+    v.details.push({part:part,severity:severity,message:message,locations:locations||[]});
+  }
 }
 function qmUploadBlockers() {
   var v=qmEnsureUploadValidation();
@@ -3955,16 +3961,20 @@ function qmUploadWarnings() {
   return v.resultsWarnings.concat(v.keyWarnings);
 }
 function scantronEnsureUploadValidation() {
-  if (!G._scantronValidation) G._scantronValidation={blockers:[],warnings:[]};
+  if (!G._scantronValidation) G._scantronValidation={blockers:[],warnings:[],details:[]};
+  if (!G._scantronValidation.details) G._scantronValidation.details=[];
   return G._scantronValidation;
 }
 function scantronResetUploadValidation() {
-  G._scantronValidation={blockers:[],warnings:[]};
+  G._scantronValidation={blockers:[],warnings:[],details:[]};
 }
-function scantronAddUploadIssue(severity, message) {
+function scantronAddUploadIssue(severity, message, locations) {
   var v=scantronEnsureUploadValidation();
   var list=severity==='blocker'?v.blockers:v.warnings;
-  if (list.indexOf(message)<0) list.push(message);
+  if (list.indexOf(message)<0) {
+    list.push(message);
+    v.details.push({part:'scantron',severity:severity,message:message,locations:locations||[]});
+  }
 }
 function scantronUploadBlockers() { return scantronEnsureUploadValidation().blockers.slice(); }
 function scantronUploadWarnings() { return scantronEnsureUploadValidation().warnings.slice(); }
@@ -4019,13 +4029,15 @@ function parseResults(text, xlsxRows, isCsv) {
   // rows[3]+ = student data
   var hRow     = rows[2];  // header row
   var QM_FOOTER_KEYWORDS = ['filter','status','total','average','sum','count','subtotal'];
-  var dataRows = rows.slice(3).filter(function(r) {
+  var dataRowNumbers=[];
+  var dataRows = rows.slice(3).filter(function(r,sourceIndex) {
     if (!r.some(function(c){ return String(c).trim() !== ''; })) return false; // skip empty rows
     // Skip QM footer rows — identified by a known keyword in the first few columns
     for (var ci = 0; ci < Math.min(r.length, 6); ci++) {
       var cv = String(r[ci]||'').trim().toLowerCase();
       if (cv && QM_FOOTER_KEYWORDS.indexOf(cv) >= 0) return false;
     }
+    dataRowNumbers.push(sourceIndex+4);
     return true;
   });
 
@@ -4279,16 +4291,17 @@ function parseResults(text, xlsxRows, isCsv) {
       outcomes: [],
       qmScores: []
     };
+    s._sourceRow=dataRowNumbers[ri]||ri+4;
 
     for (var qi = 0; qi < questions.length; qi++) {
       var raw = String(r[questions[qi].outcomeCol] || '').trim();
       var letter = parseOutcome(raw);
       if (raw && !letter && !/unscored/i.test(raw)) {
-        qmAddUploadIssue('results','blocker','Unrecognised response value for student row '+(ri+1)+', question '+questions[qi].qNum+': "'+raw.slice(0,40)+'".');
+        qmAddUploadIssue('results','blocker','Unrecognised response value for student row '+(ri+1)+', question '+questions[qi].qNum+': "'+raw.slice(0,40)+'".',[{row:ri+1,sourceRow:s._sourceRow,question:qi+1,questionLabel:questions[qi].qNum,studentId:s.id,field:'response'}]);
       }
       var rawScore=String(r[questions[qi].scoreCol]||'').trim();
       if (rawScore && rawScore!=='0' && rawScore!=='1') {
-        qmAddUploadIssue('results','blocker','Unexpected score value for student row '+(ri+1)+', question '+questions[qi].qNum+': "'+rawScore.slice(0,40)+'".');
+        qmAddUploadIssue('results','blocker','Unexpected score value for student row '+(ri+1)+', question '+questions[qi].qNum+': "'+rawScore.slice(0,40)+'".',[{row:ri+1,sourceRow:s._sourceRow,question:qi+1,questionLabel:questions[qi].qNum,studentId:s.id,field:'score'}]);
       }
       s.outcomes.push(letter);
       s.qmScores.push(parseInt(r[questions[qi].scoreCol]) || 0);
@@ -4306,8 +4319,8 @@ function parseResults(text, xlsxRows, isCsv) {
       else idCounts[s.id]=(idCounts[s.id]||0)+1;
     });
     var duplicateStudentIds=Object.keys(idCounts).filter(function(id){return idCounts[id]>1;});
-    if (blankIdRows.length) qmAddUploadIssue('results','blocker',blankIdRows.length+' student row'+(blankIdRows.length!==1?'s have':' has')+' a blank student ID.');
-    if (duplicateStudentIds.length) qmAddUploadIssue('results','blocker','Duplicate student ID'+(duplicateStudentIds.length!==1?'s':'')+' found: '+duplicateStudentIds.slice(0,10).join(', ')+(duplicateStudentIds.length>10?'…':'')+'.');
+    if (blankIdRows.length) qmAddUploadIssue('results','blocker',blankIdRows.length+' student row'+(blankIdRows.length!==1?'s have':' has')+' a blank student ID.',blankIdRows.map(function(row){return {row:row,sourceRow:G.students[row-1]._sourceRow,field:'studentId'};}));
+    if (duplicateStudentIds.length) qmAddUploadIssue('results','blocker','Duplicate student ID'+(duplicateStudentIds.length!==1?'s':'')+' found: '+duplicateStudentIds.slice(0,10).join(', ')+(duplicateStudentIds.length>10?'…':'')+'.',G.students.map(function(s,idx){return {s:s,idx:idx};}).filter(function(entry){return duplicateStudentIds.indexOf(entry.s.id)>=0;}).map(function(entry){return {row:entry.idx+1,sourceRow:entry.s._sourceRow,studentId:entry.s.id,field:'studentId'};}));
   }
 
   if (G.students.length === 0) {
@@ -4368,7 +4381,7 @@ function parseResults(text, xlsxRows, isCsv) {
     return 'Q'+(i+1)+'='+(s0.qmScores&&s0.qmScores[i]!==undefined?s0.qmScores[i]:'?');
   }).join(' | ') : 'n/a';
   var unmatchedCount = G.students.filter(function(s){ return s.stream !== engCode && s.stream !== freCode; }).length;
-  if (G_DIF_ENABLED && unmatchedCount>0) qmAddUploadIssue('results','warning',unmatchedCount+' student row'+(unmatchedCount!==1?'s use':' uses')+' an unrecognised or blank language-stream code.');
+  if (G_DIF_ENABLED && unmatchedCount>0) qmAddUploadIssue('results','warning',unmatchedCount+' student row'+(unmatchedCount!==1?'s use':' uses')+' an unrecognised or blank language-stream code.',G.students.map(function(s,idx){return {s:s,idx:idx};}).filter(function(entry){return entry.s.stream!==engCode&&entry.s.stream!==freCode;}).map(function(entry){return {row:entry.idx+1,sourceRow:entry.s._sourceRow,studentId:entry.s.id,field:'stream'};}));
   var resultBlockers=qmEnsureUploadValidation().resultsBlockers;
   var resultWarnings=qmEnsureUploadValidation().resultsWarnings;
   if (resultBlockers.length) visibleLines.push('Cannot confirm: '+resultBlockers.join(' '));
@@ -4560,7 +4573,7 @@ function parseKey(text, xlsxRows, isCsv) {
   var missing  = keys.filter(function(k){ return !k; }).length;
   var invalidKeys=keys.map(function(k,i){return (!k||!/^[a-e]$/.test(k))?validQNums[i]:null;}).filter(function(v){return v!==null;});
   if (mismatch) qmAddUploadIssue('key','blocker','Question count mismatch: results contain '+G.nQ+' questions and the key contains '+keys.length+'.');
-  if (invalidKeys.length) qmAddUploadIssue('key','blocker','Missing or unsupported answer key value for question'+(invalidKeys.length!==1?'s ':' ')+invalidKeys.join(', ')+'. Only A–E (or 1–5) are supported.');
+  if (invalidKeys.length) qmAddUploadIssue('key','blocker','Missing or unsupported answer key value for question'+(invalidKeys.length!==1?'s ':' ')+invalidKeys.join(', ')+'. Only A–E (or 1–5) are supported.',invalidKeys.map(function(qNum){var position=validQNums.indexOf(qNum);return {question:position+1,questionLabel:qNum,field:'key'};}));
 
   var keyQSeen={}; validQNums.forEach(function(q){keyQSeen[q]=(keyQSeen[q]||0)+1;});
   var duplicateKeyQ=Object.keys(keyQSeen).filter(function(q){return keyQSeen[q]>1;});
@@ -4694,7 +4707,7 @@ function parseScantronResults(text) {
     if (!numToLetter(String(value||'').replace(/\*/g,'').trim())) invalidKeyQuestions.push(idx+1);
   });
   if (invalidKeyQuestions.length) {
-    scantronAddUploadIssue('blocker','Missing or unsupported MASTER answer-key value at question'+(invalidKeyQuestions.length===1?' ':'s ')+invalidKeyQuestions.join(', ')+'. Expected values 1–5.');
+    scantronAddUploadIssue('blocker','Missing or unsupported MASTER answer-key value at question'+(invalidKeyQuestions.length===1?' ':'s ')+invalidKeyQuestions.join(', ')+'. Expected values 1–5.',invalidKeyQuestions.map(function(qNum){return {sourceRow:1,question:qNum,questionLabel:qNum,field:'key'};}));
   }
 
   var enCode = ((document.getElementById('scantron-en-code')||{value:''}).value || '').trim();
@@ -4704,7 +4717,7 @@ function parseScantronResults(text) {
   var shortRows=[];
   var excessResponseRows=[];
   var blankIdRows=[];
-  var invalidResponseRows=[];
+  var invalidResponseRows=[],invalidResponseLocations=[];
 
   for (var r = 1; r < dataRows.length; r++) {
     var row     = dataRows[r];
@@ -4729,7 +4742,10 @@ function parseScantronResults(text) {
         itemAnswers.push('');
       } else {
         var letter = numToLetter(raw);
-        if (!letter) invalidResponseRows.push('row '+(r+1)+', Q'+(q+1));
+        if (!letter) {
+          invalidResponseRows.push('row '+(r+1)+', Q'+(q+1));
+          invalidResponseLocations.push({row:r,sourceRow:r+1,question:q+1,questionLabel:q+1,studentId:studentId,field:'response'});
+        }
         itemScores.push(letter === keyLetters[q] ? 1 : 0);
         itemAnswers.push(letter.toLowerCase());
       }
@@ -4737,7 +4753,7 @@ function parseScantronResults(text) {
 
     var stream = ''; // assigned at run time in runAnalysis
 
-    students.push({ id:studentId, name:name, courseCode:courseCode, stream:stream,
+    students.push({ id:studentId, name:name, courseCode:courseCode, stream:stream,_sourceRow:r+1,
       scores:itemScores, outcomes:itemAnswers,
       total: itemScores.reduce(function(a,b){ return a+b; }, 0) });
   }
@@ -4754,11 +4770,11 @@ function parseScantronResults(text) {
     if (id) idCounts[id]=(idCounts[id]||0)+1;
   });
   var duplicateIds=Object.keys(idCounts).filter(function(id){return idCounts[id]>1;});
-  if (blankIdRows.length) scantronAddUploadIssue('blocker','Blank student ID found on row'+(blankIdRows.length===1?' ':'s ')+blankIdRows.join(', ')+'.');
-  if (duplicateIds.length) scantronAddUploadIssue('blocker','Duplicate student ID'+(duplicateIds.length===1?' ':'s ')+duplicateIds.slice(0,10).join(', ')+(duplicateIds.length>10?'…':'')+'.');
-  if (shortRows.length) scantronAddUploadIssue('blocker','Student row'+(shortRows.length===1?' ':'s ')+shortRows.join(', ')+' did not contain all '+nQ+' response columns.');
-  if (excessResponseRows.length) scantronAddUploadIssue('blocker','Student row'+(excessResponseRows.length===1?' ':'s ')+excessResponseRows.join(', ')+' contained responses beyond the end of the MASTER answer key. Check for a blank trailing key value.');
-  if (invalidResponseRows.length) scantronAddUploadIssue('blocker','Unsupported response value found at '+invalidResponseRows.slice(0,10).join('; ')+(invalidResponseRows.length>10?'…':'')+'. Expected values 1–5 or blank.');
+  if (blankIdRows.length) scantronAddUploadIssue('blocker','Blank student ID found on row'+(blankIdRows.length===1?' ':'s ')+blankIdRows.join(', ')+'.',blankIdRows.map(function(row){return {row:row-1,sourceRow:row,field:'studentId'};}));
+  if (duplicateIds.length) scantronAddUploadIssue('blocker','Duplicate student ID'+(duplicateIds.length===1?' ':'s ')+duplicateIds.slice(0,10).join(', ')+(duplicateIds.length>10?'…':'')+'.',students.map(function(s,idx){return {s:s,idx:idx};}).filter(function(entry){return duplicateIds.indexOf(entry.s.id)>=0;}).map(function(entry){return {row:entry.idx+1,sourceRow:entry.s._sourceRow,studentId:entry.s.id,field:'studentId'};}));
+  if (shortRows.length) scantronAddUploadIssue('blocker','Student row'+(shortRows.length===1?' ':'s ')+shortRows.join(', ')+' did not contain all '+nQ+' response columns.',shortRows.map(function(row){return {row:row-1,sourceRow:row,field:'response'};}));
+  if (excessResponseRows.length) scantronAddUploadIssue('blocker','Student row'+(excessResponseRows.length===1?' ':'s ')+excessResponseRows.join(', ')+' contained responses beyond the end of the MASTER answer key. Check for a blank trailing key value.',excessResponseRows.map(function(row){return {row:row-1,sourceRow:row,field:'response'};}));
+  if (invalidResponseRows.length) scantronAddUploadIssue('blocker','Unsupported response value found at '+invalidResponseRows.slice(0,10).join('; ')+(invalidResponseRows.length>10?'…':'')+'. Expected values 1–5 or blank.',invalidResponseLocations);
 
   // Store into G — same structure as QM path
   G.key      = keyLetters.map(function(l){ return l.toLowerCase(); });
@@ -4885,9 +4901,14 @@ function analysisReconciliationSnapshot(source) {
   var rec=G._reconciliation||{};
   var students=G.students||[];
   var key=G.key||[];
-  var missingResponses=0;
-  students.forEach(function(s){
-    (s.outcomes||[]).forEach(function(answer){if(!answer)missingResponses++;});
+  var missingResponses=0,missingResponseLocations=[];
+  students.forEach(function(s,studentIndex){
+    (s.outcomes||[]).forEach(function(answer,questionIndex){
+      if(!answer){
+        missingResponses++;
+        missingResponseLocations.push({row:studentIndex+1,sourceRow:s._sourceRow||studentIndex+(source==='scantron'?2:4),question:questionIndex+1,questionLabel:(G.qLabels&&G.qLabels[questionIndex])?String(G.qLabels[questionIndex]).replace(/^Question\s*/i,''):questionIndex+1,studentId:s.id||'',field:'response'});
+      }
+    });
   });
 
   var activeExceptions=Object.keys(G.exclusions||{}).filter(function(idx){
@@ -4951,6 +4972,7 @@ function analysisReconciliationSnapshot(source) {
     scoreMismatches:scoreMismatches,nEN:nEN,nFR:nFR,unmatchedStreams:unmatched,
     blockers:blockers.slice(),warnings:warnings.slice(),reviewSignals:reviewSignals
   };
+  G._missingResponseLocations=missingResponseLocations;
   G._reconciliationSnapshot=snapshot;
   return snapshot;
 }
@@ -5022,6 +5044,71 @@ function returnToUploadFiles(source) {
   checkRunReady();
 }
 
+function uploadLocationLabel(location) {
+  var bits=[];
+  if(location.sourceRow)bits.push('file row '+location.sourceRow);
+  else if(location.row)bits.push('student row '+location.row);
+  if(location.studentId)bits.push('ID '+location.studentId);
+  if(location.question)bits.push('Q'+(location.questionLabel||location.question));
+  if(location.field==='studentId')bits.push('Student ID');
+  return bits.join(' · ')||'Show location';
+}
+function renderUploadFindingGroup(source,title,severity,issues) {
+  if(!issues||!issues.length)return '';
+  var colours=severity==='blocker'
+    ? {bg:'#fff0f0',border:'#f0c0c0',text:'#7a1010',badge:'Must correct'}
+    : {bg:'#fffbf0',border:'#f0e0a0',text:'#856404',badge:'Review'};
+  return '<section class="upload-finding-group" data-severity="'+severity+'" style="padding:10px 14px;background:'+colours.bg+';border-top:1px solid '+colours.border+';color:'+colours.text+';font-size:11px">'+
+    '<div style="display:flex;align-items:center;gap:7px;margin-bottom:7px"><span style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.45px;border:1px solid '+colours.border+';border-radius:999px;padding:2px 7px">'+colours.badge+'</span><strong>'+escHtml(title)+'</strong></div>'+
+    issues.map(function(issue,issueIndex){
+      var locations=issue.locations||[];
+      var shown=locations.slice(0,8);
+      var renderLocationButton=function(location){
+        return '<button type="button" class="upload-location-link" onclick="focusUploadLocation(\''+source+'\','+(location.row||0)+','+(location.question||0)+',\''+(location.field||'')+'\')" style="font:inherit;font-weight:650;color:'+colours.text+';background:#fff;border:1px solid '+colours.border+';border-radius:999px;padding:3px 8px;cursor:pointer">'+escHtml(uploadLocationLabel(location))+'</button>';
+      };
+      var locationHtml=shown.length?'<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:6px">'+shown.map(renderLocationButton).join('')+'</div>':'';
+      if(locations.length>shown.length){
+        locationHtml+='<details style="margin-top:6px"><summary style="cursor:pointer;font-weight:700">Show '+(locations.length-shown.length)+' more location'+(locations.length-shown.length===1?'':'s')+'</summary><div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:6px">'+locations.slice(shown.length).map(renderLocationButton).join('')+'</div></details>';
+      }
+      return '<div style="padding:'+(issueIndex?'8px 0 2px':'2px 0')+';border-top:'+(issueIndex?'1px solid '+colours.border:'0')+'"><div>'+escHtml(issue.message)+'</div>'+locationHtml+'</div>';
+    }).join('')+'</section>';
+}
+function focusUploadLocation(source,row,question,field) {
+  var prefix=source==='scantron'?'sc':'qm';
+  if(field==='key'){
+    var keyAll=document.getElementById(prefix+'-key-all');
+    if(keyAll&&keyAll.style.display==='none'){
+      if(source==='scantron')scToggle('key');else qmToggle('key');
+    }
+    document.querySelectorAll('.upload-location-active').forEach(function(el){el.classList.remove('upload-location-active');el.style.outline='';el.style.background='';});
+    var keyTarget=document.querySelector('#'+prefix+'-key-all [data-upload-question="'+question+'"]')||document.querySelector('#'+prefix+'-key-preview [data-upload-question="'+question+'"]');
+    if(keyTarget){keyTarget.classList.add('upload-location-active');keyTarget.style.outline='3px solid #d97706';keyTarget.style.outlineOffset='2px';keyTarget.style.background='#fff3cd';keyTarget.scrollIntoView({behavior:'smooth',block:'center',inline:'center'});}
+    return;
+  }
+  var all=document.getElementById(prefix+'-students-all');
+  var preview=document.getElementById(prefix+'-students-preview');
+  if(all&&all.style.display==='none'){
+    if(source==='scantron')scToggle('students');else qmToggle('students');
+  }
+  if(question>5){
+    var full=document.querySelector('#'+prefix+'-students-all .'+prefix+'-ans-full');
+    if(full&&full.style.display==='none'){
+      if(source==='scantron')scToggle('answers');else qmToggle('answers');
+    }
+  }
+  document.querySelectorAll('.upload-location-active').forEach(function(el){el.classList.remove('upload-location-active');el.style.outline='';el.style.background='';});
+  var selector='#'+prefix+'-students-all [data-upload-row="'+row+'"]';
+  if(question)selector+=' [data-upload-question="'+question+'"]';
+  else if(field==='studentId')selector+=' [data-upload-field="studentId"]';
+  var target=document.querySelector(selector)||document.querySelector('#'+prefix+'-students-all [data-upload-row="'+row+'"]');
+  if(target){
+    target.classList.add('upload-location-active');
+    target.style.outline='3px solid #d97706';target.style.outlineOffset='2px';target.style.background='#fff3cd';
+    target.scrollIntoView({behavior:'smooth',block:'center',inline:'center'});
+    setTimeout(function(){target.style.outline='2px solid #d97706';},900);
+  }
+}
+
 // ── QM Upload validation panel ────────────────────────────────────────────
 function updateQMPreview() {
   if (G_SOURCE === 'scantron') return;
@@ -5084,7 +5171,7 @@ function renderQMPreview(el) {
 
   // Key pills — first 10
   var keyPillsHtml = G.key.slice(0, 10).map(function(k, i) {
-    return '<div style="display:inline-flex;flex-direction:column;align-items:center;gap:1px;background:var(--c-surface);border:0.5px solid var(--c-border);border-radius:6px;padding:5px 9px;min-width:36px">' +
+    return '<div data-upload-question="'+(i+1)+'" style="display:inline-flex;flex-direction:column;align-items:center;gap:1px;background:var(--c-surface);border:0.5px solid var(--c-border);border-radius:6px;padding:5px 9px;min-width:36px">' +
       '<span style="font-size:10px;color:var(--c-muted)">Q'+(i+1)+'</span>' +
       '<span style="font-size:13px;font-weight:600;color:var(--c-primary)">'+(k||'?').toUpperCase()+'</span></div>';
   }).join('');
@@ -5093,7 +5180,7 @@ function renderQMPreview(el) {
       '<span style="font-size:10px;color:var(--c-muted)">···</span><span style="font-size:11px;color:var(--c-muted)">'+(qCount-10)+' more</span></div>';
   }
   var allKeyPillsHtml = G.key.map(function(k, i) {
-    return '<div style="display:inline-flex;flex-direction:column;align-items:center;gap:1px;background:var(--c-surface);border:0.5px solid var(--c-border);border-radius:6px;padding:5px 9px;min-width:36px">' +
+    return '<div data-upload-question="'+(i+1)+'" style="display:inline-flex;flex-direction:column;align-items:center;gap:1px;background:var(--c-surface);border:0.5px solid var(--c-border);border-radius:6px;padding:5px 9px;min-width:36px">' +
       '<span style="font-size:10px;color:var(--c-muted)">Q'+(i+1)+'</span>' +
       '<span style="font-size:13px;font-weight:600;color:var(--c-primary)">'+(k||'?').toUpperCase()+'</span></div>';
   }).join('');
@@ -5110,12 +5197,13 @@ function renderQMPreview(el) {
         : '<span style="display:inline-block;font-size:10px;font-weight:600;color:#856404;background:#fff3cd;border-radius:4px;padding:1px 7px">? unmatched</span>';
     var rowBg = (G_DIF_ENABLED && isUnmatched) ? 'background:#fffbf0' : '';
     var p = compact ? '5px 12px' : '7px 12px';
-    var ansShort = s.outcomes ? s.outcomes.slice(0,5).map(function(a){ return a ? a.toUpperCase() : '—'; }).join(' ') : '—';
-    var ansFull  = s.outcomes ? s.outcomes.map(function(a){ return a ? a.toUpperCase() : '—'; }).join(' ') : '—';
+    function answerSpans(answers){return answers.map(function(a,qIndex){return '<span data-upload-question="'+(qIndex+1)+'" title="Question '+(qIndex+1)+'" style="display:inline-block;min-width:18px;text-align:center;border-radius:3px">'+(a?a.toUpperCase():'—')+'</span>';}).join(' ');}
+    var ansShort = s.outcomes ? answerSpans(s.outcomes.slice(0,5)) : '—';
+    var ansFull  = s.outcomes ? answerSpans(s.outcomes) : '—';
     var ansCell  = '<span class="qm-ans-short">'+ansShort+'</span><span class="qm-ans-full" style="display:none">'+ansFull+'</span>';
-    return '<tr style="'+rowBg+'">' +
+    return '<tr data-upload-row="'+(idx+1)+'" style="'+rowBg+'">' +
       '<td style="padding:'+p+';border-bottom:0.5px solid var(--c-border);color:var(--c-muted);font-size:12px">'+(idx+1)+'</td>' +
-      '<td style="padding:'+p+';border-bottom:0.5px solid var(--c-border);font-size:12px">'+(s.id||'—')+'</td>' +
+      '<td data-upload-field="studentId" style="padding:'+p+';border-bottom:0.5px solid var(--c-border);font-size:12px">'+(s.id||'—')+'</td>' +
       '<td style="padding:'+p+';border-bottom:0.5px solid var(--c-border);font-size:12px">'+(s.last&&s.first?s.last+', '+s.first:s.last||s.first||'—')+'</td>' +
       (G_DIF_ENABLED ? '<td style="padding:'+p+';border-bottom:0.5px solid var(--c-border);font-family:monospace;font-size:12px">'+(s.stream||'—')+'</td>' : '') +
       (G_DIF_ENABLED ? '<td style="padding:'+p+';border-bottom:0.5px solid var(--c-border);font-size:12px">'+streamBadge+'</td>' : '') +
@@ -5173,14 +5261,17 @@ function renderQMPreview(el) {
     : '';
   var uploadBlockers=qmUploadBlockers();
   var uploadWarnings=qmUploadWarnings();
-  var reconciliationBlocked=uploadBlockers.length>0||!analysisReconciliationSnapshot('qm').keyMatched;
+  var reconciliationSnapshot=analysisReconciliationSnapshot('qm');
+  var reconciliationBlocked=uploadBlockers.length>0||!reconciliationSnapshot.keyMatched;
+  var validationDetails=qmEnsureUploadValidation().details||[];
+  var blockerDetails=validationDetails.filter(function(issue){return issue.severity==='blocker';});
+  var warningDetails=validationDetails.filter(function(issue){return issue.severity!=='blocker';});
+  if(reconciliationSnapshot.missingResponses){
+    warningDetails.push({message:reconciliationSnapshot.missingResponses+' blank response'+(reconciliationSnapshot.missingResponses===1?' was':'s were')+' found. Blank responses are treated as unanswered and receive no point; review the locations before continuing.',locations:G._missingResponseLocations||[]});
+  }
   var uploadValidationHtml='';
-  if (uploadBlockers.length) {
-    uploadValidationHtml='<div id="qm-validation-blockers" style="padding:10px 14px;background:#fff0f0;border-top:0.5px solid #f0c0c0;color:#7a1010;font-size:11px"><strong>Analysis blocked until corrected:</strong><ul style="margin:5px 0 0 18px;padding:0">'+uploadBlockers.map(function(m){return '<li>'+escHtml(m)+'</li>';}).join('')+'</ul></div>';
-  }
-  if (uploadWarnings.length) {
-    uploadValidationHtml+='<div id="qm-validation-warnings" style="padding:10px 14px;background:#fffbf0;border-top:0.5px solid #f0e0a0;color:#856404;font-size:11px"><strong>Review before confirming:</strong><ul style="margin:5px 0 0 18px;padding:0">'+uploadWarnings.map(function(m){return '<li>'+escHtml(m)+'</li>';}).join('')+'</ul></div>';
-  }
+  uploadValidationHtml+=renderUploadFindingGroup('qm','Problems that prevent analysis','blocker',blockerDetails);
+  uploadValidationHtml+=renderUploadFindingGroup('qm','Items to review before continuing','warning',warningDetails);
 
   el.innerHTML =
     '<div style="border:0.5px solid var(--c-border);border-radius:10px;overflow:hidden;font-family:var(--font)">' +
@@ -5194,7 +5285,7 @@ function renderQMPreview(el) {
       '' +
     '</div>' +
     // Raw data notice
-    '<div class="upload-preview-notice" style="padding:7px 16px;background:#f0f4ff;border-bottom:0.5px solid var(--c-border);font-size:11px;color:var(--c-secondary)">ℹ This preview reflects the raw files only — Question Exceptions and alternate keys have not been applied yet.</div>' +
+    '<div class="upload-preview-notice" style="padding:7px 16px;background:#f0f4ff;border-bottom:0.5px solid var(--c-border);font-size:11px;color:var(--c-secondary)"><strong style="font-size:9px;text-transform:uppercase;letter-spacing:.45px;margin-right:7px">Information</strong> This preview reflects the raw files only — Question Exceptions and alternate keys have not been applied yet.</div>' +
     renderAnalysisReconciliation('qm') +
     // Mismatch warning (if any)
     mismatchWarning +
@@ -5633,7 +5724,7 @@ function renderScantronPreview(students, keyLetters, nQ, badRows) {
 
   // Key pills
   var keyPillsHtml = keyLetters.slice(0, 10).map(function(k, i) {
-    return '<div style="display:inline-flex;flex-direction:column;align-items:center;gap:1px;background:var(--c-surface);border:0.5px solid var(--c-border);border-radius:6px;padding:5px 9px;min-width:36px">' +
+    return '<div data-upload-question="'+(i+1)+'" style="display:inline-flex;flex-direction:column;align-items:center;gap:1px;background:var(--c-surface);border:0.5px solid var(--c-border);border-radius:6px;padding:5px 9px;min-width:36px">' +
       '<span style="font-size:10px;color:var(--c-muted)">Q'+(i+1)+'</span>' +
       '<span style="font-size:13px;font-weight:600;color:var(--c-primary)">'+(k||'?')+'</span></div>';
   }).join('');
@@ -5642,7 +5733,7 @@ function renderScantronPreview(students, keyLetters, nQ, badRows) {
       '<span style="font-size:10px;color:var(--c-muted)">···</span><span style="font-size:11px;color:var(--c-muted)">'+(nQ-10)+' more</span></div>';
   }
   var allKeyPillsHtml = keyLetters.map(function(k, i) {
-    return '<div style="display:inline-flex;flex-direction:column;align-items:center;gap:1px;background:var(--c-surface);border:0.5px solid var(--c-border);border-radius:6px;padding:5px 9px;min-width:36px">' +
+    return '<div data-upload-question="'+(i+1)+'" style="display:inline-flex;flex-direction:column;align-items:center;gap:1px;background:var(--c-surface);border:0.5px solid var(--c-border);border-radius:6px;padding:5px 9px;min-width:36px">' +
       '<span style="font-size:10px;color:var(--c-muted)">Q'+(i+1)+'</span>' +
       '<span style="font-size:13px;font-weight:600;color:var(--c-primary)">'+(k||'?')+'</span></div>';
   }).join('');
@@ -5659,12 +5750,13 @@ function renderScantronPreview(students, keyLetters, nQ, badRows) {
         : '<span style="display:inline-block;font-size:10px;font-weight:600;color:#856404;background:#fff3cd;border-radius:4px;padding:1px 7px">? unmatched</span>';
     var rowBg = isUnmatched ? 'background:#fffbf0' : '';
     var p = compact ? '5px 12px' : '7px 12px';
-    var ansShort = s.outcomes ? s.outcomes.slice(0,5).map(function(a){ return a ? a.toUpperCase() : '—'; }).join(' ') : '—';
-    var ansFull  = s.outcomes ? s.outcomes.map(function(a){ return a ? a.toUpperCase() : '—'; }).join(' ') : '—';
+    function answerSpans(answers){return answers.map(function(a,qIndex){return '<span data-upload-question="'+(qIndex+1)+'" title="Question '+(qIndex+1)+'" style="display:inline-block;min-width:18px;text-align:center;border-radius:3px">'+(a?a.toUpperCase():'—')+'</span>';}).join(' ');}
+    var ansShort = s.outcomes ? answerSpans(s.outcomes.slice(0,5)) : '—';
+    var ansFull  = s.outcomes ? answerSpans(s.outcomes) : '—';
     var ansCell  = '<span class="sc-ans-short">'+ansShort+'</span><span class="sc-ans-full" style="display:none">'+ansFull+'</span>';
-    return '<tr style="'+rowBg+'">' +
+    return '<tr data-upload-row="'+(idx+1)+'" style="'+rowBg+'">' +
       '<td style="padding:'+p+';border-bottom:0.5px solid var(--c-border);color:var(--c-muted);font-size:12px">'+(idx+2)+'</td>' +
-      '<td style="padding:'+p+';border-bottom:0.5px solid var(--c-border);font-size:12px">'+(s.id||'—')+'</td>' +
+      '<td data-upload-field="studentId" style="padding:'+p+';border-bottom:0.5px solid var(--c-border);font-size:12px">'+(s.id||'—')+'</td>' +
       '<td style="padding:'+p+';border-bottom:0.5px solid var(--c-border);font-size:12px">'+(s.name||'—')+'</td>' +
       '<td style="padding:'+p+';border-bottom:0.5px solid var(--c-border);font-family:monospace;font-size:12px">'+(s.courseCode||'—')+'</td>' +
       '<td style="padding:'+p+';border-bottom:0.5px solid var(--c-border);font-size:12px">'+streamBadge+'</td>' +
@@ -5706,6 +5798,15 @@ function renderScantronPreview(students, keyLetters, nQ, badRows) {
   var inp = document.getElementById('fi-main');
   if (inp && inp.files && inp.files[0]) filename = inp.files[0].name;
 
+  var scantronSnapshot=analysisReconciliationSnapshot('scantron');
+  var scantronDetails=scantronEnsureUploadValidation().details||[];
+  var scantronBlockerDetails=scantronDetails.filter(function(issue){return issue.severity==='blocker';});
+  var scantronWarningDetails=scantronDetails.filter(function(issue){return issue.severity!=='blocker';});
+  if(scantronSnapshot.missingResponses){
+    scantronWarningDetails.push({message:scantronSnapshot.missingResponses+' blank response'+(scantronSnapshot.missingResponses===1?' was':'s were')+' found. Blank responses are treated as unanswered and receive no point; review the locations before continuing.',locations:G._missingResponseLocations||[]});
+  }
+  var scantronFindingsHtml=renderUploadFindingGroup('scantron','Problems that prevent analysis','blocker',scantronBlockerDetails)+renderUploadFindingGroup('scantron','Items to review before continuing','warning',scantronWarningDetails);
+
   var thHtml = '<thead><tr style="background:var(--c-surface)">' +
     ['Row','Student ID','Name','Course code','Stream','Q1–Q5 answers'].map(function(h,i,arr){
       var cls = (i===arr.length-1) ? ' class="sc-ans-header"' : '';
@@ -5724,10 +5825,10 @@ function renderScantronPreview(students, keyLetters, nQ, badRows) {
     '</div>' +
     // Raw data notice
     '<div class="upload-preview-notice" style="padding:7px 16px;background:#f0f4ff;border-bottom:0.5px solid var(--c-border);font-size:11px;color:var(--c-secondary)">' +
-      'ℹ This preview reflects the raw file only — Question Exceptions and alternate keys have not been applied yet.' +
+      '<strong style="font-size:9px;text-transform:uppercase;letter-spacing:.45px;margin-right:7px">Information</strong> This preview reflects the raw file only — Question Exceptions and alternate keys have not been applied yet.' +
     '</div>' +
     renderAnalysisReconciliation('scantron') +
-    (scantronUploadBlockers().length?'<div id="scantron-validation-blockers" role="alert" style="padding:10px 14px;background:#fff0f0;border-bottom:0.5px solid #f0c0c0;color:#7a1010;font-size:11px"><strong>Analysis blocked until corrected:</strong><ul style="margin:5px 0 0 18px;padding:0">'+scantronUploadBlockers().map(function(message){return '<li>'+escHtml(message)+'</li>';}).join('')+'</ul></div>':'')+
+    scantronFindingsHtml+
     // KPI row
     '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-bottom:0.5px solid var(--c-border)">' +
       _previewKPI('Students', students.length, 'rows detected') +
@@ -11594,6 +11695,17 @@ var RELEASE_NOTES = [
   {
     version: '1.0.0-beta.1',
     builds: [
+      {
+        build: '20261109-02',
+        date:  'November 9, 2026',
+        notes: [
+          'Made upload-validation findings directly locatable for QuestionMark and Scantron files. Findings now retain the affected file row, student ID, question, and field whenever the source data provides them.',
+          'Added location buttons that open the complete data preview and highlight the exact response, Student ID, or answer-key entry that needs attention. Long issue lists show an initial set of locations with the remaining count so large exams remain readable.',
+          'Separated validation messages into “Must correct”, “Review”, and “Information”. Blocking problems still prevent analysis; review items can be accepted after verification; ordinary file context is no longer presented as a problem.',
+          'Blank responses are now explained as unanswered items that receive no point. The review finding shows their exact locations instead of requiring coordinators to search every student record.',
+          'Added browser regression coverage for retained missing-response locations, bounded location lists, opening the full preview, and highlighting the exact affected value. Analysis calculations and report output are unchanged.'
+        ]
+      },
       {
         build: '20261109-01',
         date:  'November 9, 2026',
@@ -18483,7 +18595,8 @@ function updateTopbarExam() {
             <div class="faq-a">
               After a successful upload, the <strong>Upload validation</strong> panel appears below the upload fields. Its Analysis reconciliation section confirms exactly how AQP interpreted the files before you run the analysis: students included, total questions detected, Disclosure and Unscored exclusions, scored questions retained, answer-key matches, effective scoring denominator, missing responses, language-stream matching, and unresolved findings. If reconstructed scores differ from QuestionMark's score columns, a separate warning appears with the number of differences and the action to take.<br><br>
               <strong>QuestionMark:</strong> The panel appears once <em>both</em> the results file and answer key are loaded. It also shows both filenames, EN/FR stream breakdown, the first 10 key answers, and a sample of five student rows. Question count, order, Question ID/version, and wording are compared between the two files.<br><br>
-              <strong>Blocking errors</strong> include duplicate or blank student IDs, duplicate question numbers, mixed scored/Unscored outcomes, invalid response or score values, missing or unsupported key answers, invalid Question ID versions, and results/key mismatches. You cannot confirm or analyse the files until these are corrected. Unrecognised language-stream codes are shown as warnings because they can be corrected with the stream-assignment workflow.<br><br>
+              Validation findings are separated by what you need to do. <strong>Must correct</strong> findings prevent confirmation and analysis. They include duplicate or blank student IDs, duplicate question numbers, mixed scored/Unscored outcomes, invalid response or score values, missing or unsupported key answers, invalid Question ID versions, and results/key mismatches. <strong>Review</strong> findings require verification but do not necessarily prevent analysis; these include blank responses and unrecognised language-stream codes. <strong>Information</strong> describes how the uploaded files are being interpreted and is not a problem.<br><br>
+              When AQP knows the affected location, the finding includes buttons showing the file row, student ID, question, or field. Select a location to open the complete preview and highlight the exact value. For large files, AQP shows the first eight location buttons and reports how many additional locations were found. A blank response means that the student did not provide a usable answer for that question; AQP treats it as unanswered and awards no point, so review the listed locations before continuing.<br><br>
               <strong>Scantron:</strong> The panel appears after the single Scantron file is uploaded. It shows the same information — filename, counts, key preview, and student sample — with unmatched course codes highlighted if any are found.<br><br>
               You can fix language codes in the Data Source &amp; DIF section and click <strong>Re-validate</strong>, or choose <strong>Return to uploads</strong> when a source file needs correction. Click <strong>Confirm and continue</strong> once the reconciled structure is correct and no blocking errors remain.
             </div>

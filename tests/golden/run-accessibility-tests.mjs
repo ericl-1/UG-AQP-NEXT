@@ -39,7 +39,7 @@ assert.match(applicationHtml, /sp-identity-shifted/, "the identity shift must be
 assert.match(applicationHtml, /#splash-screen>\.sp-grid,#splash-screen>\.sp-pulse,#splash-screen>\.sp-stage\{background-color:transparent!important\}/, "splash layers must not hide the ECG grid with inherited dialog fills");
 assert.match(applicationHtml, /left:87\.5%/, "wide splash layouts must reserve the right side for sign-in");
 assert.doesNotMatch(applicationHtml, /id="sp-pct"|id="sp-fill"/, "the splash must not imply artificial loading progress");
-assert.match(applicationHtml, /APP_BUILD\s*=\s*'20261109-01'/, "the current report-guidance build must be stamped");
+assert.match(applicationHtml, /APP_BUILD\s*=\s*'20261109-02'/, "the current validation-locator build must be stamped");
 assert.match(applicationHtml, /function plainReleaseNote\(note\)/, "release notes must include a plain-language presentation pass");
 assert.match(applicationHtml, /class="btn-dl-secondary da-method-btn"[^>]+aria-expanded="false"[^>]+aria-controls="da-methodology-panel"/, "Distractor methodology must use an accessible disclosure control");
 assert.match(applicationHtml, /class="app-version-pill"/, "the footer version must use the theme-aware pill");
