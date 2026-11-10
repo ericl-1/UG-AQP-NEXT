@@ -307,7 +307,7 @@ try {
     };
   });
   await page.setViewportSize(originalViewport);
-  assert.equal(initial.build, "20261109-01");
+  assert.equal(initial.build, "20261109-02");
   assert.equal(initial.initialRoom, "landing", "MCQ-containing demonstrations must open on Item Analysis Overview");
   assert.equal(initial.initialNav, "nav-landing", "MCQ-containing demonstrations must activate the Item Analysis Overview navigation item");
   assert.equal(initial.title, "AQP Synthetic Demonstration Exam");
@@ -368,7 +368,7 @@ try {
   assert.equal(initial.difKpiInToolbar, true, "DIF KPI tiles must share the toolbar row with the CSV action");
   assert.equal(initial.readiness.ready, false, "unreviewed demo flags should produce advisory readiness");
   assert.equal(initial.audit.demonstration, true);
-  assert.equal(initial.audit.application.build, "20261109-01");
+  assert.equal(initial.audit.application.build, "20261109-02");
   assert.equal(initial.audit.sourceFiles.demonstration.name, "Built-in synthetic dataset");
   assert.ok(initial.audit.inputInterpretation.reconciliation);
   assert.ok(initial.audit.events.some(event => event.type === "demonstration_loaded"));
@@ -651,7 +651,7 @@ try {
   assert.match(path.basename(jsonPath), /_analysis-record\.json$/);
   assert.equal(json.recordType, "aqp-analysis-record");
   assert.equal(json.schemaVersion, "1.0");
-  assert.equal(json.meta.build, "20261109-01");
+  assert.equal(json.meta.build, "20261109-02");
   assert.deepEqual(json.summary, recordUi.canonical.summary);
   assert.deepEqual(json.thresholds, recordUi.canonical.thresholds);
   assert.deepEqual(json.questions, recordUi.canonical.questions);

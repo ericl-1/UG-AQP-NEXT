@@ -77,6 +77,28 @@ try {
     assert.equal(parsed.reconciliation.nFR, scenario.french, `${scenario.name}: French count`);
     assert.deepEqual(parsed.blockers, [], `${scenario.name}: fixture must not block analysis`);
 
+    if (scenario.missing > 0) {
+      const locatorUi = await page.evaluate(() => ({
+        reviewHeading: document.querySelector('.upload-finding-group[data-severity="warning"]')?.innerText || '',
+        locationCount: document.querySelectorAll('.upload-finding-group[data-severity="warning"] .upload-location-link').length,
+        retainedLocations: (G._missingResponseLocations || []).map(location => ({
+          row: location.row, sourceRow: location.sourceRow, question: location.question, studentId: location.studentId,
+        })),
+      }));
+      assert.match(locatorUi.reviewHeading, /Items to review before continuing/i, `${scenario.name}: warning heading`);
+      assert.match(locatorUi.reviewHeading, /blank responses.*no point/i, `${scenario.name}: missing-response explanation`);
+      assert.equal(locatorUi.retainedLocations.length, scenario.missing, `${scenario.name}: retained missing-response locations`);
+      assert.ok(locatorUi.retainedLocations.every(location => location.row > 0 && location.sourceRow > 0 && location.question > 0 && location.studentId), `${scenario.name}: each missing response has a usable location`);
+      assert.equal(locatorUi.locationCount, Math.min(scenario.missing, 8), `${scenario.name}: location chips are bounded for large files`);
+      await page.evaluate(() => document.querySelector('.upload-finding-group[data-severity="warning"] .upload-location-link').click());
+      const focusState = await page.evaluate(() => ({
+        allRowsVisible: document.getElementById('qm-students-all')?.style.display !== 'none',
+        highlighted: document.querySelectorAll('#qm-students-all .upload-location-active').length,
+      }));
+      assert.equal(focusState.allRowsVisible, true, `${scenario.name}: clicking a location opens the complete preview`);
+      assert.equal(focusState.highlighted, 1, `${scenario.name}: clicking a location highlights one exact value`);
+    }
+
     await page.evaluate(() => _runAnalysis());
     await page.waitForFunction(expected => G._lastN === expected && G.mcq && G.mcq.length === 8, scenario.students);
     const analysed = await page.evaluate(() => ({
