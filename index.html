@@ -102,7 +102,7 @@
 </style>
 <style>
 /* ═══════════════════════════════════════════════════════════════════════════
-   AQP design system · Calm clinical intelligence · build 20261011-01
+   AQP design system · Calm clinical intelligence · build 20261109-01
    Centralized visual rules for colour, type, spacing, surfaces, controls,
    tables, status communication, motion, and theme parity.
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -2334,7 +2334,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
           <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px">
             <div>
               <div style="font-size:12px;font-weight:600;color:var(--c-primary)">Check Key — p-value sub-threshold</div>
-              <div style="font-size:11px;color:var(--c-muted);margin-top:1px">Triggers "Check Key" flag when p is <em>below</em> this <em>and</em> rpbis is also below its sub-threshold</div>
+              <div style="font-size:11px;color:var(--c-muted);margin-top:1px">Triggers the "Verify answer key" recommendation when p is <em>below</em> this <em>and</em> rpbis is also below its sub-threshold</div>
             </div>
             <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;margin-left:16px">
               <input type="number" id="thr-checkp" aria-label="Check Key p-value sub-threshold" value="0.25" step="0.01" min="0.01" max="0.50"
@@ -2357,7 +2357,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
           <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px">
             <div>
               <div style="font-size:12px;font-weight:600;color:var(--c-primary)">Check Key — rpbis sub-threshold</div>
-              <div style="font-size:11px;color:var(--c-muted);margin-top:1px">Triggers "Check Key" flag when rpbis is <em>below</em> this <em>and</em> p is also below its sub-threshold</div>
+              <div style="font-size:11px;color:var(--c-muted);margin-top:1px">Triggers the "Verify answer key" recommendation when rpbis is <em>below</em> this <em>and</em> p is also below its sub-threshold</div>
             </div>
             <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;margin-left:16px">
               <input type="number" id="thr-checkr" aria-label="Check Key rpbis sub-threshold" value="0.15" step="0.01" min="0.00" max="0.40"
@@ -2504,10 +2504,10 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 
 // ── App version — single source of truth ─────────────────────────────────
 var APP_VERSION     = '1.0.0-beta.1';
-var APP_BUILD       = '20261011-01';
+var APP_BUILD       = '20261109-01';
 var APP_FAQ_VERSION = '1.0.0-beta.1';  // Keep aligned with the app version; date records FAQ revisions
-var APP_FAQ_DATE    = 'October 11, 2026'; // Update when FAQ content changes
-var APP_RN_DATE     = 'October 11, 2026'; // Update each version close
+var APP_FAQ_DATE    = 'November 9, 2026'; // Update when FAQ content changes
+var APP_RN_DATE     = 'November 9, 2026'; // Update each version close
 var SESSION_BACKUP_FILE_TYPE = 'aqp-portable-session';
 var SESSION_BACKUP_SCHEMA_VERSION = 1;
 
@@ -7104,7 +7104,7 @@ function renderMCQTable(filter) {
     '<th data-tip="Difficulty index (p-value): proportion of students who answered correctly. Ideal range 0.35–0.95. Below 0.35 = Difficult; 0.96 or above = Too easy.">Difficulty (p)</th>'+
     '<th data-tip="Discrimination index (point-biserial correlation): measures how well this question separates strong from weak students. Above 0.25 = good; 0.15–0.25 = acceptable; below 0.15 = low; negative = red flag (stronger students chose wrong answer).">Discrimination</th>'+
     '<th style="min-width:80px" data-tip="The reason this question was flagged based on UGME analysis thresholds. Possible values: Difficult, Poor discrimination, Low discrimination, Too easy. A DIF badge also appears here if the question shows a significant EN/FR performance gap, independent of the other flag types. Note: Check Key is a Recommendation, not a Reason for Flag — it appears in the Recommendation column when difficulty is below 0.25 and discrimination is below 0.15, regardless of which flag applies.">Reason for Flag</th>'+
-    '<th style="min-width:48px;white-space:normal;line-height:1.3" data-tip="Most popular wrong answer among top-performing students. Only shown for items with difficulty below 0.25 and discrimination below 0.15 — suggests a possible key error or ambiguous question.">Best Students Chose</th>'+
+    '<th style="min-width:48px;white-space:normal;line-height:1.3" data-tip="Most frequently selected incorrect answer among the highest-performing 27% of students who missed the question. Shown only when both configured Verify answer key thresholds are crossed; it is a review prompt, not proof of an incorrect key.">Best Students Chose</th>'+
     '<th style="min-width:90px" class="col-rec" data-tip="Suggested action for this question based on its statistical profile.">Recommendation</th>'+
     '<th style="min-width:110px" class="col-comment" data-tip="Comments for this question — shows reason for Credit or Delete, and any alternate key notes.">Comments</th>'+
     '</tr></thead><tbody>';
@@ -7634,6 +7634,18 @@ function buildFbReportOverviewHtml(o) {
   + '</div>';
 }
 
+function bestStudentsChoseExplanation() {
+  var difficultyPct = Math.round(getThresh('checkp') * 100);
+  var discrimination = getThresh('checkr').toFixed(2);
+  return 'How to read “Best students chose”: When fewer than ' + difficultyPct + '% of students answer a question correctly and its discrimination is below ' + discrimination + ', this column shows the most frequently selected incorrect answer among the highest-performing 27% of students who missed the question. It is a prompt to verify the answer key and question wording—not proof that the keyed answer is incorrect.';
+}
+
+function bestStudentsChoseExplanationHtml() {
+  var text = bestStudentsChoseExplanation();
+  var label = 'How to read “Best students chose”:';
+  return '<p style="font-size:11px;line-height:1.5;color:#555;margin:0 0 8px"><b>' + label + '</b>' + text.slice(label.length) + '</p>';
+}
+
 function renderMCQReport(avg, alpha) {
   var title   = document.getElementById('exam-title').value||'';
   var dateVal = document.getElementById('exam-date').value;
@@ -7752,6 +7764,7 @@ function renderMCQReport(avg, alpha) {
 
     '<p style="font-size:15px;font-weight:700;color:#404040;margin:0 0 12px;padding-bottom:4px;border-bottom:2px solid var(--c-accent)">Multiple-Choice Questions Analysis</p>'+
     '<p style="margin-bottom:4px"><b>Table 1 - Flagged Questions</b><br><i>Questions flagged as possibly problematic, requiring director review.</i></p>'+
+    bestStudentsChoseExplanationHtml()+
     '<table style="width:100%;margin:0 0 14px;border-collapse:collapse"><thead><tr><th>Q#</th><th>Reason for flagging</th><th>Comments</th><th>Best students chose</th><th>Recommendation</th></tr></thead>'+
     '<tbody>'+(t1||'<tr><td colspan="5" style="text-align:center;color:var(--c-muted)">No flagged items</td></tr>')+'</tbody></table>'+
     t2+
@@ -8126,6 +8139,7 @@ function renderFullReport(avg, alpha) {
     // MCQ Analysis section
     '<p style="font-size:15px;font-weight:700;color:#404040;margin:0 0 12px;padding-bottom:4px;border-bottom:2px solid var(--c-accent)">Multiple-Choice Questions Analysis</p>'+
     '<p style="margin-bottom:4px"><b>Table 1 - Flagged Questions</b><br><i>Questions flagged as possibly problematic, requiring director review.</i></p>'+
+    bestStudentsChoseExplanationHtml()+
     '<table style="width:100%;margin:0 0 14px;border-collapse:collapse"><thead><tr><th>Q#</th><th>Reason for flagging</th><th>Comments</th><th>Best students chose</th><th>Recommendation</th></tr></thead>'+
     '<tbody>'+(t1||'<tr><td colspan="5" style="text-align:center;color:var(--c-muted)">No flagged items</td></tr>')+'</tbody></table>'+
     t2+
@@ -9119,12 +9133,13 @@ function _doExportReportBuild(type, title, safe, dateStr, a2, avg, dateSuffix, f
     // Table 1 — Flagged Questions
     body+=docxPara('Table 1 - Flagged Questions',{bold:true,sz:24,spAfter:160});
     body+=docxPara('Questions flagged as possibly problematic, requiring director review.',{italic:true,sz:22,spAfter:100});
+    body+=docxPara(bestStudentsChoseExplanation(),{sz:20,spAfter:120});
     if(flagged2.length){
       var t1rows3=[];
       for(i2=0;i2<flagged2.length;i2++){
         var r3=flagged2[i2];
         var comment3=r3.flag.indexOf('Difficult')>=0?r3.pct+'% answered correctly':r3.flag.indexOf('Poor')>=0||r3.flag.indexOf('Low')>=0?'Low discrimination':'';
-        t1rows3.push([r3.num, r3.flag, comment3, r3.topWrong&&r3.p<0.25?r3.topWrong:'', r3.rec]);
+        t1rows3.push([r3.num, r3.flag, comment3, r3.topWrong&&r3.p<getThresh('checkp')?r3.topWrong:'\u2014', r3.rec]);
       }
       t1rows3.sort(function(a,b){return a[0]-b[0];});
       body+=docxTable(['Q#','Reason for flagging','Comments','Best students chose','Recommendation'],t1rows3,[715,2100,2600,900,3398],{centreCols:[0,3],centre:true,cellMar:58,vAlignBottom:true});
@@ -9303,6 +9318,7 @@ function _doExportReportBuild(type, title, safe, dateStr, a2, avg, dateSuffix, f
     // Table 1 — Flagged Questions (no Elentra ID)
     body += docxPara('Table 1 - Flagged Questions',{bold:true,sz:24,spAfter:160});
     body += docxPara('Questions flagged as possibly problematic, requiring director review.',{italic:true,sz:22,spAfter:100});
+    body += docxPara(bestStudentsChoseExplanation(),{sz:20,spAfter:120});
     if(flagged.length){
       var t1rowsM=[];
       for(i=0;i<flagged.length;i++){
@@ -9310,7 +9326,7 @@ function _doExportReportBuild(type, title, safe, dateStr, a2, avg, dateSuffix, f
         var comment='';
         if(r.flag.indexOf('Difficult')>=0){comment=r.pct+'% answered correctly';}
         else if(r.flag.indexOf('Poor')>=0||r.flag.indexOf('Low')>=0){comment='Low discrimination';}
-        t1rowsM.push([r.num, r.flag, comment, r.topWrong&&r.p<getThresh('checkp')?r.topWrong:'', r.rec]);
+        t1rowsM.push([r.num, r.flag, comment, r.topWrong&&r.p<getThresh('checkp')?r.topWrong:'\u2014', r.rec]);
       }
       t1rowsM.sort(function(a,b){return a[0]-b[0];});
       body += docxTable(['Q#','Reason for flagging','Comments','Best students chose','Recommendation'],t1rowsM,[715,2100,2600,900,3398],{centreCols:[0,3],centre:true,cellMar:58,vAlignBottom:true});
@@ -11579,6 +11595,17 @@ var RELEASE_NOTES = [
     version: '1.0.0-beta.1',
     builds: [
       {
+        build: '20261109-01',
+        date:  'November 9, 2026',
+        notes: [
+          'Added a plain-language explanation of “Best students chose” beneath the Flagged Questions heading in MCQ and combined report previews and Word exports.',
+          'The explanation uses the thresholds applied to the analysis and clarifies that the result shows the most frequent incorrect answer among the highest-performing 27% of students who missed the question. It is a prompt to verify the key and wording, not proof of an incorrect key.',
+          'Empty “Best students chose” report cells now display an em dash so readers can distinguish an intentionally inapplicable result from missing report data.',
+          'Aligned the Settings guidance, table tooltip, contextual explanations, and FAQ with the implemented distinction between Poor discrimination, Low discrimination, and the Verify answer key recommendation.',
+          'Item statistics, flagging thresholds, scoring, DIF, feedback parsing, and recommendations are unchanged.'
+        ]
+      },
+      {
         build: '20261011-01',
         date:  'October 11, 2026',
         notes: [
@@ -13298,14 +13325,14 @@ function applyUnmatchedCorrections() {
     },
     'poor-disc': {
       term: 'Poor discrimination',
-      what: function() { return 'The discrimination index (rpbis) is below ' + _tf('disc') + ' \u2014 students who scored higher overall tended to answer this question wrong.'; },
+      what: function() { return 'The discrimination index (rpbis) is negative \u2014 students who scored higher overall tended to answer this question wrong.'; },
       why:  function() { return 'This is the strongest signal of a possible key error. It can also occur when a question tests content not covered in the course, or when the stem is misleading.'; },
       todo: function() { return 'Verify the answer key first. If the key is correct, review the stem and all options carefully for ambiguity or a plausible distractor that outcompetes the key.'; },
       live: true
     },
     'low-disc': {
       term: 'Low discrimination',
-      what: function() { return 'The discrimination index (rpbis) is between ' + _tf('disc') + ' and 0.10 \u2014 this question barely differentiates students who know the material from those who do not.'; },
+      what: function() { return 'The discrimination index (rpbis) is non-negative but below the configured threshold of ' + _tf('disc') + ' \u2014 this question barely differentiates students who know the material from those who do not.'; },
       why:  function() { return 'Often seen on questions that are very easy, test isolated recall rather than reasoning, or have distractors that are too obviously wrong to attract any responses.'; },
       todo: function() { return 'Consider whether the distractors can be made more plausible, or whether the question is testing a meaningful learning objective. Low discrimination alone is not a key error signal.'; },
       live: true
@@ -18004,7 +18031,7 @@ function _getNtFlaggedRows() {
     var ntR = ntItems[k].r;
     var ntFlag = _ntItemToFlag(ntItems[k]);
     var ntComment = ntItems[k].signals[0] ? ntItems[k].signals[0].review : '';
-    var ntBw = (ntR.topWrong && ntR.p < getThresh('checkp')) ? '<b>' + ntR.topWrong + '</b>' : '';
+    var ntBw = (ntR.topWrong && ntR.p < getThresh('checkp')) ? '<b>' + ntR.topWrong + '</b>' : '&mdash;';
     rows += '<tr><td style="text-align:center"><b>' + ntR.num + '</b></td>' +
       '<td style="color:#b07000;font-style:italic">' + ntFlag.flag + '</td>' +
       '<td>' + ntComment + '</td>' +
@@ -18022,7 +18049,7 @@ function _getNtFlaggedDocxRows() {
     var ntR = ntItems[k].r;
     var ntFlag = _ntItemToFlag(ntItems[k]);
     var ntComment = ntItems[k].signals[0] ? ntItems[k].signals[0].review : '';
-    var ntBw = (ntR.topWrong && ntR.p < getThresh('checkp')) ? ntR.topWrong : '';
+    var ntBw = (ntR.topWrong && ntR.p < getThresh('checkp')) ? ntR.topWrong : '\u2014';
     rows.push([ntR.num, ntFlag.flag, ntComment, ntBw, ntFlag.rec]);
   }
   return rows;
@@ -18035,7 +18062,7 @@ function _buildFlaggedTable1Rows(flagged) {
     if (_r.flag.indexOf('Difficult') >= 0) _cmt = _r.pct + '% of students answered correctly';
     else if (_r.flag.indexOf('Poor') >= 0 && _r.rpbis < 0 && _r.p < 0.35) _cmt = _r.pct + '% of students answered correctly / Negative discrimination';
     else if (_r.flag.indexOf('Poor') >= 0) _cmt = 'Negative discrimination';
-    var _bw = (_r.topWrong && _r.p < getThresh('checkp')) ? '<b>' + _r.topWrong + '</b>' : '';
+    var _bw = (_r.topWrong && _r.p < getThresh('checkp')) ? '<b>' + _r.topWrong + '</b>' : '&mdash;';
     var _col = _r.flag.indexOf('Poor') >= 0 ? '#993556' : (_r.flag.indexOf('Difficult') >= 0 || _r.flag.indexOf('Check') >= 0) ? 'var(--s-hard)' : '#b25400';
     _items.push({ num: _r.num, html: '<tr><td style="text-align:center"><b>' + _r.num + '</b></td><td style="color:' + _col + ';font-style:italic">' + _r.flag + '</td><td>' + _cmt + '</td><td style="text-align:center">' + _bw + '</td><td><b>' + _r.rec + '</b></td></tr>' });
   }
@@ -18726,7 +18753,7 @@ function updateTopbarExam() {
               Each flagged question shows a coloured badge in the Reason for Flag column:<br><br>
               <strong>Difficult</strong> (red) — fewer than 35% of students answered correctly. May reflect genuinely hard content, but can also indicate an ambiguous question or key error, especially when discrimination is also low.<br><br>
               <strong>Poor discrimination</strong> (red) — the discrimination index is negative, meaning students who scored well overall tended to answer this question wrong. This is a red flag for a possible key error.<br><br>
-              <strong>Low discrimination</strong> (amber) — the discrimination index is between 0 and 0.15. The question is not clearly separating stronger from weaker students, which may reduce exam reliability.<br><br>
+              <strong>Low discrimination</strong> (amber) — under the standard profile, the discrimination index is non-negative but below 0.10. The question is not clearly separating stronger from weaker students, which may reduce exam reliability.<br><br>
               <strong>Too easy</strong> (blue) — 96% or more of students answered correctly. The question does not contribute meaningfully to differentiating students.<br><br>
               <strong>DIF</strong> (indigo) — the question shows a statistically significant performance gap between English and French students. DIF flags are independent of the other flag types — a question can carry both a difficulty flag and a DIF flag simultaneously.<br><br>
               Clicking any badge opens a context panel explaining what it means and what the current threshold is.
@@ -18739,8 +18766,8 @@ function updateTopbarExam() {
               <span class="faq-icon">+</span>
             </div>
             <div class="faq-a">
-              This column appears for questions where difficulty is below 0.25 <em>and</em> discrimination is below 0.15 — the combination most likely to indicate a key error or ambiguous question. It shows the most popular wrong answer among the top-performing students on the exam.<br><br>
-              If the top quartile of students consistently chose a different answer than the key, it may mean the marked correct answer is wrong, or the question is genuinely ambiguous. The <strong>Check Key</strong> recommendation appears alongside this column when these conditions are met, prompting the exam director to verify the answer key.
+              Under the standard profile, this column appears for questions where fewer than 25% of students answered correctly <em>and</em> discrimination is below 0.15 — the combination most likely to indicate a key error or ambiguous question. It shows the most frequently selected incorrect answer among the highest-performing 27% of students who missed the question.<br><br>
+              If those high-performing students commonly selected a different answer than the key, it may mean the marked correct answer is wrong, or the question is genuinely ambiguous. The <strong>Verify answer key</strong> recommendation appears alongside this column when these conditions are met. This is a review prompt, not proof that the keyed answer is incorrect. Custom threshold settings are reflected in the analysis and reports.
             </div>
           </div>
 

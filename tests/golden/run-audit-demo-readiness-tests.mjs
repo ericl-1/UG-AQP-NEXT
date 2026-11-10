@@ -307,7 +307,7 @@ try {
     };
   });
   await page.setViewportSize(originalViewport);
-  assert.equal(initial.build, "20261011-01");
+  assert.equal(initial.build, "20261109-01");
   assert.equal(initial.initialRoom, "landing", "MCQ-containing demonstrations must open on Item Analysis Overview");
   assert.equal(initial.initialNav, "nav-landing", "MCQ-containing demonstrations must activate the Item Analysis Overview navigation item");
   assert.equal(initial.title, "AQP Synthetic Demonstration Exam");
@@ -368,7 +368,7 @@ try {
   assert.equal(initial.difKpiInToolbar, true, "DIF KPI tiles must share the toolbar row with the CSV action");
   assert.equal(initial.readiness.ready, false, "unreviewed demo flags should produce advisory readiness");
   assert.equal(initial.audit.demonstration, true);
-  assert.equal(initial.audit.application.build, "20261011-01");
+  assert.equal(initial.audit.application.build, "20261109-01");
   assert.equal(initial.audit.sourceFiles.demonstration.name, "Built-in synthetic dataset");
   assert.ok(initial.audit.inputInterpretation.reconciliation);
   assert.ok(initial.audit.events.some(event => event.type === "demonstration_loaded"));
@@ -607,19 +607,34 @@ try {
   assert.match(recordUi.backupText, /Reopenable AQP backup/);
 
   const reportAudience = await page.evaluate(() => {
+    renderMCQReport(G._lastAvg, G._lastAlpha);
     renderDIFReport();
     renderFullReport(G._lastAvg, G._lastAlpha);
+    const bestStudentsCells = root => {
+      const table = [...root.querySelectorAll("table")].find(candidate => /Best students chose/i.test(candidate.tHead?.innerText || ""));
+      return table ? [...table.tBodies[0].rows].map(row => row.cells[3]?.innerText.trim()) : [];
+    };
     return {
+      mcq: document.getElementById("mcq-report").innerText,
       dif: document.getElementById("dif-report").innerText,
       combined: document.getElementById("full-report").innerText,
+      mcqBestStudentsCells: bestStudentsCells(document.getElementById("mcq-report")),
+      combinedBestStudentsCells: bestStudentsCells(document.getElementById("full-report")),
     };
   });
+  for (const text of [reportAudience.mcq, reportAudience.combined]) {
+    assert.match(text, /highest-performing 27% of students who missed the question/);
+    assert.match(text, /not proof that the keyed answer is incorrect/);
+  }
+  assert.ok(reportAudience.mcqBestStudentsCells.includes("—"), "MCQ preview must mark non-triggered Best students chose cells with an em dash");
+  assert.ok(reportAudience.combinedBestStudentsCells.includes("—"), "combined preview must mark non-triggered Best students chose cells with an em dash");
   assert.doesNotMatch(reportAudience.dif, /DIF estimation notes|could not be estimated reliably/i, "DIF preview must remain focused on actionable flags");
   assert.doesNotMatch(reportAudience.combined, /DIF estimation notes|could not be estimated reliably/i, "combined preview must remain focused on actionable flags");
 
   const csvPath = await saveDownload(page, () => exportSessionRecord(), ".csv");
   const jsonPath = await saveDownload(page, () => exportSessionJSON(), ".json");
   const backupPath = await saveDownload(page, () => exportPortableSession(), ".json");
+  const mcqDocx = await saveDownload(page, () => doExportReport("mcq"), ".docx");
   const difDocx = await saveDownload(page, () => doExportReport("dif"), ".docx");
   const fullDocx = await saveDownload(page, () => doExportReport("full"), ".docx");
 
@@ -636,7 +651,7 @@ try {
   assert.match(path.basename(jsonPath), /_analysis-record\.json$/);
   assert.equal(json.recordType, "aqp-analysis-record");
   assert.equal(json.schemaVersion, "1.0");
-  assert.equal(json.meta.build, "20261011-01");
+  assert.equal(json.meta.build, "20261109-01");
   assert.deepEqual(json.summary, recordUi.canonical.summary);
   assert.deepEqual(json.thresholds, recordUi.canonical.thresholds);
   assert.deepEqual(json.questions, recordUi.canonical.questions);
@@ -646,8 +661,14 @@ try {
   assert.ok(json.audit.difSuppressions.length > 0);
   assert.ok(json.questions.some(q => q.dif?.estimationStatus !== "estimated" && q.dif?.suppressionReason));
 
+  const mcqText = await docxText(page, mcqDocx);
   const difText = await docxText(page, difDocx);
   const fullText = await docxText(page, fullDocx);
+  for (const text of [mcqText, fullText]) {
+    assert.match(text, /highest-performing 27% of students who missed the question/);
+    assert.match(text, /not proof that the keyed answer is incorrect/);
+    assert.match(text, /—/, "Word report must use an em dash for an intentionally empty Best students chose result");
+  }
   for (const text of [difText, fullText]) {
     assert.doesNotMatch(text, /DIF estimation notes|could not be estimated reliably/i, "distributed Word reports must remain focused on actionable DIF flags");
     assert.ok(initial.suppressions.every(s => !text.includes(s.reason)), "technical suppression reasons must remain outside distributed Word reports");
