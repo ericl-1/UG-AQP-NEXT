@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document records recommended future work for the Assessment Quality Platform after the QA, remediation, design-system consolidation, automated accessibility pass, analysis-record consolidation, identity/icon refresh, Student Feedback navigation restructure, Dark Mode/Assessment Pulse refresh, Feedback Overview workflow, Distractor Analysis live-review enhancement, setup-wizard Dark Mode completion, feedback-parser strengthening, synthetic edge-fixture coverage, institutional sign-in preview, realistic bilingual demonstration, flagged-question report guidance, and locatable upload validation delivered through version `1.0.0-beta.1`, build `20261109-02`.
+This document records recommended future work for the Assessment Quality Platform after the QA, remediation, design-system consolidation, automated accessibility pass, analysis-record consolidation, identity/icon refresh, Student Feedback navigation restructure, Dark Mode/Assessment Pulse refresh, Feedback Overview workflow, Distractor Analysis live-review enhancement and reporting, setup-wizard Dark Mode completion, feedback-parser strengthening, synthetic edge-fixture coverage, institutional sign-in preview, realistic bilingual demonstration, flagged-question report guidance, and locatable upload validation delivered through version `1.0.0-beta.1`, build `20261112-02`.
 
 These are forward-looking improvements rather than defects remaining from the two QA passes. Completed corrections are documented separately in `AQP_CHANGE_SUMMARY_2026-09-23.md`.
 
@@ -559,6 +559,14 @@ Generate the displayed difficulty and discrimination values from the thresholds 
 
 Status: implemented in build `20261109-01` across MCQ and combined previews and Word exports. Empty cells display an em dash, and related Settings, tooltip, contextual-panel, and FAQ terminology was aligned without changing analysis calculations.
 
+#### 36. Add decision-focused and full Distractor Analysis reports (implemented November 12, 2026)
+
+Two reports are now available for MCQ analyses. **Distractor Analysis — Findings** provides interpretation guidance, an executive summary, a priority table, and one detailed page for each question with an automated distractor-review signal. **Distractor Analysis — Full** adds a landscape appendix covering every analysed question.
+
+Both reports use the same analysis model as the on-screen Distractor Analysis room. They explain quartiles and automated signals in plain language, distinguish review prompts from academic conclusions, and cross-reference available item flags, feedback, DIF results, and exceptions. Detailed pages show the key, accepted alternates, and every other option selected at least once. Because QuestionMark results do not identify the complete set of choices offered, the reports explicitly warn that a 0% value does not confirm that an option existed.
+
+Status: implemented through build `20261112-02`, including HTML previews, Word exports, matching MCQ-report typography, restrained review highlighting, repeated landscape appendix headings, AQP branding, organized Director-report categories, release notes, FAQ guidance, and retained regression coverage. Scoring, MCQ flags, DIF methodology, and feedback parsing were not changed.
+
 ## Suggested delivery sequence
 
 ### Near term
@@ -588,10 +596,9 @@ Status: implemented in build `20261109-01` across MCQ and combined previews and 
 
 ### Deferred pending demonstrated need
 
-1. Distractor Analysis report or export
-2. Combined MCQ+DIF report redesign
-3. Narrative analysis summaries
-4. AI-assisted features
+1. Combined MCQ+DIF report redesign
+2. Narrative analysis summaries
+3. AI-assisted features
 
 ## Recommended immediate next task
 

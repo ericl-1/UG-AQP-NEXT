@@ -307,7 +307,7 @@ try {
     };
   });
   await page.setViewportSize(originalViewport);
-  assert.equal(initial.build, "20261109-02");
+  assert.equal(initial.build, "20261112-02");
   assert.equal(initial.initialRoom, "landing", "MCQ-containing demonstrations must open on Item Analysis Overview");
   assert.equal(initial.initialNav, "nav-landing", "MCQ-containing demonstrations must activate the Item Analysis Overview navigation item");
   assert.equal(initial.title, "AQP Synthetic Demonstration Exam");
@@ -368,7 +368,7 @@ try {
   assert.equal(initial.difKpiInToolbar, true, "DIF KPI tiles must share the toolbar row with the CSV action");
   assert.equal(initial.readiness.ready, false, "unreviewed demo flags should produce advisory readiness");
   assert.equal(initial.audit.demonstration, true);
-  assert.equal(initial.audit.application.build, "20261109-02");
+  assert.equal(initial.audit.application.build, "20261112-02");
   assert.equal(initial.audit.sourceFiles.demonstration.name, "Built-in synthetic dataset");
   assert.ok(initial.audit.inputInterpretation.reconciliation);
   assert.ok(initial.audit.events.some(event => event.type === "demonstration_loaded"));
@@ -610,6 +610,9 @@ try {
     renderMCQReport(G._lastAvg, G._lastAlpha);
     renderDIFReport();
     renderFullReport(G._lastAvg, G._lastAlpha);
+    renderDistractorReport("findings");
+    renderDistractorReport("full");
+    updateReportCards();
     const bestStudentsCells = root => {
       const table = [...root.querySelectorAll("table")].find(candidate => /Best students chose/i.test(candidate.tHead?.innerText || ""));
       return table ? [...table.tBodies[0].rows].map(row => row.cells[3]?.innerText.trim()) : [];
@@ -618,6 +621,17 @@ try {
       mcq: document.getElementById("mcq-report").innerText,
       dif: document.getElementById("dif-report").innerText,
       combined: document.getElementById("full-report").innerText,
+      distractorFindings: document.getElementById("distractor-findings-report").innerText,
+      distractorFull: document.getElementById("distractor-full-report").innerText,
+      distractorCardsVisible: ["rp-card-distractor-findings", "rp-card-distractor-full"].every(id => getComputedStyle(document.getElementById(id)).display !== "none"),
+      distractorAppendixRows: document.querySelectorAll("#distractor-full-report .da-appendix-table tbody tr").length,
+      directorSubgroups: [...document.querySelectorAll("#rp-section-analysis .director-report-subgroup")].map(group => ({
+        title: group.querySelector(".director-report-subtitle")?.textContent.trim(),
+        cards: [...group.querySelectorAll(":scope > [id^='rp-card-']")].map(card => card.id),
+      })),
+      distractorNewBadges: [...document.querySelectorAll("#rp-card-distractor-findings .report-new-badge, #rp-card-distractor-full .report-new-badge")].map(badge => badge.textContent.trim()),
+      reportIconRefs: ["rp-card-mcq", "rp-card-dif", "rp-card-distractor-findings", "rp-card-feedback"].map(id => document.querySelector(`#${id} use`)?.getAttribute("href")),
+      combinedIconRefs: [...document.querySelectorAll("#rp-card-combined use")].map(use => use.getAttribute("href")),
       mcqBestStudentsCells: bestStudentsCells(document.getElementById("mcq-report")),
       combinedBestStudentsCells: bestStudentsCells(document.getElementById("full-report")),
     };
@@ -630,6 +644,21 @@ try {
   assert.ok(reportAudience.combinedBestStudentsCells.includes("—"), "combined preview must mark non-triggered Best students chose cells with an em dash");
   assert.doesNotMatch(reportAudience.dif, /DIF estimation notes|could not be estimated reliably/i, "DIF preview must remain focused on actionable flags");
   assert.doesNotMatch(reportAudience.combined, /DIF estimation notes|could not be estimated reliably/i, "combined preview must remain focused on actionable flags");
+  assert.equal(reportAudience.distractorCardsVisible, true, "both Distractor Analysis report cards must be available for the demonstration exam");
+  assert.match(reportAudience.distractorFindings, /How to interpret this report/);
+  assert.match(reportAudience.distractorFindings, /Priority review/);
+  assert.doesNotMatch(reportAudience.distractorFindings, /Compact all question appendix/);
+  assert.match(reportAudience.distractorFull, /Compact all question appendix/);
+  assert.match(reportAudience.distractorFull, /does not confirm that the option was offered/i);
+  assert.equal(reportAudience.distractorAppendixRows, 70, "the full Distractor Analysis preview must include all 70 demonstration questions");
+  assert.deepEqual(reportAudience.directorSubgroups, [
+    { title: "MCQ & DIF Reports", cards: ["rp-card-mcq", "rp-card-dif", "rp-card-combined"] },
+    { title: "Distractor Reports", cards: ["rp-card-distractor-findings", "rp-card-distractor-full"] },
+    { title: "Feedback Reports", cards: ["rp-card-feedback"] },
+  ]);
+  assert.deepEqual(reportAudience.distractorNewBadges, ["New", "New"]);
+  assert.deepEqual(reportAudience.reportIconRefs, ["#fui-task-list", "#fui-scales", "#fui-chart", "#fui-chat"]);
+  assert.deepEqual(reportAudience.combinedIconRefs, ["#fui-task-list", "#fui-scales"]);
 
   const csvPath = await saveDownload(page, () => exportSessionRecord(), ".csv");
   const jsonPath = await saveDownload(page, () => exportSessionJSON(), ".json");
@@ -651,7 +680,7 @@ try {
   assert.match(path.basename(jsonPath), /_analysis-record\.json$/);
   assert.equal(json.recordType, "aqp-analysis-record");
   assert.equal(json.schemaVersion, "1.0");
-  assert.equal(json.meta.build, "20261109-02");
+  assert.equal(json.meta.build, "20261112-02");
   assert.deepEqual(json.summary, recordUi.canonical.summary);
   assert.deepEqual(json.thresholds, recordUi.canonical.thresholds);
   assert.deepEqual(json.questions, recordUi.canonical.questions);

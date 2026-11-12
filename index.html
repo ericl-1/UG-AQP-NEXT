@@ -102,7 +102,7 @@
 </style>
 <style>
 /* ═══════════════════════════════════════════════════════════════════════════
-   AQP design system · Calm clinical intelligence · build 20261109-02
+   AQP design system · Calm clinical intelligence · build 20261112-02
    Centralized visual rules for colour, type, spacing, surfaces, controls,
    tables, status communication, motion, and theme parity.
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -238,6 +238,14 @@ h3,.section-hdr-title{font-size:15px;line-height:1.35;font-weight:650;color:var(
 .report-group{padding:0;background:transparent;border:0;border-radius:0;margin-bottom:var(--space-6)}
 .report-group-title{margin:0 0 var(--space-2)}
 .report-group-note{margin:0 0 var(--space-3);max-width:720px}
+.director-report-subgroup{margin:0 0 var(--space-5)}
+.director-report-subgroup:last-child{margin-bottom:0}
+.director-report-subtitle{font-size:12px;font-weight:700;color:var(--c-secondary);margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--c-border);letter-spacing:.01em}
+.report-new-badge{display:inline-flex;align-items:center;margin-right:6px;padding:1px 6px;border-radius:999px;background:var(--c-accent-tint);border:1px solid rgba(163,21,21,.24);color:var(--c-accent);font-size:9.5px;font-weight:750;line-height:1.35;text-transform:uppercase;letter-spacing:.04em;vertical-align:1px}
+.report-combined-icon{position:relative;width:25px;height:22px;display:block}
+.report-combined-icon .fui-icon{position:absolute;width:15px;height:15px}
+.report-combined-icon .report-combined-mcq{left:0;top:0;color:var(--c-accent)}
+.report-combined-icon .report-combined-dif{right:0;bottom:0;color:var(--s-dif);background:var(--c-bg);border-radius:3px}
 .da-qhdr{padding:12px var(--space-4);background:var(--c-surface);border:0;border-radius:var(--radius-sm);margin-bottom:var(--space-4)}
 .da-room-heading-row{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--space-5)}
 .da-room-heading-row>div:first-child{min-width:0}
@@ -1922,10 +1930,13 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
         <div id="rp-section-analysis" class="report-group">
           <div class="report-group-title">Director reports</div>
           <div class="report-group-note">Formal Word/PDF documents intended for directors and committee review. Preview before downloading.</div>
+          <div id="rp-subgroup-mcq-dif" class="director-report-subgroup"><div class="director-report-subtitle">MCQ &amp; DIF Reports</div></div>
+          <div id="rp-subgroup-distractor" class="director-report-subgroup"><div class="director-report-subtitle">Distractor Reports</div></div>
+          <div id="rp-subgroup-feedback" class="director-report-subgroup"><div class="director-report-subtitle">Feedback Reports</div></div>
 
         <div id="rp-card-mcq" style="display:none;align-items:center;padding:13px 16px;border:1px solid var(--c-border);border-radius:10px;margin-bottom:8px;gap:14px;background:var(--c-bg)">
           <div style="flex-shrink:0;width:28px;display:flex;align-items:center;justify-content:center;color:var(--c-accent)">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>
+            <svg class="fui-icon" aria-hidden="true"><use href="#fui-task-list"/></svg>
           </div>
           <div style="flex:1;min-width:0">
             <div style="font-size:13px;font-weight:600;color:var(--c-primary);margin-bottom:2px">MCQ item analysis report <span style="font-size:10px;font-weight:500;color:var(--s-easy);background:#e8f4fd;border:1px solid #b8d9f5;border-radius:4px;padding:1px 6px;vertical-align:middle">Word</span></div>
@@ -1944,9 +1955,39 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
           </div>
         </div>
 
+        <div id="rp-card-distractor-findings" style="display:none;align-items:center;padding:13px 16px;border:1px solid var(--c-border);border-radius:10px;margin-bottom:8px;gap:14px;background:var(--c-bg)">
+          <div style="flex-shrink:0;width:28px;display:flex;align-items:center;justify-content:center;color:#0d7a7a">
+            <svg class="fui-icon" aria-hidden="true"><use href="#fui-chart"/></svg>
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13px;font-weight:600;color:var(--c-primary);margin-bottom:2px"><span class="report-new-badge">New</span>Distractor analysis — findings only <span style="font-size:10px;font-weight:500;color:var(--s-easy);background:#e8f4fd;border:1px solid #b8d9f5;border-radius:4px;padding:1px 6px;vertical-align:middle">Word</span></div>
+            <div style="font-size:11.5px;color:var(--c-muted)">Executive summary, priority review, and detailed evidence for questions requiring focused review</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:14px;flex-shrink:0">
+            <button data-tip="Preview the decision-focused Distractor Analysis report" onclick="openReportPreviewModal('distractorFindings')" style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--c-secondary);cursor:pointer;background:none;border:none;font-family:var(--font);text-decoration:underline;text-decoration-color:var(--c-border-2);text-underline-offset:2px;padding:0"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M1 8s3-5 7-5 7 5 7 5-3 5-7 5-7-5-7-5z" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/></svg>Preview</button>
+            <button data-tip="Save the findings-only report as PDF" onclick="exportReportPDF('distractorFindings')" style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--s-hard);cursor:pointer;background:none;border:none;font-family:var(--font);text-decoration:underline;text-underline-offset:2px;padding:0">PDF</button>
+            <button data-tip="Download the findings-only Distractor Analysis report" onclick="exportDistractorReport('findings')" style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:500;color:var(--c-primary);cursor:pointer;background:var(--c-bg);border:0.5px solid var(--c-border-2);border-radius:8px;padding:6px 13px;font-family:var(--font)"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M6 1v7M3 6l3 3 3-3M2 10h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Export</button>
+          </div>
+        </div>
+
+        <div id="rp-card-distractor-full" style="display:none;align-items:center;padding:13px 16px;border:1px solid var(--c-border);border-radius:10px;margin-bottom:8px;gap:14px;background:var(--c-bg)">
+          <div style="flex-shrink:0;width:28px;display:flex;align-items:center;justify-content:center;color:#6a3fa0">
+            <svg class="fui-icon" aria-hidden="true"><use href="#fui-chart"/></svg>
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13px;font-weight:600;color:var(--c-primary);margin-bottom:2px"><span class="report-new-badge">New</span>Distractor analysis — full report with appendix <span style="font-size:10px;font-weight:500;color:var(--s-easy);background:#e8f4fd;border:1px solid #b8d9f5;border-radius:4px;padding:1px 6px;vertical-align:middle">Word</span></div>
+            <div style="font-size:11.5px;color:var(--c-muted)">Findings report plus a compact landscape record for every question</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:14px;flex-shrink:0">
+            <button data-tip="Preview the full Distractor Analysis report" onclick="openReportPreviewModal('distractorFull')" style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--c-secondary);cursor:pointer;background:none;border:none;font-family:var(--font);text-decoration:underline;text-decoration-color:var(--c-border-2);text-underline-offset:2px;padding:0"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M1 8s3-5 7-5 7 5 7 5-3 5-7 5-7-5-7-5z" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/></svg>Preview</button>
+            <button data-tip="Save the full report as PDF" onclick="exportReportPDF('distractorFull')" style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--s-hard);cursor:pointer;background:none;border:none;font-family:var(--font);text-decoration:underline;text-underline-offset:2px;padding:0">PDF</button>
+            <button data-tip="Download the full Distractor Analysis report" onclick="exportDistractorReport('full')" style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:500;color:var(--c-primary);cursor:pointer;background:var(--c-bg);border:0.5px solid var(--c-border-2);border-radius:8px;padding:6px 13px;font-family:var(--font)"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M6 1v7M3 6l3 3 3-3M2 10h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Export</button>
+          </div>
+        </div>
+
         <div id="rp-card-dif" style="display:none;align-items:center;padding:13px 16px;border:1px solid var(--c-border);border-radius:10px;margin-bottom:8px;gap:14px;background:var(--c-bg)">
           <div style="flex-shrink:0;width:28px;display:flex;align-items:center;justify-content:center;color:var(--s-dif)">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            <svg class="fui-icon" aria-hidden="true"><use href="#fui-scales"/></svg>
           </div>
           <div style="flex:1;min-width:0">
             <div style="font-size:13px;font-weight:600;color:var(--c-primary);margin-bottom:2px">DIF report <span style="font-size:10px;font-weight:500;color:var(--s-easy);background:#e8f4fd;border:1px solid #b8d9f5;border-radius:4px;padding:1px 6px;vertical-align:middle">Word</span></div>
@@ -1966,8 +2007,8 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
         </div>
 
         <div id="rp-card-combined" style="display:none;align-items:center;padding:13px 16px;border:1px solid var(--c-border);border-radius:10px;margin-bottom:8px;gap:14px;background:var(--c-bg)">
-          <div style="flex-shrink:0;width:28px;display:flex;align-items:center;justify-content:center;color:var(--s-lowdisc)">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <div style="flex-shrink:0;width:28px;display:flex;align-items:center;justify-content:center">
+            <span class="report-combined-icon" aria-label="Combined Item Analysis and DIF report"><svg class="fui-icon report-combined-mcq" aria-hidden="true"><use href="#fui-task-list"/></svg><svg class="fui-icon report-combined-dif" aria-hidden="true"><use href="#fui-scales"/></svg></span>
           </div>
           <div style="flex:1;min-width:0">
             <div style="font-size:13px;font-weight:600;color:var(--c-primary);margin-bottom:2px">MCQ+DIF report <span style="font-size:10px;font-weight:500;color:var(--s-easy);background:#e8f4fd;border:1px solid #b8d9f5;border-radius:4px;padding:1px 6px;vertical-align:middle">Word</span></div>
@@ -1988,7 +2029,7 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 
         <div id="rp-card-feedback" style="display:none;align-items:center;padding:13px 16px;border:1px solid var(--c-border);border-radius:10px;margin-bottom:8px;gap:14px;background:var(--c-bg)">
           <div style="flex-shrink:0;width:28px;display:flex;align-items:center;justify-content:center;color:var(--c-fb)">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <svg class="fui-icon" aria-hidden="true"><use href="#fui-chat"/></svg>
           </div>
           <div style="flex:1;min-width:0">
             <div style="font-size:13px;font-weight:600;color:var(--c-primary);margin-bottom:2px">Feedback report <span style="font-size:10px;font-weight:500;color:var(--s-easy);background:#e8f4fd;border:1px solid #b8d9f5;border-radius:4px;padding:1px 6px;vertical-align:middle">Word</span></div>
@@ -2071,6 +2112,8 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
         <div class="report-preview" id="dif-report"></div>
         <div class="report-preview" id="full-report"></div>
         <div class="report-preview" id="feedback-report"></div>
+        <div class="report-preview" id="distractor-findings-report"></div>
+        <div class="report-preview" id="distractor-full-report"></div>
         <div class="section" id="section-report"></div>
         <div class="section" id="section-difrep"></div>
         <div class="section" id="section-combined"></div>
@@ -2505,10 +2548,10 @@ tr:not(.row-flagged):not(.row-easy):not(.row-dif):not(.row-expand) td:first-chil
 
 // ── App version — single source of truth ─────────────────────────────────
 var APP_VERSION     = '1.0.0-beta.1';
-var APP_BUILD       = '20261109-02';
+var APP_BUILD       = '20261112-02';
 var APP_FAQ_VERSION = '1.0.0-beta.1';  // Keep aligned with the app version; date records FAQ revisions
-var APP_FAQ_DATE    = 'November 9, 2026'; // Update when FAQ content changes
-var APP_RN_DATE     = 'November 9, 2026'; // Update each version close
+var APP_FAQ_DATE    = 'November 12, 2026'; // Update when FAQ content changes
+var APP_RN_DATE     = 'November 12, 2026'; // Update each version close
 var SESSION_BACKUP_FILE_TYPE = 'aqp-portable-session';
 var SESSION_BACKUP_SCHEMA_VERSION = 1;
 
@@ -5376,6 +5419,8 @@ function exportReportPDF(type) {
   else if (type === 'dif')      { renderDIFReport();                targetId = 'dif-report'; }
   else if (type === 'combined') { renderFullReport(avg, alpha);     targetId = 'full-report'; }
   else if (type === 'feedback') { renderFeedbackReport(avg, alpha); targetId = 'feedback-report'; }
+  else if (type === 'distractorFindings') { renderDistractorReport('findings'); targetId = 'distractor-findings-report'; }
+  else if (type === 'distractorFull') { renderDistractorReport('full'); targetId = 'distractor-full-report'; }
   else return;
 
   // Allow the chart setTimeout(250ms) to complete before capturing
@@ -8900,7 +8945,8 @@ function docxImage(b64, widthEmu, heightEmu, rId) {
   return '<w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:rPr/><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="'+widthEmu+'" cy="'+heightEmu+'"/><wp:docPr id="1" name="Chart"/><a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:nvPicPr><pic:cNvPr id="1" name="Chart"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="'+rId+'"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="'+widthEmu+'" cy="'+heightEmu+'"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p>';
 }
 
-function buildDocx(bodyXml, imageB64, title, extraImages) {
+function buildDocx(bodyXml, imageB64, title, extraImages, docOptions) {
+  docOptions = docOptions || {};
   // extraImages: array of {id, filename, b64} for additional images beyond the chart
   var zip = new JSZip();
   var allImages = [];
@@ -8965,11 +9011,11 @@ function buildDocx(bodyXml, imageB64, title, extraImages) {
     ' xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"'+
     ' mc:Ignorable="w14 w15 wp14">'+
     '<w:body>'+
-    '<w:sectPr><w:pgSz w:w="12240" w:h="15840"/><w:pgMar w:top="1008" w:right="1008" w:bottom="806" w:left="1008" w:header="360" w:footer="360" w:gutter="0"/></w:sectPr>'+
+    (docOptions.finalSectPr || '<w:sectPr><w:pgSz w:w="12240" w:h="15840"/><w:pgMar w:top="1008" w:right="1008" w:bottom="806" w:left="1008" w:header="360" w:footer="360" w:gutter="0"/></w:sectPr>')+
     '</w:body></w:document>';
 
   // Insert body content before sectPr
-  doc = doc.replace('<w:sectPr>', bodyXml + '<w:sectPr>');
+  doc = doc.replace('<w:body>', '<w:body>' + bodyXml);
   zip.file('word/document.xml', doc);
 
   // Images
@@ -9120,6 +9166,147 @@ function buildDocx(bodyXml, imageB64, title, extraImages) {
     '</a:theme>');
 
     return zip.generateAsync({type:'blob', mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+}
+
+function docxDaRuns(runs, opts) {
+  opts=opts||{};
+  var jc=opts.centre?'<w:jc w:val="center"/>':'';
+  var keep=opts.keepNext?'<w:keepNext/><w:keepLines/>':'';
+  var xml='<w:p><w:pPr><w:pStyle w:val="NoSpacing"/>'+keep+jc+'<w:spacing w:before="'+(opts.before||0)+'" w:after="'+(opts.after==null?100:opts.after)+'" w:line="'+(opts.line||280)+'" w:lineRule="auto"/></w:pPr>';
+  if(opts.pageBreakBefore)xml+='<w:r><w:br w:type="page"/></w:r>';
+  runs.forEach(function(run){
+    var color=run.color?'<w:color w:val="'+run.color+'"/>':'';
+    xml+='<w:r><w:rPr><w:rFonts w:ascii="Aptos Display" w:hAnsi="Aptos Display" w:eastAsia="Aptos Display" w:cs="Calibri"/>'+(run.bold?'<w:b/><w:bCs/>':'')+(run.italic?'<w:i/>':'')+color+'<w:sz w:val="'+(run.sz||22)+'"/><w:szCs w:val="'+(run.sz||22)+'"/></w:rPr><w:t xml:space="preserve">'+esc(run.text||'')+'</w:t></w:r>';
+  });
+  return xml+'</w:p>';
+}
+
+function docxDaHeading(text, level, pageBreakBefore) {
+  var sizes={1:48,2:30,3:25};
+  return docxDaRuns([{text:text,bold:true,sz:sizes[level]||25,color:level===2?'A31515':'111111'}],{before:level===1?0:(level===3?150:220),after:level===1?260:(level===3?80:140),keepNext:true,pageBreakBefore:!!pageBreakBefore});
+}
+
+function docxDaCell(value, defaults){
+  defaults=defaults||{};
+  if(value&&typeof value==='object')return value;
+  return {text:value==null?'':String(value),bold:!!defaults.bold,color:defaults.color||'',fill:defaults.fill||'',centre:!!defaults.centre};
+}
+
+function docxDaTable(headers, rows, widths, opts) {
+  opts=opts||{};
+  var total=opts.totalW||10200, n=widths.length, fontSize=opts.fontSize||19;
+  var xml='<w:tbl><w:tblPr><w:tblW w:w="'+total+'" w:type="dxa"/><w:tblLayout w:type="fixed"/><w:tblBorders><w:top w:val="single" w:sz="4" w:color="D9D9D9"/><w:left w:val="single" w:sz="4" w:color="D9D9D9"/><w:bottom w:val="single" w:sz="4" w:color="D9D9D9"/><w:right w:val="single" w:sz="4" w:color="D9D9D9"/><w:insideH w:val="single" w:sz="4" w:color="D9D9D9"/><w:insideV w:val="single" w:sz="4" w:color="D9D9D9"/></w:tblBorders><w:tblCellMar><w:top w:w="90" w:type="dxa"/><w:left w:w="90" w:type="dxa"/><w:bottom w:w="90" w:type="dxa"/><w:right w:w="90" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid>';
+  widths.forEach(function(w){xml+='<w:gridCol w:w="'+w+'"/>';});xml+='</w:tblGrid>';
+  function rowXml(cells,isHeader,rowIndex){
+    var out='<w:tr><w:trPr><w:cantSplit/>'+(isHeader?'<w:tblHeader/>':'')+'</w:trPr>';
+    for(var c=0;c<n;c++){
+      var cell=docxDaCell(cells[c],isHeader?{bold:true,color:'FFFFFF',fill:'A31515',centre:opts.headerCentre!==false}:{fill:(opts.bandRows&&rowIndex%2?'F7F8F9':'')});
+      var fill=cell.fill?'<w:shd w:val="clear" w:color="auto" w:fill="'+cell.fill+'"/>':'';
+      var jc=cell.centre?'<w:jc w:val="center"/>':'';
+      out+='<w:tc><w:tcPr><w:tcW w:w="'+widths[c]+'" w:type="dxa"/>'+fill+'<w:vAlign w:val="center"/></w:tcPr><w:p><w:pPr><w:pStyle w:val="NoSpacing"/>'+jc+'<w:spacing w:before="0" w:after="0" w:line="240" w:lineRule="auto"/></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Aptos Display" w:hAnsi="Aptos Display" w:eastAsia="Aptos Display" w:cs="Calibri"/>'+(cell.bold?'<w:b/><w:bCs/>':'')+(cell.italic?'<w:i/>':'')+(cell.color?'<w:color w:val="'+cell.color+'"/>':'')+'<w:sz w:val="'+(cell.sz||fontSize)+'"/><w:szCs w:val="'+(cell.sz||fontSize)+'"/></w:rPr><w:t xml:space="preserve">'+esc(cell.text||'')+'</w:t></w:r></w:p></w:tc>';
+    }
+    return out+'</w:tr>';
+  }
+  if(headers&&headers.length)xml+=rowXml(headers,true,0);
+  rows.forEach(function(row,idx){xml+=rowXml(row,false,idx);});
+  return xml+'</w:tbl>';
+}
+
+function docxDaPortraitSectionBreak(){
+  return '<w:p><w:pPr><w:sectPr><w:type w:val="nextPage"/><w:pgSz w:w="12240" w:h="15840"/><w:pgMar w:top="936" w:right="1008" w:bottom="936" w:left="1008" w:header="360" w:footer="360" w:gutter="0"/></w:sectPr></w:pPr></w:p>';
+}
+
+function docxDaOverall(item,opt){
+  var n=0,total=item.analysis.qTotal||item.r.n||0;
+  if(item.qd)for(var b=0;b<4;b++)n+=(item.qd.optCounts[b][opt]||0);
+  return total?Math.round(n/total*100):0;
+}
+
+function buildDistractorDocxBody(mode, data) {
+  var title=(document.getElementById('exam-title')||{value:''}).value||'Untitled exam';
+  var dateVal=(document.getElementById('exam-date')||{value:''}).value;
+  var dateStr=dateVal?new Date(dateVal+'T12:00:00').toLocaleDateString('en-CA',{year:'numeric',month:'long',day:'numeric'}):'Not provided';
+  var body=docxDaHeading('Distractor Analysis Report',1,false);
+  body+=docxDaRuns([{text:'Purpose. ',bold:true},{text:'This report helps assessment leaders identify answer options that may warrant expert review. It separates observed response patterns from interpretation and does not determine that a key or distractor is incorrect.'}],{after:150});
+  body+=docxDaHeading('How to interpret this report',2,false);
+  var guide=[
+    ['Performance quartiles. ','Students are divided into four equally sized groups based on total exam score. Q1 is the lowest-scoring quarter, Q2 the lower-middle quarter, Q3 the upper-middle quarter, and Q4 the highest-scoring quarter. Percentages describe students within that group, not the entire class.'],
+    ['Why quartiles are compared. ','The comparison helps identify answer choices that may confuse students who otherwise performed well on the exam.'],
+    ['Key competition. ','An incorrect option is selected at least as often as the keyed answer by 10% or more of students in Q3 or Q4. This prompts a review of the key and option wording.'],
+    ['Reversed distractor. ','An incorrect option attracts a larger percentage of students in the two higher-scoring quartiles than in the two lower-scoring quartiles, and at least 7% of the higher groups select it.'],
+    ['Non-functioning distractor. ','An incorrect option is selected by fewer than 5% of valid respondents. This can only be identified when the option is present in the source data.'],
+    ['Important limitation. ','These signals identify patterns for expert review. They do not establish that a question, answer key, translation, or distractor is defective. Review the original question, its full set of answer choices, course context, feedback, and any applied exceptions before making a decision.']
+  ];
+  guide.forEach(function(g){body+=docxDaRuns([{text:g[0],bold:true},{text:g[1]}],{after:80});});
+  body+=docxDaHeading('Executive summary',2,false);
+  body+=docxDaTable(null,[[{text:'Exam',bold:true,color:'FFFFFF',fill:'A31515'},title,{text:'Exam date',bold:true,color:'FFFFFF',fill:'A31515'},dateStr],[{text:'Students',bold:true,color:'FFFFFF',fill:'A31515'},String(G.students.length),{text:'Questions',bold:true,color:'FFFFFF',fill:'A31515'},String(G.nQ)]],[1200,4200,1300,3500],{totalW:10200,fontSize:20});
+  var lead=data.review.length===0?'No questions require focused distractor review.':data.review.length+' question'+(data.review.length===1?' requires':'s require')+' focused distractor review.';
+  body+=docxDaRuns([{text:lead+' ',bold:true},{text:data.review.length?'The priority table identifies the response patterns that warrant expert review. The remaining questions show either an orderly pattern or no strong automated distractor signal.':'The questions show either an orderly pattern or no strong automated distractor signal.'}],{before:160,after:120});
+  body+=docxDaTable(null,[[{text:String(data.review.length),bold:true,color:'A31515',centre:true,sz:28},{text:String(data.orderly),bold:true,centre:true,sz:28},{text:String(data.neutral),bold:true,centre:true,sz:28},{text:String(data.assessed),bold:true,centre:true,sz:28}],[{text:'Review signals',bold:true,color:'68737D',centre:true},{text:'Orderly patterns',bold:true,color:'68737D',centre:true},{text:'No strong signal',bold:true,color:'68737D',centre:true},{text:'Questions assessed',bold:true,color:'68737D',centre:true}]],[2550,2550,2550,2550],{totalW:10200,fontSize:18});
+  body+=docxDaRuns([{text:'Recommended reading. ',bold:true},{text:mode==='full'?'The priority table and question details are the decision-focused report. The appendix provides a compact record for all '+data.assessed+' questions.':'This version includes only the priority table and detailed evidence for questions requiring review.'}],{before:140,after:100});
+  body+=docxDaPortraitSectionBreak()+docxDaHeading('Priority review',2,false);
+  body+=docxDaRuns([{text:'Only questions with a strong automated distractor signal appear here. Priority reflects the response pattern and related evidence, not an academic decision.'}],{after:150});
+  var priRows=data.review.map(function(item){return [
+    {text:'Q'+String(item.r.num).padStart(2,'0'),bold:true,centre:true},
+    {text:item.priority,bold:true,color:item.priority==='High'?'A31515':'000000',centre:true},
+    item.tags.join(', '),item.analysis.evidence,item.recommendation
+  ];});
+  if(priRows.length)body+=docxDaTable(['Question','Priority','Signal','Observed evidence','Recommended action'],priRows,[800,1100,1550,3150,3600],{totalW:10200,fontSize:18,bandRows:true,headerCentre:false});
+  else body+=docxDaRuns([{text:'No questions met the automated distractor-review rules.',italic:true}],{after:100});
+
+  data.review.forEach(function(item){
+    var r=item.r,total=item.analysis.qTotal||r.n||0;
+    body+=docxDaPortraitSectionBreak()+docxDaHeading('Question '+r.num,2,false);
+    body+=docxDaTable(null,[[{text:'KEY',bold:true,color:'68737D',centre:true},{text:'CORRECT',bold:true,color:'68737D',centre:true},{text:'DISCRIMINATION',bold:true,color:'68737D',centre:true},{text:'RESPONSES',bold:true,color:'68737D',centre:true},{text:'ITEM FLAG',bold:true,color:'68737D',centre:true}],[{text:String(r.key||'—').toUpperCase(),bold:true,centre:true,sz:26},{text:Math.round((r.p||0)*100)+'%',bold:true,centre:true,sz:26},{text:Number(r.rpbis||0).toFixed(2),bold:true,centre:true,sz:26},{text:String(total),bold:true,centre:true,sz:26},{text:r.flag||'None',bold:true,color:r.flag?'A31515':'26313B',centre:true,sz:23}]],[2040,2040,2040,2040,2040],{totalW:10200,fontSize:18});
+    body+=docxDaHeading('Observed answer selection pattern',3,false);
+    body+=docxDaRuns([{text:'About the options shown. ',bold:true,color:'68737D',sz:19},{text:'This table includes the keyed answer and every other answer option selected by at least one student. The source results do not identify options that received no responses. Review the original question before deciding whether an answer option or distractor requires revision.',italic:true,color:'68737D',sz:19}],{after:90,line:245});
+    var optionRows=item.displayedOptions.map(function(o){
+      var count=0;if(item.qd)for(var b=0;b<4;b++)count+=(item.qd.optCounts[b][o]||0);
+      var keyed=o===item.key||item.altKeys.indexOf(o)>=0, fill=keyed?'EDF7EE':'';
+      function cell(t,bold){return {text:t,bold:!!bold,fill:fill,color:keyed?'2F6F3E':'000000',centre:true};}
+      return [cell(o.toUpperCase(),true),cell(count+' ('+(total?Math.round(count/total*100):0)+'%)'),cell(distractorPct(item.qd,0,o)+'%'),cell(distractorPct(item.qd,1,o)+'%'),cell(distractorPct(item.qd,2,o)+'%'),cell(distractorPct(item.qd,3,o)+'%'),cell(o===item.key?'Keyed answer':item.altKeys.indexOf(o)>=0?'Accepted alternate':'Distractor',keyed)];
+    });
+    body+=docxDaTable(['Option','Overall','Q1 low','Q2','Q3','Q4 high','Role'],optionRows,[950,1300,1250,1150,1150,1250,3150],{totalW:10200,fontSize:19});
+    body+=docxDaHeading('What this means',3,false)+docxDaRuns([{text:item.meaning,sz:20}],{after:65,line:250});
+    body+=docxDaHeading('Why it was flagged',3,false)+docxDaRuns([{text:item.why,sz:20}],{after:65,line:250});
+    body+=docxDaHeading('Related evidence',3,false)+docxDaRuns([{text:'Student feedback: ',bold:true,sz:20},{text:item.related.feedback+'.  ',sz:20},{text:'DIF: ',bold:true,sz:20},{text:item.related.dif+'.  ',sz:20},{text:'Exception: ',bold:true,sz:20},{text:item.related.exception+'.',sz:20}],{after:65,line:250});
+    body+=docxDaHeading('Recommended review',3,false)+docxDaRuns([{text:item.recommendation,sz:20}],{after:65,line:250});
+  });
+  var ts=new Date().toLocaleString('en-CA',{year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  if(mode==='full'){
+    // Keep the closing AQP branding with the portrait findings content. Placing
+    // it after a long landscape appendix can orphan it on a blank final page.
+    body+=docxReportByline(ts);
+    body+=docxDaPortraitSectionBreak()+docxDaHeading('Compact all question appendix',2,false);
+    body+=docxDaRuns([{text:'Percentages show the overall share selecting each recorded answer option. Green shading identifies the keyed option. A value of 0% means that no student selection was recorded; it does not confirm that the option was offered. The status column reports the automated distractor pattern separately from any existing item-analysis flag.'}],{after:120});
+    var appRows=data.questions.map(function(item){
+      var r=item.r,status=item.tags.length?'Review: '+item.tags.join(', '):(item.analysis.patterns.some(function(p){return p.type==='clean';})?'Orderly pattern':'No strong signal');
+      if(r.flag)status+='; '+r.flag;
+      var rel=[];if(item.related.feedback!=='No linked comments'&&item.related.feedback!=='Not loaded')rel.push(item.related.feedback);if(item.related.dif.indexOf('Flagged')===0)rel.push('DIF flagged');else if(item.related.dif.indexOf('Not estimated')===0)rel.push('DIF not estimated');if(item.related.exception&&item.related.exception!=='None applied')rel.push('Exception: '+item.related.exception);
+      var issue=item.issuePatterns.length;
+      var row=[{text:String(r.num),bold:true,centre:true,fill:issue?'FFF0CF':''},{text:String(r.key||'').toUpperCase(),bold:true,centre:true},{text:Math.round((r.p||0)*100)+'%',centre:true},{text:Number(r.rpbis||0).toFixed(2),centre:true}];
+      ['a','b','c','d','e'].forEach(function(o){row.push({text:docxDaOverall(item,o)+'%',centre:true,fill:o===item.key?'EDF7EE':'',color:o===item.key?'2F6F3E':'000000'});});
+      row.push({text:status,bold:issue,color:issue?'9A5B00':'000000',fill:issue?'FFF0CF':''});row.push(rel.join('; ')||'None');return row;
+    });
+    body+=docxDaTable(['Q','Key','Correct','Disc','A','B','C','D','E','Distractor status','Related evidence'],appRows,[500,650,850,800,650,650,650,650,650,3700,2900],{totalW:14050,fontSize:16,bandRows:true,headerCentre:false});
+  } else {
+    body+=docxReportByline(ts);
+  }
+  return body;
+}
+
+function exportDistractorReport(mode){
+  if(!G._lastN){alert('Run an MCQ analysis first, then export.');return;}
+  var data=buildDistractorReportData();if(!data)return;
+  recordAuditEvent('report_generated',{report:mode==='full'?'distractor_full':'distractor_findings',format:'docx'});
+  var title=(document.getElementById('exam-title')||{value:''}).value||'Exam';
+  var safe=title.replace(/[^a-z0-9]/gi,'_').replace(/_+/g,'_');
+  var body=buildDistractorDocxBody(mode,data);
+  var finalSect=mode==='full'?'<w:sectPr><w:pgSz w:w="15840" w:h="12240" w:orient="landscape"/><w:pgMar w:top="792" w:right="792" w:bottom="792" w:left="792" w:header="360" w:footer="360" w:gutter="0"/></w:sectPr>':null;
+  window._lastDistractorExportError='';
+  return buildDocx(body,null,'Distractor Analysis Report',null,{finalSectPr:finalSect}).then(function(blob){
+    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=safe+'_Distractor_Analysis_'+(mode==='full'?'Full':'Findings')+'.docx';a.click();setTimeout(function(){URL.revokeObjectURL(a.href);},500);
+  }).catch(function(err){window._lastDistractorExportError=err.message;alert('Distractor report export failed: '+err.message);throw err;});
 }
 
 function doExportReport(type) {
@@ -10650,6 +10837,18 @@ var _reportMeta = {
     desc:  'Frequency summary, per-question student comments, and general feedback — ready for exam director review.',
     includes: ['Feedback frequency summary', 'Comments by question (ascending)', 'Comment categories (if set)', 'General feedback section', 'MCQ cross-reference (if MCQ loaded)'],
     type: 'feedback'
+  },
+  distractorFindings: {
+    title: 'Distractor Analysis Report — Findings Only',
+    desc: 'Decision-focused summary and detailed evidence for questions with automated distractor-review signals.',
+    includes: ['Interpretation guide', 'Executive summary', 'Priority review', 'One detail page per review question'],
+    type: 'distractorFindings'
+  },
+  distractorFull: {
+    title: 'Distractor Analysis Report — Full Report',
+    desc: 'The findings report plus a compact landscape appendix covering every question.',
+    includes: ['Everything in Findings Only', 'All-question appendix', 'Recorded A–E response shares', 'Related feedback and DIF evidence'],
+    type: 'distractorFull'
   }
 };
 
@@ -10927,10 +11126,28 @@ function updateReportCards() {
     el.style.display = show ? 'flex' : 'none';
   }
 
+  // Keep the Director reports organized by purpose. appendChild is intentional:
+  // it establishes the requested visual and reading order without duplicating cards.
+  var mcqDifGroup=document.getElementById('rp-subgroup-mcq-dif');
+  var distractorGroup=document.getElementById('rp-subgroup-distractor');
+  var feedbackGroup=document.getElementById('rp-subgroup-feedback');
+  function placeCards(group, ids){
+    if(!group)return;
+    ids.forEach(function(id){var card=document.getElementById(id);if(card&&card.parentElement!==group)group.appendChild(card);});
+  }
+  placeCards(mcqDifGroup,['rp-card-mcq','rp-card-dif','rp-card-combined']);
+  placeCards(distractorGroup,['rp-card-distractor-findings','rp-card-distractor-full']);
+  placeCards(feedbackGroup,['rp-card-feedback']);
+
   showCard('rp-card-mcq',      hasMcq);
+  showCard('rp-card-distractor-findings', hasMcq);
+  showCard('rp-card-distractor-full', hasMcq);
   showCard('rp-card-dif',      hasDif);
   showCard('rp-card-combined', hasDif);   // Full report = MCQ + DIF
   showCard('rp-card-feedback', hasFeedback);
+  if(mcqDifGroup)mcqDifGroup.style.display=hasMcq?'block':'none';
+  if(distractorGroup)distractorGroup.style.display=hasMcq?'block':'none';
+  if(feedbackGroup)feedbackGroup.style.display=hasFeedback?'block':'none';
   // Session Reports section
   showCard('rp-card-record', hasMcq);
   showCard('rp-card-backup', hasMcq || hasFeedback);
@@ -10975,6 +11192,10 @@ function openReportPreviewModal(which) {
       rp.style.maxHeight = 'none';
       rp.style.height = 'auto';
     }
+  } else if (which === 'distractorFindings' || which === 'distractorFull') {
+    renderDistractorReport(which === 'distractorFull' ? 'full' : 'findings');
+    var dsrc = document.getElementById(which === 'distractorFull' ? 'distractor-full-report' : 'distractor-findings-report');
+    if (dsrc) body.innerHTML = dsrc.innerHTML;
   } else {
     // Switch the hidden preview to the right type then clone its content
     switchReportPreview(which);
@@ -11001,6 +11222,8 @@ function reportModalExport() {
   closeReportPreviewModal();
   if (_currentModalReport === 'feedback') {
     exportFeedbackReport();
+  } else if (_currentModalReport === 'distractorFindings' || _currentModalReport === 'distractorFull') {
+    exportDistractorReport(_currentModalReport === 'distractorFull' ? 'full' : 'findings');
   } else {
     var meta = _reportMeta[_currentModalReport] || _reportMeta.mcq;
     doExportReport(meta.type);
@@ -11015,8 +11238,10 @@ document.addEventListener('click', function(e) {
 
 function switchReportPreview(which) {
   _currentReportView = which;
-  ['mcq','dif','combined','feedback'].forEach(function(r){
+  ['mcq','dif','combined','feedback','distractorFindings','distractorFull'].forEach(function(r){
     var divId = (r === 'combined') ? 'full' : r;
+    if (r === 'distractorFindings') divId = 'distractor-findings';
+    if (r === 'distractorFull') divId = 'distractor-full';
     var el  = document.getElementById(divId + '-report');
     var btn = document.getElementById('rp-btn-' + r);
     if (el)  el.style.display = (r === which) ? '' : 'none';
@@ -11695,6 +11920,29 @@ var RELEASE_NOTES = [
   {
     version: '1.0.0-beta.1',
     builds: [
+      {
+        build: '20261112-02',
+        date:  'November 12, 2026',
+        notes: [
+          'Reorganized Director reports into MCQ & DIF Reports, Distractor Reports, and Feedback Reports so related documents are easier to find.',
+          'Placed the MCQ, DIF, and combined MCQ+DIF documents together in that order, followed by the two Distractor Analysis documents and then Feedback.',
+          'Matched report-card icons to the corresponding left-navigation rooms. The combined report now uses an overlapped Item Analysis and DIF icon.',
+          'Added a New badge to both Distractor Analysis report cards.',
+          'Aligned both Distractor Analysis previews and Word exports with the MCQ report font and the approved report formatting, and removed the misleading green row-edge marker from their previews.'
+        ]
+      },
+      {
+        build: '20261112-01',
+        date:  'November 12, 2026',
+        notes: [
+          'Added two Distractor Analysis reports for exams with MCQ results: a focused Findings report and a Full report with an all-question appendix.',
+          'Both reports begin with plain-language guidance, explain performance quartiles and automated review signals, and separate observed response patterns from academic conclusions.',
+          'Priority questions show every answer option recorded in the source results, including the keyed answer and accepted alternates. The reports clearly state that an unselected option cannot be distinguished from an option that was not offered.',
+          'The Full report adds a compact landscape appendix for every question. Keyed answers are shaded green, questions requiring review receive a restrained amber marker, and table headings repeat on later pages.',
+          'Report details cross-reference available student feedback, DIF results, item-analysis flags, and applied exceptions. Existing scoring, item analysis, DIF calculations, and feedback parsing are unchanged.',
+          'Added browser and document-package regression coverage for both previews and Word exports, including page orientation, repeated appendix headings, source-data limitations, and review highlighting.'
+        ]
+      },
       {
         build: '20261109-02',
         date:  'November 9, 2026',
@@ -17741,7 +17989,7 @@ function getDistractorPatternAnalysis(r, qd, key, altKeys, opts) {
         }
       }
       if (competitionBands.length) result.patterns.push({
-        type:'key_competition', tag:'Key Competition', evidence:competitionBands.join('; ') + '.',
+        type:'key_competition', tag:'Key Competition', option:competitor.toUpperCase(), evidence:competitionBands.join('; ') + '.',
         text:'Within the higher-performance groups, ' + competitionBands.join('; ') + '. These are within-quartile percentages, not the overall answer distribution. Review the key and option ' + competitor.toUpperCase() + ' as a possible defensible answer.'
       });
     }
@@ -17753,7 +18001,7 @@ function getDistractorPatternAnalysis(r, qd, key, altKeys, opts) {
       var highCnt = (qd.optCounts[2][reversed] || 0) + (qd.optCounts[3][reversed] || 0);
       var lowPct = lowN > 0 ? lowCnt / lowN : 0, highPct = highN > 0 ? highCnt / highN : 0;
       if (highPct > lowPct && highPct > 0.07) result.patterns.push({
-        type:'reversed', tag:'Reversed Distractor',
+        type:'reversed', tag:'Reversed Distractor', option:reversed.toUpperCase(), lowPct:lowPct, highPct:highPct,
         evidence:'Option ' + reversed.toUpperCase() + ' was selected by ' + Math.round(highPct * 100) + '% of students in the two higher quartiles and ' + Math.round(lowPct * 100) + '% in the two lower quartiles.',
         text:'Option ' + reversed.toUpperCase() + ' is attracting more high-performing than low-performing students. This may indicate a defensible alternative answer.'
       });
@@ -17763,7 +18011,7 @@ function getDistractorPatternAnalysis(r, qd, key, altKeys, opts) {
     var weak = opts[oi4];
     if (weak === key || altKeys.indexOf(weak) >= 0) continue;
     if ((totalAll[weak] || 0) > 0 && totalAll[weak] / result.qTotal < 0.05) result.patterns.push({
-      type:'non_functioning', tag:'Non-Functioning',
+      type:'non_functioning', tag:'Non-Functioning', option:weak.toUpperCase(),
       evidence:'Option ' + weak.toUpperCase() + ' was selected by ' + totalAll[weak] + ' of ' + result.qTotal + ' students (' + Math.round(totalAll[weak] / result.qTotal * 100) + '%).',
       text:'Option ' + weak.toUpperCase() + ' was chosen by fewer than 5% of students. Consider replacing this distractor.'
     });
@@ -17812,6 +18060,155 @@ function getDistractorRelatedEvidence(r) {
   else if (r.excluded === 'credit') exceptionText = 'Credited';
   else if (r.altKeys && r.altKeys.length) exceptionText = 'Alternate key' + (r.altKeys.length > 1 ? 's' : '') + ': ' + r.altKeys.map(function(k){ return String(k).toUpperCase(); }).join(', ');
   return { feedback:feedbackText, dif:difText, exception:exceptionText };
+}
+
+// ── Distractor reports: one shared evidence model for UI preview and exports ─
+function buildDistractorReportData() {
+  if (!G.mcq || !G.mcq.length) return null;
+  if (!G._quartileData) computeQuartileData();
+  var opts = ['a','b','c','d','e'];
+  var questions = [];
+  var review = [], orderly = 0, neutral = 0;
+  for (var i=0;i<G.mcq.length;i++) {
+    var r=G.mcq[i], qd=G._quartileData ? G._quartileData[i] : null;
+    var key=(r.key||'').toLowerCase();
+    var alt=(r.altKeys||[]).map(function(k){return String(k).toLowerCase();});
+    var pa=getDistractorPatternAnalysis(r,qd,key,alt,opts);
+    var related=getDistractorRelatedEvidence(r);
+    var issuePatterns=pa.patterns.filter(function(p){return p.type!=='clean'&&p.type!=='nopattern';});
+    var tags=[];
+    issuePatterns.forEach(function(p){if(tags.indexOf(p.tag)<0)tags.push(p.tag);});
+    var displayed=[];
+    opts.forEach(function(o){
+      var total=0;
+      if(qd) for(var b=0;b<4;b++) total+=(qd.optCounts[b][o]||0);
+      if(total>0||o===key||alt.indexOf(o)>=0) displayed.push(o);
+    });
+    var keyComp=issuePatterns.filter(function(p){return p.type==='key_competition';});
+    var reversed=issuePatterns.filter(function(p){return p.type==='reversed';});
+    var nonfunc=issuePatterns.filter(function(p){return p.type==='non_functioning';});
+    var meaning='No strong automated distractor signal was detected. Review the response pattern with the item wording when considering reuse.';
+    var recommendation='No focused distractor action is indicated. Retain the item subject to the usual content review.';
+    if(keyComp.length){
+      var compOpts=keyComp.map(function(p){return p.option;});
+      if((r.p||0)<0.10) meaning='Almost none of the students selected the keyed answer, including students who performed well on the rest of the exam. Instead, stronger students selected '+compOpts.join(', ')+'. This is a strong warning that the recorded key may be incorrect, more than one answer may be defensible, or the wording caused substantial confusion.';
+      else meaning='One or more incorrect options competed with the keyed answer among students who otherwise performed well. This may indicate a defensible alternative, an answer-key problem, or wording that requires expert review.';
+      recommendation='Verify keyed answer '+String(r.key||'').toUpperCase()+'; review option'+(compOpts.length===1?' ':'s ')+compOpts.join(', ')+' as possible defensible alternative'+(compOpts.length===1?'':'s')+'; compare the original item wording with any linked student feedback.';
+    } else if(reversed.length){
+      var rp=reversed[0];
+      meaning='Option '+rp.option+' attracted slightly more students in the higher-scoring half of the class than in the lower-scoring half. This is a prompt for content review, not evidence that the question is defective.';
+      recommendation='Review option '+rp.option+' for unintended plausibility. Retain the item if content review confirms that the higher-group difference is not meaningful.';
+    } else if(nonfunc.length){
+      var nf=nonfunc.map(function(p){return p.option;});
+      meaning='Option'+(nf.length===1?' ':'s ')+nf.join(', ')+' attracted very few responses. This may mean the distractor is too easy to dismiss, although the original question must be reviewed before drawing that conclusion.';
+      recommendation='Review option'+(nf.length===1?' ':'s ')+nf.join(', ')+' and consider revising '+(nf.length===1?'it':'them')+' before the item is reused.';
+    }
+    var why='No strong automated distractor rule was triggered.';
+    if(keyComp.length){
+      var strongest=keyComp.slice().sort(function(a,b){
+        var ao=String(a.option||'').toLowerCase(),bo=String(b.option||'').toLowerCase();
+        return Math.max(distractorPct(qd,2,bo),distractorPct(qd,3,bo))-Math.max(distractorPct(qd,2,ao),distractorPct(qd,3,ao));
+      })[0];
+      why='In Q3 and Q4, keyed option '+String(r.key||'').toUpperCase()+' was selected by '+distractorPct(qd,2,key)+'% and '+distractorPct(qd,3,key)+'%. The strongest competing option, '+strongest.option+', was selected by '+distractorPct(qd,2,String(strongest.option).toLowerCase())+'% and '+distractorPct(qd,3,String(strongest.option).toLowerCase())+'%.';
+      var otherComp=keyComp.map(function(p){return p.option;}).filter(function(o){return o!==strongest.option;});
+      if(otherComp.length)why+=' Additional key-competition signal'+(otherComp.length===1?'':'s')+' appeared for option'+(otherComp.length===1?' ':'s ')+otherComp.join(', ')+'.';
+      var revOpts=reversed.map(function(p){return p.option;});
+      if(revOpts.length)why+=' Reversed-distractor signal'+(revOpts.length===1?'':'s')+' also appeared for option'+(revOpts.length===1?' ':'s ')+revOpts.join(', ')+'.';
+    } else if(reversed.length){
+      var firstRev=reversed[0];
+      why='Across the two higher-scoring quartiles, '+Math.round(firstRev.highPct*100)+'% selected option '+firstRev.option+', compared with '+Math.round(firstRev.lowPct*100)+'% across the two lower-scoring quartiles.';
+      if(reversed.length>1)why+=' The same reversed pattern also appeared for option'+(reversed.length===2?' ':'s ')+reversed.slice(1).map(function(p){return p.option;}).join(', ')+'.';
+    } else if(nonfunc.length){
+      why='Option'+(nonfunc.length===1?' ':'s ')+nonfunc.map(function(p){return p.option;}).join(', ')+' '+(nonfunc.length===1?'was':'were')+' selected by fewer than 5% of valid respondents.';
+    }
+    var item={
+      index:i, r:r, qd:qd, key:key, altKeys:alt, analysis:pa, issuePatterns:issuePatterns,
+      tags:tags, displayedOptions:displayed, related:related, meaning:meaning,
+      why:why,
+      recommendation:recommendation,
+      priority:keyComp.length?'High':'Moderate'
+    };
+    questions.push(item);
+    if(issuePatterns.length) review.push(item);
+    else if(pa.patterns.some(function(p){return p.type==='clean';})) orderly++;
+    else neutral++;
+  }
+  return {questions:questions,review:review,orderly:orderly,neutral:neutral,assessed:questions.length};
+}
+
+function distractorPct(qd,band,opt){
+  if(!qd||!qd.qN[band]) return 0;
+  return Math.round((qd.optCounts[band][opt]||0)/qd.qN[band]*100);
+}
+
+function distractorRelatedText(item){
+  return '<b>Student feedback:</b> '+escHtml(item.related.feedback)+'. &nbsp;<b>DIF:</b> '+escHtml(item.related.dif)+'. &nbsp;<b>Exception:</b> '+escHtml(item.related.exception)+'.';
+}
+
+function distractorReportHeaderHtml(data, mode) {
+  var title=(document.getElementById('exam-title')||{value:''}).value||'Untitled exam';
+  var dateVal=(document.getElementById('exam-date')||{value:''}).value;
+  var dateStr=dateVal?new Date(dateVal+'T12:00:00').toLocaleDateString('en-CA',{year:'numeric',month:'long',day:'numeric'}):'Not provided';
+  var intro='<h1>Distractor Analysis Report</h1>'+
+    '<p><b>Purpose.</b> This report helps assessment leaders identify answer options that may warrant expert review. It separates observed response patterns from interpretation and does not determine that a key or distractor is incorrect.</p>'+
+    '<h2>How to interpret this report</h2>'+
+    '<p><b>Performance quartiles.</b> Students are divided into four equally sized groups based on total exam score. Q1 is the lowest-scoring quarter, Q2 the lower-middle quarter, Q3 the upper-middle quarter, and Q4 the highest-scoring quarter. Percentages describe students within that group, not the entire class.</p>'+
+    '<p><b>Why quartiles are compared.</b> The comparison helps identify answer choices that may confuse students who otherwise performed well on the exam.</p>'+
+    '<p><b>Key competition.</b> An incorrect option is selected at least as often as the keyed answer by 10% or more of students in Q3 or Q4. This prompts a review of the key and option wording.</p>'+
+    '<p><b>Reversed distractor.</b> An incorrect option attracts a larger percentage of students in the two higher-scoring quartiles than in the two lower-scoring quartiles, and at least 7% of the higher groups select it.</p>'+
+    '<p><b>Non-functioning distractor.</b> An incorrect option is selected by fewer than 5% of valid respondents. This can only be identified when the option is present in the source data.</p>'+
+    '<p><b>Important limitation.</b> These signals identify patterns for expert review. They do not establish that a question, answer key, translation, or distractor is defective. Review the original question, its full set of answer choices, course context, feedback, and any applied exceptions before making a decision.</p>'+
+    '<h2>Executive summary</h2>'+
+    '<table class="da-rpt-meta"><tbody><tr><th>Exam</th><td>'+escHtml(title)+'</td><th>Exam date</th><td>'+escHtml(dateStr)+'</td></tr><tr><th>Students</th><td>'+G.students.length+'</td><th>Questions</th><td>'+G.nQ+'</td></tr></tbody></table>';
+  var lead=data.review.length===0?'No questions require focused distractor review.':data.review.length+' question'+(data.review.length===1?' requires':'s require')+' focused distractor review.';
+  intro+='<p><b>'+lead+'</b> '+(data.review.length?'The priority table identifies the response patterns that warrant expert review. The remaining questions show either an orderly pattern or no strong automated distractor signal.':'The questions show either an orderly pattern or no strong automated distractor signal.')+'</p>'+
+    '<div class="da-rpt-kpis"><div><b>'+data.review.length+'</b><span>Review signals</span></div><div><b>'+data.orderly+'</b><span>Orderly patterns</span></div><div><b>'+data.neutral+'</b><span>No strong signal</span></div><div><b>'+data.assessed+'</b><span>Questions assessed</span></div></div>'+
+    '<p><b>Recommended reading.</b> '+(mode==='full'?'The priority table and question details are the decision-focused report. The appendix provides a compact record for all '+data.assessed+' questions.':'This version includes only the priority table and detailed evidence for questions requiring review.')+'</p>';
+  return intro;
+}
+
+function distractorPriorityHtml(data){
+  var rows=data.review.map(function(item){
+    return '<tr><td><b>Q'+String(item.r.num).padStart(2,'0')+'</b></td><td class="'+(item.priority==='High'?'da-priority-high':'')+'"><b>'+item.priority+'</b></td><td>'+escHtml(item.tags.join(', '))+'</td><td>'+escHtml(item.analysis.evidence)+'</td><td>'+escHtml(item.recommendation)+'</td></tr>';
+  }).join('');
+  return '<section class="da-report-page"><h2>Priority review</h2><p>Only questions with a strong automated distractor signal appear here. Priority reflects the response pattern and related evidence, not an academic decision.</p>'+
+    (rows?'<table class="da-rpt-table da-priority-table"><thead><tr><th>Question</th><th>Priority</th><th>Signal</th><th>Observed evidence</th><th>Recommended action</th></tr></thead><tbody>'+rows+'</tbody></table>':'<p><i>No questions met the automated distractor-review rules.</i></p>')+'</section>';
+}
+
+function distractorQuestionHtml(item){
+  var r=item.r, qd=item.qd, total=item.analysis.qTotal||r.n||0;
+  var optRows=item.displayedOptions.map(function(o){
+    var count=0;if(qd)for(var b=0;b<4;b++)count+=(qd.optCounts[b][o]||0);
+    var pct=total?Math.round(count/total*100):0;
+    var keyed=o===item.key||item.altKeys.indexOf(o)>=0;
+    return '<tr class="'+(keyed?'da-keyed':'')+'"><td><b>'+o.toUpperCase()+'</b></td><td>'+count+' ('+pct+'%)</td><td>'+distractorPct(qd,0,o)+'%</td><td>'+distractorPct(qd,1,o)+'%</td><td>'+distractorPct(qd,2,o)+'%</td><td>'+distractorPct(qd,3,o)+'%</td><td>'+(o===item.key?'Keyed answer':item.altKeys.indexOf(o)>=0?'Accepted alternate':'Distractor')+'</td></tr>';
+  }).join('');
+  var flag=r.flag||'None';
+  return '<section class="da-report-page da-question-page"><h2>Question '+r.num+'</h2>'+
+    '<div class="da-rpt-metrics"><div><span>Key</span><b>'+escHtml(String(r.key||'—').toUpperCase())+'</b></div><div><span>Correct</span><b>'+Math.round((r.p||0)*100)+'%</b></div><div><span>Discrimination</span><b>'+Number(r.rpbis||0).toFixed(2)+'</b></div><div><span>Responses</span><b>'+total+'</b></div><div><span>Item flag</span><b class="'+(flag==='None'?'':'da-flag')+'">'+escHtml(flag)+'</b></div></div>'+
+    '<h3>Observed answer selection pattern</h3><p class="da-option-note"><b>About the options shown.</b> This table includes the keyed answer and every other answer option selected by at least one student. The source results do not identify options that received no responses. Review the original question before deciding whether an answer option or distractor requires revision.</p>'+
+    '<table class="da-rpt-table da-option-table"><thead><tr><th>Option</th><th>Overall</th><th>Q1 low</th><th>Q2</th><th>Q3</th><th>Q4 high</th><th>Role</th></tr></thead><tbody>'+optRows+'</tbody></table>'+
+    '<h3>What this means</h3><p>'+escHtml(item.meaning)+'</p><h3>Why it was flagged</h3><p>'+escHtml(item.why)+'</p><h3>Related evidence</h3><p>'+distractorRelatedText(item)+'</p><h3>Recommended review</h3><p>'+escHtml(item.recommendation)+'</p></section>';
+}
+
+function distractorAppendixHtml(data){
+  var rows=data.questions.map(function(item){
+    var r=item.r,total=item.analysis.qTotal||r.n||0;
+    function overall(o){var n=0;if(item.qd)for(var b=0;b<4;b++)n+=(item.qd.optCounts[b][o]||0);return total?Math.round(n/total*100):0;}
+    var status=item.tags.length?'Review: '+item.tags.join(', '):(item.analysis.patterns.some(function(p){return p.type==='clean';})?'Orderly pattern':'No strong signal');
+    if(r.flag)status+='; '+r.flag;
+    var rel=[];if(item.related.feedback!=='No linked comments'&&item.related.feedback!=='Not loaded')rel.push(item.related.feedback);if(item.related.dif.indexOf('Flagged')===0)rel.push('DIF flagged');else if(item.related.dif.indexOf('Not estimated')===0)rel.push('DIF not estimated');if(item.related.exception&&item.related.exception!=='None applied')rel.push('Exception: '+item.related.exception);
+    return '<tr class="'+(item.issuePatterns.length?'da-review-row':'')+'"><td><b>'+r.num+'</b></td><td><b>'+String(r.key||'').toUpperCase()+'</b></td><td>'+Math.round((r.p||0)*100)+'%</td><td>'+Number(r.rpbis||0).toFixed(2)+'</td>'+['a','b','c','d','e'].map(function(o){return '<td class="'+(o===item.key?'da-key-cell':'')+'">'+overall(o)+'%</td>';}).join('')+'<td>'+escHtml(status)+'</td><td>'+escHtml(rel.join('; ')||'None')+'</td></tr>';
+  }).join('');
+  return '<section class="da-report-page da-appendix"><h2>Compact all question appendix</h2><p>Percentages show the overall share selecting each recorded answer option. Green shading identifies the keyed option. A value of 0% means that no student selection was recorded; it does not confirm that the option was offered. The status column reports the automated distractor pattern separately from any existing item-analysis flag.</p><table class="da-rpt-table da-appendix-table"><thead><tr><th>Q</th><th>Key</th><th>Correct</th><th>Disc</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>Distractor status</th><th>Related evidence</th></tr></thead><tbody>'+rows+'</tbody></table></section>';
+}
+
+function renderDistractorReport(mode){
+  var data=buildDistractorReportData();if(!data)return;
+  var full=mode==='full';
+  var css='<style>.da-report-root{font-family:var(--font);font-size:13px;line-height:1.55;color:#111;background:#fff;padding:34px;max-width:1050px;margin:auto}.da-report-root h1{font-family:var(--font);font-size:30px;line-height:1.15;font-weight:700;margin:0 0 24px;color:#111}.da-report-root h2{font-family:var(--font);font-size:20px;line-height:1.2;font-weight:700;color:#A31515;margin:26px 0 13px}.da-report-root h3{font-family:var(--font);font-size:16px;line-height:1.2;font-weight:700;color:#111;margin:19px 0 8px}.da-report-root p{margin:0 0 12px}.da-report-page{page-break-before:always;padding-top:12px}.da-rpt-meta,.da-rpt-table{width:100%;border-collapse:collapse}.da-rpt-meta th{background:#A31515;color:#fff;text-align:left}.da-rpt-meta th,.da-rpt-meta td,.da-rpt-table th,.da-rpt-table td{border:1px solid #d9d9d9;padding:7px 9px;vertical-align:middle}.da-rpt-table th{background:#A31515;color:#fff;text-align:left}.da-report-root .da-rpt-meta tbody td:first-child,.da-report-root .da-rpt-table tbody td:first-child{box-shadow:none!important}.da-rpt-kpis{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid #d9d9d9;margin:14px 0}.da-rpt-kpis div{text-align:center;padding:10px;border-right:1px solid #d9d9d9}.da-rpt-kpis div:last-child{border:0}.da-rpt-kpis b{display:block;font-family:var(--font);font-size:24px;line-height:1.2;font-weight:700;color:#26313b}.da-rpt-kpis div:first-child b{color:#A31515}.da-rpt-kpis span{display:block;color:#68737d;font-weight:700}.da-priority-high{color:#A31515}.da-rpt-metrics{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid #d9d9d9;margin:10px 0 18px}.da-rpt-metrics div{text-align:center;padding:10px;border-right:1px solid #d9d9d9}.da-rpt-metrics div:last-child{border:0}.da-rpt-metrics span{display:block;text-transform:uppercase;font-family:var(--font);font-size:10px;line-height:1.2;font-weight:700;color:#68737d}.da-rpt-metrics b{display:block;font-size:19px;margin-top:4px;color:#26313b}.da-rpt-metrics .da-flag{color:#A31515}.da-option-note{color:#68737d;font-style:italic}.da-keyed td,.da-key-cell{background:#edf7ee;color:#2f6f3e;font-weight:700}.da-appendix{max-width:1400px}.da-appendix-table{font-size:10.5px}.da-appendix-table th,.da-appendix-table td{padding:4px 6px}.da-review-row td:first-child,.da-review-row td:nth-child(10){background:#fff0cf;color:#9a5b00;font-weight:700}@media print{.da-report-root{padding:0;max-width:none}.da-report-page{page-break-before:always}.da-question-page{page-break-after:always}.da-appendix{page:landscape}}</style>';
+  var html=css+'<div class="da-report-root">'+distractorReportHeaderHtml(data,mode)+distractorPriorityHtml(data)+data.review.map(distractorQuestionHtml).join('')+(full?distractorAppendixHtml(data):'')+uiReportFooterHtml()+'</div>';
+  var target=document.getElementById(full?'distractor-full-report':'distractor-findings-report');if(target)target.innerHTML=html;
 }
 
 function buildDistractorDetailHtml(idx) {
@@ -18956,14 +19353,30 @@ function updateTopbarExam() {
               <span class="faq-icon">+</span>
             </div>
             <div class="faq-a">
-              All reports are in the <strong>Reports</strong> tab, organised into two sections.<br><br>
-              <strong>Analysis Reports</strong> — formal Word (.docx) documents sent to exam directors and committee members. Each card has three actions: <strong>Preview</strong> (on-screen HTML preview), <strong>PDF</strong> (opens your browser's print dialog — choose Save as PDF), and <strong>Export</strong> (downloads the Word file directly).<br><br>
+              All reports are in the <strong>Reports</strong> tab. Formal documents appear under <strong>Director reports</strong>, with three sub-categories: <strong>MCQ &amp; DIF Reports</strong>, <strong>Distractor Reports</strong>, and <strong>Feedback Reports</strong>. Each card has three actions: <strong>Preview</strong> (on-screen HTML preview), <strong>PDF</strong> (opens your browser's print dialog — choose Save as PDF), and <strong>Export</strong> (downloads the Word file directly).<br><br>
+              <strong>MCQ &amp; DIF Reports</strong><br>
               &bull; <strong>MCQ item analysis report</strong> — key findings narrative, flagged questions table, and all-questions summary.<br>
               &bull; <strong>DIF report</strong> — EN/FR performance comparison per question. Only available when DIF is enabled.<br>
-              &bull; <strong>MCQ+DIF report</strong> — MCQ analysis and DIF combined in a single document. Only available when DIF is enabled.<br>
+              &bull; <strong>MCQ+DIF report</strong> — MCQ analysis and DIF combined in a single document. Only available when DIF is enabled.<br><br>
+              <strong>Distractor Reports</strong><br>
+              &bull; <strong>Distractor Analysis — Findings</strong> — decision-focused summary, priority table, and one detailed page for each question with a strong distractor signal.<br>
+              &bull; <strong>Distractor Analysis — Full</strong> — the same focused findings plus a landscape appendix covering every analysed question.<br><br>
+              <strong>Feedback Reports</strong><br>
               &bull; <strong>Feedback report</strong> — student comments organised by question with summary and categorisation. Only available after a feedback analysis.<br><br>
-              <strong>Session Reports</strong> — structured data exports for record-keeping and integration.<br><br>
+              <strong>Analysis records</strong> — structured data exports for record-keeping and integration.<br><br>
               &bull; <strong>Analysis record (CSV or JSON)</strong> — the same privacy-minimized exam summary, per-question statistics, DIF detail, feedback counts, thresholds, timestamps, and audit history. Choose CSV for Excel review and archiving, or JSON for longitudinal analysis and future backend integration.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFAQ(this)">
+              <span>How should I use the two Distractor Analysis reports?</span>
+              <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-a">
+              Use <strong>Distractor Analysis — Findings</strong> when the Assistant Dean, promotions committee, or item reviewers need a concise document focused only on questions that warrant expert review. Use <strong>Distractor Analysis — Full</strong> when you also need a compact record of the answer distribution and distractor status for every analysed question.<br><br>
+              Both reports divide students into four performance quartiles. Q1 is the lowest-scoring quarter and Q4 is the highest-scoring quarter. Percentages in those columns describe students within that group, not the entire class. The report translates each automated signal into plain language and recommends what to review; a signal is not proof that the key, wording, translation, or distractor is defective.<br><br>
+              QuestionMark results identify answer choices that students selected, but they do not provide a complete list of choices offered on each question. The detailed pages therefore show the key, accepted alternates, and every other option selected at least once. In the full appendix, <strong>0%</strong> means no selection was recorded; it does not confirm that the option existed. Always compare the report with the original question and its complete answer choices before making a decision.
             </div>
           </div>
 
@@ -18984,7 +19397,7 @@ function updateTopbarExam() {
             </div>
             <div class="faq-a">
               No. The exception view toggle on the analysis screen is a coordinator audit tool — it lets you compare the analysis before and after your exceptions were applied. It has no effect on any report output.<br><br>
-              All Analysis Reports (MCQ, DIF, MCQ+DIF, Feedback) and Session Reports (CSV, JSON) always reflect the <strong>authoritative final state</strong>: exceptions applied, documented, and justified. Generating a report while in Initial or Δ Impact view produces exactly the same document as generating it in Clean view.
+              All Analysis Reports (MCQ, DIF, MCQ+DIF, Distractor Analysis, Feedback) and Session Reports (CSV, JSON) always reflect the <strong>authoritative final state</strong>: exceptions applied, documented, and justified. Generating a report while in Initial or Δ Impact view produces exactly the same document as generating it in Clean view.
             </div>
           </div>
 
