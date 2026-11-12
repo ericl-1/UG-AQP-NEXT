@@ -144,8 +144,32 @@ async function inspectDocx(page, filename) {
       hasStyles: stylesXml.includes('w:styleId="Normal"') && stylesXml.includes('w:styleId="TableGrid"'),
       hasDocument: !!zip.file("word/document.xml"),
       hasContentTypes: !!zip.file("[Content_Types].xml"),
+      sectionCount: (documentXml.match(/<w:sectPr>/g) || []).length,
+      hasLandscape: /<w:pgSz[^>]*w:orient="landscape"/.test(documentXml),
+      repeatingHeaders: (documentXml.match(/<w:tblHeader\/>/g) || []).length,
+      hasAmberReviewFill: documentXml.includes('w:fill="FFF0CF"'),
+      hasAptosDisplayRuns: documentXml.includes('w:ascii="Aptos Display"'),
+      hasGarnetHeadings: documentXml.includes('<w:color w:val="A31515"/>'),
     };
   }, bytes.toString("base64"));
+}
+
+async function saveBuiltDistractorDocx(page, mode) {
+  const base64 = await page.evaluate(async reportMode => {
+    const data = buildDistractorReportData();
+    const body = buildDistractorDocxBody(reportMode, data);
+    const finalSectPr = reportMode === "full"
+      ? '<w:sectPr><w:pgSz w:w="15840" w:h="12240" w:orient="landscape"/><w:pgMar w:top="792" w:right="792" w:bottom="792" w:left="792" w:header="360" w:footer="360" w:gutter="0"/></w:sectPr>'
+      : null;
+    const blob = await buildDocx(body, null, "Distractor Analysis Report", null, { finalSectPr });
+    const bytes = new Uint8Array(await blob.arrayBuffer());
+    let binary = "";
+    for (let i = 0; i < bytes.length; i += 0x8000) binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+    return btoa(binary);
+  }, mode);
+  const target = path.join(outputDir, `Synthetic_Exception_Report_Exam_Distractor_Analysis_${mode === "full" ? "Full" : "Findings"}.docx`);
+  await fs.writeFile(target, Buffer.from(base64, "base64"));
+  return target;
 }
 
 let browser;
@@ -250,8 +274,12 @@ try {
   await page.evaluate(() => { _reviewState[1] = true; saveSession(); });
 
   const reportState = await page.evaluate(() => {
+    renderDistractorReport("findings");
+    renderDistractorReport("full");
     const report = id => ({
       text: document.getElementById(id).innerText,
+      fontFamily: getComputedStyle(document.querySelector(`#${id} .da-report-root`) || document.getElementById(id)).fontFamily,
+      firstColumnShadow: getComputedStyle(document.querySelector(`#${id} .da-rpt-table tbody td:first-child`) || document.getElementById(id)).boxShadow,
       tables: [...document.querySelectorAll(`#${id} table`)].map(table =>
         [...table.rows].map(row => [...row.cells].map(cell => cell.innerText.trim()))),
     });
@@ -261,6 +289,8 @@ try {
       dif: report("dif-report"),
       full: report("full-report"),
       feedback: report("feedback-report"),
+      distractorFindings: report("distractor-findings-report"),
+      distractorFull: report("distractor-full-report"),
       draft: JSON.parse(localStorage.getItem("aqp-draft")),
     };
   });
@@ -272,6 +302,16 @@ try {
   assert.match(reportState.full.text, /Golden delete decision/);
   assert.match(reportState.full.text, /Golden alternate-key decision/);
   assert.match(reportState.feedback.text, /Student Feedback Report/);
+  assert.match(reportState.distractorFindings.text, /Distractor Analysis Report/);
+  assert.match(reportState.distractorFindings.text, /About the options shown/);
+  assert.doesNotMatch(reportState.distractorFindings.text, /Compact all question appendix/);
+  assert.match(reportState.distractorFull.text, /Compact all question appendix/);
+  assert.match(reportState.distractorFull.text, /does not confirm that the option was offered/);
+  assert.match(reportState.distractorFindings.fontFamily, /Aptos|Inter|Calibri|Segoe UI/i);
+  assert.doesNotMatch(reportState.distractorFindings.fontFamily, /Georgia/i);
+  assert.equal(reportState.distractorFull.fontFamily, reportState.distractorFindings.fontFamily);
+  assert.equal(reportState.distractorFindings.firstColumnShadow, "none");
+  assert.equal(reportState.distractorFull.firstColumnShadow, "none");
   assert.equal(Object.keys(reportState.draft.ntIncluded).length, chosen.length);
   assert.equal(reportState.draft.G.exclusions[1].disposition, "credit");
   assert.equal(reportState.draft.G.exclusions[2].disposition, "delete");
@@ -289,6 +329,8 @@ try {
   const difDocxPath = await saveDownload(page, () => doExportReport("dif"), ".docx");
   const fullDocxPath = await saveDownload(page, () => doExportReport("full"), ".docx");
   const feedbackDocxPath = await saveDownload(page, () => exportFeedbackReport(), ".docx");
+  const distractorFullDocxPath = await saveDownload(page, () => exportDistractorReport("full"), ".docx");
+  const distractorFindingsDocxPath = await saveBuiltDistractorDocx(page, "findings");
 
   const mcqCsv = parseCsv(await fs.readFile(mcqCsvPath, "utf8"));
   assert.equal(mcqCsv.length, 13);
@@ -466,6 +508,8 @@ try {
     dif: await inspectDocx(page, difDocxPath),
     full: await inspectDocx(page, fullDocxPath),
     feedback: await inspectDocx(page, feedbackDocxPath),
+    distractorFindings: await inspectDocx(page, distractorFindingsDocxPath),
+    distractorFull: await inspectDocx(page, distractorFullDocxPath),
   };
   for (const [type, doc] of Object.entries(docs)) {
     assert.ok(doc.hasDocument, `${type} Word report must contain document.xml`);
@@ -487,6 +531,19 @@ try {
   }
   assert.match(docs.dif.text, /DIF Analysis Report/);
   assert.match(docs.feedback.text, /Student Feedback Report/);
+  assert.match(docs.distractorFindings.text, /Distractor Analysis Report/);
+  assert.match(docs.distractorFindings.text, /About the options shown/);
+  assert.doesNotMatch(docs.distractorFindings.text, /Compact all question appendix/);
+  assert.equal(docs.distractorFindings.hasLandscape, false);
+  assert.match(docs.distractorFull.text, /Compact all question appendix/);
+  assert.equal(docs.distractorFull.hasLandscape, true);
+  assert.ok(docs.distractorFull.sectionCount >= 2, "full distractor report must contain portrait and landscape sections");
+  assert.ok(docs.distractorFull.repeatingHeaders >= 3, "full distractor report must repeat long-table headers");
+  assert.equal(docs.distractorFull.hasAmberReviewFill, true);
+  for (const type of ["distractorFindings", "distractorFull"]) {
+    assert.equal(docs[type].hasAptosDisplayRuns, true, `${type} must use the MCQ report font family`);
+    assert.equal(docs[type].hasGarnetHeadings, true, `${type} must use the approved garnet heading hierarchy`);
+  }
   for (const item of chosen) {
     const text = item.category.isDif ? docs.dif.text : docs.mcq.text;
     assert.match(text, new RegExp(`(?:^|\\n|\\s)${item.number}(?:\\s|\\n)`), `Near Threshold Q${item.number} must appear in Word output`);
@@ -548,7 +605,7 @@ try {
 
   assert.deepEqual(pageErrors, []);
   assert.deepEqual(alerts, []);
-  console.log(`PASS: exceptions, Near Threshold persistence, portable session round-trip, HTML previews, CSV, JSON, and 4 Word reports validated.`);
+  console.log(`PASS: exceptions, Near Threshold persistence, portable session round-trip, HTML previews, CSV, JSON, and 6 Word reports validated.`);
   console.log(`Generated report files: ${outputDir}`);
 } finally {
   if (browser) await browser.close();
